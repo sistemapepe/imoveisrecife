@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut } from "lucide-react";
+import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -171,16 +172,10 @@ export default function Admin() {
                   className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
-              <div>
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">URL da Imagem</label>
-                <input
-                  type="text"
-                  value={form.images[0] || ""}
-                  onChange={(e) => setForm({ ...form, images: [e.target.value] })}
-                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  placeholder="https://..."
-                />
-              </div>
+              <ImageUpload
+                images={form.images}
+                onChange={(imgs) => setForm({ ...form, images: imgs })}
+              />
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 text-sm">
                   <input type="checkbox" checked={form.exclusive} onChange={(e) => setForm({ ...form, exclusive: e.target.checked })} className="rounded border-border" />
