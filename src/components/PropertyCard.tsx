@@ -1,15 +1,19 @@
 import { Heart, Ruler, BedDouble, Bath, Car } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Property, formatPriceFull } from "@/data/properties";
+import { motion } from "framer-motion";
+import { Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useProperties } from "@/contexts/PropertyContext";
 
-export default function PropertyCard({ property }: { property: Property }) {
+export default function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useProperties();
   const isFav = favorites.includes(property.id);
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.08 }}
       className="bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer"
       onClick={() => navigate(`/imovel/${property.id}`)}
     >
@@ -49,6 +53,6 @@ export default function PropertyCard({ property }: { property: Property }) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
