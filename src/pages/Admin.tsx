@@ -7,6 +7,8 @@ import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyCon
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import PageTransition from "@/components/PageTransition";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 type Tab = "properties" | "settings";
 
@@ -25,6 +27,7 @@ export default function Admin() {
   const [editing, setEditing] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState<Omit<Property, "id">>(emptyProperty);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -61,9 +64,11 @@ export default function Admin() {
     setCreating(false);
   };
 
-  const handleDelete = async (id: string) => {
-    await deleteProperty(id);
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+    await deleteProperty(deleteId);
     toast.success("Imóvel removido!");
+    setDeleteId(null);
   };
 
   const handleSignOut = async () => {
@@ -121,7 +126,7 @@ export default function Admin() {
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => startEdit(p)} className="p-2 rounded-lg bg-primary/10 text-primary"><Pencil className="h-4 w-4" /></button>
-                    <button onClick={() => handleDelete(p.id)} className="p-2 rounded-lg bg-destructive/10 text-destructive"><Trash2 className="h-4 w-4" /></button>
+                    <button onClick={() => setDeleteId(p.id)} className="p-2 rounded-lg bg-destructive/10 text-destructive"><Trash2 className="h-4 w-4" /></button>
                   </div>
                 </div>
               ))}
@@ -198,6 +203,19 @@ export default function Admin() {
             <SettingsTab settings={settings} updateSettings={updateSettings} />
           )}
         </main>
+
+        <Dialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirmar exclusão</DialogTitle>
+              <DialogDescription>Tem certeza que deseja remover este imóvel? Esta ação não pode ser desfeita.</DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={() => setDeleteId(null)}>Cancelar</Button>
+              <Button variant="destructive" onClick={confirmDelete}>Excluir</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </PageTransition>
   );
