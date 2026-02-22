@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import SettingsTab from "@/components/admin/SettingsTab";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
@@ -194,33 +195,7 @@ export default function Admin() {
           )}
 
           {tab === "settings" && (
-            <div className="space-y-4">
-              <h2 className="text-lg font-bold">Configurações do Site</h2>
-              {[
-                { label: "Título do Hero", key: "heroTitle" },
-                { label: "Subtítulo (Marca)", key: "heroSubtitle" },
-                { label: "Nome do Concierge", key: "conciergeNome" },
-                { label: "Cargo do Concierge", key: "conciergeCargo" },
-                { label: "Descrição do Concierge", key: "conciergeDesc" },
-                { label: "WhatsApp (com DDI)", key: "whatsappNumber" },
-              ].map(({ label, key }) => (
-                <div key={key}>
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{label}</label>
-                  <input
-                    type="text"
-                    value={(settings as any)[key]}
-                    onChange={(e) => updateSettings({ [key]: e.target.value })}
-                    className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  />
-                </div>
-              ))}
-              <button
-                onClick={() => toast.success("Configurações salvas!")}
-                className="w-full py-3 rounded-xl gold-gradient text-accent-foreground font-bold uppercase tracking-wider text-sm"
-              >
-                Salvar Configurações
-              </button>
-            </div>
+            <SettingsTab settings={settings} updateSettings={updateSettings} />
           )}
         </main>
       </div>
