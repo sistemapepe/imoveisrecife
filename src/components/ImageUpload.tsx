@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { Progress } from "@/components/ui/progress";
 import { Upload, X, Loader2, GripVertical } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -77,7 +78,8 @@ function compressImage(file: File, maxWidth = 1200, quality = 0.8): Promise<Blob
 
 export default function ImageUpload({ images, onChange }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState("");
+  const [progressPercent, setProgressPercent] = useState(0);
+  const [progressText, setProgressText] = useState("");
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -92,7 +94,8 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
 
     for (let i = 0; i < total; i++) {
       const file = files[i];
-      setProgress(`${i + 1}/${total}`);
+      setProgressText(`${i + 1}/${total}`);
+      setProgressPercent(Math.round((i / total) * 100));
 
       try {
         const compressed = await compressImage(file);
@@ -122,8 +125,12 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
     }
 
     onChange(newImages);
-    setUploading(false);
-    setProgress("");
+    setProgressPercent(100);
+    setTimeout(() => {
+      setUploading(false);
+      setProgressPercent(0);
+      setProgressText("");
+    }, 400);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -259,12 +266,21 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
         type="button"
         onClick={() => fileInputRef.current?.click()}
         disabled={uploading}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-border text-muted-foreground text-sm hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
+        className="w-full flex flex-col items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-border text-muted-foreground text-sm hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
       >
         {uploading ? (
-          <><Loader2 className="h-4 w-4 animate-spin" /> Enviando {progress}...</>
+          <div className="w-full px-4 space-y-1.5">
+            <div className="flex items-center justify-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Enviando {progressText}...</span>
+            </div>
+            <Progress value={progressPercent} className="h-2" />
+            <p className="text-center text-xs text-muted-foreground">{progressPercent}%</p>
+          </div>
         ) : (
-          <><Upload className="h-4 w-4" /> Adicionar imagens</>
+          <div className="flex items-center gap-2">
+            <Upload className="h-4 w-4" /> Adicionar imagens
+          </div>
         )}
       </button>
     </div>
