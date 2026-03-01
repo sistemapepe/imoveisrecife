@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PropertyProvider } from "@/contexts/PropertyContext";
 import BottomNav from "@/components/BottomNav";
+import WhatsAppFab from "@/components/WhatsAppFab";
 import Index from "./pages/Index";
 import SearchResults from "./pages/SearchResults";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -47,8 +48,9 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <div className="max-w-md mx-auto relative min-h-screen">
-              <AnimatedRoutes />
-              <BottomNav />
+               <AnimatedRoutes />
+               <WhatsAppFab />
+               <BottomNav />
             </div>
           </BrowserRouter>
         </PropertyProvider>
