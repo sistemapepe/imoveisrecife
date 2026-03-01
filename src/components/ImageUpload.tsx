@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { Upload, X, Loader2 } from "lucide-react";
+import { useState, useRef, useCallback } from "react";
+import { Upload, X, Loader2, GripVertical } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -37,6 +37,8 @@ function compressImage(file: File, maxWidth = 1200, quality = 0.8): Promise<Blob
 export default function ImageUpload({ images, onChange }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState("");
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,17 +87,109 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
     onChange(images.filter((_, i) => i !== index));
   };
 
+  const handleDragStart = (index: number) => {
+    setDragIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    setOverIndex(index);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === dropIndex) {
+      setDragIndex(null);
+      setOverIndex(null);
+      return;
+    }
+    const reordered = [...images];
+    const [moved] = reordered.splice(dragIndex, 1);
+    reordered.splice(dropIndex, 0, moved);
+    onChange(reordered);
+    setDragIndex(null);
+    setOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDragIndex(null);
+    setOverIndex(null);
+  };
+
+  // Touch drag support
+  const touchState = useRef<{ index: number; startY: number; startX: number } | null>(null);
+
+  const handleTouchStart = (index: number, e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    touchState.current = { index, startY: touch.clientY, startX: touch.clientX };
+  };
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (touchState.current === null || overIndex === null) {
+      touchState.current = null;
+      setOverIndex(null);
+      setDragIndex(null);
+      return;
+    }
+    const fromIdx = touchState.current.index;
+    if (fromIdx !== overIndex) {
+      const reordered = [...images];
+      const [moved] = reordered.splice(fromIdx, 1);
+      reordered.splice(overIndex, 0, moved);
+      onChange(reordered);
+    }
+    touchState.current = null;
+    setOverIndex(null);
+    setDragIndex(null);
+  }, [images, onChange, overIndex]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!touchState.current) return;
+    const touch = e.touches[0];
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (el) {
+      const item = el.closest("[data-img-index]");
+      if (item) {
+        const idx = Number(item.getAttribute("data-img-index"));
+        setOverIndex(idx);
+        setDragIndex(touchState.current.index);
+      }
+    }
+  }, []);
+
   return (
     <div className="space-y-3">
       <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-        Imagens
+        Imagens {images.length > 1 && <span className="font-normal normal-case">(arraste para reordenar)</span>}
       </label>
 
       {images.length > 0 && (
         <div className="grid grid-cols-3 gap-2">
           {images.map((img, i) => (
-            <div key={i} className="relative aspect-square rounded-lg overflow-hidden group">
-              <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
+            <div
+              key={`${img}-${i}`}
+              data-img-index={i}
+              draggable
+              onDragStart={() => handleDragStart(i)}
+              onDragOver={(e) => handleDragOver(e, i)}
+              onDrop={(e) => handleDrop(e, i)}
+              onDragEnd={handleDragEnd}
+              onTouchStart={(e) => handleTouchStart(i, e)}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              className={`relative aspect-square rounded-lg overflow-hidden group cursor-grab active:cursor-grabbing transition-all duration-150 ${
+                dragIndex === i ? "opacity-40 scale-95" : ""
+              } ${overIndex === i && dragIndex !== i ? "ring-2 ring-primary scale-105" : ""}`}
+            >
+              <img src={img} alt="" className="w-full h-full object-cover pointer-events-none" loading="lazy" />
+              {i === 0 && (
+                <span className="absolute bottom-1 left-1 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded">
+                  CAPA
+                </span>
+              )}
+              <div className="absolute top-1 left-1 p-0.5 rounded bg-foreground/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                <GripVertical className="h-3 w-3 text-card" />
+              </div>
               <button
                 type="button"
                 onClick={() => removeImage(i)}
