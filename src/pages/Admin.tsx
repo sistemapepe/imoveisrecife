@@ -12,6 +12,18 @@ import { Button } from "@/components/ui/button";
 
 type Tab = "properties" | "settings";
 
+const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
+
+const maskCurrency = (value: number) => {
+  if (!value) return "";
+  return value.toLocaleString("pt-BR");
+};
+
+const parseCurrency = (v: string): number => {
+  const clean = v.replace(/\D/g, "");
+  return clean ? Number(clean) : 0;
+};
+
 const emptyProperty: Omit<Property, "id"> = {
   title: "", address: "", neighborhood: "", city: "São Paulo",
   price: 0, area: 0, suites: 0, bathrooms: 0, parking: 0,
@@ -170,9 +182,9 @@ export default function Admin() {
               <div>
                 <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">CEP</label>
                 <div className="relative">
-                  <input
+                   <input
                     type="text"
-                    value={cep}
+                    value={maskCep(cep)}
                     onChange={(e) => fetchCep(e.target.value)}
                     placeholder="00000-000"
                     maxLength={9}
@@ -185,7 +197,29 @@ export default function Admin() {
                 { label: "Endereço", key: "address", type: "text" },
                 { label: "Bairro", key: "neighborhood", type: "text" },
                 { label: "Cidade", key: "city", type: "text" },
-                { label: "Preço (R$)", key: "price", type: "number" },
+              ].map(({ label, key, type }) => (
+                <div key={key}>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{label}</label>
+                  <input
+                    type={type}
+                    value={(form as any)[key]}
+                    onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                    className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+              ))}
+              <div>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Preço (R$)</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={form.price ? `R$ ${maskCurrency(form.price)}` : ""}
+                  onChange={(e) => setForm({ ...form, price: parseCurrency(e.target.value) })}
+                  placeholder="R$ 0"
+                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+              {[
                 { label: "Área (m²)", key: "area", type: "number" },
                 { label: "Suítes", key: "suites", type: "number" },
                 { label: "Banheiros", key: "bathrooms", type: "number" },
