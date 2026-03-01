@@ -35,7 +35,7 @@ const emptyProperty: Omit<Property, "id" | "code"> = {
 
 export default function Admin() {
   const navigate = useNavigate();
-  const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canManageSettings, canManageUsers } = useAuth();
+  const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canManageSettings, canManageUsers, canViewContacts } = useAuth();
   const { properties, settings, addProperty, updateProperty, deleteProperty, updateSettings } = useProperties();
   const [tab, setTab] = useState<Tab>("properties");
   const [editing, setEditing] = useState<string | null>(null);
@@ -142,7 +142,7 @@ export default function Admin() {
             >
               <LayoutDashboard className="h-4 w-4" /> Imóveis
             </button>
-            {(canManageProperties || canManageSettings) && (
+            {canViewContacts && (
               <button
                 onClick={() => { setTab("messages"); setEditing(null); setCreating(false); }}
                 className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "messages" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}

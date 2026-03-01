@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { UserPlus, Trash2, Shield, Eye, EyeOff } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import PermissionsConfig from "./PermissionsConfig";
 
 interface ManagedUser {
   id: string;
@@ -224,6 +225,10 @@ export default function UsersTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {/* Permissions Config */}
+      <div className="mt-8 pt-6 border-t border-border">
+        <PermissionsConfig />
+      </div>
     </div>
   );
 }
