@@ -27,6 +27,7 @@ export interface Property {
   images: string[];
   exclusive: boolean;
   featured: boolean;
+  category: string;
 }
 
 export interface SiteSettings {
@@ -154,7 +155,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       title: p.title, address: p.address, neighborhood: p.neighborhood, city: p.city,
       price: p.price, area: p.area, bedrooms: p.bedrooms, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
       type: p.type, description: p.description, amenities: p.amenities, images: p.images,
-      exclusive: p.exclusive, featured: p.featured,
+      exclusive: p.exclusive, featured: p.featured, category: p.category,
     } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
     await fetchProperties();

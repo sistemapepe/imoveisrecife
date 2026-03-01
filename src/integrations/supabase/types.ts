@@ -80,6 +80,7 @@ export type Database = {
           area: number
           bathrooms: number
           bedrooms: number
+          category: string
           city: string
           code: string
           created_at: string
@@ -102,6 +103,7 @@ export type Database = {
           area?: number
           bathrooms?: number
           bedrooms?: number
+          category?: string
           city?: string
           code: string
           created_at?: string
@@ -124,6 +126,7 @@ export type Database = {
           area?: number
           bathrooms?: number
           bedrooms?: number
+          category?: string
           city?: string
           code?: string
           created_at?: string
