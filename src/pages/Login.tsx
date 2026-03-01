@@ -9,23 +9,22 @@ import PageTransition from "@/components/PageTransition";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { signIn, signUp } = useAuth();
+  const { signIn } = useAuth();
   const { settings } = useProperties();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = isSignUp ? await signUp(email, password) : await signIn(email, password);
+    const { error } = await signIn(email, password);
     setLoading(false);
     if (error) {
       toast.error(error);
     } else {
-      toast.success(isSignUp ? "Conta criada!" : "Login realizado!");
+      toast.success("Login realizado!");
       navigate("/admin");
     }
   };
@@ -33,7 +32,6 @@ export default function Login() {
   return (
     <PageTransition>
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
-        {/* Subtle background pattern */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground)) 1px, transparent 0)`,
           backgroundSize: '32px 32px',
@@ -45,7 +43,6 @@ export default function Login() {
           transition={{ duration: 0.5 }}
           className="w-full max-w-sm relative z-10"
         >
-          {/* Brand header */}
           <div className="text-center mb-8">
             {settings.logoUrl ? (
               <motion.img
@@ -69,12 +66,9 @@ export default function Login() {
             <h1 className="font-serif text-2xl font-bold text-foreground tracking-tight">
               {settings.brandName || "Admin"}
             </h1>
-            <p className="text-muted-foreground text-sm mt-1.5">
-              {isSignUp ? "Criar conta de administrador" : "Acesso Administrativo"}
-            </p>
+            <p className="text-muted-foreground text-sm mt-1.5">Acesso Administrativo</p>
           </div>
 
-          {/* Form card */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -119,22 +113,15 @@ export default function Login() {
                 disabled={loading}
                 className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold uppercase tracking-wider text-sm disabled:opacity-50 hover:opacity-90 transition-opacity"
               >
-                {loading ? "Carregando..." : isSignUp ? "Criar Conta" : "Entrar"}
+                {loading ? "Carregando..." : "Entrar"}
               </button>
             </form>
           </motion.div>
 
-          {/* Footer links */}
-          <div className="mt-5 space-y-2 text-center">
-            <button
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm text-primary font-semibold hover:underline"
-            >
-              {isSignUp ? "Já tem conta? Entrar" : "Não tem conta? Criar"}
-            </button>
+          <div className="mt-5 text-center">
             <button
               onClick={() => navigate("/")}
-              className="block w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               ← Voltar ao site
             </button>
