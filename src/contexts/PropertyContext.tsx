@@ -16,6 +16,7 @@ export interface Property {
   city: string;
   price: number;
   area: number;
+  bedrooms: number;
   suites: number;
   bathrooms: number;
   parking: number;
@@ -114,7 +115,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const addProperty = async (p: Omit<Property, "id">) => {
     const { error } = await supabase.from("properties").insert({
       title: p.title, address: p.address, neighborhood: p.neighborhood, city: p.city,
-      price: p.price, area: p.area, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
+      price: p.price, area: p.area, bedrooms: p.bedrooms, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
       type: p.type, description: p.description, amenities: p.amenities, images: p.images,
       exclusive: p.exclusive, featured: p.featured,
     });

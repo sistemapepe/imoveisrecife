@@ -76,6 +76,7 @@ export type Database = {
           amenities: string[]
           area: number
           bathrooms: number
+          bedrooms: number
           city: string
           created_at: string
           description: string
@@ -96,6 +97,7 @@ export type Database = {
           amenities?: string[]
           area?: number
           bathrooms?: number
+          bedrooms?: number
           city?: string
           created_at?: string
           description?: string
@@ -116,6 +118,7 @@ export type Database = {
           amenities?: string[]
           area?: number
           bathrooms?: number
+          bedrooms?: number
           city?: string
           created_at?: string
           description?: string

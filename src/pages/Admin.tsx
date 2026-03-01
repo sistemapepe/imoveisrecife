@@ -26,7 +26,7 @@ const parseCurrency = (v: string): number => {
 
 const emptyProperty: Omit<Property, "id"> = {
   title: "", address: "", neighborhood: "", city: "São Paulo",
-  price: 0, area: 0, suites: 0, bathrooms: 0, parking: 0,
+  price: 0, area: 0, bedrooms: 0, suites: 0, bathrooms: 0, parking: 0,
   type: "Casa", description: "", amenities: [],
   images: [], exclusive: false, featured: false,
 };
@@ -221,6 +221,7 @@ export default function Admin() {
               </div>
               {[
                 { label: "Área (m²)", key: "area", type: "number" },
+                { label: "Quartos", key: "bedrooms", type: "number" },
                 { label: "Suítes", key: "suites", type: "number" },
                 { label: "Banheiros", key: "bathrooms", type: "number" },
                 { label: "Vagas", key: "parking", type: "number" },

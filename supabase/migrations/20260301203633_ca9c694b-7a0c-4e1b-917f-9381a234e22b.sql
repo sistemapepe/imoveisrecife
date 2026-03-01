@@ -1,0 +1,1 @@
+ALTER TABLE public.properties ADD COLUMN bedrooms integer NOT NULL DEFAULT 0;
