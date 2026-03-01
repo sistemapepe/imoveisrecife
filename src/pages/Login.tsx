@@ -51,7 +51,7 @@ export default function Login() {
                 transition={{ delay: 0.1, duration: 0.4 }}
                 src={settings.logoUrl}
                 alt={settings.brandName}
-                className="mx-auto h-16 max-w-[220px] object-contain mb-4"
+                className="mx-auto h-28 max-w-[280px] object-contain mb-4"
               />
             ) : (
               <motion.div
