@@ -1,8 +1,10 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
 type AppRole = "admin" | "supervisor" | "corretor" | "user";
+
+type PermissionKey = "view_properties" | "manage_properties" | "view_contacts" | "manage_settings" | "manage_users";
 
 interface AuthContextType {
   user: User | null;
@@ -16,6 +18,7 @@ interface AuthContextType {
   canViewProperties: boolean;
   canManageSettings: boolean;
   canManageUsers: boolean;
+  canViewContacts: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -23,18 +26,51 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
+  const [permissions, setPermissions] = useState<Record<PermissionKey, boolean>>({
+    view_properties: false,
+    manage_properties: false,
+    view_contacts: false,
+    manage_settings: false,
+    manage_users: false,
+  });
   const [loading, setLoading] = useState(true);
 
   const isAdmin = role === "admin";
-  const canManageProperties = role === "admin" || role === "supervisor";
-  const canViewProperties = role === "admin" || role === "supervisor" || role === "corretor";
-  const canManageSettings = role === "admin";
-  const canManageUsers = role === "admin";
+
+  // Admin always has all permissions; others use DB-driven permissions
+  const canManageProperties = isAdmin || permissions.manage_properties;
+  const canViewProperties = isAdmin || permissions.view_properties;
+  const canManageSettings = isAdmin || permissions.manage_settings;
+  const canManageUsers = isAdmin || permissions.manage_users;
+  const canViewContacts = isAdmin || permissions.view_contacts;
+
+  const loadPermissions = useCallback(async (userRole: AppRole) => {
+    if (userRole === "admin") return; // admin has all
+    try {
+      const { data } = await supabase
+        .from("role_permissions")
+        .select("permission, enabled")
+        .eq("role", userRole);
+      if (data) {
+        const perms = { ...permissions };
+        data.forEach((row: any) => {
+          if (row.permission in perms) {
+            perms[row.permission as PermissionKey] = row.enabled;
+          }
+        });
+        setPermissions(perms);
+      }
+    } catch {
+      // keep defaults
+    }
+  }, []);
 
   const checkRole = async (userId: string) => {
     try {
       const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
-      setRole((data?.role as AppRole) || "user");
+      const userRole = (data?.role as AppRole) || "user";
+      setRole(userRole);
+      await loadPermissions(userRole);
     } catch {
       setRole("user");
     }
@@ -94,7 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, role, loading, signIn, signUp, signOut, canManageProperties, canViewProperties, canManageSettings, canManageUsers }}>
+    <AuthContext.Provider value={{ user, isAdmin, role, loading, signIn, signUp, signOut, canManageProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts }}>
       {children}
     </AuthContext.Provider>
   );
