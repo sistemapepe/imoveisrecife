@@ -83,11 +83,18 @@ export default function PropertyDetail() {
           <div>
             <div className="flex justify-between items-end mb-3">
               <h2 className="text-lg font-bold">Localização</h2>
-              <span className="text-xs text-primary font-bold uppercase tracking-wide">{property.neighborhood}, SP</span>
+              <span className="text-xs text-primary font-bold uppercase tracking-wide">{property.neighborhood}, {property.city}</span>
             </div>
-            <div className="relative h-48 w-full rounded-2xl overflow-hidden bg-secondary border border-border flex items-center justify-center">
-              <MapPin className="h-10 w-10 text-primary" />
-              <span className="ml-2 text-sm text-muted-foreground">{property.address}</span>
+            <div className="relative h-48 w-full rounded-2xl overflow-hidden bg-secondary border border-border">
+              <iframe
+                title="Mapa"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                src={`https://www.google.com/maps?q=${encodeURIComponent(`${property.address}, ${property.neighborhood}, ${property.city}`)}&output=embed`}
+              />
             </div>
           </div>
         </motion.div>
