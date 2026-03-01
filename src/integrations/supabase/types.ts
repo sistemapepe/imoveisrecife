@@ -186,6 +186,7 @@ export type Database = {
           primary_color: string
           updated_at: string
           website_url: string
+          whatsapp_message: string
           whatsapp_number: string
           youtube_url: string
         }
@@ -208,6 +209,7 @@ export type Database = {
           primary_color?: string
           updated_at?: string
           website_url?: string
+          whatsapp_message?: string
           whatsapp_number?: string
           youtube_url?: string
         }
@@ -230,6 +232,7 @@ export type Database = {
           primary_color?: string
           updated_at?: string
           website_url?: string
+          whatsapp_message?: string
           whatsapp_number?: string
           youtube_url?: string
         }

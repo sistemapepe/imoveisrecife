@@ -48,6 +48,7 @@ const sections: SectionDef[] = [
     description: "Canais de comunicação com clientes",
     fields: [
       { label: "WhatsApp (com DDI)", key: "whatsappNumber", icon: <MessageCircle className="h-4 w-4" />, placeholder: "5511999999999" },
+      { label: "Mensagem padrão do WhatsApp", key: "whatsappMessage", icon: <MessageCircle className="h-4 w-4" />, multiline: true, placeholder: "Olá! Gostaria de mais informações..." },
       { label: "E-mail de contato", key: "emailContact", icon: <Mail className="h-4 w-4" />, type: "email", placeholder: "contato@jhr.com" },
     ],
   },
