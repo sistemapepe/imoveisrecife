@@ -21,13 +21,14 @@ export default function Index() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Auto-advance carousel
+  const intervalMs = (settings.bannerInterval || 5) * 1000;
   useEffect(() => {
     if (heroSlides.length <= 1) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
+    }, intervalMs);
     return () => clearInterval(timer);
-  }, [heroSlides.length]);
+  }, [heroSlides.length, intervalMs]);
 
   const goToSlide = (index: number) => setCurrentSlide(index);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
