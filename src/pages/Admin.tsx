@@ -31,7 +31,7 @@ const emptyProperty: Omit<Property, "id" | "code"> = {
   title: "", address: "", neighborhood: "", city: "São Paulo",
   price: 0, area: 0, bedrooms: 0, suites: 0, bathrooms: 0, parking: 0,
   type: "Casa", description: "", amenities: [],
-  images: [], exclusive: false, featured: false,
+  images: [], exclusive: false, featured: false, category: "Venda",
 };
 
 export default function Admin() {
@@ -303,6 +303,18 @@ export default function Admin() {
                   />
                 </div>
               ))}
+              <div>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Categoria</label>
+                <select
+                  value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm"
+                >
+                  {["Venda", "Locação", "Temporada", "Repasse"].map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
               <div>
                 <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Tipo</label>
                 <select
