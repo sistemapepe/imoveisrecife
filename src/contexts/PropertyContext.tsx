@@ -50,6 +50,7 @@ export interface SiteSettings {
   primaryColor: string;
   accentColor: string;
   bannerInterval: number;
+  whatsappMessage: string;
 }
 
 interface PropertyContextType {
@@ -84,6 +85,7 @@ const defaultSettings: SiteSettings = {
   primaryColor: "195 85% 45%",
   accentColor: "42 56% 55%",
   bannerInterval: 5,
+  whatsappMessage: "Olá! Gostaria de mais informações sobre os imóveis da JHR.",
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -131,6 +133,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         primaryColor: data.primary_color,
         accentColor: data.accent_color,
         bannerInterval: (data as any).banner_interval ?? 5,
+        whatsappMessage: (data as any).whatsapp_message ?? defaultSettings.whatsappMessage,
       });
     }
   }, []);
@@ -185,6 +188,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       websiteUrl: "website_url", emailContact: "email_contact",
       primaryColor: "primary_color", accentColor: "accent_color",
       bannerInterval: "banner_interval",
+      whatsappMessage: "whatsapp_message",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];

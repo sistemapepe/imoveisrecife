@@ -1,0 +1,1 @@
+ALTER TABLE public.site_settings ADD COLUMN whatsapp_message text NOT NULL DEFAULT 'Olá! Gostaria de mais informações sobre os imóveis da JHR.';
