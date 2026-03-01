@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { PropertyProvider } from "@/contexts/PropertyContext";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppFab from "@/components/WhatsAppFab";
+import DynamicTheme from "@/components/DynamicTheme";
 import Index from "./pages/Index";
 import SearchResults from "./pages/SearchResults";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -46,6 +47,7 @@ const App = () => (
         <PropertyProvider>
           <Toaster />
           <Sonner />
+          <DynamicTheme />
           <BrowserRouter>
             <div className="max-w-screen-lg mx-auto relative min-h-screen">
                <AnimatedRoutes />
