@@ -37,6 +37,16 @@ export interface SiteSettings {
   conciergeCargo: string;
   conciergeDesc: string;
   whatsappNumber: string;
+  brandName: string;
+  footerText: string;
+  instagramUrl: string;
+  facebookUrl: string;
+  youtubeUrl: string;
+  linkedinUrl: string;
+  websiteUrl: string;
+  emailContact: string;
+  primaryColor: string;
+  accentColor: string;
 }
 
 interface PropertyContextType {
@@ -59,6 +69,16 @@ const defaultSettings: SiteSettings = {
   conciergeCargo: "Concierge de Luxo",
   conciergeDesc: "Especialista em propriedades exclusivas. Estou pronto para encontrar o seu próximo investimento.",
   whatsappNumber: "5511999999999",
+  brandName: "JHR LUXURY",
+  footerText: "© 2024 JHR Imóveis de Luxo. Todos os direitos reservados.",
+  instagramUrl: "",
+  facebookUrl: "",
+  youtubeUrl: "",
+  linkedinUrl: "",
+  websiteUrl: "",
+  emailContact: "",
+  primaryColor: "195 85% 45%",
+  accentColor: "42 56% 55%",
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -94,6 +114,16 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         conciergeCargo: data.concierge_cargo,
         conciergeDesc: data.concierge_desc,
         whatsappNumber: data.whatsapp_number,
+        brandName: data.brand_name,
+        footerText: data.footer_text,
+        instagramUrl: data.instagram_url,
+        facebookUrl: data.facebook_url,
+        youtubeUrl: data.youtube_url,
+        linkedinUrl: data.linkedin_url,
+        websiteUrl: data.website_url,
+        emailContact: data.email_contact,
+        primaryColor: data.primary_color,
+        accentColor: data.accent_color,
       });
     }
   }, []);
@@ -138,14 +168,21 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
 
   const updateSettings = async (s: Partial<SiteSettings>) => {
     const dbUpdate: Record<string, string> = {};
-    if (s.heroTitle !== undefined) dbUpdate.hero_title = s.heroTitle;
-    if (s.heroSubtitle !== undefined) dbUpdate.hero_subtitle = s.heroSubtitle;
-    if (s.conciergeNome !== undefined) dbUpdate.concierge_nome = s.conciergeNome;
-    if (s.conciergeCargo !== undefined) dbUpdate.concierge_cargo = s.conciergeCargo;
-    if (s.conciergeDesc !== undefined) dbUpdate.concierge_desc = s.conciergeDesc;
-    if (s.whatsappNumber !== undefined) dbUpdate.whatsapp_number = s.whatsappNumber;
+    const map: Record<string, string> = {
+      heroTitle: "hero_title", heroSubtitle: "hero_subtitle",
+      conciergeNome: "concierge_nome", conciergeCargo: "concierge_cargo",
+      conciergeDesc: "concierge_desc", whatsappNumber: "whatsapp_number",
+      brandName: "brand_name", footerText: "footer_text",
+      instagramUrl: "instagram_url", facebookUrl: "facebook_url",
+      youtubeUrl: "youtube_url", linkedinUrl: "linkedin_url",
+      websiteUrl: "website_url", emailContact: "email_contact",
+      primaryColor: "primary_color", accentColor: "accent_color",
+    };
+    for (const [key, dbKey] of Object.entries(map)) {
+      if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
+    }
     
-    if (settings.id) {
+    if (settings.id && Object.keys(dbUpdate).length > 0) {
       await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
     }
     setSettings((prev) => ({ ...prev, ...s }));

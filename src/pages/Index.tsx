@@ -52,7 +52,7 @@ export default function Index() {
           <button onClick={() => navigate("/admin")} className="text-accent">
             <span className="text-2xl">☰</span>
           </button>
-          <h1 className="font-serif text-xl font-bold tracking-widest text-accent uppercase">{settings.heroSubtitle}</h1>
+          <h1 className="font-serif text-xl font-bold tracking-widest text-accent uppercase">{settings.brandName}</h1>
           <button onClick={() => navigate("/login")} className="text-card">
             <span className="text-2xl">👤</span>
           </button>

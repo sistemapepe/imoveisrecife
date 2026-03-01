@@ -141,34 +141,64 @@ export type Database = {
       }
       site_settings: {
         Row: {
+          accent_color: string
+          brand_name: string
           concierge_cargo: string
           concierge_desc: string
           concierge_nome: string
+          email_contact: string
+          facebook_url: string
+          footer_text: string
           hero_subtitle: string
           hero_title: string
           id: string
+          instagram_url: string
+          linkedin_url: string
+          primary_color: string
           updated_at: string
+          website_url: string
           whatsapp_number: string
+          youtube_url: string
         }
         Insert: {
+          accent_color?: string
+          brand_name?: string
           concierge_cargo?: string
           concierge_desc?: string
           concierge_nome?: string
+          email_contact?: string
+          facebook_url?: string
+          footer_text?: string
           hero_subtitle?: string
           hero_title?: string
           id?: string
+          instagram_url?: string
+          linkedin_url?: string
+          primary_color?: string
           updated_at?: string
+          website_url?: string
           whatsapp_number?: string
+          youtube_url?: string
         }
         Update: {
+          accent_color?: string
+          brand_name?: string
           concierge_cargo?: string
           concierge_desc?: string
           concierge_nome?: string
+          email_contact?: string
+          facebook_url?: string
+          footer_text?: string
           hero_subtitle?: string
           hero_title?: string
           id?: string
+          instagram_url?: string
+          linkedin_url?: string
+          primary_color?: string
           updated_at?: string
+          website_url?: string
           whatsapp_number?: string
+          youtube_url?: string
         }
         Relationships: []
       }

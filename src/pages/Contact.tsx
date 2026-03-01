@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Verified, Globe, Camera, Mail } from "lucide-react";
+import { ArrowLeft, Verified, Globe, Instagram, Facebook, Youtube, Linkedin, Mail } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ export default function Contact() {
       <div className="relative flex min-h-screen w-full flex-col pb-32 bg-background">
         <nav className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 glass-header border-b border-border">
           <button onClick={() => navigate(-1)}><ArrowLeft className="h-6 w-6" /></button>
-          <h1 className="font-serif text-lg font-bold tracking-widest text-accent uppercase">JHR LUXURY</h1>
+          <h1 className="font-serif text-lg font-bold tracking-widest text-accent uppercase">{settings.brandName}</h1>
           <div className="w-8" />
         </nav>
 
@@ -111,12 +111,27 @@ export default function Contact() {
 
         <footer className="px-6 py-10 border-t border-border flex flex-col items-center gap-6">
           <div className="flex gap-8">
-            <Globe className="h-6 w-6 text-accent" />
-            <Camera className="h-6 w-6 text-accent" />
-            <Mail className="h-6 w-6 text-accent" />
+            {settings.instagramUrl && (
+              <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer"><Instagram className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
+            )}
+            {settings.facebookUrl && (
+              <a href={settings.facebookUrl} target="_blank" rel="noopener noreferrer"><Facebook className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
+            )}
+            {settings.youtubeUrl && (
+              <a href={settings.youtubeUrl} target="_blank" rel="noopener noreferrer"><Youtube className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
+            )}
+            {settings.linkedinUrl && (
+              <a href={settings.linkedinUrl} target="_blank" rel="noopener noreferrer"><Linkedin className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
+            )}
+            {settings.websiteUrl && (
+              <a href={settings.websiteUrl} target="_blank" rel="noopener noreferrer"><Globe className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
+            )}
+            {settings.emailContact && (
+              <a href={`mailto:${settings.emailContact}`}><Mail className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
+            )}
           </div>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest text-center">
-            © 2024 JHR Imóveis de Luxo<br />Todos os direitos reservados.
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest text-center whitespace-pre-line">
+            {settings.footerText}
           </p>
         </footer>
       </div>
