@@ -69,14 +69,46 @@ const sections: SectionDef[] = [
       { label: "Texto do rodapé", key: "footerText", multiline: true, placeholder: "© 2024 JHR Imóveis..." },
     ],
   },
-  {
-    title: "🎨 Cores",
-    description: "Cores principais do site (formato HSL: ex: 195 85% 45%)",
-    fields: [
-      { label: "Cor Primária (HSL)", key: "primaryColor", icon: <Palette className="h-4 w-4" />, placeholder: "195 85% 45%" },
-      { label: "Cor de Destaque (HSL)", key: "accentColor", icon: <Palette className="h-4 w-4" />, placeholder: "42 56% 55%" },
-    ],
-  },
+];
+
+function hslToHex(hslStr: string): string {
+  const parts = hslStr.match(/[\d.]+/g);
+  if (!parts || parts.length < 3) return "#0099cc";
+  const h = parseFloat(parts[0]), s = parseFloat(parts[1]) / 100, l = parseFloat(parts[2]) / 100;
+  const a2 = s * Math.min(l, 1 - l);
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12;
+    const color = l - a2 * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, "0");
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function hexToHsl(hex: string): string {
+  let r = parseInt(hex.slice(1, 3), 16) / 255;
+  let g = parseInt(hex.slice(3, 5), 16) / 255;
+  let b = parseInt(hex.slice(5, 7), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0, l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+    else if (max === g) h = ((b - r) / d + 2) * 60;
+    else h = ((r - g) / d + 4) * 60;
+  }
+  return `${Math.round(h)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+}
+
+const presetColors = [
+  { label: "Azul Petróleo", hsl: "195 85% 45%" },
+  { label: "Dourado", hsl: "42 56% 55%" },
+  { label: "Esmeralda", hsl: "160 84% 39%" },
+  { label: "Borgonha", hsl: "345 80% 30%" },
+  { label: "Azul Marinho", hsl: "220 60% 25%" },
+  { label: "Preto Elegante", hsl: "0 0% 10%" },
+  { label: "Rose Gold", hsl: "10 50% 60%" },
+  { label: "Púrpura", hsl: "270 50% 40%" },
 ];
 
 export default function SettingsTab({ settings, updateSettings }: SettingsTabProps) {
@@ -123,26 +155,79 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
                   className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               ) : (
-                <div className="flex items-center gap-2">
-                  <input
-                    type={type || "text"}
-                    value={(localSettings as any)[key] || ""}
-                    onChange={(e) => setLocalSettings((prev) => ({ ...prev, [key]: e.target.value }))}
-                    placeholder={placeholder}
-                    className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  />
-                  {key === "primaryColor" || key === "accentColor" ? (
-                    <div
-                      className="mt-1 w-8 h-8 rounded-lg border border-border shrink-0"
-                      style={{ backgroundColor: `hsl(${(localSettings as any)[key]})` }}
-                    />
-                  ) : null}
-                </div>
+                <input
+                  type={type || "text"}
+                  value={(localSettings as any)[key] || ""}
+                  onChange={(e) => setLocalSettings((prev) => ({ ...prev, [key]: e.target.value }))}
+                  placeholder={placeholder}
+                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
               )}
             </div>
           ))}
         </div>
       ))}
+
+      {/* Color Picker Section */}
+      <div className="bg-card rounded-xl border border-border p-4 space-y-4">
+        <div>
+          <h3 className="font-bold text-sm">🎨 Cores</h3>
+          <p className="text-xs text-muted-foreground">Escolha as cores do site visualmente</p>
+        </div>
+
+        {([
+          { label: "Cor Primária", key: "primaryColor" as keyof SiteSettings },
+          { label: "Cor de Destaque", key: "accentColor" as keyof SiteSettings },
+        ]).map(({ label, key }) => (
+          <div key={key} className="space-y-2">
+            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+              <Palette className="h-4 w-4" /> {label}
+            </label>
+            <div className="flex items-center gap-3">
+              <label className="relative cursor-pointer">
+                <input
+                  type="color"
+                  value={hslToHex((localSettings as any)[key] || "")}
+                  onChange={(e) => {
+                    const hsl = hexToHsl(e.target.value);
+                    setLocalSettings((prev) => ({ ...prev, [key]: hsl }));
+                  }}
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                />
+                <div
+                  className="w-10 h-10 rounded-xl border-2 border-border shadow-sm"
+                  style={{ backgroundColor: `hsl(${(localSettings as any)[key]})` }}
+                />
+              </label>
+              <input
+                type="text"
+                value={(localSettings as any)[key] || ""}
+                onChange={(e) => setLocalSettings((prev) => ({ ...prev, [key]: e.target.value }))}
+                placeholder="195 85% 45%"
+                className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 font-mono"
+              />
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {presetColors.map((preset) => (
+                <button
+                  key={preset.hsl}
+                  type="button"
+                  title={preset.label}
+                  onClick={() => setLocalSettings((prev) => ({ ...prev, [key]: preset.hsl }))}
+                  className="w-7 h-7 rounded-lg border border-border hover:scale-110 transition-transform"
+                  style={{ backgroundColor: `hsl(${preset.hsl})` }}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+
+        <div className="flex gap-2 rounded-lg border border-border p-3">
+          <div className="flex-1 h-8 rounded-md" style={{ backgroundColor: `hsl(${localSettings.primaryColor})` }} />
+          <div className="flex-1 h-8 rounded-md" style={{ backgroundColor: `hsl(${localSettings.accentColor})` }} />
+        </div>
+        <p className="text-[10px] text-muted-foreground text-center">Pré-visualização: Primária + Destaque</p>
+      </div>
 
       <button
         onClick={handleSave}
