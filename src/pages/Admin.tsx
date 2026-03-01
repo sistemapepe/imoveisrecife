@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import SettingsTab from "@/components/admin/SettingsTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2 } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,6 +28,33 @@ export default function Admin() {
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState<Omit<Property, "id">>(emptyProperty);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [cep, setCep] = useState("");
+  const [cepLoading, setCepLoading] = useState(false);
+
+  const fetchCep = async (value: string) => {
+    const clean = value.replace(/\D/g, "");
+    setCep(value);
+    if (clean.length !== 8) return;
+    setCepLoading(true);
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${clean}/json/`);
+      const data = await res.json();
+      if (!data.erro) {
+        setForm((prev) => ({
+          ...prev,
+          address: data.logradouro || prev.address,
+          neighborhood: data.bairro || prev.neighborhood,
+          city: data.localidade || prev.city,
+        }));
+        toast.success("Endereço preenchido!");
+      } else {
+        toast.error("CEP não encontrado");
+      }
+    } catch {
+      toast.error("Erro ao buscar CEP");
+    }
+    setCepLoading(false);
+  };
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -136,8 +163,25 @@ export default function Admin() {
           {(editing || creating) && tab === "properties" && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold">{creating ? "Novo Imóvel" : "Editar Imóvel"}</h2>
+              <div>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Título</label>
+                <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">CEP</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={cep}
+                    onChange={(e) => fetchCep(e.target.value)}
+                    placeholder="00000-000"
+                    maxLength={9}
+                    className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                  {cepLoading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-primary" />}
+                </div>
+              </div>
               {[
-                { label: "Título", key: "title", type: "text" },
                 { label: "Endereço", key: "address", type: "text" },
                 { label: "Bairro", key: "neighborhood", type: "text" },
                 { label: "Cidade", key: "city", type: "text" },
