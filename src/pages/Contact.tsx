@@ -9,7 +9,7 @@ import PageTransition from "@/components/PageTransition";
 export default function Contact() {
   const navigate = useNavigate();
   const { settings } = useProperties();
-  const [form, setForm] = useState({ name: "", email: "", phone: "", interest: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", interest: "", message: "" });
   const [sending, setSending] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,11 +20,12 @@ export default function Contact() {
       email: form.email,
       phone: form.phone,
       interest: form.interest,
+      message: form.message,
     });
     setSending(false);
     if (error) { toast.error("Erro ao enviar"); return; }
     toast.success("Mensagem enviada com sucesso!");
-    setForm({ name: "", email: "", phone: "", interest: "" });
+    setForm({ name: "", email: "", phone: "", interest: "", message: "" });
   };
 
   return (
@@ -84,10 +85,19 @@ export default function Contact() {
               className="w-full border-0 border-b border-border bg-transparent pb-2 pt-4 text-sm focus:outline-none focus:border-accent text-muted-foreground uppercase text-xs tracking-wider"
             >
               <option value="">Interesse</option>
-              <option value="buy">Comprar Imóvel</option>
-              <option value="sell">Vender Imóvel</option>
-              <option value="concierge">Serviço de Concierge</option>
+              <option value="Comprar Imóvel">Comprar Imóvel</option>
+              <option value="Vender Imóvel">Vender Imóvel</option>
+              <option value="Alugar Imóvel">Alugar Imóvel</option>
+              <option value="Serviço de Concierge">Serviço de Concierge</option>
+              <option value="Outro">Outro</option>
             </select>
+            <textarea
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
+              placeholder="Sua mensagem"
+              rows={4}
+              className="w-full border border-border rounded-lg bg-transparent p-3 mt-2 text-sm focus:outline-none focus:border-accent placeholder:text-muted-foreground placeholder:uppercase placeholder:text-xs placeholder:tracking-wider resize-none"
+            />
             <button type="submit" disabled={sending} className="w-full gold-gradient text-accent-foreground font-bold py-4 rounded-sm uppercase tracking-[0.2em] text-xs shadow-lg mt-8 disabled:opacity-50">
               {sending ? "Enviando..." : "Enviar Mensagem"}
             </button>
