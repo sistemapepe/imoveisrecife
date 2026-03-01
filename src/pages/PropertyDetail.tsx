@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen } from "lucide-react";
+import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
@@ -10,10 +11,12 @@ export default function PropertyDetail() {
   const navigate = useNavigate();
   const { properties, settings, favorites, toggleFavorite } = useProperties();
   const property = properties.find((p) => p.id === id);
+  const [currentImg, setCurrentImg] = useState(0);
 
   if (!property) return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Imóvel não encontrado</div>;
 
   const isFav = favorites.includes(property.id);
+  const totalImages = property.images.length;
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -56,10 +59,50 @@ export default function PropertyDetail() {
           </div>
         </div>
 
-        {/* Hero image - responsive aspect ratio */}
+        {/* Image Gallery */}
         <div className="relative w-full aspect-[4/5] md:aspect-[16/9] lg:aspect-[21/9] overflow-hidden">
-          <img className="h-full w-full object-cover" src={property.images[0]} alt={property.title} />
+          <img
+            className="h-full w-full object-cover transition-opacity duration-300"
+            src={property.images[currentImg]}
+            alt={`${property.title} - Foto ${currentImg + 1}`}
+          />
+          {totalImages > 1 && (
+            <>
+              <button
+                onClick={() => setCurrentImg((prev) => (prev - 1 + totalImages) % totalImages)}
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-card/30 backdrop-blur-md flex items-center justify-center text-card border border-card/20 active:scale-95 transition-transform"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                onClick={() => setCurrentImg((prev) => (prev + 1) % totalImages)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-card/30 backdrop-blur-md flex items-center justify-center text-card border border-card/20 active:scale-95 transition-transform"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-foreground/60 backdrop-blur-sm text-card text-xs font-semibold">
+                {currentImg + 1} / {totalImages}
+              </div>
+            </>
+          )}
         </div>
+
+        {/* Thumbnails */}
+        {totalImages > 1 && (
+          <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide max-w-screen-lg mx-auto">
+            {property.images.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentImg(i)}
+                className={`shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                  i === currentImg ? "border-primary ring-2 ring-primary/30" : "border-transparent opacity-60 hover:opacity-100"
+                }`}
+              >
+                <img src={img} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
