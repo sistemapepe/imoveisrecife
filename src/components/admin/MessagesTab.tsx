@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Mail, Phone, Tag, RefreshCw } from "lucide-react";
+import { Mail, Phone, Tag, RefreshCw, MessageSquareText } from "lucide-react";
 
 interface ContactMessage {
   id: string;
@@ -9,10 +9,15 @@ interface ContactMessage {
   email: string;
   phone: string;
   interest: string;
+  message: string;
   created_at: string;
 }
 
-export default function MessagesTab() {
+interface MessagesTabProps {
+  onNewMessage?: () => void;
+}
+
+export default function MessagesTab({ onNewMessage }: MessagesTabProps) {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,6 +39,27 @@ export default function MessagesTab() {
   useEffect(() => {
     fetchMessages();
   }, [fetchMessages]);
+
+  // Realtime subscription for new messages
+  useEffect(() => {
+    const channel = supabase
+      .channel("contact_messages_realtime")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "contact_messages" },
+        (payload) => {
+          const newMsg = payload.new as ContactMessage;
+          setMessages((prev) => [newMsg, ...prev]);
+          toast.info(`Nova mensagem de ${newMsg.name}`);
+          onNewMessage?.();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [onNewMessage]);
 
   return (
     <div className="space-y-4">
@@ -84,6 +110,12 @@ export default function MessagesTab() {
                   </span>
                 )}
               </div>
+              {msg.message && (
+                <div className="flex gap-2 mt-2 pt-2 border-t border-border">
+                  <MessageSquareText className="h-3.5 w-3.5 text-accent mt-0.5 shrink-0" />
+                  <p className="text-sm text-foreground/80 leading-relaxed">{msg.message}</p>
+                </div>
+              )}
             </div>
           ))}
         </div>

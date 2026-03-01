@@ -3,11 +3,12 @@ import SettingsTab from "@/components/admin/SettingsTab";
 import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import PageTransition from "@/components/PageTransition";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ export default function Admin() {
   const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts } = useAuth();
   const { properties, settings, addProperty, updateProperty, deleteProperty, updateSettings } = useProperties();
   const [tab, setTab] = useState<Tab>("properties");
+  const [newMsgCount, setNewMsgCount] = useState(0);
   const [editing, setEditing] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState<Omit<Property, "id" | "code">>(emptyProperty);
@@ -75,6 +77,25 @@ export default function Admin() {
       navigate("/login");
     }
   }, [user, authLoading, navigate]);
+
+  // Realtime notification for new contact messages
+  useEffect(() => {
+    if (!canViewContacts) return;
+    const channel = supabase
+      .channel("admin_msg_notifications")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "contact_messages" },
+        () => {
+          if (tab !== "messages") {
+            setNewMsgCount((c) => c + 1);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [canViewContacts, tab]);
 
   if (authLoading) return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
   if (!user) return null;
@@ -126,9 +147,24 @@ export default function Admin() {
               <ArrowLeft className="h-6 w-6" />
             </button>
             <h1 className="text-lg font-bold">Painel {role === "admin" ? "Admin" : role === "supervisor" ? "Supervisor" : "Corretor"}</h1>
-            <button onClick={handleSignOut} className="w-10 h-10 flex items-center justify-center text-destructive">
-              <LogOut className="h-5 w-5" />
-            </button>
+            <div className="flex items-center gap-1">
+              {canViewContacts && (
+                <button
+                  onClick={() => { setTab("messages"); setEditing(null); setCreating(false); setNewMsgCount(0); }}
+                  className="relative w-10 h-10 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Bell className="h-5 w-5" />
+                  {newMsgCount > 0 && (
+                    <span className="absolute top-1 right-1 h-4 min-w-[16px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold animate-pulse">
+                      {newMsgCount}
+                    </span>
+                  )}
+                </button>
+              )}
+              <button onClick={handleSignOut} className="w-10 h-10 flex items-center justify-center text-destructive">
+                <LogOut className="h-5 w-5" />
+              </button>
+            </div>
           </div>
           {!canManageProperties && (
             <div className="px-4 py-2 bg-primary/10 text-primary text-xs text-center font-semibold">
@@ -362,7 +398,7 @@ export default function Admin() {
           )}
 
           {tab === "messages" && (
-            <MessagesTab />
+            <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
           )}
         </main>
 
