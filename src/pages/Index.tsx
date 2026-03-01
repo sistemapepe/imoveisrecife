@@ -9,7 +9,7 @@ import PageTransition from "@/components/PageTransition";
 
 export default function Index() {
   const navigate = useNavigate();
-  const { properties, settings, favorites, toggleFavorite } = useProperties();
+  const { properties, settings, favorites, toggleFavorite, loading } = useProperties();
   const featured = properties.filter((p) => p.featured);
 
   // Hero carousel - featured first, then all properties, then fallback
@@ -45,6 +45,16 @@ export default function Index() {
       return map;
     }, new Map<string, { type: string; image: string; count: number }>())
   ).map(([, v]) => v);
+
+  if (loading) {
+    return (
+      <PageTransition>
+        <div className="flex min-h-screen w-full items-center justify-center bg-luxury-dark">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+        </div>
+      </PageTransition>
+    );
+  }
 
   return (
     <PageTransition>
