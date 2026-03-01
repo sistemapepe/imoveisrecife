@@ -8,8 +8,35 @@ interface ImageUploadProps {
   onChange: (images: string[]) => void;
 }
 
+function compressImage(file: File, maxWidth = 1200, quality = 0.8): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      let { width, height } = img;
+      if (width > maxWidth) {
+        height = (height * maxWidth) / width;
+        width = maxWidth;
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return reject(new Error("Canvas not supported"));
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error("Compression failed"))),
+        "image/webp",
+        quality
+      );
+    };
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}
+
 export default function ImageUpload({ images, onChange }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,30 +45,39 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
 
     setUploading(true);
     const newImages = [...images];
+    const total = files.length;
 
-    for (const file of Array.from(files)) {
-      const ext = file.name.split(".").pop();
-      const fileName = `${crypto.randomUUID()}.${ext}`;
-      const filePath = `properties/${fileName}`;
+    for (let i = 0; i < total; i++) {
+      const file = files[i];
+      setProgress(`${i + 1}/${total}`);
 
-      const { error } = await supabase.storage
-        .from("property-images")
-        .upload(filePath, file, { upsert: true });
+      try {
+        const compressed = await compressImage(file);
+        const fileName = `${crypto.randomUUID()}.webp`;
+        const filePath = `properties/${fileName}`;
 
-      if (error) {
-        toast.error(`Erro ao enviar ${file.name}: ${error.message}`);
-        continue;
+        const { error } = await supabase.storage
+          .from("property-images")
+          .upload(filePath, compressed, { contentType: "image/webp", upsert: true });
+
+        if (error) {
+          toast.error(`Erro ao enviar ${file.name}: ${error.message}`);
+          continue;
+        }
+
+        const { data: urlData } = supabase.storage
+          .from("property-images")
+          .getPublicUrl(filePath);
+
+        newImages.push(urlData.publicUrl);
+      } catch {
+        toast.error(`Erro ao processar ${file.name}`);
       }
-
-      const { data: urlData } = supabase.storage
-        .from("property-images")
-        .getPublicUrl(filePath);
-
-      newImages.push(urlData.publicUrl);
     }
 
     onChange(newImages);
     setUploading(false);
+    setProgress("");
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -59,7 +95,7 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
         <div className="grid grid-cols-3 gap-2">
           {images.map((img, i) => (
             <div key={i} className="relative aspect-square rounded-lg overflow-hidden group">
-              <img src={img} alt="" className="w-full h-full object-cover" />
+              <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
               <button
                 type="button"
                 onClick={() => removeImage(i)}
@@ -88,7 +124,7 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-border text-muted-foreground text-sm hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
       >
         {uploading ? (
-          <><Loader2 className="h-4 w-4 animate-spin" /> Enviando...</>
+          <><Loader2 className="h-4 w-4 animate-spin" /> Enviando {progress}...</>
         ) : (
           <><Upload className="h-4 w-4" /> Adicionar imagens</>
         )}
