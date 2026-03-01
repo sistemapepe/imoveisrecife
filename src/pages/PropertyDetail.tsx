@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
@@ -12,6 +12,8 @@ export default function PropertyDetail() {
   const { properties, settings, favorites, toggleFavorite } = useProperties();
   const property = properties.find((p) => p.id === id);
   const [currentImg, setCurrentImg] = useState(0);
+  const touchStartX = useRef(0);
+  const touchDelta = useRef(0);
 
   if (!property) return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Imóvel não encontrado</div>;
 
@@ -59,24 +61,43 @@ export default function PropertyDetail() {
           </div>
         </div>
 
-        {/* Image Gallery */}
-        <div className="relative w-full aspect-[4/5] md:aspect-[16/9] lg:aspect-[21/9] overflow-hidden">
+        {/* Image Gallery with swipe */}
+        <div
+          className="relative w-full aspect-[4/5] md:aspect-[16/9] lg:aspect-[21/9] overflow-hidden touch-pan-y"
+          onTouchStart={(e) => {
+            touchStartX.current = e.touches[0].clientX;
+            touchDelta.current = 0;
+          }}
+          onTouchMove={(e) => {
+            touchDelta.current = e.touches[0].clientX - touchStartX.current;
+          }}
+          onTouchEnd={() => {
+            if (totalImages <= 1) return;
+            if (touchDelta.current > 50) {
+              setCurrentImg((prev) => (prev - 1 + totalImages) % totalImages);
+            } else if (touchDelta.current < -50) {
+              setCurrentImg((prev) => (prev + 1) % totalImages);
+            }
+            touchDelta.current = 0;
+          }}
+        >
           <img
-            className="h-full w-full object-cover transition-opacity duration-300"
+            className="h-full w-full object-cover transition-opacity duration-300 pointer-events-none select-none"
             src={property.images[currentImg]}
             alt={`${property.title} - Foto ${currentImg + 1}`}
+            draggable={false}
           />
           {totalImages > 1 && (
             <>
               <button
                 onClick={() => setCurrentImg((prev) => (prev - 1 + totalImages) % totalImages)}
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-card/30 backdrop-blur-md flex items-center justify-center text-card border border-card/20 active:scale-95 transition-transform"
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-card/30 backdrop-blur-md flex items-center justify-center text-card border border-card/20 active:scale-95 transition-transform hidden md:flex"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <button
                 onClick={() => setCurrentImg((prev) => (prev + 1) % totalImages)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-card/30 backdrop-blur-md flex items-center justify-center text-card border border-card/20 active:scale-95 transition-transform"
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-card/30 backdrop-blur-md flex items-center justify-center text-card border border-card/20 active:scale-95 transition-transform hidden md:flex"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
