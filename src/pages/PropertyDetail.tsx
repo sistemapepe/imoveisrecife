@@ -33,7 +33,7 @@ export default function PropertyDetail() {
 
   const handleWhatsApp = () => {
     const message = encodeURIComponent(
-      `Olá! Tenho interesse no imóvel: ${property.title} - ${formatPriceFull(property.price)}\n${window.location.href}`
+      `Olá! Tenho interesse no imóvel ${property.code}: ${property.title} - ${formatPriceFull(property.price)}\n${window.location.href}`
     );
     window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
   };
@@ -78,9 +78,10 @@ export default function PropertyDetail() {
                 </div>
               )}
               <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-tight mb-2">{property.title}</h1>
-              <p className="text-sm text-muted-foreground mb-4 flex items-center gap-1">
+              <p className="text-sm text-muted-foreground mb-1 flex items-center gap-1">
                 <MapPin className="h-4 w-4" /> {property.address}, {property.neighborhood}
               </p>
+              <p className="text-xs font-mono text-primary/70 mb-4">Cód: {property.code}</p>
               <div className="text-2xl md:text-3xl font-extrabold text-accent tracking-tight mb-8">{formatPriceFull(property.price)}</div>
 
               <div className="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 mb-8">

@@ -78,6 +78,7 @@ export type Database = {
           bathrooms: number
           bedrooms: number
           city: string
+          code: string
           created_at: string
           description: string
           exclusive: boolean
@@ -99,6 +100,7 @@ export type Database = {
           bathrooms?: number
           bedrooms?: number
           city?: string
+          code: string
           created_at?: string
           description?: string
           exclusive?: boolean
@@ -120,6 +122,7 @@ export type Database = {
           bathrooms?: number
           bedrooms?: number
           city?: string
+          code?: string
           created_at?: string
           description?: string
           exclusive?: boolean

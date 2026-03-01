@@ -10,7 +10,7 @@ export default function WhatsAppFab() {
   if (location.pathname.startsWith("/admin") || location.pathname.startsWith("/login")) return null;
 
   const handleClick = () => {
-    const message = encodeURIComponent("Olá! Gostaria de mais informações sobre os imóveis.");
+    const message = encodeURIComponent("Olá! Gostaria de mais informações sobre os imóveis da JHR.");
     window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
   };
 
