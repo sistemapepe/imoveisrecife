@@ -53,7 +53,7 @@ export default function Index() {
             <span className="text-2xl">☰</span>
           </button>
           {settings.logoUrl ? (
-            <img src={settings.logoUrl} alt={settings.brandName} className="h-8 max-w-[140px] object-contain" />
+            <img src={settings.logoUrl} alt={settings.brandName} className="h-12 max-w-[200px] object-contain" />
           ) : (
             <h1 className="font-serif text-xl font-bold tracking-widest text-accent uppercase">{settings.brandName}</h1>
           )}
