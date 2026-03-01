@@ -183,15 +183,33 @@ export default function PropertyDetail() {
                   <h2 className="text-lg font-bold">Localização</h2>
                   <span className="text-xs text-primary font-bold uppercase tracking-wide">{property.neighborhood}, {property.city}</span>
                 </div>
-                <div className="relative h-48 md:h-72 w-full rounded-2xl overflow-hidden bg-secondary border border-border">
+                <div className="relative h-56 md:h-80 w-full rounded-2xl overflow-hidden bg-secondary border border-border">
                   <iframe
-                    title="Mapa"
+                    title="Mapa do Imóvel"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     loading="lazy"
+                    allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps?q=${encodeURIComponent(`${property.address}, ${property.neighborhood}, ${property.city}`)}&output=embed`}
+                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(`${property.address}, ${property.neighborhood}, ${property.city}`)}&zoom=16`}
+                  />
+                </div>
+
+                <h3 className="text-base font-bold mt-6 mb-3 flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-accent" />
+                  Pontos de Interesse Próximos
+                </h3>
+                <div className="relative h-56 md:h-80 w-full rounded-2xl overflow-hidden bg-secondary border border-border">
+                  <iframe
+                    title="Pontos comerciais próximos"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=restaurantes+mercados+farmácias+near+${encodeURIComponent(`${property.address}, ${property.neighborhood}, ${property.city}`)}&zoom=15`}
                   />
                 </div>
               </div>
