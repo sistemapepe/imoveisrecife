@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import SettingsTab from "@/components/admin/SettingsTab";
 import UsersTab from "@/components/admin/UsersTab";
+import MessagesTab from "@/components/admin/MessagesTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,7 +12,7 @@ import PageTransition from "@/components/PageTransition";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-type Tab = "properties" | "settings" | "users";
+type Tab = "properties" | "settings" | "users" | "messages";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -141,6 +142,14 @@ export default function Admin() {
             >
               <LayoutDashboard className="h-4 w-4" /> Imóveis
             </button>
+            {(canManageProperties || canManageSettings) && (
+              <button
+                onClick={() => { setTab("messages"); setEditing(null); setCreating(false); }}
+                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "messages" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
+              >
+                <MessageSquare className="h-4 w-4" /> Contatos
+              </button>
+            )}
             {canManageUsers && (
               <button
                 onClick={() => { setTab("users"); setEditing(null); setCreating(false); }}
@@ -346,6 +355,10 @@ export default function Admin() {
 
           {tab === "users" && canManageUsers && (
             <UsersTab />
+          )}
+
+          {tab === "messages" && (
+            <MessagesTab />
           )}
         </main>
 
