@@ -256,6 +256,50 @@ export default function Admin() {
                   className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
+              <div>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Amenidades</label>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {["Piscina", "Churrasqueira", "Academia", "Sauna", "Jardim", "Elevador", "Varanda Gourmet", "Playground", "Salão de Festas", "Segurança 24h", "Quadra Esportiva", "Spa", "Home Cinema", "Adega", "Lavabo"].map((amenity) => {
+                    const selected = form.amenities.includes(amenity);
+                    return (
+                      <button
+                        key={amenity}
+                        type="button"
+                        onClick={() =>
+                          setForm({
+                            ...form,
+                            amenities: selected
+                              ? form.amenities.filter((a) => a !== amenity)
+                              : [...form.amenities, amenity],
+                          })
+                        }
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+                          selected
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {amenity}
+                      </button>
+                    );
+                  })}
+                </div>
+                <input
+                  type="text"
+                  placeholder="Adicionar outra amenidade e pressione Enter"
+                  className="w-full mt-2 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      const val = (e.target as HTMLInputElement).value.trim();
+                      if (val && !form.amenities.includes(val)) {
+                        setForm({ ...form, amenities: [...form.amenities, val] });
+                        (e.target as HTMLInputElement).value = "";
+                      }
+                    }
+                  }}
+                />
+              </div>
               <ImageUpload
                 images={form.images}
                 onChange={(imgs) => setForm({ ...form, images: imgs })}
