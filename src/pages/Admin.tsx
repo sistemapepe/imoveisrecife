@@ -24,7 +24,7 @@ const parseCurrency = (v: string): number => {
   return clean ? Number(clean) : 0;
 };
 
-const emptyProperty: Omit<Property, "id"> = {
+const emptyProperty: Omit<Property, "id" | "code"> = {
   title: "", address: "", neighborhood: "", city: "São Paulo",
   price: 0, area: 0, bedrooms: 0, suites: 0, bathrooms: 0, parking: 0,
   type: "Casa", description: "", amenities: [],
@@ -38,7 +38,7 @@ export default function Admin() {
   const [tab, setTab] = useState<Tab>("properties");
   const [editing, setEditing] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
-  const [form, setForm] = useState<Omit<Property, "id">>(emptyProperty);
+  const [form, setForm] = useState<Omit<Property, "id" | "code">>(emptyProperty);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [cep, setCep] = useState("");
   const [cepLoading, setCepLoading] = useState(false);
@@ -80,7 +80,7 @@ export default function Admin() {
   const startEdit = (p: Property) => {
     setEditing(p.id);
     setCreating(false);
-    const { id, ...rest } = p;
+    const { id, code, ...rest } = p;
     setForm(rest);
   };
 
@@ -159,7 +159,10 @@ export default function Admin() {
                 <div key={p.id} className="bg-card rounded-xl p-4 border border-border flex items-center gap-4">
                   <img src={p.images[0] || "/placeholder.svg"} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-sm truncate">{p.title}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-sm truncate">{p.title}</h3>
+                      <span className="text-[10px] font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded shrink-0">{p.code}</span>
+                    </div>
                     <p className="text-xs text-accent font-semibold">{formatPriceFull(p.price)}</p>
                     <p className="text-xs text-muted-foreground">{p.type} · {p.neighborhood}</p>
                   </div>

@@ -10,6 +10,7 @@ import property4 from "@/assets/property-4.jpg";
 
 export interface Property {
   id: string;
+  code: string;
   title: string;
   address: string;
   neighborhood: string;
@@ -42,7 +43,7 @@ interface PropertyContextType {
   properties: Property[];
   settings: SiteSettings;
   loading: boolean;
-  addProperty: (p: Omit<Property, "id">) => Promise<void>;
+  addProperty: (p: Omit<Property, "id" | "code">) => Promise<void>;
   updateProperty: (id: string, p: Partial<Property>) => Promise<void>;
   deleteProperty: (id: string) => Promise<void>;
   updateSettings: (s: Partial<SiteSettings>) => Promise<void>;
@@ -112,13 +113,13 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     fetchFavorites();
   }, [fetchFavorites]);
 
-  const addProperty = async (p: Omit<Property, "id">) => {
+  const addProperty = async (p: Omit<Property, "id" | "code">) => {
     const { error } = await supabase.from("properties").insert({
       title: p.title, address: p.address, neighborhood: p.neighborhood, city: p.city,
       price: p.price, area: p.area, bedrooms: p.bedrooms, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
       type: p.type, description: p.description, amenities: p.amenities, images: p.images,
       exclusive: p.exclusive, featured: p.featured,
-    });
+    } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
     await fetchProperties();
   };
