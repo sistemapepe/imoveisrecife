@@ -47,7 +47,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <div className="max-w-md mx-auto relative min-h-screen">
+            <div className="max-w-screen-lg mx-auto relative min-h-screen">
                <AnimatedRoutes />
                <WhatsAppFab />
                <BottomNav />

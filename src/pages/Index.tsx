@@ -48,7 +48,7 @@ export default function Index() {
     <PageTransition>
       <div className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24">
         {/* Header */}
-        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 glass-nav border-b border-card/10 max-w-md mx-auto">
+        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 glass-nav border-b border-card/10 max-w-screen-lg mx-auto">
           <button onClick={() => navigate("/admin")} className="text-accent">
             <span className="text-2xl">☰</span>
           </button>
@@ -180,7 +180,7 @@ export default function Index() {
           <div className="px-6 py-6">
             <h4 className="text-card font-serif text-lg mb-4">Coleções</h4>
             {collections.length > 0 ? (
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {collections.map((col) => (
                   <button
                     key={col.type}
