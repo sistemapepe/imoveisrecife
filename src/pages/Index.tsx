@@ -52,7 +52,11 @@ export default function Index() {
           <button onClick={() => navigate("/admin")} className="text-accent">
             <span className="text-2xl">☰</span>
           </button>
-          <h1 className="font-serif text-xl font-bold tracking-widest text-accent uppercase">{settings.brandName}</h1>
+          {settings.logoUrl ? (
+            <img src={settings.logoUrl} alt={settings.brandName} className="h-8 max-w-[140px] object-contain" />
+          ) : (
+            <h1 className="font-serif text-xl font-bold tracking-widest text-accent uppercase">{settings.brandName}</h1>
+          )}
           <button onClick={() => navigate("/login")} className="text-card">
             <span className="text-2xl">👤</span>
           </button>
