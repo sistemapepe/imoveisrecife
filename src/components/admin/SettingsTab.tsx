@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SiteSettings } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
-import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User } from "lucide-react";
+import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer } from "lucide-react";
 import LogoUpload from "./LogoUpload";
 
 interface SettingsTabProps {
@@ -227,6 +227,31 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
           <div className="flex-1 h-8 rounded-md" style={{ backgroundColor: `hsl(${localSettings.accentColor})` }} />
         </div>
         <p className="text-[10px] text-muted-foreground text-center">Pré-visualização: Primária + Destaque</p>
+      </div>
+
+      {/* Banner Interval */}
+      <div className="bg-card rounded-xl border border-border p-4 space-y-3">
+        <div>
+          <h3 className="font-bold text-sm">⏱️ Banner</h3>
+          <p className="text-xs text-muted-foreground">Tempo de transição entre slides do banner principal</p>
+        </div>
+        <div>
+          <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+            <Timer className="h-4 w-4" /> Intervalo (segundos)
+          </label>
+          <div className="flex items-center gap-3 mt-1">
+            <input
+              type="range"
+              min={2}
+              max={15}
+              step={1}
+              value={localSettings.bannerInterval || 5}
+              onChange={(e) => setLocalSettings((prev) => ({ ...prev, bannerInterval: Number(e.target.value) }))}
+              className="flex-1 accent-primary"
+            />
+            <span className="text-sm font-bold w-8 text-center">{localSettings.bannerInterval || 5}s</span>
+          </div>
+        </div>
       </div>
 
       <button

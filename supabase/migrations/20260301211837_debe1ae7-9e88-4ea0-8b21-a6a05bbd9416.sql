@@ -1,0 +1,1 @@
+ALTER TABLE public.site_settings ADD COLUMN banner_interval integer NOT NULL DEFAULT 5;

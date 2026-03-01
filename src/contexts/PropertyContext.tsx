@@ -48,6 +48,7 @@ export interface SiteSettings {
   emailContact: string;
   primaryColor: string;
   accentColor: string;
+  bannerInterval: number;
 }
 
 interface PropertyContextType {
@@ -81,6 +82,7 @@ const defaultSettings: SiteSettings = {
   emailContact: "",
   primaryColor: "195 85% 45%",
   accentColor: "42 56% 55%",
+  bannerInterval: 5,
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -127,6 +129,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         emailContact: data.email_contact,
         primaryColor: data.primary_color,
         accentColor: data.accent_color,
+        bannerInterval: (data as any).banner_interval ?? 5,
       });
     }
   }, []);
@@ -180,6 +183,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       youtubeUrl: "youtube_url", linkedinUrl: "linkedin_url",
       websiteUrl: "website_url", emailContact: "email_contact",
       primaryColor: "primary_color", accentColor: "accent_color",
+      bannerInterval: "banner_interval",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];

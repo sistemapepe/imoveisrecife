@@ -142,6 +142,7 @@ export type Database = {
       site_settings: {
         Row: {
           accent_color: string
+          banner_interval: number
           brand_name: string
           concierge_cargo: string
           concierge_desc: string
@@ -163,6 +164,7 @@ export type Database = {
         }
         Insert: {
           accent_color?: string
+          banner_interval?: number
           brand_name?: string
           concierge_cargo?: string
           concierge_desc?: string
@@ -184,6 +186,7 @@ export type Database = {
         }
         Update: {
           accent_color?: string
+          banner_interval?: number
           brand_name?: string
           concierge_cargo?: string
           concierge_desc?: string
