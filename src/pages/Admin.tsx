@@ -34,7 +34,7 @@ const emptyProperty: Omit<Property, "id" | "code"> = {
 
 export default function Admin() {
   const navigate = useNavigate();
-  const { user, isAdmin, loading: authLoading, signOut } = useAuth();
+  const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canManageSettings, canManageUsers } = useAuth();
   const { properties, settings, addProperty, updateProperty, deleteProperty, updateSettings } = useProperties();
   const [tab, setTab] = useState<Tab>("properties");
   const [editing, setEditing] = useState<string | null>(null);
@@ -124,14 +124,14 @@ export default function Admin() {
             <button onClick={() => navigate("/")} className="w-10 h-10 flex items-center justify-center">
               <ArrowLeft className="h-6 w-6" />
             </button>
-            <h1 className="text-lg font-bold">Painel Admin</h1>
+            <h1 className="text-lg font-bold">Painel {role === "admin" ? "Admin" : role === "supervisor" ? "Supervisor" : "Corretor"}</h1>
             <button onClick={handleSignOut} className="w-10 h-10 flex items-center justify-center text-destructive">
               <LogOut className="h-5 w-5" />
             </button>
           </div>
-          {!isAdmin && (
-            <div className="px-4 py-2 bg-destructive/10 text-destructive text-xs text-center font-semibold">
-              ⚠️ Você não tem permissão de admin. Operações de escrita serão bloqueadas.
+          {!canManageProperties && (
+            <div className="px-4 py-2 bg-primary/10 text-primary text-xs text-center font-semibold">
+              📋 Modo visualização — você pode consultar os imóveis cadastrados.
             </div>
           )}
           <div className="flex border-b border-border">
@@ -141,7 +141,7 @@ export default function Admin() {
             >
               <LayoutDashboard className="h-4 w-4" /> Imóveis
             </button>
-            {isAdmin && (
+            {canManageUsers && (
               <button
                 onClick={() => { setTab("users"); setEditing(null); setCreating(false); }}
                 className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "users" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
@@ -149,21 +149,25 @@ export default function Admin() {
                 <Users className="h-4 w-4" /> Equipe
               </button>
             )}
-            <button
-              onClick={() => { setTab("settings"); setEditing(null); setCreating(false); }}
-              className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "settings" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-            >
-              <Settings className="h-4 w-4" /> Config
-            </button>
+            {canManageSettings && (
+              <button
+                onClick={() => { setTab("settings"); setEditing(null); setCreating(false); }}
+                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "settings" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
+              >
+                <Settings className="h-4 w-4" /> Config
+              </button>
+            )}
           </div>
         </header>
 
         <main className="p-4">
           {tab === "properties" && !editing && !creating && (
             <div className="space-y-4">
-              <button onClick={startCreate} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl gold-gradient text-accent-foreground font-bold uppercase tracking-wider text-sm">
-                <Plus className="h-5 w-5" /> Novo Imóvel
-              </button>
+              {canManageProperties && (
+                <button onClick={startCreate} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl gold-gradient text-accent-foreground font-bold uppercase tracking-wider text-sm">
+                  <Plus className="h-5 w-5" /> Novo Imóvel
+                </button>
+              )}
               {properties.map((p) => (
                 <div key={p.id} className="bg-card rounded-xl p-4 border border-border flex items-center gap-4">
                   <img src={p.images[0] || "/placeholder.svg"} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0" />
@@ -175,10 +179,12 @@ export default function Admin() {
                     <p className="text-xs text-accent font-semibold">{formatPriceFull(p.price)}</p>
                     <p className="text-xs text-muted-foreground">{p.type} · {p.neighborhood}</p>
                   </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => startEdit(p)} className="p-2 rounded-lg bg-primary/10 text-primary"><Pencil className="h-4 w-4" /></button>
-                    <button onClick={() => setDeleteId(p.id)} className="p-2 rounded-lg bg-destructive/10 text-destructive"><Trash2 className="h-4 w-4" /></button>
-                  </div>
+                  {canManageProperties && (
+                    <div className="flex gap-2">
+                      <button onClick={() => startEdit(p)} className="p-2 rounded-lg bg-primary/10 text-primary"><Pencil className="h-4 w-4" /></button>
+                      <button onClick={() => setDeleteId(p.id)} className="p-2 rounded-lg bg-destructive/10 text-destructive"><Trash2 className="h-4 w-4" /></button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -334,11 +340,11 @@ export default function Admin() {
             </div>
           )}
 
-          {tab === "settings" && (
+          {tab === "settings" && canManageSettings && (
             <SettingsTab settings={settings} updateSettings={updateSettings} />
           )}
 
-          {tab === "users" && isAdmin && (
+          {tab === "users" && canManageUsers && (
             <UsersTab />
           )}
         </main>
