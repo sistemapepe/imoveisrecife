@@ -12,10 +12,11 @@ export default function Index() {
   const { properties, settings, favorites, toggleFavorite } = useProperties();
   const featured = properties.filter((p) => p.featured);
 
-  // Hero carousel state - uses featured properties or fallback
-  const heroSlides = featured.length > 0
-    ? featured.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
-    : [{ image: heroImage, title: settings.heroTitle, id: null }];
+  // Hero carousel - featured first, then all properties, then fallback
+  const bannerProperties = featured.length > 0 ? featured : properties;
+  const heroSlides = bannerProperties.length > 0
+    ? bannerProperties.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
+    : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }];
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
