@@ -35,7 +35,7 @@ const emptyProperty: Omit<Property, "id" | "code"> = {
 
 export default function Admin() {
   const navigate = useNavigate();
-  const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canManageSettings, canManageUsers, canViewContacts } = useAuth();
+  const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts } = useAuth();
   const { properties, settings, addProperty, updateProperty, deleteProperty, updateSettings } = useProperties();
   const [tab, setTab] = useState<Tab>("properties");
   const [editing, setEditing] = useState<string | null>(null);
@@ -188,10 +188,14 @@ export default function Admin() {
                     <p className="text-xs text-accent font-semibold">{formatPriceFull(p.price)}</p>
                     <p className="text-xs text-muted-foreground">{p.type} · {p.neighborhood}</p>
                   </div>
-                  {canManageProperties && (
+                  {(canManageProperties || canDeleteProperties) && (
                     <div className="flex gap-2">
-                      <button onClick={() => startEdit(p)} className="p-2 rounded-lg bg-primary/10 text-primary"><Pencil className="h-4 w-4" /></button>
-                      <button onClick={() => setDeleteId(p.id)} className="p-2 rounded-lg bg-destructive/10 text-destructive"><Trash2 className="h-4 w-4" /></button>
+                      {canManageProperties && (
+                        <button onClick={() => startEdit(p)} className="p-2 rounded-lg bg-primary/10 text-primary"><Pencil className="h-4 w-4" /></button>
+                      )}
+                      {canDeleteProperties && (
+                        <button onClick={() => setDeleteId(p.id)} className="p-2 rounded-lg bg-destructive/10 text-destructive"><Trash2 className="h-4 w-4" /></button>
+                      )}
                     </div>
                   )}
                 </div>

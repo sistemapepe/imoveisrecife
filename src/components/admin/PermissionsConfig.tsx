@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 
 const PERMISSIONS = [
   { key: "view_properties", label: "Visualizar Imóveis" },
-  { key: "manage_properties", label: "Criar/Editar/Excluir Imóveis" },
+  { key: "manage_properties", label: "Criar/Editar Imóveis" },
+  { key: "delete_properties", label: "Excluir Imóveis" },
   { key: "view_contacts", label: "Visualizar Contatos" },
   { key: "manage_settings", label: "Configurações do Site" },
   { key: "manage_users", label: "Gestão de Equipe" },

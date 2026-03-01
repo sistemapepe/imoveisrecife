@@ -4,7 +4,7 @@ import type { User } from "@supabase/supabase-js";
 
 type AppRole = "admin" | "supervisor" | "corretor" | "user";
 
-type PermissionKey = "view_properties" | "manage_properties" | "view_contacts" | "manage_settings" | "manage_users";
+type PermissionKey = "view_properties" | "manage_properties" | "delete_properties" | "view_contacts" | "manage_settings" | "manage_users";
 
 interface AuthContextType {
   user: User | null;
@@ -15,6 +15,7 @@ interface AuthContextType {
   signUp: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   canManageProperties: boolean;
+  canDeleteProperties: boolean;
   canViewProperties: boolean;
   canManageSettings: boolean;
   canManageUsers: boolean;
@@ -29,6 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [permissions, setPermissions] = useState<Record<PermissionKey, boolean>>({
     view_properties: false,
     manage_properties: false,
+    delete_properties: false,
     view_contacts: false,
     manage_settings: false,
     manage_users: false,
@@ -37,8 +39,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isAdmin = role === "admin";
 
-  // Admin always has all permissions; others use DB-driven permissions
   const canManageProperties = isAdmin || permissions.manage_properties;
+  const canDeleteProperties = isAdmin || permissions.delete_properties;
   const canViewProperties = isAdmin || permissions.view_properties;
   const canManageSettings = isAdmin || permissions.manage_settings;
   const canManageUsers = isAdmin || permissions.manage_users;
@@ -130,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, role, loading, signIn, signUp, signOut, canManageProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts }}>
+    <AuthContext.Provider value={{ user, isAdmin, role, loading, signIn, signUp, signOut, canManageProperties, canDeleteProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts }}>
       {children}
     </AuthContext.Provider>
   );
