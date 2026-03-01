@@ -154,6 +154,7 @@ export type Database = {
           id: string
           instagram_url: string
           linkedin_url: string
+          logo_url: string
           primary_color: string
           updated_at: string
           website_url: string
@@ -174,6 +175,7 @@ export type Database = {
           id?: string
           instagram_url?: string
           linkedin_url?: string
+          logo_url?: string
           primary_color?: string
           updated_at?: string
           website_url?: string
@@ -194,6 +196,7 @@ export type Database = {
           id?: string
           instagram_url?: string
           linkedin_url?: string
+          logo_url?: string
           primary_color?: string
           updated_at?: string
           website_url?: string

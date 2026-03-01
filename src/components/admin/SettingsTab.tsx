@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { SiteSettings } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
 import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User } from "lucide-react";
+import LogoUpload from "./LogoUpload";
 
 interface SettingsTabProps {
   settings: SiteSettings;
@@ -100,6 +101,13 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
             <h3 className="font-bold text-sm">{section.title}</h3>
             <p className="text-xs text-muted-foreground">{section.description}</p>
           </div>
+
+          {section.title.includes("Marca") && (
+            <LogoUpload
+              logoUrl={localSettings.logoUrl}
+              onChange={(url) => setLocalSettings((prev) => ({ ...prev, logoUrl: url }))}
+            />
+          )}
 
           {section.fields.map(({ label, key, icon, type, placeholder, multiline }) => (
             <div key={key}>

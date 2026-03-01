@@ -32,7 +32,11 @@ export default function Contact() {
       <div className="relative flex min-h-screen w-full flex-col pb-32 bg-background">
         <nav className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 glass-header border-b border-border">
           <button onClick={() => navigate(-1)}><ArrowLeft className="h-6 w-6" /></button>
-          <h1 className="font-serif text-lg font-bold tracking-widest text-accent uppercase">{settings.brandName}</h1>
+          {settings.logoUrl ? (
+            <img src={settings.logoUrl} alt={settings.brandName} className="h-8 max-w-[140px] object-contain" />
+          ) : (
+            <h1 className="font-serif text-lg font-bold tracking-widest text-accent uppercase">{settings.brandName}</h1>
+          )}
           <div className="w-8" />
         </nav>
 

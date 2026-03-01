@@ -38,6 +38,7 @@ export interface SiteSettings {
   conciergeDesc: string;
   whatsappNumber: string;
   brandName: string;
+  logoUrl: string;
   footerText: string;
   instagramUrl: string;
   facebookUrl: string;
@@ -70,6 +71,7 @@ const defaultSettings: SiteSettings = {
   conciergeDesc: "Especialista em propriedades exclusivas. Estou pronto para encontrar o seu próximo investimento.",
   whatsappNumber: "5511999999999",
   brandName: "JHR LUXURY",
+  logoUrl: "",
   footerText: "© 2024 JHR Imóveis de Luxo. Todos os direitos reservados.",
   instagramUrl: "",
   facebookUrl: "",
@@ -115,6 +117,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         conciergeDesc: data.concierge_desc,
         whatsappNumber: data.whatsapp_number,
         brandName: data.brand_name,
+        logoUrl: data.logo_url,
         footerText: data.footer_text,
         instagramUrl: data.instagram_url,
         facebookUrl: data.facebook_url,
@@ -172,7 +175,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       heroTitle: "hero_title", heroSubtitle: "hero_subtitle",
       conciergeNome: "concierge_nome", conciergeCargo: "concierge_cargo",
       conciergeDesc: "concierge_desc", whatsappNumber: "whatsapp_number",
-      brandName: "brand_name", footerText: "footer_text",
+      brandName: "brand_name", logoUrl: "logo_url", footerText: "footer_text",
       instagramUrl: "instagram_url", facebookUrl: "facebook_url",
       youtubeUrl: "youtube_url", linkedinUrl: "linkedin_url",
       websiteUrl: "website_url", emailContact: "email_contact",
