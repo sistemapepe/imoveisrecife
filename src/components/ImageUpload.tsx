@@ -10,27 +10,68 @@ interface ImageUploadProps {
 
 function compressImage(file: File, maxWidth = 1200, quality = 0.8): Promise<Blob> {
   return new Promise((resolve, reject) => {
+    // Timeout safety - if compression takes too long, use original file
+    const timeout = setTimeout(() => {
+      console.warn("Image compression timed out, using original file");
+      resolve(file);
+    }, 10000);
+
     const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
     img.onload = () => {
-      const canvas = document.createElement("canvas");
-      let { width, height } = img;
-      if (width > maxWidth) {
-        height = (height * maxWidth) / width;
-        width = maxWidth;
+      try {
+        const canvas = document.createElement("canvas");
+        let { width, height } = img;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          clearTimeout(timeout);
+          URL.revokeObjectURL(objectUrl);
+          resolve(file); // fallback to original
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Try WebP first, fallback to JPEG
+        const tryFormat = (format: string, q: number) => {
+          canvas.toBlob(
+            (blob) => {
+              clearTimeout(timeout);
+              URL.revokeObjectURL(objectUrl);
+              resolve(blob || file);
+            },
+            format,
+            q
+          );
+        };
+
+        if (typeof canvas.toBlob === "function") {
+          tryFormat("image/webp", quality);
+        } else {
+          clearTimeout(timeout);
+          URL.revokeObjectURL(objectUrl);
+          resolve(file);
+        }
+      } catch {
+        clearTimeout(timeout);
+        URL.revokeObjectURL(objectUrl);
+        resolve(file);
       }
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return reject(new Error("Canvas not supported"));
-      ctx.drawImage(img, 0, 0, width, height);
-      canvas.toBlob(
-        (blob) => (blob ? resolve(blob) : reject(new Error("Compression failed"))),
-        "image/webp",
-        quality
-      );
     };
-    img.onerror = reject;
-    img.src = URL.createObjectURL(file);
+
+    img.onerror = () => {
+      clearTimeout(timeout);
+      URL.revokeObjectURL(objectUrl);
+      resolve(file); // fallback to original instead of rejecting
+    };
+
+    img.src = objectUrl;
   });
 }
 
@@ -55,12 +96,15 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
 
       try {
         const compressed = await compressImage(file);
-        const fileName = `${crypto.randomUUID()}.webp`;
+        const isOriginal = compressed === file;
+        const ext = isOriginal ? (file.name.split(".").pop() || "jpg") : "webp";
+        const contentType = isOriginal ? file.type || "image/jpeg" : "image/webp";
+        const fileName = `${crypto.randomUUID()}.${ext}`;
         const filePath = `properties/${fileName}`;
 
         const { error } = await supabase.storage
           .from("property-images")
-          .upload(filePath, compressed, { contentType: "image/webp", upsert: true });
+          .upload(filePath, compressed, { contentType, upsert: true });
 
         if (error) {
           toast.error(`Erro ao enviar ${file.name}: ${error.message}`);
