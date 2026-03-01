@@ -19,11 +19,18 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         <img alt={property.title} className="w-full h-full object-cover" src={property.images[0]} />
-        {property.exclusive && (
-          <div className="absolute top-4 left-4 gold-gradient px-3 py-1 rounded-sm shadow-lg">
-            <span className="text-[10px] font-bold text-accent-foreground uppercase tracking-[0.2em]">Exclusive</span>
-          </div>
-        )}
+        <div className="absolute top-4 left-4 flex gap-2">
+          {property.category && (
+            <div className="bg-primary px-3 py-1 rounded-sm shadow-lg">
+              <span className="text-[10px] font-bold text-primary-foreground uppercase tracking-[0.15em]">{property.category}</span>
+            </div>
+          )}
+          {property.exclusive && (
+            <div className="gold-gradient px-3 py-1 rounded-sm shadow-lg">
+              <span className="text-[10px] font-bold text-accent-foreground uppercase tracking-[0.2em]">Exclusivo</span>
+            </div>
+          )}
+        </div>
         <button
           className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-foreground/20 backdrop-blur-md rounded-full border border-card/30"
           onClick={(e) => { e.stopPropagation(); toggleFavorite(property.id); }}
