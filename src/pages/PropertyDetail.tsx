@@ -243,7 +243,7 @@ export default function PropertyDetail() {
         </motion.div>
 
         {/* Mobile bottom CTA */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-card/80 backdrop-blur-xl border-t border-border z-50 max-w-screen-lg mx-auto md:hidden">
+        <div className="fixed bottom-20 left-0 right-0 p-4 bg-card/80 backdrop-blur-xl border-t border-border z-50 max-w-screen-lg mx-auto md:hidden">
           <div className="flex gap-3">
             <button onClick={handleWhatsApp} className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-whatsapp text-card shadow-lg active:scale-95 transition-transform">
               <MessageCircle className="h-6 w-6" />
