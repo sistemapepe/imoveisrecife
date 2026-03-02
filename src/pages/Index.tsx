@@ -193,12 +193,14 @@ export default function Index() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
-                  className="relative w-full max-w-md mb-5"
+                  className="relative w-full max-w-md mb-6"
                 >
-                  <div className="relative flex items-center">
-                    <Search className="absolute left-4 h-5 w-5 text-muted-foreground z-10" />
+                  <div className="relative flex items-center group">
+                    <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-accent/40 via-primary/20 to-accent/40 opacity-60 blur-sm group-focus-within:opacity-100 transition-opacity duration-500" />
+                    <Search className="absolute left-5 h-5 w-5 text-accent/80 z-10" />
                     <input
-                      className="w-full h-12 pl-11 pr-4 bg-card/90 backdrop-blur-xl rounded-full text-sm font-medium text-foreground shadow-lg border border-card/30 focus:ring-2 focus:ring-accent/40 focus:outline-none transition-all placeholder:text-muted-foreground"
+                      className="relative w-full h-14 pl-13 pr-5 bg-foreground/20 backdrop-blur-2xl rounded-full text-sm font-medium text-card shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)] border border-card/15 focus:border-accent/40 focus:shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_20px_hsl(var(--accent)/0.15)] focus:outline-none transition-all duration-300 placeholder:text-card/50"
+                      style={{ paddingLeft: '3rem' }}
                       value={quickSearch}
                       onChange={(e) => { setQuickSearch(e.target.value); setShowQuickSuggestions(true); }}
                       onFocus={() => setShowQuickSuggestions(true)}
@@ -211,7 +213,7 @@ export default function Index() {
                     />
                   </div>
                   {showQuickSuggestions && quickSearch.trim() && quickSuggestions.length > 0 && (
-                    <div className="absolute left-0 right-0 top-full mt-2 max-h-52 overflow-y-auto rounded-xl bg-card border border-border shadow-2xl z-50">
+                    <div className="absolute left-0 right-0 top-full mt-3 max-h-56 overflow-y-auto rounded-2xl bg-foreground/25 backdrop-blur-2xl border border-card/15 shadow-[0_16px_48px_rgba(0,0,0,0.5)] z-50">
                       {quickSuggestions.map((s, i) => (
                         <button
                           key={`${s.city}-${s.neighborhood || ""}-${i}`}
@@ -219,17 +221,17 @@ export default function Index() {
                             const loc = s.neighborhood ? `${s.neighborhood}, ${s.city}` : s.city;
                             navigate(`/busca?location=${encodeURIComponent(loc)}`);
                           }}
-                          className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-secondary/60 transition-colors border-b border-border/50 last:border-0"
+                          className="flex items-center gap-3 w-full px-5 py-3.5 text-left hover:bg-card/10 transition-colors duration-200 border-b border-card/5 last:border-0"
                         >
                           <MapPin className="h-4 w-4 shrink-0 text-accent" />
                           <div className="min-w-0">
                             {s.neighborhood ? (
                               <>
-                                <span className="text-sm font-semibold text-foreground">{s.neighborhood}</span>
-                                <span className="text-xs text-muted-foreground ml-1.5">{s.city}, PE</span>
+                                <span className="text-sm font-semibold text-card">{s.neighborhood}</span>
+                                <span className="text-xs text-card/50 ml-1.5">{s.city}, PE</span>
                               </>
                             ) : (
-                              <span className="text-sm font-semibold text-foreground">{s.city}, PE</span>
+                              <span className="text-sm font-semibold text-card">{s.city}, PE</span>
                             )}
                           </div>
                         </button>
