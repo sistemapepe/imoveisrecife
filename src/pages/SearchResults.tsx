@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, SlidersHorizontal, X } from "lucide-react";
+import { useState, useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { ArrowLeft, SlidersHorizontal, X, MapPin } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
 import PageTransition from "@/components/PageTransition";
@@ -9,16 +9,60 @@ const propertyTypes = ["Casa", "Apartamento", "Cobertura", "Terreno", "Comercial
 
 export default function SearchResults() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { properties } = useProperties();
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+
+  const locationFilter = searchParams.get("location") || "";
+  const typesFilter = searchParams.get("types")?.split(",").filter(Boolean) || [];
+  const bedroomsFilter = searchParams.get("bedrooms") || "";
+  const parkingFilter = searchParams.get("parking") || "";
+
+  const [activeFilters, setActiveFilters] = useState<string[]>(typesFilter);
 
   const toggleFilter = (f: string) => {
     setActiveFilters((prev) => prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]);
   };
 
-  const filtered = activeFilters.length > 0
-    ? properties.filter((p) => activeFilters.includes(p.type))
-    : properties;
+  const filtered = useMemo(() => {
+    let result = properties;
+
+    // Filter by type
+    if (activeFilters.length > 0) {
+      result = result.filter((p) => activeFilters.includes(p.type));
+    }
+
+    // Filter by location (city or neighborhood)
+    if (locationFilter) {
+      const loc = locationFilter.toLowerCase();
+      result = result.filter((p) =>
+        p.city.toLowerCase().includes(loc) ||
+        p.neighborhood.toLowerCase().includes(loc) ||
+        p.address.toLowerCase().includes(loc)
+      );
+    }
+
+    // Filter by bedrooms
+    if (bedroomsFilter) {
+      const num = parseInt(bedroomsFilter);
+      if (!isNaN(num)) {
+        if (bedroomsFilter.includes("+")) {
+          result = result.filter((p) => p.bedrooms >= num);
+        } else {
+          result = result.filter((p) => p.bedrooms >= num);
+        }
+      }
+    }
+
+    // Filter by parking
+    if (parkingFilter) {
+      const num = parseInt(parkingFilter);
+      if (!isNaN(num)) {
+        result = result.filter((p) => p.parking >= num);
+      }
+    }
+
+    return result;
+  }, [properties, activeFilters, locationFilter, bedroomsFilter, parkingFilter]);
 
   return (
     <PageTransition>
@@ -36,6 +80,18 @@ export default function SearchResults() {
               <SlidersHorizontal className="h-6 w-6 text-foreground" />
             </button>
           </div>
+
+          {/* Active location badge */}
+          {locationFilter && (
+            <div className="px-4 pb-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                <MapPin className="h-3 w-3" />
+                {locationFilter}
+                <button onClick={() => navigate("/busca")} className="ml-1 hover:text-primary/70"><X className="h-3 w-3" /></button>
+              </span>
+            </div>
+          )}
+
           <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-3 border-t border-border/50">
             {propertyTypes.map((type) => {
               const active = activeFilters.includes(type);
@@ -56,7 +112,10 @@ export default function SearchResults() {
         </header>
         <main className="p-4 space-y-6">
           {filtered.length === 0 && (
-            <p className="text-center py-20 text-muted-foreground">Nenhum imóvel cadastrado. Adicione pelo painel admin.</p>
+            <div className="text-center py-20">
+              <p className="text-muted-foreground mb-2">Nenhum imóvel encontrado para esses filtros.</p>
+              <button onClick={() => navigate("/filtros")} className="text-primary font-semibold text-sm">Ajustar filtros</button>
+            </div>
           )}
           {filtered.map((p, i) => (
             <PropertyCard key={p.id} property={p} index={i} />

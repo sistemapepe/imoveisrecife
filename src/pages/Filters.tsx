@@ -151,7 +151,17 @@ export default function Filters() {
         </main>
 
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-card/90 backdrop-blur-lg border-t border-border z-40">
-          <button onClick={() => navigate("/busca")} className="w-full h-14 gold-gradient rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
+          <button
+            onClick={() => {
+              const params = new URLSearchParams();
+              if (search) params.set("location", search);
+              if (selectedTypes.length > 0) params.set("types", selectedTypes.join(","));
+              if (selectedBedrooms) params.set("bedrooms", selectedBedrooms);
+              if (selectedParking) params.set("parking", selectedParking);
+              navigate(`/busca?${params.toString()}`);
+            }}
+            className="w-full h-14 gold-gradient rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+          >
             <span className="text-accent-foreground font-extrabold tracking-wide uppercase">Ver Resultados</span>
             <ArrowRight className="h-5 w-5 text-accent-foreground" />
           </button>
