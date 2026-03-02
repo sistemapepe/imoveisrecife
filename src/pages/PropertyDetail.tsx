@@ -16,7 +16,41 @@ export default function PropertyDetail() {
   const touchStartX = useRef(0);
   const touchDelta = useRef(0);
 
-  if (!property) return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Imóvel não encontrado</div>;
+  if (!property) return (
+    <PageTransition>
+      <div className="min-h-screen bg-background pb-32">
+        {/* Skeleton top bar */}
+        <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 max-w-screen-lg mx-auto">
+          <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
+          <div className="flex gap-2">
+            <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
+            <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
+          </div>
+        </div>
+        {/* Skeleton image */}
+        <div className="w-full aspect-[4/5] md:aspect-[16/9] lg:aspect-[21/9] bg-muted animate-pulse" />
+        {/* Skeleton content */}
+        <div className="relative -mt-6 rounded-t-3xl bg-background p-6 max-w-screen-lg mx-auto space-y-4">
+          <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-muted md:hidden" />
+          <div className="h-4 w-32 rounded bg-muted animate-pulse" />
+          <div className="h-8 w-3/4 rounded bg-muted animate-pulse" />
+          <div className="h-5 w-1/2 rounded bg-muted animate-pulse" />
+          <div className="h-10 w-48 rounded bg-muted animate-pulse" />
+          <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mt-6">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="h-20 rounded-xl bg-muted animate-pulse" />
+            ))}
+          </div>
+          <div className="space-y-2 mt-6">
+            <div className="h-5 w-28 rounded bg-muted animate-pulse" />
+            <div className="h-4 w-full rounded bg-muted animate-pulse" />
+            <div className="h-4 w-full rounded bg-muted animate-pulse" />
+            <div className="h-4 w-2/3 rounded bg-muted animate-pulse" />
+          </div>
+        </div>
+      </div>
+    </PageTransition>
+  );
 
   const isFav = favorites.includes(property.id);
   const totalImages = property.images.length;
