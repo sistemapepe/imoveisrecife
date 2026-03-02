@@ -1,4 +1,4 @@
-import { Heart, Ruler, BedDouble, Bath, Car } from "lucide-react";
+import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Property, formatPriceFull } from "@/contexts/PropertyContext";
@@ -41,10 +41,14 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
       <div className="p-5">
         <h2 className="font-serif text-xl text-foreground">{property.title}</h2>
         <p className="font-serif text-2xl text-accent mb-4 italic">{formatPriceFull(property.price)}</p>
-        <div className="flex items-center justify-between border-t border-border pt-4">
+        <div className="flex items-center flex-wrap gap-3 border-t border-border pt-4">
           <div className="flex items-center gap-1.5">
             <Ruler className="h-4 w-4 text-accent" />
             <span className="text-xs font-semibold text-muted-foreground">{property.area}m²</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <DoorOpen className="h-4 w-4 text-accent" />
+            <span className="text-xs font-semibold text-muted-foreground">{property.bedrooms} Quartos</span>
           </div>
           <div className="flex items-center gap-1.5">
             <BedDouble className="h-4 w-4 text-accent" />
