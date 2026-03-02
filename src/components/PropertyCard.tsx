@@ -41,26 +41,26 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
       <div className="p-5">
         <h2 className="font-serif text-xl text-foreground">{property.title}</h2>
         <p className="font-serif text-2xl text-accent mb-4 italic">{formatPriceFull(property.price)}</p>
-        <div className="flex items-center flex-wrap gap-3 border-t border-border pt-4">
-          <div className="flex items-center gap-1.5">
-            <Ruler className="h-4 w-4 text-accent" />
-            <span className="text-xs font-semibold text-muted-foreground">{property.area}m²</span>
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 border-t border-border pt-4">
+          <div className="flex items-center gap-1 min-w-0">
+            <Ruler className="h-3.5 w-3.5 shrink-0 text-accent" />
+            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.area}m²</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <DoorOpen className="h-4 w-4 text-accent" />
-            <span className="text-xs font-semibold text-muted-foreground">{property.bedrooms} Quartos</span>
+          <div className="flex items-center gap-1 min-w-0">
+            <DoorOpen className="h-3.5 w-3.5 shrink-0 text-accent" />
+            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.bedrooms} Qts</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <BedDouble className="h-4 w-4 text-accent" />
-            <span className="text-xs font-semibold text-muted-foreground">{property.suites} Suítes</span>
+          <div className="flex items-center gap-1 min-w-0">
+            <BedDouble className="h-3.5 w-3.5 shrink-0 text-accent" />
+            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.suites} Suítes</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Bath className="h-4 w-4 text-accent" />
-            <span className="text-xs font-semibold text-muted-foreground">{property.bathrooms} Banh.</span>
+          <div className="flex items-center gap-1 min-w-0">
+            <Bath className="h-3.5 w-3.5 shrink-0 text-accent" />
+            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.bathrooms} Banh.</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Car className="h-4 w-4 text-accent" />
-            <span className="text-xs font-semibold text-muted-foreground">{property.parking} Vagas</span>
+          <div className="flex items-center gap-1 min-w-0">
+            <Car className="h-3.5 w-3.5 shrink-0 text-accent" />
+            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.parking} Vagas</span>
           </div>
         </div>
       </div>
