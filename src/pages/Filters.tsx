@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { X, Search, ChevronRight, ArrowRight } from "lucide-react";
+import { X, Search, ChevronRight, ArrowRight, MapPin } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
+import { searchLocations } from "@/data/pernambuco-locations";
 
 const types = ["Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"];
 const bedroomOptions = ["1", "2", "3", "4", "5+"];
@@ -12,7 +13,35 @@ export default function Filters() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>(["Casa"]);
   const [selectedBedrooms, setSelectedBedrooms] = useState("3");
   const [selectedParking, setSelectedParking] = useState("4+");
-  const [search, setSearch] = useState("São Paulo, SP");
+  const [search, setSearch] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState<{ city: string; neighborhood?: string }[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setSuggestions(searchLocations(search));
+  }, [search]);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(e.target as Node) &&
+        inputRef.current &&
+        !inputRef.current.contains(e.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const selectLocation = (city: string, neighborhood?: string) => {
+    setSearch(neighborhood ? `${neighborhood}, ${city}` : city);
+    setShowSuggestions(false);
+  };
 
   const toggleType = (t: string) => {
     setSelectedTypes((prev) => prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]);
@@ -27,18 +56,46 @@ export default function Filters() {
               <X className="h-6 w-6" />
             </button>
             <h1 className="text-lg font-bold tracking-tight">Filtros Avançados</h1>
-            <button className="text-primary text-sm font-semibold">Limpar</button>
+            <button className="text-primary text-sm font-semibold" onClick={() => { setSearch(""); setSelectedTypes([]); setSelectedBedrooms(""); setSelectedParking(""); }}>Limpar</button>
           </div>
-          <div className="px-4 pb-4">
+          <div className="px-4 pb-4 relative">
             <div className="relative flex items-center">
               <Search className="absolute left-3 h-5 w-5 text-muted-foreground" />
               <input
+                ref={inputRef}
                 className="w-full h-12 pl-10 pr-4 bg-secondary border-none rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => { setSearch(e.target.value); setShowSuggestions(true); }}
+                onFocus={() => setShowSuggestions(true)}
                 placeholder="Cidade, Bairro ou Condomínio"
               />
             </div>
+            {showSuggestions && suggestions.length > 0 && (
+              <div
+                ref={suggestionsRef}
+                className="absolute left-4 right-4 top-full mt-1 max-h-64 overflow-y-auto rounded-xl bg-card border border-border shadow-xl z-50"
+              >
+                {suggestions.map((s, i) => (
+                  <button
+                    key={`${s.city}-${s.neighborhood || ""}-${i}`}
+                    onClick={() => selectLocation(s.city, s.neighborhood)}
+                    className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-secondary/60 transition-colors border-b border-border/50 last:border-0"
+                  >
+                    <MapPin className="h-4 w-4 shrink-0 text-accent" />
+                    <div className="min-w-0">
+                      {s.neighborhood ? (
+                        <>
+                          <span className="text-sm font-semibold text-foreground">{s.neighborhood}</span>
+                          <span className="text-xs text-muted-foreground ml-1.5">{s.city}, PE</span>
+                        </>
+                      ) : (
+                        <span className="text-sm font-semibold text-foreground">{s.city}, PE</span>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </header>
 
