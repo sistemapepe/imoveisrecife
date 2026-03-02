@@ -243,7 +243,7 @@ export default function PropertyDetail() {
         </motion.div>
 
         {/* Mobile bottom CTA */}
-        <div className="fixed bottom-20 left-0 right-0 p-4 bg-card/80 backdrop-blur-xl border-t border-border z-50 max-w-screen-lg mx-auto md:hidden">
+        <div className="fixed bottom-20 left-0 right-0 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-card/80 backdrop-blur-xl border-t border-border z-50 max-w-screen-lg mx-auto md:hidden">
           <div className="flex gap-3">
             <button onClick={handleShare} className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-secondary text-foreground shadow-lg active:scale-95 transition-transform border border-border gap-0.5">
               <Share2 className="h-5 w-5" />
