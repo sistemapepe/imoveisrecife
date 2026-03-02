@@ -14,11 +14,12 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.08 }}
-      className="bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer"
+      className="group bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer transition-shadow duration-300 hover:shadow-2xl"
+      whileHover={{ y: -4 }}
       onClick={() => navigate(`/imovel/${property.id}`)}
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
-        <img alt={property.title} className="w-full h-full object-cover" src={property.images[0]} />
+        <img alt={property.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={property.images[0]} />
         <div className="absolute top-4 left-4 flex gap-2">
           {property.category && (
             <div className="bg-primary px-3 py-1 rounded-sm shadow-lg">
