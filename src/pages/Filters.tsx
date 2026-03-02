@@ -150,7 +150,7 @@ export default function Filters() {
           </section>
         </main>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-card/90 backdrop-blur-lg border-t border-border z-40">
+        <div className="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-card/90 backdrop-blur-lg border-t border-border z-50 max-w-md mx-auto">
           <button
             onClick={() => {
               const params = new URLSearchParams();
@@ -165,7 +165,6 @@ export default function Filters() {
             <span className="text-accent-foreground font-extrabold tracking-wide uppercase">Ver Resultados</span>
             <ArrowRight className="h-5 w-5 text-accent-foreground" />
           </button>
-          <div className="h-4" />
         </div>
       </div>
     </PageTransition>
