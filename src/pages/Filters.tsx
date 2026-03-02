@@ -150,7 +150,7 @@ export default function Filters() {
           </section>
         </main>
 
-        <div className="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-card/90 backdrop-blur-lg border-t border-border z-50 max-w-md mx-auto">
+        <div className="fixed bottom-20 left-0 right-0 p-4 bg-card/90 backdrop-blur-lg border-t border-border z-50 max-w-md mx-auto">
           <button
             onClick={() => {
               const params = new URLSearchParams();
