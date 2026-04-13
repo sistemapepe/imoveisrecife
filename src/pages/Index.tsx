@@ -317,6 +317,35 @@ export default function Index() {
                 )}
               </div>
 
+              {/* CTA Banner with first property cover */}
+              {properties.length > 0 && (
+                <div className="px-6 py-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="relative h-56 md:h-64 rounded-2xl overflow-hidden cursor-pointer group"
+                    onClick={() => navigate(`/imovel/${properties[0].id}`)}
+                  >
+                    <img
+                      src={properties[0].images[0]}
+                      alt={properties[0].title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/50 to-transparent" />
+                    <div className="relative z-10 flex flex-col justify-center h-full px-8 max-w-sm">
+                      <span className="text-accent text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Em destaque</span>
+                      <h3 className="font-serif text-2xl md:text-3xl text-card leading-tight mb-2">{properties[0].title}</h3>
+                      <p className="text-card/70 text-sm mb-4">{properties[0].neighborhood} · {properties[0].city}</p>
+                      <span className="inline-flex items-center gap-2 text-accent font-bold text-sm uppercase tracking-wider group-hover:gap-3 transition-all">
+                        Saiba mais <ArrowRight className="h-4 w-4" />
+                      </span>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+
               {/* Dynamic Collections */}
               <div className="px-6 py-6">
                 <h4 className="text-card font-serif text-lg mb-4">Coleções</h4>
