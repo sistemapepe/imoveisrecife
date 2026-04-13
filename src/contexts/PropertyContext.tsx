@@ -136,6 +136,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         accentColor: data.accent_color,
         bannerInterval: (data as any).banner_interval ?? 5,
         whatsappMessage: (data as any).whatsapp_message ?? defaultSettings.whatsappMessage,
+        availableAmenities: (data as any).available_amenities ?? defaultSettings.availableAmenities,
       });
     }
   }, []);
@@ -191,6 +192,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       primaryColor: "primary_color", accentColor: "accent_color",
       bannerInterval: "banner_interval",
       whatsappMessage: "whatsapp_message",
+      availableAmenities: "available_amenities",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
