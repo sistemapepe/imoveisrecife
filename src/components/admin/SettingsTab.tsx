@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SiteSettings } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
-import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer } from "lucide-react";
+import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag } from "lucide-react";
 import LogoUpload from "./LogoUpload";
 
 interface SettingsTabProps {
@@ -228,6 +228,76 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
           <div className="flex-1 h-8 rounded-md" style={{ backgroundColor: `hsl(${localSettings.accentColor})` }} />
         </div>
         <p className="text-[10px] text-muted-foreground text-center">Pré-visualização: Primária + Destaque</p>
+      </div>
+
+      {/* Amenities Management */}
+      <div className="bg-card rounded-xl border border-border p-4 space-y-3">
+        <div>
+          <h3 className="font-bold text-sm">🏷️ Amenidades</h3>
+          <p className="text-xs text-muted-foreground">Gerencie as amenidades disponíveis para os imóveis</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {(localSettings.availableAmenities || []).map((amenity) => (
+            <span
+              key={amenity}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20"
+            >
+              <Tag className="h-3 w-3" />
+              {amenity}
+              <button
+                type="button"
+                onClick={() =>
+                  setLocalSettings((prev) => ({
+                    ...prev,
+                    availableAmenities: prev.availableAmenities.filter((a) => a !== amenity),
+                  }))
+                }
+                className="ml-0.5 hover:text-destructive transition-colors"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            placeholder="Nova amenidade..."
+            className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                const val = (e.target as HTMLInputElement).value.trim();
+                if (val && !(localSettings.availableAmenities || []).includes(val)) {
+                  setLocalSettings((prev) => ({
+                    ...prev,
+                    availableAmenities: [...(prev.availableAmenities || []), val],
+                  }));
+                  (e.target as HTMLInputElement).value = "";
+                }
+              }
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              const input = document.querySelector<HTMLInputElement>('input[placeholder="Nova amenidade..."]');
+              if (input) {
+                const val = input.value.trim();
+                if (val && !(localSettings.availableAmenities || []).includes(val)) {
+                  setLocalSettings((prev) => ({
+                    ...prev,
+                    availableAmenities: [...(prev.availableAmenities || []), val],
+                  }));
+                  input.value = "";
+                }
+              }
+            }}
+            className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold flex items-center gap-1"
+          >
+            <Plus className="h-4 w-4" /> Adicionar
+          </button>
+        </div>
       </div>
 
       {/* Banner Interval */}

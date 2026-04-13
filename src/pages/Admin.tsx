@@ -339,7 +339,7 @@ export default function Admin() {
               <div>
                 <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Amenidades</label>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {["Piscina", "Churrasqueira", "Academia", "Sauna", "Jardim", "Elevador", "Varanda Gourmet", "Playground", "Salão de Festas", "Segurança 24h", "Quadra Esportiva", "Spa", "Home Cinema", "Adega", "Lavabo"].map((amenity) => {
+                  {settings.availableAmenities.map((amenity) => {
                     const selected = form.amenities.includes(amenity);
                     return (
                       <button
