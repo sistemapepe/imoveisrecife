@@ -51,6 +51,7 @@ export interface SiteSettings {
   accentColor: string;
   bannerInterval: number;
   whatsappMessage: string;
+  availableAmenities: string[];
 }
 
 interface PropertyContextType {
@@ -86,6 +87,7 @@ const defaultSettings: SiteSettings = {
   accentColor: "42 56% 55%",
   bannerInterval: 5,
   whatsappMessage: "Olá! Gostaria de mais informações sobre os imóveis da JHR.",
+  availableAmenities: ["Piscina", "Churrasqueira", "Academia", "Sauna", "Jardim", "Elevador", "Varanda Gourmet", "Playground", "Salão de Festas", "Segurança 24h", "Quadra Esportiva", "Spa", "Home Cinema", "Adega", "Lavabo"],
 };
 
 const localImages = [property1, property2, property3, property4];
