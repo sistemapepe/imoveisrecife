@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import PageTransition from "@/components/PageTransition";
+import SEOHead from "@/components/SEOHead";
 
 export default function Login() {
   const navigate = useNavigate();
