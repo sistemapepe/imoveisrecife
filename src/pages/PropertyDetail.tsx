@@ -4,6 +4,7 @@ import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calenda
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
+import SEOHead from "@/components/SEOHead";
 import InteractiveMap from "@/components/InteractiveMap";
 import { toast } from "sonner";
 

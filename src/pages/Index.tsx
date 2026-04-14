@@ -64,6 +64,7 @@ export default function Index() {
 
   return (
     <PageTransition>
+      <SEOHead title={settings.heroTitle} description={`${settings.brandName} — Imóveis de luxo em Recife e região. Encontre casas, apartamentos e coberturas exclusivas.`} />
       <AnimatePresence mode="wait">
         {loading ? (
           <motion.div
