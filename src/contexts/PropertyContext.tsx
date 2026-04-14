@@ -8,6 +8,8 @@ import property2 from "@/assets/property-2.jpg";
 import property3 from "@/assets/property-3.jpg";
 import property4 from "@/assets/property-4.jpg";
 
+export type PropertyStatus = "disponivel" | "reservado" | "vendido";
+
 export interface Property {
   id: string;
   code: string;
@@ -28,6 +30,7 @@ export interface Property {
   exclusive: boolean;
   featured: boolean;
   category: string;
+  status: PropertyStatus;
 }
 
 export interface SiteSettings {
