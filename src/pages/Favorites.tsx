@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
 import PageTransition from "@/components/PageTransition";
+import SEOHead from "@/components/SEOHead";
 
 export default function Favorites() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function Favorites() {
 
   return (
     <PageTransition>
+      <SEOHead title="Favoritos" description="Seus imóveis favoritos salvos para consulta rápida." />
       <div className="min-h-screen bg-background pb-24">
         <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">

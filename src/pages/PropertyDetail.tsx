@@ -4,6 +4,7 @@ import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calenda
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
+import SEOHead from "@/components/SEOHead";
 import InteractiveMap from "@/components/InteractiveMap";
 import { toast } from "sonner";
 
@@ -80,6 +81,12 @@ export default function PropertyDetail() {
 
   return (
     <PageTransition>
+      <SEOHead
+        title={`${property.title} — ${formatPriceFull(property.price)}`}
+        description={`${property.type} com ${property.bedrooms} quartos, ${property.area}m² em ${property.neighborhood}, ${property.city}. ${property.description.slice(0, 120)}`}
+        image={property.images[0]}
+        type="article"
+      />
       <div className="min-h-screen bg-background pb-32">
         {/* Top bar */}
         <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-foreground/40 to-transparent max-w-screen-lg mx-auto">

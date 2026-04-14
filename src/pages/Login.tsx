@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import PageTransition from "@/components/PageTransition";
+import SEOHead from "@/components/SEOHead";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ export default function Login() {
 
   return (
     <PageTransition>
+      <SEOHead title="Login" description="Acesse o painel administrativo de gestão de imóveis." />
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground)) 1px, transparent 0)`,

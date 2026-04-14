@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { X, Search, ChevronRight, ArrowRight, MapPin } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
+import SEOHead from "@/components/SEOHead";
 import { searchLocations } from "@/data/pernambuco-locations";
 
 const types = ["Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"];
@@ -49,6 +50,7 @@ export default function Filters() {
 
   return (
     <PageTransition>
+      <SEOHead title="Filtros" description="Filtre imóveis por tipo, quartos, localização e mais." />
       <div className="relative flex h-screen w-full flex-col overflow-hidden max-w-md mx-auto bg-background">
         <header className="sticky top-0 z-30 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 py-4">
