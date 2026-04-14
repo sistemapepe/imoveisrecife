@@ -31,6 +31,7 @@ export default function Contact() {
 
   return (
     <PageTransition>
+      <SEOHead title="Contato" description="Entre em contato com nossa equipe de corretores especializados em imóveis de luxo em Recife." />
       <div className="relative flex min-h-screen w-full flex-col pb-32 bg-background">
         <nav className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 glass-header border-b border-border">
           <button onClick={() => navigate(-1)}><ArrowLeft className="h-6 w-6" /></button>

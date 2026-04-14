@@ -67,6 +67,7 @@ export default function SearchResults() {
 
   return (
     <PageTransition>
+      <SEOHead title="Resultados da Busca" description="Encontre imóveis em Recife e região com filtros avançados." />
       <div className="min-h-screen bg-background pb-24">
         <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">
