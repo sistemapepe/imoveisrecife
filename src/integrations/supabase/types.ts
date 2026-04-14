@@ -92,6 +92,7 @@ export type Database = {
           neighborhood: string
           parking: number
           price: number
+          status: string
           suites: number
           title: string
           type: string
@@ -115,6 +116,7 @@ export type Database = {
           neighborhood?: string
           parking?: number
           price?: number
+          status?: string
           suites?: number
           title: string
           type?: string
@@ -138,6 +140,7 @@ export type Database = {
           neighborhood?: string
           parking?: number
           price?: number
+          status?: string
           suites?: number
           title?: string
           type?: string
