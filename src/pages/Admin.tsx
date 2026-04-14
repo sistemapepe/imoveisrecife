@@ -32,6 +32,7 @@ const emptyProperty: Omit<Property, "id" | "code"> = {
   price: 0, area: 0, bedrooms: 0, suites: 0, bathrooms: 0, parking: 0,
   type: "Casa", description: "", amenities: [],
   images: [], exclusive: false, featured: false, category: "Venda",
+  status: "disponivel",
 };
 
 export default function Admin() {
@@ -220,6 +221,13 @@ export default function Admin() {
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-sm truncate">{p.title}</h3>
                       <span className="text-[10px] font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded shrink-0">{p.code}</span>
+                      {p.status && p.status !== "disponivel" && (
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
+                          p.status === "reservado" ? "bg-yellow-500/20 text-yellow-700" : "bg-red-500/20 text-red-700"
+                        }`}>
+                          {p.status === "reservado" ? "Reservado" : "Vendido"}
+                        </span>
+                      )}
                     </div>
                     <p className="text-xs text-accent font-semibold">{formatPriceFull(p.price)}</p>
                     <p className="text-xs text-muted-foreground">{p.type} · {p.neighborhood}</p>
@@ -303,6 +311,22 @@ export default function Admin() {
                   />
                 </div>
               ))}
+              <div>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Status</label>
+                <select
+                  value={form.status}
+                  onChange={(e) => setForm({ ...form, status: e.target.value as any })}
+                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm"
+                >
+                  {[
+                    { value: "disponivel", label: "Disponível" },
+                    { value: "reservado", label: "Reservado" },
+                    { value: "vendido", label: "Vendido" },
+                  ].map((s) => (
+                    <option key={s.value} value={s.value}>{s.label}</option>
+                  ))}
+                </select>
+              </div>
               <div>
                 <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Categoria</label>
                 <select

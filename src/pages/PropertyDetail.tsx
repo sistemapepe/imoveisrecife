@@ -183,7 +183,23 @@ export default function PropertyDetail() {
                   <Award className="h-4 w-4" /> Exclusividade JHR
                 </div>
               )}
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-tight mb-2">{property.title}</h1>
+              <div className="flex items-center gap-2 flex-wrap mb-2">
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-tight">{property.title}</h1>
+                {(property as any).status && (property as any).status !== "disponivel" && (
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+                    (property as any).status === "reservado"
+                      ? "bg-yellow-500/20 text-yellow-700 border border-yellow-500/30"
+                      : "bg-red-500/20 text-red-700 border border-red-500/30"
+                  }`}>
+                    {(property as any).status === "reservado" ? "Reservado" : "Vendido"}
+                  </span>
+                )}
+                {(property as any).status === "disponivel" && (
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-green-500/20 text-green-700 border border-green-500/30">
+                    Disponível
+                  </span>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground mb-1 flex items-center gap-1">
                 <MapPin className="h-4 w-4" /> {property.address}, {property.neighborhood}
               </p>
