@@ -435,6 +435,10 @@ export default function Admin() {
             <SettingsTab settings={settings} updateSettings={updateSettings} />
           )}
 
+          {tab === "privacy" && canManageSettings && (
+            <PrivacyTab settings={settings} updateSettings={updateSettings} />
+          )}
+
           {tab === "users" && canManageUsers && (
             <UsersTab />
           )}
