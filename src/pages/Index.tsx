@@ -12,10 +12,11 @@ import { searchLocations } from "@/data/pernambuco-locations";
 export default function Index() {
   const navigate = useNavigate();
   const { properties, settings, favorites, toggleFavorite, loading } = useProperties();
-  const featured = properties.filter((p) => p.featured);
+  const available = properties.filter((p) => !p.status || p.status === "disponivel");
+  const featured = available.filter((p) => p.featured);
 
-  // Hero carousel - featured first, then all properties, then fallback
-  const bannerProperties = featured.length > 0 ? featured : properties;
+  // Hero carousel - featured first, then all available properties, then fallback
+  const bannerProperties = featured.length > 0 ? featured : available;
   const heroSlides = bannerProperties.length > 0
     ? bannerProperties.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
     : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }];
