@@ -121,7 +121,7 @@ export default function Index() {
                     <div className="w-full aspect-[4/3] bg-card/10 animate-pulse" />
                     <div className="p-5 space-y-3">
                       <div className="h-5 w-28 rounded bg-card/10 animate-pulse" />
-                      <div className="h-4 w-40 rounded bg-card/10 animate-pulse" />
+                      {settings.showLocationOnCard && <div className="h-4 w-40 rounded bg-card/10 animate-pulse" />}
                       <div className="flex gap-4">
                         <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
                         <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
@@ -323,7 +323,10 @@ export default function Index() {
                     </div>
                     <div className="p-5">
                       <p className="text-accent text-lg font-bold">{formatPriceFull(p.price)}</p>
-                      <p className="text-card/70 text-sm font-medium mb-3">{p.title} - {p.neighborhood}</p>
+                      <p className="text-card/70 text-sm font-medium mb-3">
+                        {p.title}
+                        {settings.showLocationOnCard && ` - ${p.neighborhood}`}
+                      </p>
                       <div className="flex items-center gap-4 text-card/50 text-xs uppercase tracking-tighter">
                         <div className="flex items-center gap-1"><Ruler className="h-3 w-3 text-primary" />{p.area}m²</div>
                         <div className="flex items-center gap-1"><BedDouble className="h-3 w-3 text-primary" />{p.suites} Suítes</div>
@@ -357,7 +360,9 @@ export default function Index() {
                     <div className="relative z-10 flex flex-col justify-center h-full px-8 max-w-sm">
                       <span className="text-accent text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Em destaque</span>
                       <h3 className="font-serif text-2xl md:text-3xl text-card leading-tight mb-2">{properties[0].title}</h3>
-                      <p className="text-card/70 text-sm mb-4">{properties[0].neighborhood} · {properties[0].city}</p>
+                      {settings.showLocationOnCard && (
+                        <p className="text-card/70 text-sm mb-4">{properties[0].neighborhood} · {properties[0].city}</p>
+                      )}
                       <span className="inline-flex items-center gap-2 text-accent font-bold text-sm uppercase tracking-wider group-hover:gap-3 transition-all">
                         Saiba mais <ArrowRight className="h-4 w-4" />
                       </span>
