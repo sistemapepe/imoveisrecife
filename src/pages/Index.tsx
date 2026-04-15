@@ -413,6 +413,75 @@ export default function Index() {
                   <p className="text-card/50 text-sm">Cadastre imóveis para ver as coleções.</p>
                 )}
               </div>
+
+              {/* Inline Filters + All Properties */}
+              <div className="px-6 pt-8 pb-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <span className="text-accent text-xs font-bold uppercase tracking-widest">Explore</span>
+                    <h3 className="text-2xl font-serif text-card mt-1">Todos os Imóveis</h3>
+                  </div>
+                  <span className="text-card/50 text-sm font-medium">{filteredProperties.length} {filteredProperties.length === 1 ? "imóvel" : "imóveis"}</span>
+                </div>
+
+                {/* Type filter chips */}
+                <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-4">
+                  {typeFilters.map((type) => (
+                    <button
+                      key={type}
+                      onClick={() => { setActiveType(type); setShowAll(false); }}
+                      className={`shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+                        activeType === type
+                          ? "bg-accent text-accent-foreground shadow-lg"
+                          : "bg-card/5 border border-card/10 text-card/60 hover:border-accent/30 hover:text-card"
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Sort chips */}
+                <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-6">
+                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-card/40 self-center mr-1">Ordenar:</span>
+                  {sortOptions.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setSortBy(opt.value)}
+                      className={`shrink-0 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
+                        sortBy === opt.value
+                          ? "bg-primary/20 text-primary border border-primary/30"
+                          : "bg-card/5 border border-card/10 text-card/50 hover:text-card"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Property grid */}
+                {displayedProperties.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      {displayedProperties.map((p, i) => (
+                        <PropertyCard key={p.id} property={p} index={i} />
+                      ))}
+                    </div>
+                    {!showAll && filteredProperties.length > 6 && (
+                      <div className="flex justify-center mt-8">
+                        <button
+                          onClick={() => setShowAll(true)}
+                          className="flex items-center gap-2 px-8 py-3 rounded-full border-2 border-accent text-accent text-sm font-bold uppercase tracking-wider hover:bg-accent hover:text-accent-foreground transition-all"
+                        >
+                          Ver todos os {filteredProperties.length} imóveis <ArrowRight className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-card/50 text-sm text-center py-12">Nenhum imóvel encontrado para "{activeType}".</p>
+                )}
+              </div>
             </section>
           </motion.div>
         )}
