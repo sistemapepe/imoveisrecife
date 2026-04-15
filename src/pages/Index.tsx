@@ -299,9 +299,42 @@ export default function Index() {
               </div>
             </section>
 
+            {/* Inline Filters - Minimal top bar */}
+            <div className="sticky top-[90px] z-40 bg-luxury-dark/90 backdrop-blur-xl border-b border-card/5">
+              <div className="flex overflow-x-auto hide-scrollbar gap-2 px-6 py-3">
+                {typeFilters.map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => { setActiveType(type); setShowAll(false); }}
+                    className={`shrink-0 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all ${
+                      activeType === type
+                        ? "bg-accent text-accent-foreground"
+                        : "text-card/50 hover:text-card"
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+                <div className="shrink-0 w-px h-6 bg-card/10 self-center mx-1" />
+                {sortOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setSortBy(opt.value)}
+                    className={`shrink-0 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-wider transition-all ${
+                      sortBy === opt.value
+                        ? "text-primary"
+                        : "text-card/30 hover:text-card/60"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Featured */}
-            <section className="relative -mt-12 z-10 bg-luxury-dark rounded-t-xl pb-8">
-              <div className="px-6 pt-8 pb-4 flex justify-between items-end">
+            <section className="relative z-10 bg-luxury-dark pb-8">
+              <div className="px-6 pt-6 pb-4 flex justify-between items-end">
                 <div>
                   <span className="text-accent text-xs font-bold uppercase tracking-widest">Exclusividade {settings.brandName}</span>
                   <h3 className="text-2xl font-serif text-card mt-1">Destaques</h3>
