@@ -1,10 +1,11 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import { Helmet } from "react-helmet-async";
 import InteractiveMap from "@/components/InteractiveMap";
 import { toast } from "sonner";
 
@@ -85,7 +86,7 @@ export default function PropertyDetail() {
     name: property.title,
     description: property.description,
     url: window.location.href,
-    datePosted: property.created_at || new Date().toISOString(),
+    datePosted: new Date().toISOString(),
     image: property.images,
     offers: {
       "@type": "Offer",
