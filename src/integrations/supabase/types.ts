@@ -224,6 +224,7 @@ export type Database = {
           logo_url: string
           primary_color: string
           privacy_policy: string
+          show_location_on_card: boolean
           updated_at: string
           website_url: string
           whatsapp_message: string
@@ -249,6 +250,7 @@ export type Database = {
           logo_url?: string
           primary_color?: string
           privacy_policy?: string
+          show_location_on_card?: boolean
           updated_at?: string
           website_url?: string
           whatsapp_message?: string
@@ -274,6 +276,7 @@ export type Database = {
           logo_url?: string
           primary_color?: string
           privacy_policy?: string
+          show_location_on_card?: boolean
           updated_at?: string
           website_url?: string
           whatsapp_message?: string

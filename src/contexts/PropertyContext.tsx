@@ -57,6 +57,7 @@ export interface SiteSettings {
   whatsappMessage: string;
   availableAmenities: string[];
   privacyPolicy: string;
+  showLocationOnCard: boolean;
 }
 
 interface PropertyContextType {
@@ -94,6 +95,7 @@ const defaultSettings: SiteSettings = {
   whatsappMessage: "Olá! Gostaria de mais informações sobre os imóveis da JHR.",
   availableAmenities: ["Piscina", "Churrasqueira", "Academia", "Sauna", "Jardim", "Elevador", "Varanda Gourmet", "Playground", "Salão de Festas", "Segurança 24h", "Quadra Esportiva", "Spa", "Home Cinema", "Adega", "Lavabo"],
   privacyPolicy: "",
+  showLocationOnCard: true,
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -145,6 +147,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         whatsappMessage: (data as any).whatsapp_message ?? defaultSettings.whatsappMessage,
         availableAmenities: (data as any).available_amenities ?? defaultSettings.availableAmenities,
         privacyPolicy: (data as any).privacy_policy ?? "",
+        showLocationOnCard: (data as any).show_location_on_card ?? true,
       });
     }
   }, []);
@@ -202,6 +205,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       whatsappMessage: "whatsapp_message",
       availableAmenities: "available_amenities",
       privacyPolicy: "privacy_policy",
+      showLocationOnCard: "show_location_on_card",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];

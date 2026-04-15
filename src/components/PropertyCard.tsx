@@ -1,4 +1,4 @@
-import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen } from "lucide-react";
+import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Property, formatPriceFull } from "@/contexts/PropertyContext";
@@ -6,7 +6,7 @@ import { useProperties } from "@/contexts/PropertyContext";
 
 export default function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const navigate = useNavigate();
-  const { favorites, toggleFavorite } = useProperties();
+  const { favorites, toggleFavorite, settings } = useProperties();
   const isFav = favorites.includes(property.id);
 
   return (
@@ -50,6 +50,11 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
       </div>
       <div className="p-5">
         <h2 className="font-serif text-xl text-foreground">{property.title}</h2>
+        {settings.showLocationOnCard && (
+          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+            <MapPin className="h-3 w-3 text-accent" /> {property.neighborhood}, {property.city}
+          </p>
+        )}
         <p className="font-serif text-2xl text-accent mb-4 italic">{formatPriceFull(property.price)}</p>
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 border-t border-border pt-4">
           <div className="flex items-center gap-1 min-w-0">
