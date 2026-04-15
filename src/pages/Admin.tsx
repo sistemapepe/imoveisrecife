@@ -209,6 +209,14 @@ export default function Admin() {
                 <Settings className="h-4 w-4" /> Config
               </button>
             )}
+            {canManageSettings && (
+              <button
+                onClick={() => { setTab("privacy"); setEditing(null); setCreating(false); }}
+                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "privacy" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
+              >
+                <FileText className="h-4 w-4" /> LGPD
+              </button>
+            )}
           </div>
         </header>
 
