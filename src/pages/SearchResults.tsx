@@ -37,6 +37,11 @@ export default function SearchResults() {
   const filtered = useMemo(() => {
     let result = properties;
 
+    // Filter by status
+    if (activeStatus.length > 0) {
+      result = result.filter((p) => activeStatus.includes(p.status || "disponivel"));
+    }
+
     // Filter by type
     if (activeFilters.length > 0) {
       result = result.filter((p) => activeFilters.includes(p.type));
