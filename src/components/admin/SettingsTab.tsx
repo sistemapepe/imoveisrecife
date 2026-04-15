@@ -71,6 +71,14 @@ const sections: SectionDef[] = [
       { label: "Texto do rodapé", key: "footerText", multiline: true, placeholder: "© 2024 JHR Imóveis..." },
     ],
   },
+  {
+    title: "💻 Desenvolvedor",
+    description: "Créditos do desenvolvedor exibidos no rodapé",
+    fields: [
+      { label: "Nome do Desenvolvedor", key: "developerName", placeholder: "Studio Digital" },
+      { label: "Link do Desenvolvedor", key: "developerUrl", icon: <Globe className="h-4 w-4" />, placeholder: "https://studiodigital.com" },
+    ],
+  },
 ];
 
 function hslToHex(hslStr: string): string {

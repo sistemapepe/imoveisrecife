@@ -58,6 +58,8 @@ export interface SiteSettings {
   availableAmenities: string[];
   privacyPolicy: string;
   showLocationOnCard: boolean;
+  developerName: string;
+  developerUrl: string;
 }
 
 interface PropertyContextType {
@@ -96,6 +98,8 @@ const defaultSettings: SiteSettings = {
   availableAmenities: ["Piscina", "Churrasqueira", "Academia", "Sauna", "Jardim", "Elevador", "Varanda Gourmet", "Playground", "Salão de Festas", "Segurança 24h", "Quadra Esportiva", "Spa", "Home Cinema", "Adega", "Lavabo"],
   privacyPolicy: "",
   showLocationOnCard: true,
+  developerName: "",
+  developerUrl: "",
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -148,6 +152,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         availableAmenities: (data as any).available_amenities ?? defaultSettings.availableAmenities,
         privacyPolicy: (data as any).privacy_policy ?? "",
         showLocationOnCard: (data as any).show_location_on_card ?? true,
+        developerName: (data as any).developer_name ?? "",
+        developerUrl: (data as any).developer_url ?? "",
       });
     }
   }, []);
@@ -206,6 +212,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       availableAmenities: "available_amenities",
       privacyPolicy: "privacy_policy",
       showLocationOnCard: "show_location_on_card",
+      developerName: "developer_name",
+      developerUrl: "developer_url",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
