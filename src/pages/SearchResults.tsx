@@ -7,6 +7,11 @@ import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 
 const propertyTypes = ["Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"] as const;
+const statusOptions = [
+  { value: "disponivel", label: "Disponível" },
+  { value: "reservado", label: "Reservado" },
+  { value: "vendido", label: "Vendido" },
+] as const;
 
 export default function SearchResults() {
   const navigate = useNavigate();
@@ -19,13 +24,23 @@ export default function SearchResults() {
   const parkingFilter = searchParams.get("parking") || "";
 
   const [activeFilters, setActiveFilters] = useState<string[]>(typesFilter);
+  const [activeStatus, setActiveStatus] = useState<string[]>([]);
 
   const toggleFilter = (f: string) => {
     setActiveFilters((prev) => prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]);
   };
 
+  const toggleStatus = (s: string) => {
+    setActiveStatus((prev) => prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]);
+  };
+
   const filtered = useMemo(() => {
     let result = properties;
+
+    // Filter by status
+    if (activeStatus.length > 0) {
+      result = result.filter((p) => activeStatus.includes(p.status || "disponivel"));
+    }
 
     // Filter by type
     if (activeFilters.length > 0) {
@@ -63,7 +78,7 @@ export default function SearchResults() {
     }
 
     return result;
-  }, [properties, activeFilters, locationFilter, bedroomsFilter, parkingFilter]);
+  }, [properties, activeFilters, activeStatus, locationFilter, bedroomsFilter, parkingFilter]);
 
   return (
     <PageTransition>
@@ -85,7 +100,7 @@ export default function SearchResults() {
 
           {/* Active location badge */}
           {locationFilter && (
-            <div className="px-4 pb-2">
+            <div className="px-4 pb-2 pt-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
                 <MapPin className="h-3 w-3" />
                 {locationFilter}
@@ -106,6 +121,27 @@ export default function SearchResults() {
                   }`}
                 >
                   {type}
+                  {active && <X className="h-3 w-3" />}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-2 border-t border-border/50">
+            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground self-center mr-1">Status:</span>
+            {statusOptions.map(({ value, label }) => {
+              const active = activeStatus.includes(value);
+              return (
+                <button
+                  key={value}
+                  onClick={() => toggleStatus(value)}
+                  className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${
+                    active
+                      ? value === "vendido" ? "bg-red-500 text-white" : value === "reservado" ? "bg-yellow-500 text-white" : "bg-green-600 text-white"
+                      : "bg-card border border-border text-muted-foreground"
+                  }`}
+                >
+                  {label}
                   {active && <X className="h-3 w-3" />}
                 </button>
               );
