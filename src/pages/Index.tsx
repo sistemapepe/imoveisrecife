@@ -285,7 +285,7 @@ export default function Index() {
             <section className="relative -mt-12 z-10 bg-luxury-dark rounded-t-xl pb-8">
               <div className="px-6 pt-8 pb-4 flex justify-between items-end">
                 <div>
-                  <span className="text-accent text-xs font-bold uppercase tracking-widest">Exclusividade</span>
+                  <span className="text-accent text-xs font-bold uppercase tracking-widest">Exclusividade {settings.brandName}</span>
                   <h3 className="text-2xl font-serif text-card mt-1">Destaques</h3>
                 </div>
                 <button onClick={() => navigate("/busca")} className="text-primary text-sm font-semibold flex items-center gap-1">
