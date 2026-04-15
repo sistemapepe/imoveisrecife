@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight } from "lucide-react";
+import { getAmenityIcon } from "@/lib/amenity-icons";
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
@@ -281,9 +282,15 @@ export default function PropertyDetail() {
               <div className="mb-8">
                 <h2 className="text-lg font-bold mb-3">Comodidades</h2>
                 <div className="flex flex-wrap gap-2 md:gap-3">
-                  {property.amenities.map((a) => (
-                    <div key={a} className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-xs font-medium">{a}</div>
-                  ))}
+                  {property.amenities.map((a) => {
+                    const AmenityIcon = getAmenityIcon(a);
+                    return (
+                      <div key={a} className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-xs font-medium">
+                        {AmenityIcon && <AmenityIcon className="h-3.5 w-3.5 text-accent" />}
+                        {a}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
