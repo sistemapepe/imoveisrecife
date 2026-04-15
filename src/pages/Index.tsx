@@ -421,9 +421,9 @@ export default function Index() {
                         {settings.showLocationOnCard && ` - ${p.neighborhood}`}
                       </p>
                       <div className="flex items-center gap-4 text-card/50 text-xs uppercase tracking-tighter">
-                        <div className="flex items-center gap-1"><Ruler className="h-3 w-3 text-primary" />{p.area}m²</div>
-                        <div className="flex items-center gap-1"><BedDouble className="h-3 w-3 text-primary" />{p.suites} Suítes</div>
-                        <div className="flex items-center gap-1"><Car className="h-3 w-3 text-primary" />{p.parking} Vagas</div>
+                        {!!p.area && <div className="flex items-center gap-1"><Ruler className="h-3 w-3 text-primary" />{p.area}m²</div>}
+                        {!!p.suites && <div className="flex items-center gap-1"><BedDouble className="h-3 w-3 text-primary" />{p.suites} Suítes</div>}
+                        {!!p.parking && <div className="flex items-center gap-1"><Car className="h-3 w-3 text-primary" />{p.parking} Vagas</div>}
                       </div>
                     </div>
                   </motion.div>
