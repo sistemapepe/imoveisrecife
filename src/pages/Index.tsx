@@ -16,11 +16,11 @@ export default function Index() {
   const featured = available.filter((p) => p.featured);
 
   // Hero carousel - prefer a source with multiple slides to avoid a static banner.
+  const bannerSources = [featured, available, properties];
   const bannerProperties =
-    [featured, available, properties].find((group) => group.length > 1) ||
-    featured ||
-    available ||
-    properties;
+    bannerSources.find((group) => group.length > 1) ??
+    bannerSources.find((group) => group.length > 0) ??
+    [];
   const heroSlides = bannerProperties.length > 0
     ? bannerProperties.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
     : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }];
