@@ -55,6 +55,7 @@ export interface SiteSettings {
   bannerInterval: number;
   whatsappMessage: string;
   availableAmenities: string[];
+  privacyPolicy: string;
 }
 
 interface PropertyContextType {
