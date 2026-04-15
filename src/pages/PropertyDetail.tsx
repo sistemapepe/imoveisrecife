@@ -287,8 +287,8 @@ export default function PropertyDetail() {
                 </div>
               </div>
 
-              {(property as any).video_tour_url && (
-                <VirtualTour videoUrl={(property as any).video_tour_url} title={property.title} />
+              {property.video_tour_url && (
+                <VirtualTour videoUrl={property.video_tour_url} title={property.title} />
               )}
 
               <VisitScheduleForm propertyId={property.id} propertyTitle={property.title} />
