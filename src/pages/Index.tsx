@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Heart, ChevronLeft, ChevronRight, Search, MapPin, SlidersHorizontal, ArrowUpDown } from "lucide-react";
+import { ArrowRight, Heart, ChevronLeft, ChevronRight, Search, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import heroImage from "@/assets/hero-mansion.jpg";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
@@ -10,9 +10,8 @@ import PropertyCard from "@/components/PropertyCard";
 import SEOHead from "@/components/SEOHead";
 import { searchLocations } from "@/data/pernambuco-locations";
 
-const propertyTypes = ["Todos", "Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"];
+const typeFilters = ["Todos", "Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"];
 const sortOptions = [
-  { value: "recent", label: "Mais recentes" },
   { value: "price_asc", label: "Menor preço" },
   { value: "price_desc", label: "Maior preço" },
   { value: "area_desc", label: "Maior área" },
@@ -24,25 +23,20 @@ export default function Index() {
   const available = properties.filter((p) => !p.status || p.status === "disponivel");
   const featured = available.filter((p) => p.featured);
   const [activeType, setActiveType] = useState("Todos");
-  const [sortBy, setSortBy] = useState("recent");
-  const [showSortMenu, setShowSortMenu] = useState(false);
-  const [showAllProperties, setShowAllProperties] = useState(false);
+  const [sortBy, setSortBy] = useState("price_desc");
+  const [showAll, setShowAll] = useState(false);
 
   const filteredProperties = useMemo(() => {
-    let result = available;
-    if (activeType !== "Todos") {
-      result = result.filter((p) => p.type === activeType);
-    }
+    let result = activeType === "Todos" ? available : available.filter((p) => p.type === activeType);
     switch (sortBy) {
-      case "price_asc": result = [...result].sort((a, b) => a.price - b.price); break;
-      case "price_desc": result = [...result].sort((a, b) => b.price - a.price); break;
-      case "area_desc": result = [...result].sort((a, b) => b.area - a.area); break;
-      default: result = [...result].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      case "price_asc": return [...result].sort((a, b) => a.price - b.price);
+      case "price_desc": return [...result].sort((a, b) => b.price - a.price);
+      case "area_desc": return [...result].sort((a, b) => b.area - a.area);
+      default: return result;
     }
-    return result;
   }, [available, activeType, sortBy]);
 
-  const displayedProperties = showAllProperties ? filteredProperties : filteredProperties.slice(0, 6);
+  const displayedProperties = showAll ? filteredProperties : filteredProperties.slice(0, 6);
 
   // Hero carousel - show ALL properties
   const heroSlides = properties.length > 0
