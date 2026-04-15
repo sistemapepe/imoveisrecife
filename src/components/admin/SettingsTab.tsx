@@ -324,7 +324,7 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
           </span>
           <input
             type="checkbox"
-            checked={localSettings.showLocationOnCard ?? true}
+            checked={localSettings.showLocationOnCard ?? false}
             onChange={(e) => setLocalSettings((prev) => ({ ...prev, showLocationOnCard: e.target.checked }))}
             className="w-5 h-5 accent-primary rounded"
           />
