@@ -532,6 +532,16 @@ export default function Index() {
                     {settings.footerText}
                   </p>
                 )}
+                {settings.developerName && (
+                  <p className="text-[9px] text-muted-foreground/50 tracking-wider text-center mt-2">
+                    Desenvolvido por{" "}
+                    {settings.developerUrl ? (
+                      <a href={settings.developerUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-accent transition-colors">
+                        {settings.developerName}
+                      </a>
+                    ) : settings.developerName}
+                  </p>
+                )}
               </footer>
             </section>
           </motion.div>
