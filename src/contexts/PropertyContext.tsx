@@ -92,6 +92,7 @@ const defaultSettings: SiteSettings = {
   bannerInterval: 5,
   whatsappMessage: "Olá! Gostaria de mais informações sobre os imóveis da JHR.",
   availableAmenities: ["Piscina", "Churrasqueira", "Academia", "Sauna", "Jardim", "Elevador", "Varanda Gourmet", "Playground", "Salão de Festas", "Segurança 24h", "Quadra Esportiva", "Spa", "Home Cinema", "Adega", "Lavabo"],
+  privacyPolicy: "",
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -142,6 +143,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         bannerInterval: (data as any).banner_interval ?? 5,
         whatsappMessage: (data as any).whatsapp_message ?? defaultSettings.whatsappMessage,
         availableAmenities: (data as any).available_amenities ?? defaultSettings.availableAmenities,
+        privacyPolicy: (data as any).privacy_policy ?? "",
       });
     }
   }, []);
@@ -198,6 +200,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       bannerInterval: "banner_interval",
       whatsappMessage: "whatsapp_message",
       availableAmenities: "available_amenities",
+      privacyPolicy: "privacy_policy",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
