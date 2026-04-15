@@ -98,7 +98,7 @@ const defaultSettings: SiteSettings = {
 
 const localImages = [property1, property2, property3, property4];
 
-const PropertyContext = createContext<PropertyContextType | null>(null);
+export const PropertyContext = createContext<PropertyContextType | null>(null);
 
 export function PropertyProvider({ children }: { children: ReactNode }) {
   const [properties, setProperties] = useState<Property[]>([]);
