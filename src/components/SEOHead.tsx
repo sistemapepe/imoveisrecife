@@ -1,6 +1,6 @@
-import { Helmet } from "react-helmet-async";
 import { useContext } from "react";
-import { useProperties } from "@/contexts/PropertyContext";
+import { Helmet } from "react-helmet-async";
+import { PropertyContext } from "@/contexts/PropertyContext";
 
 interface SEOHeadProps {
   title?: string;
@@ -17,13 +17,8 @@ export default function SEOHead({
   url,
   type = "website",
 }: SEOHeadProps) {
-  let brandName = "Imóveis Recife";
-  try {
-    const { settings } = useProperties();
-    brandName = settings.brandName || brandName;
-  } catch {
-    // Fallback if outside PropertyProvider
-  }
+  const ctx = useContext(PropertyContext);
+  const brandName = ctx?.settings?.brandName || "Imóveis Recife";
   const fullTitle = title ? `${title} | ${brandName}` : brandName;
   const metaDescription =
     description || `${brandName} — Encontre o imóvel dos seus sonhos em Recife e região.`;
