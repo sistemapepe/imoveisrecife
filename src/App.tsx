@@ -21,11 +21,13 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import CookieConsent from "./components/CookieConsent";
+import { useTrafficTracker } from "@/hooks/useTrafficTracker";
 
 const queryClient = new QueryClient();
 
 function AnimatedRoutes() {
   const location = useLocation();
+  useTrafficTracker();
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
