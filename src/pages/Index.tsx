@@ -1,19 +1,48 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Heart, ChevronLeft, ChevronRight, Search, MapPin } from "lucide-react";
+import { ArrowRight, Heart, ChevronLeft, ChevronRight, Search, MapPin, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import heroImage from "@/assets/hero-mansion.jpg";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import { Ruler, BedDouble, Car } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
+import PropertyCard from "@/components/PropertyCard";
 import SEOHead from "@/components/SEOHead";
 import { searchLocations } from "@/data/pernambuco-locations";
+
+const propertyTypes = ["Todos", "Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"];
+const sortOptions = [
+  { value: "recent", label: "Mais recentes" },
+  { value: "price_asc", label: "Menor preço" },
+  { value: "price_desc", label: "Maior preço" },
+  { value: "area_desc", label: "Maior área" },
+];
 
 export default function Index() {
   const navigate = useNavigate();
   const { properties, settings, favorites, toggleFavorite, loading } = useProperties();
   const available = properties.filter((p) => !p.status || p.status === "disponivel");
   const featured = available.filter((p) => p.featured);
+  const [activeType, setActiveType] = useState("Todos");
+  const [sortBy, setSortBy] = useState("recent");
+  const [showSortMenu, setShowSortMenu] = useState(false);
+  const [showAllProperties, setShowAllProperties] = useState(false);
+
+  const filteredProperties = useMemo(() => {
+    let result = available;
+    if (activeType !== "Todos") {
+      result = result.filter((p) => p.type === activeType);
+    }
+    switch (sortBy) {
+      case "price_asc": result = [...result].sort((a, b) => a.price - b.price); break;
+      case "price_desc": result = [...result].sort((a, b) => b.price - a.price); break;
+      case "area_desc": result = [...result].sort((a, b) => b.area - a.area); break;
+      default: result = [...result].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }
+    return result;
+  }, [available, activeType, sortBy]);
+
+  const displayedProperties = showAllProperties ? filteredProperties : filteredProperties.slice(0, 6);
 
   // Hero carousel - show ALL properties
   const heroSlides = properties.length > 0
