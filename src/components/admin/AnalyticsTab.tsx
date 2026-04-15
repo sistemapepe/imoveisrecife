@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp, ArrowUp, ArrowDown } from "lucide-react";
+import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp } from "lucide-react";
 
 interface ViewsByProperty {
   property_id: string;

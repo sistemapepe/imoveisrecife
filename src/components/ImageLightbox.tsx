@@ -34,7 +34,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [isOpen, currentIndex]);
+  }, [isOpen, currentIndex, onClose, goTo]);
 
   const resetZoom = () => {
     setScale(1);
