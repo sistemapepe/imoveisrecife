@@ -12,8 +12,6 @@ import { searchLocations } from "@/data/pernambuco-locations";
 
 const typeFilters = ["Todos", "Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"];
 const sortOptions = [
-  { value: "price_asc", label: "Menor preço" },
-  { value: "price_desc", label: "Maior preço" },
   { value: "area_desc", label: "Maior área" },
 ];
 
@@ -23,17 +21,13 @@ export default function Index() {
   const available = properties.filter((p) => !p.status || p.status === "disponivel");
   const featured = available.filter((p) => p.featured);
   const [activeType, setActiveType] = useState("Todos");
-  const [sortBy, setSortBy] = useState("price_desc");
+  const [sortBy, setSortBy] = useState("");
   const [showAll, setShowAll] = useState(false);
 
   const filteredProperties = useMemo(() => {
     let result = activeType === "Todos" ? available : available.filter((p) => p.type === activeType);
-    switch (sortBy) {
-      case "price_asc": return [...result].sort((a, b) => a.price - b.price);
-      case "price_desc": return [...result].sort((a, b) => b.price - a.price);
-      case "area_desc": return [...result].sort((a, b) => b.area - a.area);
-      default: return result;
-    }
+    if (sortBy === "area_desc") return [...result].sort((a, b) => b.area - a.area);
+    return result;
   }, [available, activeType, sortBy]);
 
   const displayedProperties = showAll ? filteredProperties : filteredProperties.slice(0, 6);
