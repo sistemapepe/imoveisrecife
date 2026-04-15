@@ -354,7 +354,7 @@ export default function PropertyDetail() {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <ImageLightbox
         images={property.images}
