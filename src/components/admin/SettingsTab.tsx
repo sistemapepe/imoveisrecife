@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { SiteSettings } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
-import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag } from "lucide-react";
+import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin } from "lucide-react";
 import LogoUpload from "./LogoUpload";
+import { getAmenityIcon } from "@/lib/amenity-icons";
 
 interface SettingsTabProps {
   settings: SiteSettings;
@@ -236,28 +237,31 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
           <h3 className="font-bold text-sm">🏷️ Amenidades</h3>
           <p className="text-xs text-muted-foreground">Gerencie as amenidades disponíveis para os imóveis</p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {(localSettings.availableAmenities || []).map((amenity) => (
-            <span
-              key={amenity}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20"
-            >
-              <Tag className="h-3 w-3" />
-              {amenity}
-              <button
-                type="button"
-                onClick={() =>
-                  setLocalSettings((prev) => ({
-                    ...prev,
-                    availableAmenities: prev.availableAmenities.filter((a) => a !== amenity),
-                  }))
-                }
-                className="ml-0.5 hover:text-destructive transition-colors"
+         <div className="flex flex-wrap gap-2">
+          {(localSettings.availableAmenities || []).map((amenity) => {
+            const AmenityIcon = getAmenityIcon(amenity);
+            return (
+              <span
+                key={amenity}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20"
               >
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          ))}
+                {AmenityIcon ? <AmenityIcon className="h-3 w-3" /> : <Tag className="h-3 w-3" />}
+                {amenity}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setLocalSettings((prev) => ({
+                      ...prev,
+                      availableAmenities: prev.availableAmenities.filter((a) => a !== amenity),
+                    }))
+                  }
+                  className="ml-0.5 hover:text-destructive transition-colors"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            );
+          })}
         </div>
         <div className="flex gap-2">
           <input
@@ -298,6 +302,25 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
             <Plus className="h-4 w-4" /> Adicionar
           </button>
         </div>
+      </div>
+
+      {/* Display Options */}
+      <div className="bg-card rounded-xl border border-border p-4 space-y-3">
+        <div>
+          <h3 className="font-bold text-sm">📍 Exibição</h3>
+          <p className="text-xs text-muted-foreground">Controle o que aparece nos cards de imóveis</p>
+        </div>
+        <label className="flex items-center justify-between cursor-pointer">
+          <span className="text-sm font-medium flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-accent" /> Exibir localização nos cards
+          </span>
+          <input
+            type="checkbox"
+            checked={localSettings.showLocationOnCard ?? true}
+            onChange={(e) => setLocalSettings((prev) => ({ ...prev, showLocationOnCard: e.target.checked }))}
+            className="w-5 h-5 accent-primary rounded"
+          />
+        </label>
       </div>
 
       {/* Banner Interval */}
