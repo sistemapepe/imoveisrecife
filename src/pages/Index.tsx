@@ -15,8 +15,12 @@ export default function Index() {
   const available = properties.filter((p) => !p.status || p.status === "disponivel");
   const featured = available.filter((p) => p.featured);
 
-  // Hero carousel - featured first, then available, then all properties as fallback
-  const bannerProperties = featured.length > 0 ? featured : (available.length > 0 ? available : properties);
+  // Hero carousel - prefer a source with multiple slides to avoid a static banner.
+  const bannerProperties =
+    [featured, available, properties].find((group) => group.length > 1) ||
+    featured ||
+    available ||
+    properties;
   const heroSlides = bannerProperties.length > 0
     ? bannerProperties.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
     : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }];
@@ -46,6 +50,10 @@ export default function Index() {
     }, intervalMs);
     return () => clearInterval(timer);
   }, [heroSlides.length, intervalMs]);
+
+  useEffect(() => {
+    setCurrentSlide((prev) => (prev >= heroSlides.length ? 0 : prev));
+  }, [heroSlides.length]);
 
   const goToSlide = (index: number) => setCurrentSlide(index);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
