@@ -7,6 +7,11 @@ import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 
 const propertyTypes = ["Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"] as const;
+const statusOptions = [
+  { value: "disponivel", label: "Disponível" },
+  { value: "reservado", label: "Reservado" },
+  { value: "vendido", label: "Vendido" },
+] as const;
 
 export default function SearchResults() {
   const navigate = useNavigate();
