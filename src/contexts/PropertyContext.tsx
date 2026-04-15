@@ -191,7 +191,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   };
 
   const updateSettings = async (s: Partial<SiteSettings>) => {
-    const dbUpdate: Record<string, string> = {};
+    const dbUpdate: Record<string, any> = {};
     const map: Record<string, string> = {
       heroTitle: "hero_title", heroSubtitle: "hero_subtitle",
       conciergeNome: "concierge_nome", conciergeCargo: "concierge_cargo",
