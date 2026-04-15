@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,8 +16,9 @@ import { Button } from "@/components/ui/button";
 
 import AnalyticsTab from "@/components/admin/AnalyticsTab";
 import VisitsTab from "@/components/admin/VisitsTab";
+import TrafficTab from "@/components/admin/TrafficTab";
 
-type Tab = "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits";
+type Tab = "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -234,6 +235,14 @@ export default function Admin() {
                 className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "visits" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
               >
                 <Calendar className="h-4 w-4" /> Visitas
+              </button>
+            )}
+            {(isAdmin || role === "supervisor") && (
+              <button
+                onClick={() => { setTab("traffic"); setEditing(null); setCreating(false); }}
+                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "traffic" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
+              >
+                <Globe className="h-4 w-4" /> Tráfego
               </button>
             )}
           </div>
@@ -484,6 +493,10 @@ export default function Admin() {
 
           {tab === "visits" && (isAdmin || role === "supervisor") && (
             <VisitsTab />
+          )}
+
+          {tab === "traffic" && (isAdmin || role === "supervisor") && (
+            <TrafficTab />
           )}
         </main>
 
