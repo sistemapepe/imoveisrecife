@@ -25,6 +25,11 @@ export default function PropertyDetail() {
   const touchStartX = useRef(0);
   const touchDelta = useRef(0);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   // Track property view
   useEffect(() => {
     if (!id) return;
