@@ -282,6 +282,92 @@ export type Database = {
         }
         Relationships: []
       }
+      traffic_events: {
+        Row: {
+          browser: string
+          campaign: string
+          channel: string
+          content: string
+          country: string
+          created_at: string
+          device_type: string
+          event_type: string
+          full_url: string
+          id: string
+          landing_page: string
+          language: string
+          medium: string
+          os: string
+          pathname: string
+          property_id: string | null
+          referrer_domain: string
+          referrer_url: string
+          session_id: string
+          social_network: string
+          source: string
+          term: string
+          visitor_id: string
+        }
+        Insert: {
+          browser?: string
+          campaign?: string
+          channel?: string
+          content?: string
+          country?: string
+          created_at?: string
+          device_type?: string
+          event_type?: string
+          full_url?: string
+          id?: string
+          landing_page?: string
+          language?: string
+          medium?: string
+          os?: string
+          pathname?: string
+          property_id?: string | null
+          referrer_domain?: string
+          referrer_url?: string
+          session_id?: string
+          social_network?: string
+          source?: string
+          term?: string
+          visitor_id?: string
+        }
+        Update: {
+          browser?: string
+          campaign?: string
+          channel?: string
+          content?: string
+          country?: string
+          created_at?: string
+          device_type?: string
+          event_type?: string
+          full_url?: string
+          id?: string
+          landing_page?: string
+          language?: string
+          medium?: string
+          os?: string
+          pathname?: string
+          property_id?: string | null
+          referrer_domain?: string
+          referrer_url?: string
+          session_id?: string
+          social_network?: string
+          source?: string
+          term?: string
+          visitor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "traffic_events_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
