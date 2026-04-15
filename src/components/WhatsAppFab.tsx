@@ -1,6 +1,7 @@
 import { MessageCircle } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { useLocation } from "react-router-dom";
+import { trackEvent } from "@/hooks/useTrafficTracker";
 
 export default function WhatsAppFab() {
   const { settings } = useProperties();
@@ -10,6 +11,7 @@ export default function WhatsAppFab() {
   if (location.pathname.startsWith("/admin") || location.pathname.startsWith("/login")) return null;
 
   const handleClick = () => {
+    trackEvent("whatsapp_click");
     const message = encodeURIComponent(settings.whatsappMessage || "Olá! Gostaria de mais informações sobre os imóveis da JHR.");
     window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
   };
