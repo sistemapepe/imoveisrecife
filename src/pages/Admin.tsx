@@ -272,7 +272,7 @@ export default function Admin() {
                       )}
                     </div>
                     <p className="text-xs text-accent font-semibold">{formatPriceFull(p.price)}</p>
-                    <p className="text-xs text-muted-foreground">{p.type} · {p.neighborhood}</p>
+                    <p className="text-xs text-muted-foreground">{p.type}{settings.showLocationOnCard ? ` · ${p.neighborhood}` : ""}</p>
                   </div>
                   {(canManageProperties || canDeleteProperties) && (
                     <div className="flex gap-2">
