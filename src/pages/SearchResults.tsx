@@ -24,9 +24,14 @@ export default function SearchResults() {
   const parkingFilter = searchParams.get("parking") || "";
 
   const [activeFilters, setActiveFilters] = useState<string[]>(typesFilter);
+  const [activeStatus, setActiveStatus] = useState<string[]>([]);
 
   const toggleFilter = (f: string) => {
     setActiveFilters((prev) => prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]);
+  };
+
+  const toggleStatus = (s: string) => {
+    setActiveStatus((prev) => prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]);
   };
 
   const filtered = useMemo(() => {
