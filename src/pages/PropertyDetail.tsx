@@ -174,10 +174,11 @@ export default function PropertyDetail() {
           }}
         >
           <img
-            className="h-full w-full object-cover transition-opacity duration-300 pointer-events-none select-none"
+            className="h-full w-full object-cover transition-opacity duration-300 cursor-pointer select-none"
             src={property.images[currentImg]}
             alt={`${property.title} - Foto ${currentImg + 1}`}
             draggable={false}
+            onClick={() => { setLightboxIndex(currentImg); setLightboxOpen(true); }}
           />
           {totalImages > 1 && (
             <>
@@ -286,6 +287,12 @@ export default function PropertyDetail() {
                 </div>
               </div>
 
+              {(property as any).video_tour_url && (
+                <VirtualTour videoUrl={(property as any).video_tour_url} title={property.title} />
+              )}
+
+              <VisitScheduleForm propertyId={property.id} propertyTitle={property.title} />
+
               <InteractiveMap
                 address={property.address}
                 neighborhood={property.neighborhood}
@@ -331,6 +338,14 @@ export default function PropertyDetail() {
           </div>
         </div>
       </div>
+
+      <ImageLightbox
+        images={property.images}
+        initialIndex={lightboxIndex}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        title={property.title}
+      />
     </PageTransition>
   );
 }
