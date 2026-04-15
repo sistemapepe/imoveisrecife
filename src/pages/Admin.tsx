@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import SettingsTab from "@/components/admin/SettingsTab";
 import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
+import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,7 +14,7 @@ import PageTransition from "@/components/PageTransition";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-type Tab = "properties" | "settings" | "users" | "messages";
+type Tab = "properties" | "settings" | "users" | "messages" | "privacy";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -206,6 +207,14 @@ export default function Admin() {
                 className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "settings" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
               >
                 <Settings className="h-4 w-4" /> Config
+              </button>
+            )}
+            {canManageSettings && (
+              <button
+                onClick={() => { setTab("privacy"); setEditing(null); setCreating(false); }}
+                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "privacy" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
+              >
+                <FileText className="h-4 w-4" /> LGPD
               </button>
             )}
           </div>
@@ -432,6 +441,10 @@ export default function Admin() {
 
           {tab === "settings" && canManageSettings && (
             <SettingsTab settings={settings} updateSettings={updateSettings} />
+          )}
+
+          {tab === "privacy" && canManageSettings && (
+            <PrivacyTab settings={settings} updateSettings={updateSettings} />
           )}
 
           {tab === "users" && canManageUsers && (

@@ -188,6 +188,7 @@ export type Database = {
           linkedin_url: string
           logo_url: string
           primary_color: string
+          privacy_policy: string
           updated_at: string
           website_url: string
           whatsapp_message: string
@@ -212,6 +213,7 @@ export type Database = {
           linkedin_url?: string
           logo_url?: string
           primary_color?: string
+          privacy_policy?: string
           updated_at?: string
           website_url?: string
           whatsapp_message?: string
@@ -236,6 +238,7 @@ export type Database = {
           linkedin_url?: string
           logo_url?: string
           primary_color?: string
+          privacy_policy?: string
           updated_at?: string
           website_url?: string
           whatsapp_message?: string

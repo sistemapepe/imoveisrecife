@@ -19,6 +19,8 @@ import Favorites from "./pages/Favorites";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,8 @@ function AnimatedRoutes() {
         <Route path="/favoritos" element={<Favorites />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/privacidade" element={<PrivacyPolicy />} />
+        <Route path="*" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
@@ -54,6 +58,7 @@ const App = () => (
             <div className="max-w-screen-lg mx-auto relative min-h-screen">
                <AnimatedRoutes />
                <WhatsAppFab />
+               <CookieConsent />
                <BottomNav />
             </div>
           </BrowserRouter>
