@@ -294,16 +294,16 @@ export default function Index() {
             </section>
 
             {/* Inline Filters - Minimal top bar */}
-            <div className="sticky top-[90px] z-40 bg-luxury-dark/90 backdrop-blur-xl border-b border-card/5">
-              <div className="flex overflow-x-auto hide-scrollbar gap-2 px-6 py-3">
+            <div className="sticky top-0 z-40 bg-luxury-dark/95 backdrop-blur-xl border-b border-card/10 shadow-lg">
+              <div className="flex overflow-x-auto hide-scrollbar gap-2.5 px-4 py-3">
                 {typeFilters.map((type) => (
                   <button
                     key={type}
                     onClick={() => { setActiveType(type); setShowAll(false); }}
-                    className={`shrink-0 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all ${
+                    className={`shrink-0 px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all active:scale-95 ${
                       activeType === type
-                        ? "bg-accent text-accent-foreground"
-                        : "text-card/50 hover:text-card"
+                        ? "bg-accent text-accent-foreground shadow-md"
+                        : "bg-card/5 text-card/50 hover:text-card hover:bg-card/10"
                     }`}
                   >
                     {type}
@@ -313,10 +313,10 @@ export default function Index() {
                 {sortOptions.map((opt) => (
                   <button
                     key={opt.value}
-                    onClick={() => setSortBy(opt.value)}
-                    className={`shrink-0 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-wider transition-all ${
+                    onClick={() => setSortBy(sortBy === opt.value ? "" : opt.value)}
+                    className={`shrink-0 px-4 py-2 rounded-full text-[11px] font-semibold tracking-wider transition-all active:scale-95 ${
                       sortBy === opt.value
-                        ? "text-primary"
+                        ? "text-primary bg-primary/10"
                         : "text-card/30 hover:text-card/60"
                     }`}
                   >
