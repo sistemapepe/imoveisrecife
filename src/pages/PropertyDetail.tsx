@@ -312,11 +312,13 @@ export default function PropertyDetail() {
 
               <VisitScheduleForm propertyId={property.id} propertyTitle={property.title} />
 
-              <InteractiveMap
-                address={property.address}
-                neighborhood={property.neighborhood}
-                city={property.city}
-              />
+              {settings.showLocationOnCard && (
+                <InteractiveMap
+                  address={property.address}
+                  neighborhood={property.neighborhood}
+                  city={property.city}
+                />
+              )}
             </div>
 
             {/* Desktop sidebar CTA */}
