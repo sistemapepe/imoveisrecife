@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,7 +14,10 @@ import PageTransition from "@/components/PageTransition";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-type Tab = "properties" | "settings" | "users" | "messages" | "privacy";
+import AnalyticsTab from "@/components/admin/AnalyticsTab";
+import VisitsTab from "@/components/admin/VisitsTab";
+
+type Tab = "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -215,6 +218,22 @@ export default function Admin() {
                 className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "privacy" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
               >
                 <FileText className="h-4 w-4" /> LGPD
+              </button>
+            )}
+            {(isAdmin || role === "supervisor") && (
+              <button
+                onClick={() => { setTab("analytics"); setEditing(null); setCreating(false); }}
+                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "analytics" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
+              >
+                <BarChart3 className="h-4 w-4" /> Analytics
+              </button>
+            )}
+            {(isAdmin || role === "supervisor") && (
+              <button
+                onClick={() => { setTab("visits"); setEditing(null); setCreating(false); }}
+                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "visits" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
+              >
+                <Calendar className="h-4 w-4" /> Visitas
               </button>
             )}
           </div>
@@ -422,6 +441,10 @@ export default function Admin() {
                 images={form.images}
                 onChange={(imgs) => setForm({ ...form, images: imgs })}
               />
+              <div>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Tour Virtual 360° (URL YouTube/Matterport)</label>
+                <input type="url" value={(form as any).video_tour_url || ""} onChange={(e) => setForm({ ...form, video_tour_url: e.target.value } as any)} placeholder="https://youtube.com/watch?v=..." className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
+              </div>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 text-sm">
                   <input type="checkbox" checked={form.exclusive} onChange={(e) => setForm({ ...form, exclusive: e.target.checked })} className="rounded border-border" />
@@ -453,6 +476,14 @@ export default function Admin() {
 
           {tab === "messages" && (
             <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
+          )}
+
+          {tab === "analytics" && (isAdmin || role === "supervisor") && (
+            <AnalyticsTab />
+          )}
+
+          {tab === "visits" && (isAdmin || role === "supervisor") && (
+            <VisitsTab />
           )}
         </main>
 

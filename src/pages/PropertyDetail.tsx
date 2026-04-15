@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
@@ -7,6 +7,10 @@ import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 import { Helmet } from "react-helmet-async";
 import InteractiveMap from "@/components/InteractiveMap";
+import ImageLightbox from "@/components/ImageLightbox";
+import VirtualTour from "@/components/VirtualTour";
+import VisitScheduleForm from "@/components/VisitScheduleForm";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export default function PropertyDetail() {
@@ -15,8 +19,16 @@ export default function PropertyDetail() {
   const { properties, settings, favorites, toggleFavorite } = useProperties();
   const property = properties.find((p) => p.id === id);
   const [currentImg, setCurrentImg] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
   const touchStartX = useRef(0);
   const touchDelta = useRef(0);
+
+  // Track property view
+  useEffect(() => {
+    if (!id) return;
+    supabase.from("property_views").insert({ property_id: id, ip_hash: "" }).then();
+  }, [id]);
 
   if (!property) return (
     <PageTransition>
@@ -162,10 +174,11 @@ export default function PropertyDetail() {
           }}
         >
           <img
-            className="h-full w-full object-cover transition-opacity duration-300 pointer-events-none select-none"
+            className="h-full w-full object-cover transition-opacity duration-300 cursor-pointer select-none"
             src={property.images[currentImg]}
             alt={`${property.title} - Foto ${currentImg + 1}`}
             draggable={false}
+            onClick={() => { setLightboxIndex(currentImg); setLightboxOpen(true); }}
           />
           {totalImages > 1 && (
             <>
@@ -274,6 +287,12 @@ export default function PropertyDetail() {
                 </div>
               </div>
 
+              {property.video_tour_url && (
+                <VirtualTour videoUrl={property.video_tour_url} title={property.title} />
+              )}
+
+              <VisitScheduleForm propertyId={property.id} propertyTitle={property.title} />
+
               <InteractiveMap
                 address={property.address}
                 neighborhood={property.neighborhood}
@@ -319,6 +338,14 @@ export default function PropertyDetail() {
           </div>
         </div>
       </div>
+
+      <ImageLightbox
+        images={property.images}
+        initialIndex={lightboxIndex}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        title={property.title}
+      />
     </PageTransition>
   );
 }
