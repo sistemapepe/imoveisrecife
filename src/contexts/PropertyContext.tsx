@@ -97,7 +97,7 @@ const defaultSettings: SiteSettings = {
   whatsappMessage: "Olá! Gostaria de mais informações sobre os imóveis da JHR.",
   availableAmenities: ["Piscina", "Churrasqueira", "Academia", "Sauna", "Jardim", "Elevador", "Varanda Gourmet", "Playground", "Salão de Festas", "Segurança 24h", "Quadra Esportiva", "Spa", "Home Cinema", "Adega", "Lavabo"],
   privacyPolicy: "",
-  showLocationOnCard: true,
+  showLocationOnCard: false,
   developerName: "",
   developerUrl: "",
 };
