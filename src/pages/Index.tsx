@@ -297,6 +297,15 @@ export default function Index() {
                   >
                     <div className="relative w-full aspect-[4/3] overflow-hidden">
                       <img src={p.images[0]} alt={p.title} className="w-full h-full object-cover" />
+                      {p.status && p.status !== "disponivel" && (
+                        <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-sm shadow-lg ${
+                          p.status === "reservado" ? "bg-yellow-500/90" : "bg-red-500/90"
+                        }`}>
+                          <span className="text-[10px] font-bold text-white uppercase tracking-wider">
+                            {p.status === "reservado" ? "Reservado" : "Vendido"}
+                          </span>
+                        </div>
+                      )}
                       <button
                         className="absolute top-3 right-3 bg-foreground/50 backdrop-blur-md p-1.5 rounded-full"
                         onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}

@@ -21,6 +21,15 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         <img alt={property.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={property.images[0]} />
         <div className="absolute top-4 left-4 flex gap-2">
+          {property.status && property.status !== "disponivel" && (
+            <div className={`px-3 py-1 rounded-sm shadow-lg ${
+              property.status === "reservado" ? "bg-yellow-500/90" : "bg-red-500/90"
+            }`}>
+              <span className="text-[10px] font-bold text-white uppercase tracking-[0.15em]">
+                {property.status === "reservado" ? "Reservado" : "Vendido"}
+              </span>
+            </div>
+          )}
           {property.category && (
             <div className="bg-primary px-3 py-1 rounded-sm shadow-lg">
               <span className="text-[10px] font-bold text-primary-foreground uppercase tracking-[0.15em]">{property.category}</span>
