@@ -97,6 +97,7 @@ export type Database = {
           title: string
           type: string
           updated_at: string
+          video_tour_url: string
         }
         Insert: {
           address?: string
@@ -121,6 +122,7 @@ export type Database = {
           title: string
           type?: string
           updated_at?: string
+          video_tour_url?: string
         }
         Update: {
           address?: string
@@ -145,8 +147,41 @@ export type Database = {
           title?: string
           type?: string
           updated_at?: string
+          video_tour_url?: string
         }
         Relationships: []
+      }
+      property_views: {
+        Row: {
+          created_at: string
+          id: string
+          ip_hash: string
+          property_id: string
+          viewer_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_hash?: string
+          property_id: string
+          viewer_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_hash?: string
+          property_id?: string
+          viewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_views_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       role_permissions: {
         Row: {
@@ -264,6 +299,56 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      visit_requests: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          phone: string
+          preferred_date: string
+          preferred_time: string
+          property_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message?: string
+          name: string
+          phone?: string
+          preferred_date: string
+          preferred_time?: string
+          property_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string
+          preferred_date?: string
+          preferred_time?: string
+          property_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visit_requests_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
