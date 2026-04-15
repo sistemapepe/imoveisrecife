@@ -1,10 +1,11 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import { Helmet } from "react-helmet-async";
 import InteractiveMap from "@/components/InteractiveMap";
 import { toast } from "sonner";
 
@@ -79,6 +80,40 @@ export default function PropertyDetail() {
     window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
   };
 
+  const schemaOrg = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    name: property.title,
+    description: property.description,
+    url: window.location.href,
+    datePosted: new Date().toISOString(),
+    image: property.images,
+    offers: {
+      "@type": "Offer",
+      price: property.price,
+      priceCurrency: "BRL",
+      availability: property.status === "vendido"
+        ? "https://schema.org/SoldOut"
+        : property.status === "reservado"
+          ? "https://schema.org/LimitedAvailability"
+          : "https://schema.org/InStock",
+    },
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: property.address,
+      addressLocality: property.city,
+      addressRegion: "PE",
+      addressCountry: "BR",
+    },
+    floorSize: {
+      "@type": "QuantitativeValue",
+      value: property.area,
+      unitCode: "MTK",
+    },
+    numberOfRooms: property.bedrooms,
+    numberOfBathroomsTotal: property.bathrooms,
+  };
+
   return (
     <PageTransition>
       <SEOHead
@@ -87,6 +122,9 @@ export default function PropertyDetail() {
         image={property.images[0]}
         type="article"
       />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(schemaOrg)}</script>
+      </Helmet>
       <div className="min-h-screen bg-background pb-32">
         {/* Top bar */}
         <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-foreground/40 to-transparent max-w-screen-lg mx-auto">
