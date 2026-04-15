@@ -84,23 +84,21 @@ export default function Admin() {
     }
   }, [user, authLoading, navigate]);
 
-  // Realtime notification for new contact messages
+  // Poll for new contact messages (secure alternative to Realtime)
+  const lastMsgCountRef = useCallback(() => {}, []);
   useEffect(() => {
     if (!canViewContacts) return;
-    const channel = supabase
-      .channel("admin_msg_notifications")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "contact_messages" },
-        () => {
-          if (tab !== "messages") {
-            setNewMsgCount((c) => c + 1);
-          }
-        }
-      )
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
+    let lastCount = 0;
+    const checkNewMessages = async () => {
+      const { count } = await supabase.from("contact_messages").select("id", { count: "exact", head: true });
+      if (count !== null && count > lastCount && lastCount > 0 && tab !== "messages") {
+        setNewMsgCount((c) => c + (count - lastCount));
+      }
+      if (count !== null) lastCount = count;
+    };
+    checkNewMessages();
+    const interval = setInterval(checkNewMessages, 30000); // Poll every 30s
+    return () => clearInterval(interval);
   }, [canViewContacts, tab]);
 
   if (authLoading) return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
