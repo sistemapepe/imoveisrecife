@@ -326,8 +326,44 @@ export default function Index() {
               </div>
             </div>
 
-            {/* Featured */}
             <section className="relative z-10 bg-luxury-dark pb-8">
+              {/* Filtered Properties Grid - immediately visible after filters */}
+              <div className="px-6 pt-6 pb-4">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-lg font-serif text-card">
+                    {activeType === "Todos" ? "Todos os Imóveis" : activeType}
+                  </h3>
+                  <span className="text-card/40 text-xs font-medium">
+                    {filteredProperties.length} {filteredProperties.length === 1 ? "imóvel" : "imóveis"}
+                  </span>
+                </div>
+
+                {displayedProperties.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      {displayedProperties.map((p, i) => (
+                        <PropertyCard key={p.id} property={p} index={i} />
+                      ))}
+                    </div>
+                    {!showAll && filteredProperties.length > 6 && (
+                      <div className="flex justify-center mt-8">
+                        <button
+                          onClick={() => setShowAll(true)}
+                          className="flex items-center gap-2 px-8 py-3 rounded-full border-2 border-accent text-accent text-sm font-bold uppercase tracking-wider hover:bg-accent hover:text-accent-foreground transition-all"
+                        >
+                          Ver todos os {filteredProperties.length} imóveis <ArrowRight className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-card/50 text-sm text-center py-12">Nenhum imóvel encontrado para "{activeType}".</p>
+                )}
+              </div>
+
+              {/* Featured */}
+              {featured.length > 0 && (
+                <>
               <div className="px-6 pt-6 pb-4 flex justify-between items-end">
                 <div>
                   <span className="text-accent text-xs font-bold uppercase tracking-widest">Exclusividade {settings.brandName}</span>
@@ -380,10 +416,9 @@ export default function Index() {
                     </div>
                   </motion.div>
                 ))}
-                {featured.length === 0 && (
-                  <p className="text-card/50 text-sm">Nenhum imóvel em destaque. Adicione pelo admin.</p>
-                )}
               </div>
+                </>
+              )}
 
               {/* CTA Banner with first property cover */}
               {properties.length > 0 && (
@@ -424,7 +459,7 @@ export default function Index() {
                     {collections.map((col) => (
                       <button
                         key={col.type}
-                        onClick={() => navigate(`/busca?type=${encodeURIComponent(col.type)}`)}
+                        onClick={() => { setActiveType(col.type); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                         className="relative h-28 rounded-lg overflow-hidden border border-card/5"
                       >
                         <img src={col.image} alt={col.type} className="absolute inset-0 w-full h-full object-cover" />
@@ -438,37 +473,6 @@ export default function Index() {
                   </div>
                 ) : (
                   <p className="text-card/50 text-sm">Cadastre imóveis para ver as coleções.</p>
-                )}
-              </div>
-
-              {/* All Properties */}
-              <div className="px-6 pt-6 pb-4">
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-lg font-serif text-card">Todos os Imóveis</h3>
-                  <span className="text-card/40 text-xs font-medium">{filteredProperties.length} {filteredProperties.length === 1 ? "imóvel" : "imóveis"}</span>
-                </div>
-
-                {/* Property grid */}
-                {displayedProperties.length > 0 ? (
-                  <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      {displayedProperties.map((p, i) => (
-                        <PropertyCard key={p.id} property={p} index={i} />
-                      ))}
-                    </div>
-                    {!showAll && filteredProperties.length > 6 && (
-                      <div className="flex justify-center mt-8">
-                        <button
-                          onClick={() => setShowAll(true)}
-                          className="flex items-center gap-2 px-8 py-3 rounded-full border-2 border-accent text-accent text-sm font-bold uppercase tracking-wider hover:bg-accent hover:text-accent-foreground transition-all"
-                        >
-                          Ver todos os {filteredProperties.length} imóveis <ArrowRight className="h-4 w-4" />
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-card/50 text-sm text-center py-12">Nenhum imóvel encontrado para "{activeType}".</p>
                 )}
               </div>
             </section>
