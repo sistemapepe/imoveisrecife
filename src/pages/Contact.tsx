@@ -114,16 +114,18 @@ export default function Contact() {
           </div>
         </div>
 
-        <section className="px-8 mb-16">
-          <a
-            href={`https://wa.me/${settings.whatsappNumber}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 w-full border border-whatsapp text-whatsapp font-bold py-4 rounded-sm uppercase tracking-[0.2em] text-xs transition-all hover:bg-whatsapp/5"
-          >
-            💬 Falar pelo WhatsApp
-          </a>
-        </section>
+        {settings.whatsappNumber && (
+          <section className="px-8 mb-16">
+            <a
+              href={`https://wa.me/${settings.whatsappNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-3 w-full border border-whatsapp text-whatsapp font-bold py-4 rounded-sm uppercase tracking-[0.2em] text-xs transition-all hover:bg-whatsapp/5"
+            >
+              💬 Falar pelo WhatsApp
+            </a>
+          </section>
+        )}
 
         <footer className="px-6 py-10 border-t border-border flex flex-col items-center gap-6">
           <div className="flex gap-8">
@@ -146,9 +148,11 @@ export default function Contact() {
               <a href={`mailto:${settings.emailContact}`}><Mail className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
             )}
           </div>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest text-center whitespace-pre-line">
-            {settings.footerText}
-          </p>
+          {settings.footerText && (
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest text-center whitespace-pre-line">
+              {settings.footerText}
+            </p>
+          )}
           {settings.developerName && (
             <p className="text-[9px] text-muted-foreground/50 tracking-wider text-center mt-2">
               Desenvolvido por{" "}
