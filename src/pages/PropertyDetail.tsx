@@ -262,9 +262,11 @@ export default function PropertyDetail() {
                   </span>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground mb-1 flex items-center gap-1">
-                <MapPin className="h-4 w-4" /> {property.address}, {property.neighborhood}
-              </p>
+              {settings.showLocationOnCard && (
+                <p className="text-sm text-muted-foreground mb-1 flex items-center gap-1">
+                  <MapPin className="h-4 w-4" /> {property.address}, {property.neighborhood}
+                </p>
+              )}
               <p className="text-xs font-mono text-primary/70 mb-4">Cód: {property.code}</p>
               <div className="text-2xl md:text-3xl font-extrabold text-accent tracking-tight mb-8">{formatPriceFull(property.price)}</div>
 
