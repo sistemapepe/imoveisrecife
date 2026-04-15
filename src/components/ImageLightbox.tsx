@@ -20,10 +20,20 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
   const touchStartX = useRef(0);
   const touchDelta = useRef(0);
 
+  const resetZoom = useCallback(() => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  }, []);
+
+  const goTo = useCallback((dir: number) => {
+    resetZoom();
+    setCurrentIndex((prev) => (prev + dir + images.length) % images.length);
+  }, [images.length, resetZoom]);
+
   useEffect(() => {
     setCurrentIndex(initialIndex);
     resetZoom();
-  }, [initialIndex, isOpen]);
+  }, [initialIndex, isOpen, resetZoom]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -34,17 +44,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [isOpen, currentIndex, onClose, goTo]);
-
-  const resetZoom = () => {
-    setScale(1);
-    setPosition({ x: 0, y: 0 });
-  };
-
-  const goTo = useCallback((dir: number) => {
-    resetZoom();
-    setCurrentIndex((prev) => (prev + dir + images.length) % images.length);
-  }, [images.length]);
+  }, [isOpen, onClose, goTo]);
 
   const toggleZoom = () => {
     if (scale > 1) {
