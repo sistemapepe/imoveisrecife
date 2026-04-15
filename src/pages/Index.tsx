@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Heart, ChevronLeft, ChevronRight, Search, MapPin } from "lucide-react";
+import { ArrowRight, Heart, ChevronLeft, ChevronRight, Search, MapPin, LayoutGrid, Home, Building2, Layers, LandPlot, Store, ArrowUpDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import heroImage from "@/assets/hero-mansion.jpg";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
@@ -10,9 +10,16 @@ import PropertyCard from "@/components/PropertyCard";
 import SEOHead from "@/components/SEOHead";
 import { searchLocations } from "@/data/pernambuco-locations";
 
-const typeFilters = ["Todos", "Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"];
+const typeFilters = [
+  { label: "Todos", icon: LayoutGrid },
+  { label: "Casa", icon: Home },
+  { label: "Apartamento", icon: Building2 },
+  { label: "Cobertura", icon: Layers },
+  { label: "Terreno", icon: LandPlot },
+  { label: "Comercial", icon: Store },
+];
 const sortOptions = [
-  { value: "area_desc", label: "Maior área" },
+  { value: "area_desc", label: "Maior área", icon: ArrowUpDown },
 ];
 
 export default function Index() {
@@ -296,33 +303,38 @@ export default function Index() {
             {/* Inline Filters - Minimal top bar */}
             <div className="sticky top-0 z-40 bg-luxury-dark/95 backdrop-blur-xl border-b border-card/10 shadow-lg">
               <div className="flex overflow-x-auto hide-scrollbar gap-2.5 px-4 py-3">
-                {typeFilters.map((type) => (
+                {typeFilters.map(({ label, icon: Icon }) => (
                   <button
-                    key={type}
-                    onClick={() => { setActiveType(type); setShowAll(false); }}
-                    className={`shrink-0 px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all active:scale-95 ${
-                      activeType === type
+                    key={label}
+                    onClick={() => { setActiveType(label); setShowAll(false); }}
+                    className={`shrink-0 flex items-center gap-1.5 px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all active:scale-95 ${
+                      activeType === label
                         ? "bg-accent text-accent-foreground shadow-md"
                         : "bg-card/5 text-card/50 hover:text-card hover:bg-card/10"
                     }`}
                   >
-                    {type}
+                    <Icon className="h-3.5 w-3.5" />
+                    {label}
                   </button>
                 ))}
                 <div className="shrink-0 w-px h-6 bg-card/10 self-center mx-1" />
-                {sortOptions.map((opt) => (
+                {sortOptions.map((opt) => {
+                  const SortIcon = opt.icon;
+                  return (
                   <button
                     key={opt.value}
                     onClick={() => setSortBy(sortBy === opt.value ? "" : opt.value)}
-                    className={`shrink-0 px-4 py-2 rounded-full text-[11px] font-semibold tracking-wider transition-all active:scale-95 ${
+                    className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-semibold tracking-wider transition-all active:scale-95 ${
                       sortBy === opt.value
                         ? "text-primary bg-primary/10"
                         : "text-card/30 hover:text-card/60"
                     }`}
                   >
+                    <SortIcon className="h-3.5 w-3.5" />
                     {opt.label}
                   </button>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
