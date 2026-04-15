@@ -218,7 +218,7 @@ export default function PropertyDetail() {
             <div>
               {property.exclusive && (
                 <div className="flex items-center gap-2 mb-2 text-primary font-semibold text-xs tracking-widest uppercase">
-                  <Award className="h-4 w-4" /> Exclusividade JHR
+                  <Award className="h-4 w-4" /> Exclusividade {settings.brandName}
                 </div>
               )}
               <div className="flex items-center gap-2 flex-wrap mb-2">
