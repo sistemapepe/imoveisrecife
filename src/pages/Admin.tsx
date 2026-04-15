@@ -441,6 +441,10 @@ export default function Admin() {
                 images={form.images}
                 onChange={(imgs) => setForm({ ...form, images: imgs })}
               />
+              <div>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Tour Virtual 360° (URL YouTube/Matterport)</label>
+                <input type="url" value={(form as any).video_tour_url || ""} onChange={(e) => setForm({ ...form, video_tour_url: e.target.value } as any)} placeholder="https://youtube.com/watch?v=..." className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
+              </div>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 text-sm">
                   <input type="checkbox" checked={form.exclusive} onChange={(e) => setForm({ ...form, exclusive: e.target.checked })} className="rounded border-border" />
