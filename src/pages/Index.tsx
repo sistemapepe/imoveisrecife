@@ -447,49 +447,11 @@ export default function Index() {
                 )}
               </div>
 
-              {/* Inline Filters + All Properties */}
-              <div className="px-6 pt-8 pb-4">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <span className="text-accent text-xs font-bold uppercase tracking-widest">Explore</span>
-                    <h3 className="text-2xl font-serif text-card mt-1">Todos os Imóveis</h3>
-                  </div>
-                  <span className="text-card/50 text-sm font-medium">{filteredProperties.length} {filteredProperties.length === 1 ? "imóvel" : "imóveis"}</span>
-                </div>
-
-                {/* Type filter chips */}
-                <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-4">
-                  {typeFilters.map((type) => (
-                    <button
-                      key={type}
-                      onClick={() => { setActiveType(type); setShowAll(false); }}
-                      className={`shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
-                        activeType === type
-                          ? "bg-accent text-accent-foreground shadow-lg"
-                          : "bg-card/5 border border-card/10 text-card/60 hover:border-accent/30 hover:text-card"
-                      }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Sort chips */}
-                <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-6">
-                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-card/40 self-center mr-1">Ordenar:</span>
-                  {sortOptions.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setSortBy(opt.value)}
-                      className={`shrink-0 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
-                        sortBy === opt.value
-                          ? "bg-primary/20 text-primary border border-primary/30"
-                          : "bg-card/5 border border-card/10 text-card/50 hover:text-card"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
+              {/* All Properties */}
+              <div className="px-6 pt-6 pb-4">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-lg font-serif text-card">Todos os Imóveis</h3>
+                  <span className="text-card/40 text-xs font-medium">{filteredProperties.length} {filteredProperties.length === 1 ? "imóvel" : "imóveis"}</span>
                 </div>
 
                 {/* Property grid */}
