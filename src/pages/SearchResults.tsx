@@ -78,7 +78,7 @@ export default function SearchResults() {
     }
 
     return result;
-  }, [properties, activeFilters, locationFilter, bedroomsFilter, parkingFilter]);
+  }, [properties, activeFilters, activeStatus, locationFilter, bedroomsFilter, parkingFilter]);
 
   return (
     <PageTransition>
