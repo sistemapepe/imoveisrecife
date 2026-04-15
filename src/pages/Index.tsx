@@ -326,8 +326,155 @@ export default function Index() {
               </div>
             </div>
 
-            {/* Featured */}
             <section className="relative z-10 bg-luxury-dark pb-8">
+              {/* Filtered Properties Grid - immediately visible after filters */}
+              <div className="px-6 pt-6 pb-4">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-lg font-serif text-card">
+                    {activeType === "Todos" ? "Todos os Imóveis" : activeType}
+                  </h3>
+                  <span className="text-card/40 text-xs font-medium">
+                    {filteredProperties.length} {filteredProperties.length === 1 ? "imóvel" : "imóveis"}
+                  </span>
+                </div>
+
+                {displayedProperties.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      {displayedProperties.map((p, i) => (
+                        <PropertyCard key={p.id} property={p} index={i} />
+                      ))}
+                    </div>
+                    {!showAll && filteredProperties.length > 6 && (
+                      <div className="flex justify-center mt-8">
+                        <button
+                          onClick={() => setShowAll(true)}
+                          className="flex items-center gap-2 px-8 py-3 rounded-full border-2 border-accent text-accent text-sm font-bold uppercase tracking-wider hover:bg-accent hover:text-accent-foreground transition-all"
+                        >
+                          Ver todos os {filteredProperties.length} imóveis <ArrowRight className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-card/50 text-sm text-center py-12">Nenhum imóvel encontrado para "{activeType}".</p>
+                )}
+              </div>
+
+              {/* Featured */}
+              {featured.length > 0 && (
+                <>
+              <div className="px-6 pt-6 pb-4 flex justify-between items-end">
+                <div>
+                  <span className="text-accent text-xs font-bold uppercase tracking-widest">Exclusividade {settings.brandName}</span>
+                  <h3 className="text-2xl font-serif text-card mt-1">Destaques</h3>
+                </div>
+                <button onClick={() => navigate("/busca")} className="text-primary text-sm font-semibold flex items-center gap-1">
+                  Ver todos <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="flex overflow-x-auto hide-scrollbar gap-5 px-6 pb-6">
+                {featured.map((p, i) => (
+                  <motion.div
+                    key={p.id}
+                    initial={{ opacity: 0, x: 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.1 * i }}
+                    className="flex flex-col min-w-[280px] bg-luxury-dark-lighter/40 rounded-xl overflow-hidden border border-card/5 cursor-pointer"
+                    onClick={() => navigate(`/imovel/${p.id}`)}
+                  >
+                    <div className="relative w-full aspect-[4/3] overflow-hidden">
+                      <img src={p.images[0]} alt={p.title} className="w-full h-full object-cover" />
+                      {p.status && p.status !== "disponivel" && (
+                        <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-sm shadow-lg ${
+                          p.status === "reservado" ? "bg-yellow-500/90" : "bg-red-500/90"
+                        }`}>
+                          <span className="text-[10px] font-bold text-white uppercase tracking-wider">
+                            {p.status === "reservado" ? "Reservado" : "Vendido"}
+                          </span>
+                        </div>
+                      )}
+                      <button
+                        className="absolute top-3 right-3 bg-foreground/50 backdrop-blur-md p-1.5 rounded-full"
+                        onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}
+                      >
+                        <Heart className={`h-4 w-4 ${favorites.includes(p.id) ? "fill-accent text-accent" : "text-card"}`} />
+                      </button>
+                    </div>
+                    <div className="p-5">
+                      <p className="text-accent text-lg font-bold">{formatPriceFull(p.price)}</p>
+                      <p className="text-card/70 text-sm font-medium mb-3">
+                        {p.title}
+                        {settings.showLocationOnCard && ` - ${p.neighborhood}`}
+                      </p>
+                      <div className="flex items-center gap-4 text-card/50 text-xs uppercase tracking-tighter">
+                        <div className="flex items-center gap-1"><Ruler className="h-3 w-3 text-primary" />{p.area}m²</div>
+                        <div className="flex items-center gap-1"><BedDouble className="h-3 w-3 text-primary" />{p.suites} Suítes</div>
+                        <div className="flex items-center gap-1"><Car className="h-3 w-3 text-primary" />{p.parking} Vagas</div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+                </>
+              )}
+
+              {/* CTA Banner with first property cover */}
+              {properties.length > 0 && (
+                <div className="px-6 py-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="relative h-56 md:h-64 rounded-2xl overflow-hidden cursor-pointer group"
+                    onClick={() => navigate(`/imovel/${properties[0].id}`)}
+                  >
+                    <img
+                      src={properties[0].images[0]}
+                      alt={properties[0].title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/50 to-transparent" />
+                    <div className="relative z-10 flex flex-col justify-center h-full px-8 max-w-sm">
+                      <span className="text-accent text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Em destaque</span>
+                      <h3 className="font-serif text-2xl md:text-3xl text-card leading-tight mb-2">{properties[0].title}</h3>
+                      {settings.showLocationOnCard && (
+                        <p className="text-card/70 text-sm mb-4">{properties[0].neighborhood} · {properties[0].city}</p>
+                      )}
+                      <span className="inline-flex items-center gap-2 text-accent font-bold text-sm uppercase tracking-wider group-hover:gap-3 transition-all">
+                        Saiba mais <ArrowRight className="h-4 w-4" />
+                      </span>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+
+              {/* Dynamic Collections */}
+              <div className="px-6 py-6">
+                <h4 className="text-card font-serif text-lg mb-4">Coleções</h4>
+                {collections.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {collections.map((col) => (
+                      <button
+                        key={col.type}
+                        onClick={() => { setActiveType(col.type); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                        className="relative h-28 rounded-lg overflow-hidden border border-card/5"
+                      >
+                        <img src={col.image} alt={col.type} className="absolute inset-0 w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-foreground/50" />
+                        <div className="relative z-10 flex flex-col justify-center items-center h-full">
+                          <span className="text-card font-bold tracking-widest text-xs uppercase">{col.type}</span>
+                          <span className="text-card/60 text-[10px] mt-1">{col.count} {col.count === 1 ? "imóvel" : "imóveis"}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-card/50 text-sm">Cadastre imóveis para ver as coleções.</p>
+                )}
+              </div>
               <div className="px-6 pt-6 pb-4 flex justify-between items-end">
                 <div>
                   <span className="text-accent text-xs font-bold uppercase tracking-widest">Exclusividade {settings.brandName}</span>
