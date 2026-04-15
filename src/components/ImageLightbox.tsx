@@ -19,6 +19,11 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
   const posStart = useRef({ x: 0, y: 0 });
   const touchStartX = useRef(0);
   const touchDelta = useRef(0);
+  
+  // Pinch-to-zoom refs
+  const initialPinchDistance = useRef(0);
+  const initialPinchScale = useRef(1);
+  const isPinching = useRef(false);
 
   const resetZoom = useCallback(() => {
     setScale(1);
@@ -46,6 +51,18 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
     return () => window.removeEventListener("keydown", handleKey);
   }, [isOpen, onClose, goTo]);
 
+  // Prevent body scroll when lightbox is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.touchAction = "";
+    };
+  }, [isOpen]);
+
   const toggleZoom = () => {
     if (scale > 1) {
       resetZoom();
@@ -72,18 +89,60 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
 
   const handlePointerUp = () => setIsDragging(false);
 
+  const getDistance = (t1: React.Touch, t2: React.Touch) => {
+    return Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+  };
+
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      // Pinch start
+      isPinching.current = true;
+      initialPinchDistance.current = getDistance(e.touches[0], e.touches[1]);
+      initialPinchScale.current = scale;
+      return;
+    }
     if (scale > 1) return;
     touchStartX.current = e.touches[0].clientX;
     touchDelta.current = 0;
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && isPinching.current) {
+      e.preventDefault();
+      const dist = getDistance(e.touches[0], e.touches[1]);
+      const newScale = Math.min(5, Math.max(1, initialPinchScale.current * (dist / initialPinchDistance.current)));
+      setScale(newScale);
+      if (newScale <= 1) {
+        setPosition({ x: 0, y: 0 });
+      }
+      return;
+    }
+    if (scale > 1 && e.touches.length === 1) {
+      // Pan while zoomed
+      if (!isDragging) {
+        setIsDragging(true);
+        dragStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        posStart.current = { ...position };
+      } else {
+        setPosition({
+          x: posStart.current.x + (e.touches[0].clientX - dragStart.current.x),
+          y: posStart.current.y + (e.touches[0].clientY - dragStart.current.y),
+        });
+      }
+      return;
+    }
     if (scale > 1) return;
     touchDelta.current = e.touches[0].clientX - touchStartX.current;
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (isPinching.current && e.touches.length < 2) {
+      isPinching.current = false;
+      setIsDragging(false);
+      if (scale <= 1.05) resetZoom();
+      return;
+    }
+    setIsDragging(false);
     if (scale > 1 || images.length <= 1) return;
     if (touchDelta.current > 60) goTo(-1);
     else if (touchDelta.current < -60) goTo(1);
@@ -119,7 +178,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
 
         {/* Main image */}
         <div
-          className="flex-1 flex items-center justify-center overflow-hidden relative select-none"
+          className="flex-1 flex items-center justify-center overflow-hidden relative select-none touch-none"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -151,7 +210,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
             className="max-h-full max-w-full object-contain cursor-grab active:cursor-grabbing"
             style={{
               transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
-              transition: isDragging ? "none" : "transform 0.2s ease",
+              transition: isDragging || isPinching.current ? "none" : "transform 0.2s ease",
             }}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
@@ -160,6 +219,13 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
             draggable={false}
           />
         </div>
+
+        {/* Zoom indicator */}
+        {scale > 1 && (
+          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-white/70 text-xs font-medium">
+            {Math.round(scale * 100)}%
+          </div>
+        )}
 
         {/* Thumbnails */}
         {images.length > 1 && (
