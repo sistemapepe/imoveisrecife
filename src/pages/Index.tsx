@@ -318,19 +318,23 @@ export default function Index() {
                   </button>
                 ))}
                 <div className="shrink-0 w-px h-6 bg-card/10 self-center mx-1" />
-                {sortOptions.map((opt) => (
+                {sortOptions.map((opt) => {
+                  const SortIcon = opt.icon;
+                  return (
                   <button
                     key={opt.value}
                     onClick={() => setSortBy(sortBy === opt.value ? "" : opt.value)}
-                    className={`shrink-0 px-4 py-2 rounded-full text-[11px] font-semibold tracking-wider transition-all active:scale-95 ${
+                    className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-semibold tracking-wider transition-all active:scale-95 ${
                       sortBy === opt.value
                         ? "text-primary bg-primary/10"
                         : "text-card/30 hover:text-card/60"
                     }`}
                   >
+                    <SortIcon className="h-3.5 w-3.5" />
                     {opt.label}
                   </button>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
