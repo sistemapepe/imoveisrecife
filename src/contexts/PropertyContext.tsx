@@ -31,6 +31,7 @@ export interface Property {
   featured: boolean;
   category: string;
   status: PropertyStatus;
+  video_tour_url?: string;
 }
 
 export interface SiteSettings {
