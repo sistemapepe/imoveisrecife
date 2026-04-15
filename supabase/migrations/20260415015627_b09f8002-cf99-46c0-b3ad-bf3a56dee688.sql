@@ -1,0 +1,1 @@
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS show_location_on_card boolean NOT NULL DEFAULT true;
