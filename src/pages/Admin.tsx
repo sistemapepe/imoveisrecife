@@ -116,6 +116,11 @@ export default function Admin() {
 
   const handleSave = async () => {
     if (!form.title) { toast.error("Título obrigatório"); return; }
+    if (!form.price || form.price <= 0) { toast.error("Preço obrigatório"); return; }
+    if (!form.type) { toast.error("Tipo obrigatório"); return; }
+    if (!form.status) { toast.error("Status obrigatório"); return; }
+    if (!form.category) { toast.error("Categoria obrigatória"); return; }
+    if (!form.description || !form.description.trim()) { toast.error("Descrição obrigatória"); return; }
     if (creating) {
       await addProperty(form);
       toast.success("Imóvel criado!");
