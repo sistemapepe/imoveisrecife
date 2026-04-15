@@ -10,9 +10,16 @@ import PropertyCard from "@/components/PropertyCard";
 import SEOHead from "@/components/SEOHead";
 import { searchLocations } from "@/data/pernambuco-locations";
 
-const typeFilters = ["Todos", "Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"];
+const typeFilters = [
+  { label: "Todos", icon: LayoutGrid },
+  { label: "Casa", icon: Home },
+  { label: "Apartamento", icon: Building2 },
+  { label: "Cobertura", icon: Layers },
+  { label: "Terreno", icon: LandPlot },
+  { label: "Comercial", icon: Store },
+];
 const sortOptions = [
-  { value: "area_desc", label: "Maior área" },
+  { value: "area_desc", label: "Maior área", icon: ArrowUpDown },
 ];
 
 export default function Index() {
