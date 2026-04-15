@@ -143,7 +143,12 @@ export default function PropertyDetail() {
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(schemaOrg)}</script>
       </Helmet>
-      <div className="min-h-screen bg-background pb-32">
+      <motion.div
+        className="min-h-screen bg-background pb-32"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+      >
         {/* Top bar */}
         <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-foreground/40 to-transparent max-w-screen-lg mx-auto">
           <button onClick={() => navigate(-1)} className="flex h-10 w-10 items-center justify-center rounded-full bg-card/20 backdrop-blur-md text-card border border-card/30">
@@ -349,7 +354,7 @@ export default function PropertyDetail() {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <ImageLightbox
         images={property.images}
