@@ -61,22 +61,30 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
             <Ruler className="h-3.5 w-3.5 shrink-0 text-accent" />
             <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.area}m²</span>
           </div>
+        {!!property.bedrooms && (
           <div className="flex items-center gap-1 min-w-0">
             <DoorOpen className="h-3.5 w-3.5 shrink-0 text-accent" />
             <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.bedrooms} Qts</span>
           </div>
+        )}
+        {!!property.suites && (
           <div className="flex items-center gap-1 min-w-0">
             <BedDouble className="h-3.5 w-3.5 shrink-0 text-accent" />
             <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.suites} Suítes</span>
           </div>
+        )}
+        {!!property.bathrooms && (
           <div className="flex items-center gap-1 min-w-0">
             <Bath className="h-3.5 w-3.5 shrink-0 text-accent" />
             <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.bathrooms} Banh.</span>
           </div>
+        )}
+        {!!property.parking && (
           <div className="flex items-center gap-1 min-w-0">
             <Car className="h-3.5 w-3.5 shrink-0 text-accent" />
             <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.parking} Vagas</span>
           </div>
+        )}
         </div>
       </div>
     </motion.div>

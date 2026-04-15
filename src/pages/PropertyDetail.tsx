@@ -270,12 +270,12 @@ export default function PropertyDetail() {
 
               <div className="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 mb-8">
                 {[
-                  { icon: DoorOpen, label: `${(property as any).bedrooms || 0}`, sub: "Quartos" },
-                  { icon: BedDouble, label: `${property.suites}`, sub: "Suítes" },
-                  { icon: Bath, label: `${property.bathrooms}`, sub: "Banheiros" },
-                  { icon: Car, label: `${property.parking}`, sub: "Vagas" },
-                  { icon: Ruler, label: `${property.area}`, sub: "m²" },
-                ].map(({ icon: Icon, label, sub }) => (
+                  { icon: DoorOpen, label: `${(property as any).bedrooms || 0}`, sub: "Quartos", value: (property as any).bedrooms },
+                  { icon: BedDouble, label: `${property.suites}`, sub: "Suítes", value: property.suites },
+                  { icon: Bath, label: `${property.bathrooms}`, sub: "Banheiros", value: property.bathrooms },
+                  { icon: Car, label: `${property.parking}`, sub: "Vagas", value: property.parking },
+                  { icon: Ruler, label: `${property.area}`, sub: "m²", value: property.area },
+                ].filter(item => !!item.value).map(({ icon: Icon, label, sub }) => (
                   <div key={sub} className="flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-card border border-border shadow-sm">
                     <Icon className="h-5 w-5 text-accent mb-1.5" />
                     <span className="text-sm font-bold">{label}</span>
