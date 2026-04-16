@@ -49,6 +49,7 @@ export default function Admin() {
   const [tab, setTab] = useState<Tab>("dashboard");
   const [search, setSearch] = useState("");
   const [newMsgCount, setNewMsgCount] = useState(0);
+  const [pendingVisitsCount, setPendingVisitsCount] = useState(0);
   const [editing, setEditing] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState<Omit<Property, "id" | "code">>(emptyProperty);
@@ -105,6 +106,22 @@ export default function Admin() {
     return () => clearInterval(interval);
   }, [canViewContacts, tab]);
 
+  // Poll for pending visit requests
+  useEffect(() => {
+    const canViewVisits = isAdmin || role === "supervisor";
+    if (!canViewVisits) return;
+    const checkPendingVisits = async () => {
+      const { count } = await supabase
+        .from("visit_requests")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "pending");
+      setPendingVisitsCount(count ?? 0);
+    };
+    checkPendingVisits();
+    const interval = setInterval(checkPendingVisits, 30000);
+    return () => clearInterval(interval);
+  }, [isAdmin, role, tab]);
+
   if (authLoading) return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
   if (!user) return null;
 
@@ -155,7 +172,7 @@ export default function Admin() {
     { key: "dashboard", label: "Resumo", icon: Home, show: true },
     { key: "properties", label: "Imóveis", icon: LayoutDashboard, show: true },
     { key: "messages", label: "Contatos", icon: MessageSquare, show: !!canViewContacts, badge: newMsgCount },
-    { key: "visits", label: "Visitas", icon: Calendar, show: isAdmin || role === "supervisor" },
+    { key: "visits", label: "Visitas", icon: Calendar, show: isAdmin || role === "supervisor", badge: pendingVisitsCount },
     { key: "analytics", label: "Analytics", icon: BarChart3, show: isAdmin || role === "supervisor" },
     { key: "traffic", label: "Tráfego", icon: Globe, show: isAdmin || role === "supervisor" },
     { key: "users", label: "Equipe", icon: Users, show: !!canManageUsers },
