@@ -44,7 +44,7 @@ export default function Contact() {
         </nav>
 
         <header className="px-6 pt-10 pb-6 text-center">
-          <h2 className="font-serif text-4xl mb-2">Fale Conosco</h2>
+          <h2 className="font-serif text-4xl mb-2">Atendimento Exclusivo</h2>
           <div className="w-12 h-[1px] bg-accent mx-auto" />
         </header>
 
@@ -101,7 +101,7 @@ export default function Contact() {
               className="w-full border border-border rounded-lg bg-transparent p-3 mt-2 text-sm focus:outline-none focus:border-accent placeholder:text-muted-foreground placeholder:uppercase placeholder:text-xs placeholder:tracking-wider resize-none"
             />
             <button type="submit" disabled={sending} className="w-full gold-gradient text-accent-foreground font-bold py-4 rounded-sm uppercase tracking-[0.2em] text-xs shadow-lg mt-8 disabled:opacity-50">
-              {sending ? "Enviando..." : "Enviar Mensagem"}
+              {sending ? "Enviando..." : "Solicitar Contato"}
             </button>
           </form>
         </section>

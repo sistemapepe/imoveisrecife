@@ -90,7 +90,7 @@ export default function VisitScheduleForm({ propertyId, propertyTitle }: VisitSc
   return (
     <div className="mb-8">
       <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
-        <Calendar className="h-5 w-5 text-accent" /> Agendar Visita
+        <Calendar className="h-5 w-5 text-accent" /> Agendar uma Visita Privada
       </h2>
       <form onSubmit={handleSubmit} className="space-y-4 p-5 rounded-2xl bg-card border border-border">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

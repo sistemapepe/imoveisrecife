@@ -68,7 +68,7 @@ export default function Login() {
             <h1 className="font-serif text-2xl font-bold text-foreground tracking-tight">
               {settings.brandName || "Admin"}
             </h1>
-            <p className="text-muted-foreground text-sm mt-1.5">Acesso Administrativo</p>
+            <p className="text-muted-foreground text-sm mt-1.5">Acesso Restrito</p>
           </div>
 
           <motion.div
@@ -115,7 +115,7 @@ export default function Login() {
                 disabled={loading}
                 className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold uppercase tracking-wider text-sm disabled:opacity-50 hover:opacity-90 transition-opacity"
               >
-                {loading ? "Carregando..." : "Entrar"}
+                {loading ? "Carregando..." : "Acessar"}
               </button>
             </form>
           </motion.div>

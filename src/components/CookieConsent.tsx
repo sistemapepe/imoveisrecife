@@ -31,9 +31,9 @@ export default function CookieConsent() {
         <div className="flex items-start gap-3">
           <Shield className="h-5 w-5 text-primary mt-0.5 shrink-0" />
           <div className="flex-1 space-y-2">
-            <p className="text-sm text-foreground font-semibold">Privacidade e Cookies</p>
+            <p className="text-sm text-foreground font-semibold">Sua privacidade importa</p>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Utilizamos cookies essenciais para o funcionamento do site. Ao continuar navegando, você concorda com nossa{" "}
+              Usamos cookies essenciais para uma experiência refinada. Ao continuar, você concorda com nossa{" "}
               <Link to="/privacidade" className="text-primary underline underline-offset-2">
                 Política de Privacidade
               </Link>{" "}
