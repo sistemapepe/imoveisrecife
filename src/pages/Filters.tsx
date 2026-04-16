@@ -57,7 +57,7 @@ export default function Filters() {
             <button onClick={() => navigate(-1)} className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-secondary transition-colors">
               <X className="h-6 w-6" />
             </button>
-            <h1 className="text-lg font-bold tracking-tight">Filtros Avançados</h1>
+            <h1 className="text-lg font-bold tracking-tight">Refinar Busca</h1>
             <button className="text-primary text-sm font-semibold" onClick={() => { setSearch(""); setSelectedTypes([]); setSelectedBedrooms(""); setSelectedParking(""); }}>Limpar</button>
           </div>
           <div className="px-4 pb-4 relative">
@@ -113,7 +113,7 @@ export default function Filters() {
           <div className="h-px bg-border mx-4 my-6" />
           <section className="px-4">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Faixa de Preço</h3>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Investimento</h3>
               <div className="text-accent font-bold text-sm">R$ 2.5M - R$ 15M+</div>
             </div>
             <div className="relative h-10 flex items-center">
@@ -164,7 +164,7 @@ export default function Filters() {
             }}
             className="w-full h-14 gold-gradient rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
           >
-            <span className="text-accent-foreground font-extrabold tracking-wide uppercase">Ver Resultados</span>
+            <span className="text-accent-foreground font-extrabold tracking-wide uppercase">Ver Imóveis</span>
             <ArrowRight className="h-5 w-5 text-accent-foreground" />
           </button>
         </div>

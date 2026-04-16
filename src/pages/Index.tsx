@@ -239,7 +239,7 @@ export default function Index() {
                           navigate(`/busca?location=${encodeURIComponent(quickSearch.trim())}`);
                         }
                       }}
-                      placeholder="Buscar por cidade ou bairro..."
+                      placeholder="Onde deseja morar?"
                     />
                   </div>
                   {showQuickSuggestions && quickSearch.trim() && quickSuggestions.length > 0 && (
@@ -284,7 +284,7 @@ export default function Index() {
                   }}
                   className="flex min-w-[160px] items-center justify-center overflow-hidden rounded-full h-12 px-8 border-2 border-accent text-accent bg-transparent text-sm font-bold uppercase tracking-[0.2em] transition-all hover:bg-accent hover:text-accent-foreground"
                 >
-                  Conheça
+                  Descobrir
                 </motion.button>
 
                 {/* Dots */}

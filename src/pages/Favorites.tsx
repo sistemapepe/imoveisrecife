@@ -19,15 +19,15 @@ export default function Favorites() {
             <button onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center">
               <ArrowLeft className="h-6 w-6" />
             </button>
-            <h1 className="text-lg font-bold">Favoritos</h1>
+            <h1 className="text-lg font-bold">Sua Seleção</h1>
             <div className="w-10" />
           </div>
         </header>
         <main className="p-4 space-y-6">
           {favProperties.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground">
-              <p className="text-lg font-semibold">Nenhum favorito ainda</p>
-              <p className="text-sm mt-2">Toque no ♥ para salvar imóveis</p>
+              <p className="text-lg font-semibold">Sua seleção está vazia</p>
+              <p className="text-sm mt-2">Toque no ♥ para guardar os imóveis que mais despertam seu interesse</p>
             </div>
           ) : (
             favProperties.map((p, i) => <PropertyCard key={p.id} property={p} index={i} />)
