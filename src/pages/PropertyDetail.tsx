@@ -77,17 +77,21 @@ export default function PropertyDetail() {
 
   const handleShare = async () => {
     const url = window.location.href;
-    const text = `${property.title} - ${formatPriceFull(property.price)} | ${property.neighborhood}, ${property.city}`;
 
     if (navigator.share) {
       try {
-        await navigator.share({ title: property.title, text, url });
-      } catch {
-        // User cancelled share
+        await navigator.share({ title: property.title, url });
+        return;
+      } catch (err: any) {
+        // User cancelled or share failed - fall back to clipboard
+        if (err?.name === "AbortError") return;
       }
-    } else {
-      await navigator.clipboard.writeText(`${text}\n${url}`);
+    }
+    try {
+      await navigator.clipboard.writeText(url);
       toast.success("Link copiado!");
+    } catch {
+      toast.error("Não foi possível compartilhar o link");
     }
   };
 
