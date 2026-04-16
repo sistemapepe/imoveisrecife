@@ -184,7 +184,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     fetchProperties();
     fetchSettings();
-  }, [fetchProperties, fetchSettings]);
+    fetchContactInfo();
+  }, [fetchProperties, fetchSettings, fetchContactInfo]);
 
   useEffect(() => {
     fetchFavorites();
