@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import PageTransition from "@/components/PageTransition";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
 import AnalyticsTab from "@/components/admin/AnalyticsTab";
@@ -147,20 +148,91 @@ export default function Admin() {
     navigate("/");
   };
 
+  const allTabs: { key: Tab; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = [
+    { key: "properties", label: "Imóveis", icon: LayoutDashboard, show: true },
+    { key: "messages", label: "Contatos", icon: MessageSquare, show: !!canViewContacts, badge: newMsgCount },
+    { key: "visits", label: "Visitas", icon: Calendar, show: isAdmin || role === "supervisor" },
+    { key: "analytics", label: "Analytics", icon: BarChart3, show: isAdmin || role === "supervisor" },
+    { key: "traffic", label: "Tráfego", icon: Globe, show: isAdmin || role === "supervisor" },
+    { key: "users", label: "Equipe", icon: Users, show: !!canManageUsers },
+    { key: "settings", label: "Configurações", icon: Settings, show: !!canManageSettings },
+    { key: "privacy", label: "LGPD", icon: FileText, show: !!canManageSettings },
+  ];
+  const visibleTabs = allTabs.filter((t) => t.show);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const switchTab = (newTab: Tab) => {
+    setTab(newTab);
+    setEditing(null);
+    setCreating(false);
+    if (newTab === "messages") setNewMsgCount(0);
+    setMobileMenuOpen(false);
+  };
+
+  const currentTabLabel = visibleTabs.find((t) => t.key === tab)?.label ?? "Painel";
+
   return (
     <PageTransition>
       <div className="min-h-screen bg-background pb-8">
         <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">
-            <button onClick={() => navigate("/")} className="w-10 h-10 flex items-center justify-center">
-              <ArrowLeft className="h-6 w-6" />
-            </button>
-            <h1 className="text-lg font-bold">Painel {role === "admin" ? "Admin" : role === "supervisor" ? "Supervisor" : "Corretor"}</h1>
+            <div className="flex items-center gap-1">
+              <button onClick={() => navigate("/")} className="w-10 h-10 flex items-center justify-center" aria-label="Voltar">
+                <ArrowLeft className="h-6 w-6" />
+              </button>
+              {/* Mobile menu trigger */}
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <button className="md:hidden w-10 h-10 flex items-center justify-center" aria-label="Abrir menu">
+                    <Menu className="h-6 w-6" />
+                  </button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-72 p-0 flex flex-col">
+                  <SheetHeader className="px-5 pt-5 pb-3 border-b border-border">
+                    <SheetTitle className="text-left">Painel {role === "admin" ? "Admin" : role === "supervisor" ? "Supervisor" : "Corretor"}</SheetTitle>
+                  </SheetHeader>
+                  <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-1">
+                    {visibleTabs.map((t) => {
+                      const Icon = t.icon;
+                      const active = tab === t.key;
+                      return (
+                        <button
+                          key={t.key}
+                          onClick={() => switchTab(t.key)}
+                          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                            active ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
+                          }`}
+                        >
+                          <Icon className="h-5 w-5 shrink-0" />
+                          <span className="flex-1 text-left">{t.label}</span>
+                          {!!t.badge && t.badge > 0 && (
+                            <span className="h-5 min-w-[20px] px-1.5 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
+                              {t.badge}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </nav>
+                  <button
+                    onClick={handleSignOut}
+                    className="m-3 flex items-center justify-center gap-2 py-3 rounded-xl bg-destructive/10 text-destructive font-bold text-sm"
+                  >
+                    <LogOut className="h-4 w-4" /> Sair
+                  </button>
+                </SheetContent>
+              </Sheet>
+            </div>
+            <h1 className="text-base md:text-lg font-bold truncate px-2">
+              <span className="md:hidden">{currentTabLabel}</span>
+              <span className="hidden md:inline">Painel {role === "admin" ? "Admin" : role === "supervisor" ? "Supervisor" : "Corretor"}</span>
+            </h1>
             <div className="flex items-center gap-1">
               {canViewContacts && (
                 <button
-                  onClick={() => { setTab("messages"); setEditing(null); setCreating(false); setNewMsgCount(0); }}
+                  onClick={() => switchTab("messages")}
                   className="relative w-10 h-10 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Contatos"
                 >
                   <Bell className="h-5 w-5" />
                   {newMsgCount > 0 && (
@@ -170,7 +242,7 @@ export default function Admin() {
                   )}
                 </button>
               )}
-              <button onClick={handleSignOut} className="w-10 h-10 flex items-center justify-center text-destructive">
+              <button onClick={handleSignOut} className="hidden md:flex w-10 h-10 items-center justify-center text-destructive" aria-label="Sair">
                 <LogOut className="h-5 w-5" />
               </button>
             </div>
@@ -180,69 +252,28 @@ export default function Admin() {
               📋 Modo visualização — você pode consultar os imóveis cadastrados.
             </div>
           )}
-          <div className="flex border-b border-border">
-            <button
-              onClick={() => { setTab("properties"); setEditing(null); setCreating(false); }}
-              className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "properties" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-            >
-              <LayoutDashboard className="h-4 w-4" /> Imóveis
-            </button>
-            {canViewContacts && (
-              <button
-                onClick={() => { setTab("messages"); setEditing(null); setCreating(false); }}
-                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "messages" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-              >
-                <MessageSquare className="h-4 w-4" /> Contatos
-              </button>
-            )}
-            {canManageUsers && (
-              <button
-                onClick={() => { setTab("users"); setEditing(null); setCreating(false); }}
-                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "users" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-              >
-                <Users className="h-4 w-4" /> Equipe
-              </button>
-            )}
-            {canManageSettings && (
-              <button
-                onClick={() => { setTab("settings"); setEditing(null); setCreating(false); }}
-                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "settings" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-              >
-                <Settings className="h-4 w-4" /> Config
-              </button>
-            )}
-            {canManageSettings && (
-              <button
-                onClick={() => { setTab("privacy"); setEditing(null); setCreating(false); }}
-                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "privacy" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-              >
-                <FileText className="h-4 w-4" /> LGPD
-              </button>
-            )}
-            {(isAdmin || role === "supervisor") && (
-              <button
-                onClick={() => { setTab("analytics"); setEditing(null); setCreating(false); }}
-                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "analytics" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-              >
-                <BarChart3 className="h-4 w-4" /> Analytics
-              </button>
-            )}
-            {(isAdmin || role === "supervisor") && (
-              <button
-                onClick={() => { setTab("visits"); setEditing(null); setCreating(false); }}
-                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "visits" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-              >
-                <Calendar className="h-4 w-4" /> Visitas
-              </button>
-            )}
-            {(isAdmin || role === "supervisor") && (
-              <button
-                onClick={() => { setTab("traffic"); setEditing(null); setCreating(false); }}
-                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${tab === "traffic" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-              >
-                <Globe className="h-4 w-4" /> Tráfego
-              </button>
-            )}
+          {/* Desktop tabs - horizontal scroll on overflow */}
+          <div className="hidden md:flex border-b border-border overflow-x-auto scrollbar-hide">
+            {visibleTabs.map((t) => {
+              const Icon = t.icon;
+              const active = tab === t.key;
+              return (
+                <button
+                  key={t.key}
+                  onClick={() => switchTab(t.key)}
+                  className={`shrink-0 min-w-[120px] py-3 px-4 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors ${
+                    active ? "text-primary border-b-2 border-primary" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" /> {t.label}
+                  {!!t.badge && t.badge > 0 && (
+                    <span className="h-4 min-w-[16px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
+                      {t.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </header>
 
