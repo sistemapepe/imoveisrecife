@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_info: {
+        Row: {
+          email_contact: string
+          id: string
+          updated_at: string
+          whatsapp_number: string
+        }
+        Insert: {
+          email_contact?: string
+          id?: string
+          updated_at?: string
+          whatsapp_number?: string
+        }
+        Update: {
+          email_contact?: string
+          id?: string
+          updated_at?: string
+          whatsapp_number?: string
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string
@@ -215,7 +236,6 @@ export type Database = {
           concierge_nome: string
           developer_name: string
           developer_url: string
-          email_contact: string
           facebook_url: string
           footer_text: string
           hero_subtitle: string
@@ -231,7 +251,6 @@ export type Database = {
           updated_at: string
           website_url: string
           whatsapp_message: string
-          whatsapp_number: string
           youtube_url: string
         }
         Insert: {
@@ -244,7 +263,6 @@ export type Database = {
           concierge_nome?: string
           developer_name?: string
           developer_url?: string
-          email_contact?: string
           facebook_url?: string
           footer_text?: string
           hero_subtitle?: string
@@ -260,7 +278,6 @@ export type Database = {
           updated_at?: string
           website_url?: string
           whatsapp_message?: string
-          whatsapp_number?: string
           youtube_url?: string
         }
         Update: {
@@ -273,7 +290,6 @@ export type Database = {
           concierge_nome?: string
           developer_name?: string
           developer_url?: string
-          email_contact?: string
           facebook_url?: string
           footer_text?: string
           hero_subtitle?: string
@@ -289,7 +305,6 @@ export type Database = {
           updated_at?: string
           website_url?: string
           whatsapp_message?: string
-          whatsapp_number?: string
           youtube_url?: string
         }
         Relationships: []
