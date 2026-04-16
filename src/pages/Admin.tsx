@@ -281,6 +281,10 @@ export default function Admin() {
         </header>
 
         <main className="p-4">
+          {tab === "dashboard" && (
+            <DashboardTab onNavigate={(t) => switchTab(t)} />
+          )}
+
           {tab === "properties" && !editing && !creating && (
             <div className="space-y-4">
               {canManageProperties && (
@@ -288,7 +292,49 @@ export default function Admin() {
                   <Plus className="h-5 w-5" /> Novo Imóvel
                 </button>
               )}
-              {properties.map((p) => (
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Buscar por título, código, bairro..."
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+                {search && (
+                  <button
+                    onClick={() => setSearch("")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-muted-foreground hover:text-foreground"
+                    aria-label="Limpar busca"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              {(() => {
+                const q = search.trim().toLowerCase();
+                const filtered = q
+                  ? properties.filter((p) =>
+                      [p.title, p.code, p.neighborhood, p.city, p.type]
+                        .filter(Boolean)
+                        .some((v) => v.toLowerCase().includes(q))
+                    )
+                  : properties;
+                if (filtered.length === 0) {
+                  return (
+                    <div className="text-center py-10 text-sm text-muted-foreground">
+                      Nenhum imóvel encontrado para "{search}".
+                    </div>
+                  );
+                }
+                return (
+                  <>
+                    {q && (
+                      <p className="text-xs text-muted-foreground">
+                        {filtered.length} resultado{filtered.length !== 1 ? "s" : ""}
+                      </p>
+                    )}
+                    {filtered.map((p) => (
                 <div key={p.id} className="bg-card rounded-xl p-4 border border-border flex items-center gap-4">
                   <img src={p.images[0] || "/placeholder.svg"} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0" />
                   <div className="flex-1 min-w-0">
