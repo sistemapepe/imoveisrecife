@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight, TrendingDown } from "lucide-react";
 import { getAmenityIcon } from "@/lib/amenity-icons";
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
