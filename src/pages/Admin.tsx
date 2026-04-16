@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,8 +18,9 @@ import { Button } from "@/components/ui/button";
 import AnalyticsTab from "@/components/admin/AnalyticsTab";
 import VisitsTab from "@/components/admin/VisitsTab";
 import TrafficTab from "@/components/admin/TrafficTab";
+import DashboardTab from "@/components/admin/DashboardTab";
 
-type Tab = "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -45,7 +46,8 @@ export default function Admin() {
   const navigate = useNavigate();
   const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts } = useAuth();
   const { properties, settings, addProperty, updateProperty, deleteProperty, updateSettings } = useProperties();
-  const [tab, setTab] = useState<Tab>("properties");
+  const [tab, setTab] = useState<Tab>("dashboard");
+  const [search, setSearch] = useState("");
   const [newMsgCount, setNewMsgCount] = useState(0);
   const [editing, setEditing] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
@@ -150,6 +152,7 @@ export default function Admin() {
   };
 
   const allTabs: { key: Tab; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = [
+    { key: "dashboard", label: "Resumo", icon: Home, show: true },
     { key: "properties", label: "Imóveis", icon: LayoutDashboard, show: true },
     { key: "messages", label: "Contatos", icon: MessageSquare, show: !!canViewContacts, badge: newMsgCount },
     { key: "visits", label: "Visitas", icon: Calendar, show: isAdmin || role === "supervisor" },
@@ -278,6 +281,10 @@ export default function Admin() {
         </header>
 
         <main className="p-4">
+          {tab === "dashboard" && (
+            <DashboardTab onNavigate={(t) => switchTab(t)} />
+          )}
+
           {tab === "properties" && !editing && !creating && (
             <div className="space-y-4">
               {canManageProperties && (
@@ -285,7 +292,49 @@ export default function Admin() {
                   <Plus className="h-5 w-5" /> Novo Imóvel
                 </button>
               )}
-              {properties.map((p) => (
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Buscar por título, código, bairro..."
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+                {search && (
+                  <button
+                    onClick={() => setSearch("")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-muted-foreground hover:text-foreground"
+                    aria-label="Limpar busca"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              {(() => {
+                const q = search.trim().toLowerCase();
+                const filtered = q
+                  ? properties.filter((p) =>
+                      [p.title, p.code, p.neighborhood, p.city, p.type]
+                        .filter(Boolean)
+                        .some((v) => v.toLowerCase().includes(q))
+                    )
+                  : properties;
+                if (filtered.length === 0) {
+                  return (
+                    <div className="text-center py-10 text-sm text-muted-foreground">
+                      Nenhum imóvel encontrado para "{search}".
+                    </div>
+                  );
+                }
+                return (
+                  <>
+                    {q && (
+                      <p className="text-xs text-muted-foreground">
+                        {filtered.length} resultado{filtered.length !== 1 ? "s" : ""}
+                      </p>
+                    )}
+                    {filtered.map((p) => (
                 <div key={p.id} className="bg-card rounded-xl p-4 border border-border flex items-center gap-4">
                   <img src={p.images[0] || "/placeholder.svg"} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0" />
                   <div className="flex-1 min-w-0">
@@ -334,6 +383,9 @@ export default function Admin() {
                   )}
                 </div>
               ))}
+                  </>
+                );
+              })()}
             </div>
           )}
 
