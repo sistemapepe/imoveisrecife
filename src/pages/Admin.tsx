@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -269,11 +269,30 @@ export default function Admin() {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-accent font-semibold">{formatPriceFull(p.price)}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-xs text-accent font-semibold">{formatPriceFull(p.price)}</p>
+                      {!!p.previous_price && p.previous_price > p.price && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-destructive/10 text-destructive px-1.5 py-0.5 rounded">
+                          <TrendingDown className="h-3 w-3" /> Baixou
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground">{p.type}{settings.showLocationOnCard ? ` · ${p.neighborhood}` : ""}</p>
                   </div>
                   {(canManageProperties || canDeleteProperties) && (
                     <div className="flex gap-2">
+                      {canManageProperties && !!p.previous_price && p.previous_price > p.price && (
+                        <button
+                          onClick={async () => {
+                            await updateProperty(p.id, { previous_price: 0 } as any);
+                            toast.success("Tag de baixa removida!");
+                          }}
+                          title="Limpar tag de baixa"
+                          className="p-2 rounded-lg bg-destructive/10 text-destructive"
+                        >
+                          <TagIcon className="h-4 w-4" />
+                        </button>
+                      )}
                       {canManageProperties && (
                         <button onClick={() => startEdit(p)} className="p-2 rounded-lg bg-primary/10 text-primary"><Pencil className="h-4 w-4" /></button>
                       )}
