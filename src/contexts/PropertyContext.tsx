@@ -130,14 +130,14 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const fetchSettings = useCallback(async () => {
     const { data } = await supabase.from("site_settings").select("*").limit(1).single();
     if (data) {
-      setSettings({
+      setSettings((prev) => ({
+        ...prev,
         id: data.id,
         heroTitle: data.hero_title,
         heroSubtitle: data.hero_subtitle,
         conciergeNome: data.concierge_nome,
         conciergeCargo: data.concierge_cargo,
         conciergeDesc: data.concierge_desc,
-        whatsappNumber: data.whatsapp_number,
         brandName: data.brand_name,
         logoUrl: data.logo_url,
         footerText: data.footer_text,
@@ -146,7 +146,6 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         youtubeUrl: data.youtube_url,
         linkedinUrl: data.linkedin_url,
         websiteUrl: data.website_url,
-        emailContact: data.email_contact,
         primaryColor: data.primary_color,
         accentColor: data.accent_color,
         bannerInterval: (data as any).banner_interval ?? 5,
@@ -157,7 +156,22 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         developerName: (data as any).developer_name ?? "",
         developerUrl: (data as any).developer_url ?? "",
         showVisitSchedule: (data as any).show_visit_schedule ?? true,
-      });
+      }));
+    }
+  }, []);
+
+  const fetchContactInfo = useCallback(async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke("get-contact-info");
+      if (!error && data) {
+        setSettings((prev) => ({
+          ...prev,
+          whatsappNumber: data.whatsapp_number ?? prev.whatsappNumber,
+          emailContact: data.email_contact ?? prev.emailContact,
+        }));
+      }
+    } catch (e) {
+      console.error("Failed to fetch contact info", e);
     }
   }, []);
 
