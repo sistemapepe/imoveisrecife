@@ -60,6 +60,7 @@ export interface SiteSettings {
   showLocationOnCard: boolean;
   developerName: string;
   developerUrl: string;
+  showVisitSchedule: boolean;
 }
 
 interface PropertyContextType {
@@ -100,6 +101,7 @@ const defaultSettings: SiteSettings = {
   showLocationOnCard: false,
   developerName: "",
   developerUrl: "",
+  showVisitSchedule: true,
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -154,6 +156,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         showLocationOnCard: (data as any).show_location_on_card ?? true,
         developerName: (data as any).developer_name ?? "",
         developerUrl: (data as any).developer_url ?? "",
+        showVisitSchedule: (data as any).show_visit_schedule ?? true,
       });
     }
   }, []);
@@ -214,6 +217,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       showLocationOnCard: "show_location_on_card",
       developerName: "developer_name",
       developerUrl: "developer_url",
+      showVisitSchedule: "show_visit_schedule",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];

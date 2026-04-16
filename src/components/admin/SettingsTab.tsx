@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SiteSettings } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
-import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin } from "lucide-react";
+import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin, Calendar } from "lucide-react";
 import LogoUpload from "./LogoUpload";
 import { getAmenityIcon } from "@/lib/amenity-icons";
 
@@ -326,6 +326,17 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
             type="checkbox"
             checked={localSettings.showLocationOnCard ?? false}
             onChange={(e) => setLocalSettings((prev) => ({ ...prev, showLocationOnCard: e.target.checked }))}
+            className="w-5 h-5 accent-primary rounded"
+          />
+        </label>
+        <label className="flex items-center justify-between cursor-pointer">
+          <span className="text-sm font-medium flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-accent" /> Exibir formulário de Agendar Visita
+          </span>
+          <input
+            type="checkbox"
+            checked={localSettings.showVisitSchedule ?? true}
+            onChange={(e) => setLocalSettings((prev) => ({ ...prev, showVisitSchedule: e.target.checked }))}
             className="w-5 h-5 accent-primary rounded"
           />
         </label>
