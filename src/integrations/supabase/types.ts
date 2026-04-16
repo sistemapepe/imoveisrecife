@@ -112,6 +112,7 @@ export type Database = {
           images: string[]
           neighborhood: string
           parking: number
+          previous_price: number
           price: number
           status: string
           suites: number
@@ -137,6 +138,7 @@ export type Database = {
           images?: string[]
           neighborhood?: string
           parking?: number
+          previous_price?: number
           price?: number
           status?: string
           suites?: number
@@ -162,6 +164,7 @@ export type Database = {
           images?: string[]
           neighborhood?: string
           parking?: number
+          previous_price?: number
           price?: number
           status?: string
           suites?: number
