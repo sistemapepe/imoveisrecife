@@ -219,11 +219,11 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     const map: Record<string, string> = {
       heroTitle: "hero_title", heroSubtitle: "hero_subtitle",
       conciergeNome: "concierge_nome", conciergeCargo: "concierge_cargo",
-      conciergeDesc: "concierge_desc", whatsappNumber: "whatsapp_number",
+      conciergeDesc: "concierge_desc",
       brandName: "brand_name", logoUrl: "logo_url", footerText: "footer_text",
       instagramUrl: "instagram_url", facebookUrl: "facebook_url",
       youtubeUrl: "youtube_url", linkedinUrl: "linkedin_url",
-      websiteUrl: "website_url", emailContact: "email_contact",
+      websiteUrl: "website_url",
       primaryColor: "primary_color", accentColor: "accent_color",
       bannerInterval: "banner_interval",
       whatsappMessage: "whatsapp_message",
@@ -237,10 +237,28 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
     }
-    
+
     if (settings.id && Object.keys(dbUpdate).length > 0) {
       await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
     }
+
+    // Contact info lives in a separate, admin-only table
+    const contactUpdate: Record<string, any> = {};
+    if (s.whatsappNumber !== undefined) contactUpdate.whatsapp_number = s.whatsappNumber;
+    if (s.emailContact !== undefined) contactUpdate.email_contact = s.emailContact;
+    if (Object.keys(contactUpdate).length > 0) {
+      const { data: existing } = await supabase
+        .from("contact_info" as any)
+        .select("id")
+        .limit(1)
+        .maybeSingle();
+      if (existing && (existing as any).id) {
+        await supabase.from("contact_info" as any).update(contactUpdate).eq("id", (existing as any).id);
+      } else {
+        await supabase.from("contact_info" as any).insert(contactUpdate);
+      }
+    }
+
     setSettings((prev) => ({ ...prev, ...s }));
   };
 
