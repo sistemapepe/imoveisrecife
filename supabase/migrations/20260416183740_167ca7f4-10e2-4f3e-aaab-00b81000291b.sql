@@ -1,0 +1,1 @@
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS show_visit_schedule boolean NOT NULL DEFAULT true;
