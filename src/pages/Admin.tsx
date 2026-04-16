@@ -53,6 +53,7 @@ export default function Admin() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [cep, setCep] = useState("");
   const [cepLoading, setCepLoading] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const fetchCep = async (value: string) => {
     const clean = value.replace(/\D/g, "");
@@ -159,7 +160,6 @@ export default function Admin() {
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManageSettings },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const switchTab = (newTab: Tab) => {
     setTab(newTab);
