@@ -314,7 +314,9 @@ export default function PropertyDetail() {
                 <VirtualTour videoUrl={property.video_tour_url} title={property.title} />
               )}
 
-              <VisitScheduleForm propertyId={property.id} propertyTitle={property.title} />
+              {settings.showVisitSchedule && (
+                <VisitScheduleForm propertyId={property.id} propertyTitle={property.title} />
+              )}
 
               {settings.showLocationOnCard && (
                 <InteractiveMap
