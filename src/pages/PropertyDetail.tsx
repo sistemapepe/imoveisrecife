@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight, TrendingDown } from "lucide-react";
 import { getAmenityIcon } from "@/lib/amenity-icons";
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
@@ -272,7 +272,37 @@ export default function PropertyDetail() {
                 </p>
               )}
               <p className="text-xs font-mono text-primary/70 mb-4">Cód: {property.code}</p>
-              <div className="text-2xl md:text-3xl font-extrabold text-accent tracking-tight mb-8">{formatPriceFull(property.price)}</div>
+              {(() => {
+                const hasPriceDrop = !!property.previous_price && property.previous_price > property.price;
+                const dropPercent = hasPriceDrop
+                  ? Math.round(((property.previous_price! - property.price) / property.previous_price!) * 100)
+                  : 0;
+                return (
+                  <div className="mb-8">
+                    <div className="flex items-baseline gap-3 flex-wrap">
+                      <div className="text-2xl md:text-3xl font-extrabold text-accent tracking-tight">{formatPriceFull(property.price)}</div>
+                      {hasPriceDrop && (
+                        <span className="text-base md:text-lg text-muted-foreground line-through">
+                          {formatPriceFull(property.previous_price!)}
+                        </span>
+                      )}
+                    </div>
+                    {hasPriceDrop && (
+                      <motion.div
+                        initial={{ scale: 0, rotate: -8 }}
+                        animate={{ scale: 1, rotate: -3 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.2 }}
+                        className="inline-flex items-center gap-2 mt-3 bg-destructive px-4 py-2 rounded-sm shadow-2xl border border-destructive-foreground/20"
+                      >
+                        <TrendingDown className="h-4 w-4 text-destructive-foreground" />
+                        <span className="text-xs font-bold text-destructive-foreground uppercase tracking-[0.18em]">
+                          Preço Reduzido — {dropPercent}% off
+                        </span>
+                      </motion.div>
+                    )}
+                  </div>
+                );
+              })()}
 
               <div className="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 mb-8">
                 {[
@@ -330,7 +360,12 @@ export default function PropertyDetail() {
             {/* Desktop sidebar CTA */}
             <div className="hidden md:block">
               <div className="sticky top-24 space-y-4 p-6 rounded-2xl bg-card border border-border shadow-sm">
-                <p className="text-2xl font-extrabold text-accent">{formatPriceFull(property.price)}</p>
+                <div>
+                  <p className="text-2xl font-extrabold text-accent">{formatPriceFull(property.price)}</p>
+                  {!!property.previous_price && property.previous_price > property.price && (
+                    <p className="text-sm text-muted-foreground line-through">{formatPriceFull(property.previous_price)}</p>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground">{property.title}</p>
                 <button
                   onClick={handleWhatsApp}
