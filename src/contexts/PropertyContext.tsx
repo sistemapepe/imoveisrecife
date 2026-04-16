@@ -32,6 +32,7 @@ export interface Property {
   category: string;
   status: PropertyStatus;
   video_tour_url?: string;
+  previous_price?: number;
 }
 
 export interface SiteSettings {

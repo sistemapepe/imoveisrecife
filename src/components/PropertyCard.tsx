@@ -1,4 +1,4 @@
-import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, MapPin } from "lucide-react";
+import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, MapPin, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Property, formatPriceFull } from "@/contexts/PropertyContext";
@@ -8,6 +8,10 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
   const navigate = useNavigate();
   const { favorites, toggleFavorite, settings } = useProperties();
   const isFav = favorites.includes(property.id);
+  const hasPriceDrop = !!property.previous_price && property.previous_price > property.price;
+  const dropPercent = hasPriceDrop
+    ? Math.round(((property.previous_price! - property.price) / property.previous_price!) * 100)
+    : 0;
 
   return (
     <motion.div
@@ -47,6 +51,19 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         >
           <Heart className={`h-5 w-5 ${isFav ? "fill-accent text-accent" : "text-card"}`} />
         </button>
+        {hasPriceDrop && (
+          <motion.div
+            initial={{ scale: 0, rotate: -8 }}
+            animate={{ scale: 1, rotate: -6 }}
+            transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.2 }}
+            className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-destructive px-3 py-1.5 rounded-sm shadow-2xl border border-destructive-foreground/20"
+          >
+            <TrendingDown className="h-3.5 w-3.5 text-destructive-foreground" />
+            <span className="text-[11px] font-bold text-destructive-foreground uppercase tracking-[0.15em]">
+              Baixou {dropPercent}%
+            </span>
+          </motion.div>
+        )}
       </div>
       <div className="p-5">
         <h2 className="font-serif text-xl text-foreground">{property.title}</h2>
@@ -55,7 +72,14 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
             <MapPin className="h-3 w-3 text-accent" /> {property.neighborhood}, {property.city}
           </p>
         )}
-        <p className="font-serif text-2xl text-accent mb-4 italic">{formatPriceFull(property.price)}</p>
+        <div className="flex items-baseline gap-2 mb-4 flex-wrap">
+          <p className="font-serif text-2xl text-accent italic">{formatPriceFull(property.price)}</p>
+          {hasPriceDrop && (
+            <span className="text-sm text-muted-foreground line-through">
+              {formatPriceFull(property.previous_price!)}
+            </span>
+          )}
+        </div>
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 border-t border-border pt-4">
           <div className="flex items-center gap-1 min-w-0">
             <Ruler className="h-3.5 w-3.5 shrink-0 text-accent" />
