@@ -18,8 +18,9 @@ import { Button } from "@/components/ui/button";
 import AnalyticsTab from "@/components/admin/AnalyticsTab";
 import VisitsTab from "@/components/admin/VisitsTab";
 import TrafficTab from "@/components/admin/TrafficTab";
+import DashboardTab from "@/components/admin/DashboardTab";
 
-type Tab = "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -45,7 +46,8 @@ export default function Admin() {
   const navigate = useNavigate();
   const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts } = useAuth();
   const { properties, settings, addProperty, updateProperty, deleteProperty, updateSettings } = useProperties();
-  const [tab, setTab] = useState<Tab>("properties");
+  const [tab, setTab] = useState<Tab>("dashboard");
+  const [search, setSearch] = useState("");
   const [newMsgCount, setNewMsgCount] = useState(0);
   const [editing, setEditing] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
