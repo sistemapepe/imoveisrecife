@@ -22,9 +22,14 @@ interface TrafficEvent {
 export default function TrafficTab() {
   const [events, setEvents] = useState<TrafficEvent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState<"7d" | "30d" | "90d">("30d");
+  const [period, setPeriod] = useState<"today" | "7d" | "30d" | "90d">("today");
 
   const getDateFilter = () => {
+    if (period === "today") {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d.toISOString();
+    }
     const days = period === "7d" ? 7 : period === "30d" ? 30 : 90;
     const d = new Date();
     d.setDate(d.getDate() - days);
@@ -139,8 +144,8 @@ export default function TrafficTab() {
       </h2>
 
       {/* Period filter */}
-      <div className="flex gap-2">
-        {(["7d", "30d", "90d"] as const).map((p) => (
+      <div className="flex flex-wrap gap-2">
+        {(["today", "7d", "30d", "90d"] as const).map((p) => (
           <button
             key={p}
             onClick={() => setPeriod(p)}
@@ -148,7 +153,7 @@ export default function TrafficTab() {
               period === p ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
             }`}
           >
-            {p === "7d" ? "7 dias" : p === "30d" ? "30 dias" : "90 dias"}
+            {p === "today" ? "Hoje" : p === "7d" ? "7 dias" : p === "30d" ? "30 dias" : "90 dias"}
           </button>
         ))}
       </div>
