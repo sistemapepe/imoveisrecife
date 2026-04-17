@@ -66,7 +66,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         )}
       </div>
       <div className="p-5">
-        <h2 className="font-serif font-bold text-2xl text-foreground">{property.title}</h2>
+        <h2 className="font-serif font-bold text-2xl text-foreground line-clamp-2 leading-tight">{property.title}</h2>
         {settings.showLocationOnCard && (
           <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
             <MapPin className="h-3 w-3 text-accent" /> {property.neighborhood}, {property.city}
