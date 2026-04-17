@@ -16,18 +16,30 @@ interface LeadCaptureModalProps {
   source?: string;
 }
 
+// Brazilian phone mask: (99) 99999-9999 or (99) 9999-9999
+function formatBrPhone(raw: string): string {
+  const digits = raw.replace(/\D/g, "").slice(0, 11);
+  if (digits.length === 0) return "";
+  if (digits.length <= 2) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10)
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
 const leadSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Nome muito curto")
+    .min(2, "Informe seu nome completo")
     .max(100, "Nome muito longo"),
   phone: z
     .string()
     .trim()
-    .min(8, "Telefone inválido")
-    .max(20, "Telefone inválido")
-    .regex(/^[0-9()+\-\s]+$/, "Telefone inválido"),
+    .refine((val) => {
+      const digits = val.replace(/\D/g, "");
+      return digits.length === 10 || digits.length === 11;
+    }, "Informe DDD + número (ex: (81) 99999-9999)"),
 });
 
 export default function LeadCaptureModal({
@@ -54,6 +66,26 @@ export default function LeadCaptureModal({
       openedAtRef.current = Date.now();
     }
   }, [open, settings.leadModalEnabled, onConfirm]);
+
+  // Lock body scroll while modal is open so it stays centered on viewport
+  useEffect(() => {
+    if (!open) return;
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
+  }, [open]);
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(formatBrPhone(e.target.value));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,7 +126,10 @@ export default function LeadCaptureModal({
     });
     setSubmitting(false);
     if (error) {
-      toast.error("Erro ao registrar. Continuando...");
+      const msg = error.message?.includes("rate_limit_exceeded")
+        ? "Muitas tentativas. Aguarde alguns minutos."
+        : "Erro ao registrar. Continuando...";
+      toast.error(msg);
     }
     onConfirm();
     setName("");
@@ -114,100 +149,105 @@ export default function LeadCaptureModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-foreground/60 backdrop-blur-sm px-4 py-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]"
+          className="fixed inset-0 z-[100] bg-foreground/60 backdrop-blur-sm"
           onClick={onClose}
         >
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="lead-modal-title"
-            initial={{ opacity: 0, y: 30, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.96 }}
-            transition={{ duration: 0.25 }}
-            onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md my-auto bg-card rounded-2xl shadow-2xl border border-border overflow-hidden"
-          >
-            <div className="flex items-center justify-between p-5 border-b border-border">
-              <div className="flex items-center gap-2">
-                <div className="h-9 w-9 rounded-full bg-whatsapp/10 flex items-center justify-center">
-                  <MessageCircle className="h-5 w-5 text-whatsapp" />
+          <div className="fixed inset-0 flex items-center justify-center overflow-y-auto px-4 py-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]">
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="lead-modal-title"
+              initial={{ opacity: 0, y: 30, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 30, scale: 0.96 }}
+              transition={{ duration: 0.25 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-md my-auto bg-card rounded-2xl shadow-2xl border border-border overflow-hidden"
+            >
+              <div className="flex items-center justify-between p-5 border-b border-border">
+                <div className="flex items-center gap-2">
+                  <div className="h-9 w-9 rounded-full bg-whatsapp/10 flex items-center justify-center">
+                    <MessageCircle className="h-5 w-5 text-whatsapp" />
+                  </div>
+                  <h2 id="lead-modal-title" className="font-bold text-base">{settings.leadModalTitle}</h2>
                 </div>
-                <h2 id="lead-modal-title" className="font-bold text-base">{settings.leadModalTitle}</h2>
-              </div>
-              <button onClick={onClose} aria-label="Fechar" className="p-1 rounded-full hover:bg-muted transition-colors">
-                <X className="h-5 w-5 text-muted-foreground" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
-              {/* Honeypot - invisible to humans, bots fill it */}
-              <input
-                type="text"
-                name={HONEYPOT_FIELD_NAME}
-                value={honeypot}
-                onChange={(e) => setHoneypot(e.target.value)}
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-                style={honeypotInputStyle}
-              />
-              <p className="text-sm text-muted-foreground whitespace-pre-line">
-                {settings.leadModalDescription}
-              </p>
-
-              <div>
-                <label htmlFor="lead-name" className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-muted-foreground">
-                  {settings.leadModalNameLabel}
-                </label>
-                <input
-                  id="lead-name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  maxLength={100}
-                  required
-                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
-                  placeholder={settings.leadModalNamePlaceholder}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="lead-phone" className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-muted-foreground">
-                  {settings.leadModalPhoneLabel}
-                </label>
-                <input
-                  id="lead-phone"
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  maxLength={20}
-                  required
-                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
-                  placeholder={settings.leadModalPhonePlaceholder}
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full rounded-xl bg-whatsapp text-white py-3.5 font-bold text-sm active:scale-95 transition-transform flex items-center justify-center gap-2 disabled:opacity-60"
-              >
-                <MessageCircle className="h-5 w-5" />
-                {submitting ? settings.leadModalSubmittingText : settings.leadModalSubmitText}
-              </button>
-
-              {settings.leadModalShowSkip !== false && (
-                <button
-                  type="button"
-                  onClick={handleSkip}
-                  className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
-                >
-                  {settings.leadModalSkipText}
+                <button onClick={onClose} aria-label="Fechar" className="p-1 rounded-full hover:bg-muted transition-colors">
+                  <X className="h-5 w-5 text-muted-foreground" />
                 </button>
-              )}
-            </form>
-          </motion.div>
+              </div>
+
+              <form onSubmit={handleSubmit} className="p-5 space-y-4">
+                {/* Honeypot - invisible to humans, bots fill it */}
+                <input
+                  type="text"
+                  name={HONEYPOT_FIELD_NAME}
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={honeypotInputStyle}
+                />
+                <p className="text-sm text-muted-foreground whitespace-pre-line">
+                  {settings.leadModalDescription}
+                </p>
+
+                <div>
+                  <label htmlFor="lead-name" className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-muted-foreground">
+                    {settings.leadModalNameLabel} <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    id="lead-name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    maxLength={100}
+                    required
+                    autoComplete="name"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+                    placeholder={settings.leadModalNamePlaceholder}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="lead-phone" className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-muted-foreground">
+                    {settings.leadModalPhoneLabel} <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    id="lead-phone"
+                    type="tel"
+                    inputMode="numeric"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    maxLength={16}
+                    required
+                    autoComplete="tel-national"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+                    placeholder="(81) 99999-9999"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full rounded-xl bg-whatsapp text-white py-3.5 font-bold text-sm active:scale-95 transition-transform flex items-center justify-center gap-2 disabled:opacity-60"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  {submitting ? settings.leadModalSubmittingText : settings.leadModalSubmitText}
+                </button>
+
+                {settings.leadModalShowSkip !== false && (
+                  <button
+                    type="button"
+                    onClick={handleSkip}
+                    className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
+                  >
+                    {settings.leadModalSkipText}
+                  </button>
+                )}
+              </form>
+            </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
