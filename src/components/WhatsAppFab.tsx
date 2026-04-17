@@ -11,14 +11,14 @@ export default function WhatsAppFab() {
   const params = useParams();
   const [open, setOpen] = useState(false);
 
-  // Hide on admin/login pages
-  if (location.pathname.startsWith("/admin") || location.pathname.startsWith("/login")) return null;
-
   const currentProperty = useMemo(() => {
     if (!location.pathname.startsWith("/imovel/")) return null;
     const id = params.id || location.pathname.split("/imovel/")[1]?.split("/")[0];
     return properties.find((p) => p.id === id) || null;
   }, [location.pathname, params.id, properties]);
+
+  // Hide on admin/login pages
+  if (location.pathname.startsWith("/admin") || location.pathname.startsWith("/login")) return null;
 
   const source = currentProperty ? "whatsapp_fab_property" : "whatsapp_fab_global";
 
