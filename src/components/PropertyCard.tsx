@@ -1,19 +1,32 @@
-import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, TrendingDown } from "lucide-react";
+import { useState } from "react";
+import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, TrendingDown, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useProperties } from "@/contexts/PropertyContext";
+import LeadCaptureModal from "@/components/LeadCaptureModal";
+import { trackEvent } from "@/hooks/useTrafficTracker";
 
 export default function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const navigate = useNavigate();
-  const { favorites, toggleFavorite } = useProperties();
+  const { favorites, toggleFavorite, settings } = useProperties();
   const isFav = favorites.includes(property.id);
   const hasPriceDrop = !!property.previous_price && property.previous_price > property.price;
   const dropPercent = hasPriceDrop
     ? Math.round(((property.previous_price! - property.price) / property.previous_price!) * 100)
     : 0;
+  const [leadOpen, setLeadOpen] = useState(false);
+
+  const openWhatsApp = () => {
+    trackEvent("whatsapp_click", property.id);
+    const baseMsg = settings.whatsappMessage || "Olá! Gostaria de mais informações sobre este imóvel.";
+    const msg = `${baseMsg}\n\nImóvel: ${property.title} (${property.code || property.id})`;
+    const message = encodeURIComponent(msg);
+    window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
+  };
 
   return (
+    <>
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -59,6 +72,13 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
           onClick={(e) => { e.stopPropagation(); toggleFavorite(property.id); }}
         >
           <Heart className={`h-5 w-5 ${isFav ? "fill-accent text-accent" : "text-card"}`} />
+        </button>
+        <button
+          aria-label={`Falar no WhatsApp sobre ${property.title}`}
+          className="absolute bottom-4 right-4 w-11 h-11 flex items-center justify-center bg-whatsapp text-white rounded-full shadow-lg hover:scale-110 transition-transform"
+          onClick={(e) => { e.stopPropagation(); setLeadOpen(true); }}
+        >
+          <MessageCircle className="h-5 w-5" />
         </button>
         {hasPriceDrop && (
           <motion.div
@@ -119,5 +139,18 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         </div>
       </div>
     </motion.div>
+
+    <LeadCaptureModal
+      open={leadOpen}
+      onClose={() => setLeadOpen(false)}
+      onConfirm={() => {
+        setLeadOpen(false);
+        openWhatsApp();
+      }}
+      propertyId={property.id}
+      propertyTitle={property.title}
+      source="property_card"
+    />
+    </>
   );
 }
