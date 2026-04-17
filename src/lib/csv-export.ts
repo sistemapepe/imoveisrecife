@@ -2,7 +2,7 @@
  * Convert an array of objects to a CSV string and trigger a browser download.
  * Values are escaped to prevent CSV injection (formula prefixes) and proper quoting.
  */
-export function downloadCSV<T extends Record<string, unknown>>(
+export function downloadCSV<T>(
   rows: T[],
   filename: string,
   columns?: { key: keyof T; label: string }[],
