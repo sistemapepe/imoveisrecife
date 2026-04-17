@@ -10,7 +10,20 @@ interface ContactMessage {
   phone: string;
   interest: string;
   message: string;
+  source: string;
   created_at: string;
+}
+
+const SOURCE_LABELS: Record<string, { label: string; cls: string }> = {
+  contato: { label: "Form Contato", cls: "bg-primary/10 text-primary" },
+  form_contato: { label: "Form Contato", cls: "bg-primary/10 text-primary" },
+  whatsapp_fab: { label: "WhatsApp", cls: "bg-whatsapp/10 text-whatsapp" },
+  whatsapp_fab_global: { label: "WhatsApp", cls: "bg-whatsapp/10 text-whatsapp" },
+  whatsapp_fab_property: { label: "WhatsApp Imóvel", cls: "bg-whatsapp/10 text-whatsapp" },
+};
+
+function sourceBadge(source: string) {
+  return SOURCE_LABELS[source] || { label: source || "—", cls: "bg-muted text-muted-foreground" };
 }
 
 interface MessagesTabProps {
@@ -93,7 +106,15 @@ export default function MessagesTab({ onNewMessage }: MessagesTabProps) {
                   })}
                 </span>
               </div>
-              <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+              <div className="flex flex-wrap gap-3 text-xs text-muted-foreground items-center">
+                {(() => {
+                  const b = sourceBadge(msg.source);
+                  return (
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${b.cls}`}>
+                      {b.label}
+                    </span>
+                  );
+                })()}
                 <span className="flex items-center gap-1">
                   <Mail className="h-3.5 w-3.5" />
                   <a href={`mailto:${msg.email}`} className="text-primary hover:underline">{msg.email}</a>
