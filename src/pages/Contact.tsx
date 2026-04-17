@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Verified, Globe, Instagram, Facebook, Youtube, Linkedin, Mail } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
@@ -6,15 +6,27 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import { checkHoneypot, HONEYPOT_FIELD_NAME, honeypotInputStyle } from "@/lib/honeypot";
 
 export default function Contact() {
   const navigate = useNavigate();
   const { settings } = useProperties();
   const [form, setForm] = useState({ name: "", email: "", phone: "", interest: "", message: "" });
+  const [honeypot, setHoneypot] = useState("");
   const [sending, setSending] = useState(false);
+  const openedAtRef = useRef<number>(Date.now());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Anti-bot: honeypot + time-trap
+    const bot = checkHoneypot(honeypot, openedAtRef.current);
+    if (!bot.ok) {
+      // Silently pretend success to not tip off bots
+      toast.success("Mensagem enviada com sucesso!");
+      setForm({ name: "", email: "", phone: "", interest: "", message: "" });
+      setHoneypot("");
+      return;
+    }
     setSending(true);
     const { error } = await supabase.from("contact_messages").insert({
       name: form.name,
@@ -24,9 +36,16 @@ export default function Contact() {
       message: form.message,
     });
     setSending(false);
-    if (error) { toast.error("Erro ao enviar"); return; }
+    if (error) {
+      const msg = error.message?.includes("rate_limit_exceeded")
+        ? "Muitas mensagens enviadas. Tente novamente em alguns minutos."
+        : "Erro ao enviar";
+      toast.error(msg);
+      return;
+    }
     toast.success("Mensagem enviada com sucesso!");
     setForm({ name: "", email: "", phone: "", interest: "", message: "" });
+    setHoneypot("");
   };
 
   return (
@@ -66,6 +85,17 @@ export default function Contact() {
 
         <section className="px-8 mb-10">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Honeypot - invisible to humans, bots fill it */}
+            <input
+              type="text"
+              name={HONEYPOT_FIELD_NAME}
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={honeypotInputStyle}
+            />
             {[
               { label: "Nome Completo", key: "name", type: "text" },
               { label: "E-mail", key: "email", type: "email" },
