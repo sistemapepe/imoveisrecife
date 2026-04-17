@@ -94,24 +94,23 @@ export default function LeadCaptureModal({
   return (
     <AnimatePresence>
       {open && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 z-[100] bg-foreground/60 backdrop-blur-sm"
-            aria-hidden="true"
-          />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-foreground/60 backdrop-blur-sm px-4 py-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]"
+          onClick={onClose}
+        >
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-labelledby="lead-modal-title"
-            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            initial={{ opacity: 0, y: 30, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.95 }}
+            exit={{ opacity: 0, y: 30, scale: 0.96 }}
             transition={{ duration: 0.25 }}
-            className="fixed left-1/2 top-1/2 z-[101] -translate-x-1/2 -translate-y-1/2 w-[92%] max-w-md bg-card rounded-2xl shadow-2xl border border-border overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md my-auto bg-card rounded-2xl shadow-2xl border border-border overflow-hidden"
           >
             <div className="flex items-center justify-between p-5 border-b border-border">
               <div className="flex items-center gap-2">
@@ -182,7 +181,7 @@ export default function LeadCaptureModal({
               )}
             </form>
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );
