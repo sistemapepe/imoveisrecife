@@ -105,7 +105,7 @@ export default function Index() {
     }, new Map<string, { type: string; image: string; count: number }>())
   ).map(([, v]) => v);
 
-  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://imoveisrecife.lovable.app";
+  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://imoveisrecife.com.br";
   const homeJsonLd = [
     {
       "@context": "https://schema.org",

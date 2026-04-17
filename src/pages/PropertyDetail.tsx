@@ -111,7 +111,7 @@ export default function PropertyDetail() {
     setLeadModalOpen(true);
   };
 
-  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://imoveisrecife.lovable.app";
+  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://imoveisrecife.com.br";
   const propertyUrl = `${siteOrigin}/imovel/${property.id}`;
   const schemaOrg = {
     "@context": "https://schema.org",
