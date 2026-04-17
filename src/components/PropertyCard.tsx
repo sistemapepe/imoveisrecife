@@ -74,6 +74,9 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         )}
         <div className="flex items-baseline gap-2 mb-4 flex-wrap">
           <p className="font-serif text-2xl text-accent italic">{formatPriceFull(property.price)}</p>
+          <span className="text-xs text-muted-foreground">
+            ({property.city}/{property.neighborhood})
+          </span>
           {hasPriceDrop && (
             <span className="text-sm text-muted-foreground line-through">
               {formatPriceFull(property.previous_price!)}
