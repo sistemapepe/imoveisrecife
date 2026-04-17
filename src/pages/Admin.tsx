@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -511,11 +511,52 @@ export default function Admin() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Descrição</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Descrição</label>
+                  <button
+                    type="button"
+                    disabled={generatingSeo}
+                    onClick={async () => {
+                      setGeneratingSeo(true);
+                      try {
+                        const { data, error } = await supabase.functions.invoke("seo-generate", {
+                          body: {
+                            title: form.title,
+                            type: form.type,
+                            bedrooms: form.bedrooms,
+                            suites: form.suites,
+                            bathrooms: form.bathrooms,
+                            parking: form.parking,
+                            area: form.area,
+                            neighborhood: form.neighborhood,
+                            city: form.city,
+                            amenities: form.amenities,
+                            price: form.price,
+                            description: form.description,
+                          },
+                        });
+                        if (error) throw error;
+                        if (data?.error) throw new Error(data.error);
+                        const newDesc = data?.description || form.description;
+                        const newTitle = data?.title || form.title;
+                        setForm({ ...form, description: newDesc, title: newTitle });
+                        toast.success("Descrição SEO gerada!");
+                      } catch (err: any) {
+                        toast.error(err?.message || "Erro ao gerar SEO");
+                      } finally {
+                        setGeneratingSeo(false);
+                      }
+                    }}
+                    className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-accent/10 text-accent hover:bg-accent/20 disabled:opacity-50"
+                  >
+                    {generatingSeo ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+                    {generatingSeo ? "Gerando..." : "Gerar com IA"}
+                  </button>
+                </div>
                 <textarea
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  rows={4}
+                  rows={6}
                   className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
