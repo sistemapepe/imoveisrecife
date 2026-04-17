@@ -19,8 +19,9 @@ import AnalyticsTab from "@/components/admin/AnalyticsTab";
 import VisitsTab from "@/components/admin/VisitsTab";
 import TrafficTab from "@/components/admin/TrafficTab";
 import DashboardTab from "@/components/admin/DashboardTab";
+import SeoAuditTab from "@/components/admin/SeoAuditTab";
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -176,6 +177,7 @@ export default function Admin() {
     { key: "visits", label: "Visitas", icon: Calendar, show: isAdmin || role === "supervisor", badge: pendingVisitsCount },
     { key: "analytics", label: "Analytics", icon: BarChart3, show: isAdmin || role === "supervisor" },
     { key: "traffic", label: "Tráfego", icon: Globe, show: isAdmin || role === "supervisor" },
+    { key: "seo", label: "SEO Audit", icon: Sparkles, show: !!canManageProperties },
     { key: "users", label: "Equipe", icon: Users, show: !!canManageUsers },
     { key: "settings", label: "Configurações", icon: Settings, show: !!canManageSettings },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManageSettings },
@@ -656,6 +658,10 @@ export default function Admin() {
 
           {tab === "traffic" && (isAdmin || role === "supervisor") && (
             <TrafficTab />
+          )}
+
+          {tab === "seo" && canManageProperties && (
+            <SeoAuditTab />
           )}
         </main>
 
