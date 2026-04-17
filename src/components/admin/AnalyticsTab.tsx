@@ -21,13 +21,18 @@ export default function AnalyticsTab() {
   const [leadsByDay, setLeadsByDay] = useState<LeadsByPeriod[]>([]);
   const [viewsByDay, setViewsByDay] = useState<LeadsByPeriod[]>([]);
   const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState<"7d" | "30d" | "90d">("30d");
+  const [period, setPeriod] = useState<"today" | "7d" | "30d" | "90d">("today");
 
   useEffect(() => {
     fetchAnalytics();
   }, [period]);
 
   const getDateFilter = () => {
+    if (period === "today") {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d.toISOString();
+    }
     const days = period === "7d" ? 7 : period === "30d" ? 30 : 90;
     const d = new Date();
     d.setDate(d.getDate() - days);
@@ -100,7 +105,7 @@ export default function AnalyticsTab() {
     <div className="space-y-6">
       {/* Period filter */}
       <div className="flex gap-2">
-        {(["7d", "30d", "90d"] as const).map((p) => (
+        {(["today", "7d", "30d", "90d"] as const).map((p) => (
           <button
             key={p}
             onClick={() => setPeriod(p)}
@@ -110,7 +115,7 @@ export default function AnalyticsTab() {
                 : "bg-secondary text-muted-foreground hover:bg-secondary/80"
             }`}
           >
-            {p === "7d" ? "7 dias" : p === "30d" ? "30 dias" : "90 dias"}
+            {p === "today" ? "Hoje" : p === "7d" ? "7 dias" : p === "30d" ? "30 dias" : "90 dias"}
           </button>
         ))}
       </div>
