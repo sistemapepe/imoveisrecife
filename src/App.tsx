@@ -23,7 +23,16 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import CookieConsent from "./components/CookieConsent";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 min: dados considerados frescos, sem refetch
+      gcTime: 30 * 60 * 1000,   // 30 min em cache antes do garbage collect
+      refetchOnWindowFocus: false, // evita refetch ao trocar de aba
+      retry: 1,
+    },
+  },
+});
 
 function AnimatedRoutes() {
   const location = useLocation();
