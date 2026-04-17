@@ -11,6 +11,10 @@ import InteractiveMap from "@/components/InteractiveMap";
 import ImageLightbox from "@/components/ImageLightbox";
 import VirtualTour from "@/components/VirtualTour";
 import VisitScheduleForm from "@/components/VisitScheduleForm";
+import SimilarProperties from "@/components/SimilarProperties";
+import RecentViewsBadge from "@/components/RecentViewsBadge";
+import FinancingSimulator from "@/components/FinancingSimulator";
+import LeadCaptureModal from "@/components/LeadCaptureModal";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
