@@ -16,8 +16,8 @@ export default function Favorites() {
       <div className="min-h-screen bg-background pb-24">
         <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">
-            <button onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center">
-              <ArrowLeft className="h-6 w-6" />
+            <button onClick={() => navigate(-1)} aria-label="Voltar" className="w-10 h-10 flex items-center justify-center">
+              <ArrowLeft className="h-6 w-6" aria-hidden="true" />
             </button>
             <h1 className="text-lg font-bold">Sua Seleção</h1>
             <div className="w-10" />

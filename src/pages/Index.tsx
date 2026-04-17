@@ -410,6 +410,8 @@ export default function Index() {
                       <button
                         className="absolute top-3 right-3 bg-foreground/50 backdrop-blur-md p-1.5 rounded-full"
                         onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}
+                        aria-label={favorites.includes(p.id) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                        aria-pressed={favorites.includes(p.id)}
                       >
                         <Heart className={`h-4 w-4 ${favorites.includes(p.id) ? "fill-accent text-accent" : "text-card"}`} />
                       </button>

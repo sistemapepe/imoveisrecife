@@ -24,9 +24,10 @@ export default function BottomNav() {
             <div key={i} className="relative -top-6">
               <button
                 onClick={() => navigate("/busca")}
+                aria-label="Buscar imóveis"
                 className="gold-gradient p-4 rounded-full shadow-lg"
               >
-                <Plus className="h-6 w-6 text-accent-foreground" />
+                <Plus className="h-6 w-6 text-accent-foreground" aria-hidden="true" />
               </button>
             </div>
           );
@@ -37,9 +38,11 @@ export default function BottomNav() {
           <button
             key={tab.path}
             onClick={() => navigate(tab.path)}
+            aria-label={tab.label}
+            aria-current={active ? "page" : undefined}
             className={`flex flex-col items-center gap-1 ${active ? "text-accent" : "text-muted-foreground"}`}
           >
-            <Icon className="h-7 w-7" fill={active ? "currentColor" : "none"} />
+            <Icon className="h-7 w-7" fill={active ? "currentColor" : "none"} aria-hidden="true" />
             <span className="text-[10px] font-bold uppercase tracking-tighter">{tab.label}</span>
           </button>
         );

@@ -86,15 +86,15 @@ export default function SearchResults() {
       <div className="min-h-screen bg-background pb-24">
         <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">
-            <button onClick={() => navigate(-1)} className="flex items-center justify-center w-10 h-10">
-              <ArrowLeft className="h-6 w-6 text-foreground" />
+            <button onClick={() => navigate(-1)} aria-label="Voltar" className="flex items-center justify-center w-10 h-10">
+              <ArrowLeft className="h-6 w-6 text-foreground" aria-hidden="true" />
             </button>
             <div className="text-center">
               <h1 className="text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">Resultados</h1>
               <p className="text-sm font-semibold text-foreground italic">{filtered.length} Imóveis encontrados</p>
             </div>
-            <button onClick={() => navigate("/filtros")} className="flex items-center justify-center w-10 h-10">
-              <SlidersHorizontal className="h-6 w-6 text-foreground" />
+            <button onClick={() => navigate("/filtros")} aria-label="Abrir filtros" className="flex items-center justify-center w-10 h-10">
+              <SlidersHorizontal className="h-6 w-6 text-foreground" aria-hidden="true" />
             </button>
           </div>
 
@@ -102,9 +102,9 @@ export default function SearchResults() {
           {locationFilter && (
             <div className="px-4 pb-2 pt-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                <MapPin className="h-3 w-3" />
+                <MapPin className="h-3 w-3" aria-hidden="true" />
                 {locationFilter}
-                <button onClick={() => navigate("/busca")} className="ml-1 hover:text-primary/70"><X className="h-3 w-3" /></button>
+                <button onClick={() => navigate("/busca")} aria-label="Remover filtro de localização" className="ml-1 hover:text-primary/70"><X className="h-3 w-3" aria-hidden="true" /></button>
               </span>
             </div>
           )}

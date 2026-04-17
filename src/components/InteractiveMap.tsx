@@ -56,13 +56,15 @@ export default function InteractiveMap({ address, neighborhood, city }: Interact
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
+              aria-label={`Mostrar ${cat.label} no mapa`}
+              aria-pressed={isActive}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold whitespace-nowrap border transition-all shrink-0 ${
                 isActive
                   ? "bg-primary text-primary-foreground border-primary shadow-md"
                   : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
               }`}
             >
-              <Icon className="h-3.5 w-3.5" />
+              <Icon className="h-3.5 w-3.5" aria-hidden="true" />
               {cat.label}
             </button>
           );

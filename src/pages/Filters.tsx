@@ -54,8 +54,8 @@ export default function Filters() {
       <div className="relative flex h-screen w-full flex-col overflow-hidden max-w-md mx-auto bg-background">
         <header className="sticky top-0 z-30 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 py-4">
-            <button onClick={() => navigate(-1)} className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-secondary transition-colors">
-              <X className="h-6 w-6" />
+            <button onClick={() => navigate(-1)} aria-label="Fechar filtros" className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-secondary transition-colors">
+              <X className="h-6 w-6" aria-hidden="true" />
             </button>
             <h1 className="text-lg font-bold tracking-tight">Refinar Busca</h1>
             <button className="text-primary text-sm font-semibold" onClick={() => { setSearch(""); setSelectedTypes([]); setSelectedBedrooms(""); setSelectedParking(""); }}>Limpar</button>
