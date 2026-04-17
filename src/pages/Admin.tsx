@@ -55,6 +55,7 @@ export default function Admin() {
   const [form, setForm] = useState<Omit<Property, "id" | "code">>(emptyProperty);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [cep, setCep] = useState("");
+  const [generatingSeo, setGeneratingSeo] = useState(false);
   const [cepLoading, setCepLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
