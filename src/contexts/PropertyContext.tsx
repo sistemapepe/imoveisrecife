@@ -62,6 +62,17 @@ export interface SiteSettings {
   developerName: string;
   developerUrl: string;
   showVisitSchedule: boolean;
+  leadModalEnabled: boolean;
+  leadModalShowSkip: boolean;
+  leadModalTitle: string;
+  leadModalDescription: string;
+  leadModalNameLabel: string;
+  leadModalNamePlaceholder: string;
+  leadModalPhoneLabel: string;
+  leadModalPhonePlaceholder: string;
+  leadModalSubmitText: string;
+  leadModalSubmittingText: string;
+  leadModalSkipText: string;
 }
 
 interface PropertyContextType {
@@ -103,6 +114,17 @@ const defaultSettings: SiteSettings = {
   developerName: "",
   developerUrl: "",
   showVisitSchedule: true,
+  leadModalEnabled: true,
+  leadModalShowSkip: true,
+  leadModalTitle: "Antes de continuar",
+  leadModalDescription: "Deixe seu contato para o corretor te chamar de volta caso o WhatsApp não responda.",
+  leadModalNameLabel: "Seu nome",
+  leadModalNamePlaceholder: "Como podemos te chamar?",
+  leadModalPhoneLabel: "Telefone / WhatsApp",
+  leadModalPhonePlaceholder: "(81) 99999-9999",
+  leadModalSubmitText: "Continuar para o WhatsApp",
+  leadModalSubmittingText: "Conectando...",
+  leadModalSkipText: "Prefiro não informar agora",
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -157,6 +179,17 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         developerName: (data as any).developer_name ?? "",
         developerUrl: (data as any).developer_url ?? "",
         showVisitSchedule: (data as any).show_visit_schedule ?? true,
+        leadModalEnabled: (data as any).lead_modal_enabled ?? true,
+        leadModalShowSkip: (data as any).lead_modal_show_skip ?? true,
+        leadModalTitle: (data as any).lead_modal_title ?? defaultSettings.leadModalTitle,
+        leadModalDescription: (data as any).lead_modal_description ?? defaultSettings.leadModalDescription,
+        leadModalNameLabel: (data as any).lead_modal_name_label ?? defaultSettings.leadModalNameLabel,
+        leadModalNamePlaceholder: (data as any).lead_modal_name_placeholder ?? defaultSettings.leadModalNamePlaceholder,
+        leadModalPhoneLabel: (data as any).lead_modal_phone_label ?? defaultSettings.leadModalPhoneLabel,
+        leadModalPhonePlaceholder: (data as any).lead_modal_phone_placeholder ?? defaultSettings.leadModalPhonePlaceholder,
+        leadModalSubmitText: (data as any).lead_modal_submit_text ?? defaultSettings.leadModalSubmitText,
+        leadModalSubmittingText: (data as any).lead_modal_submitting_text ?? defaultSettings.leadModalSubmittingText,
+        leadModalSkipText: (data as any).lead_modal_skip_text ?? defaultSettings.leadModalSkipText,
       }));
     }
   }, []);
@@ -234,6 +267,17 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       developerName: "developer_name",
       developerUrl: "developer_url",
       showVisitSchedule: "show_visit_schedule",
+      leadModalEnabled: "lead_modal_enabled",
+      leadModalShowSkip: "lead_modal_show_skip",
+      leadModalTitle: "lead_modal_title",
+      leadModalDescription: "lead_modal_description",
+      leadModalNameLabel: "lead_modal_name_label",
+      leadModalNamePlaceholder: "lead_modal_name_placeholder",
+      leadModalPhoneLabel: "lead_modal_phone_label",
+      leadModalPhonePlaceholder: "lead_modal_phone_placeholder",
+      leadModalSubmitText: "lead_modal_submit_text",
+      leadModalSubmittingText: "lead_modal_submitting_text",
+      leadModalSkipText: "lead_modal_skip_text",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];

@@ -245,6 +245,17 @@ export type Database = {
           hero_title: string
           id: string
           instagram_url: string
+          lead_modal_description: string
+          lead_modal_enabled: boolean
+          lead_modal_name_label: string
+          lead_modal_name_placeholder: string
+          lead_modal_phone_label: string
+          lead_modal_phone_placeholder: string
+          lead_modal_show_skip: boolean
+          lead_modal_skip_text: string
+          lead_modal_submit_text: string
+          lead_modal_submitting_text: string
+          lead_modal_title: string
           linkedin_url: string
           logo_url: string
           primary_color: string
@@ -272,6 +283,17 @@ export type Database = {
           hero_title?: string
           id?: string
           instagram_url?: string
+          lead_modal_description?: string
+          lead_modal_enabled?: boolean
+          lead_modal_name_label?: string
+          lead_modal_name_placeholder?: string
+          lead_modal_phone_label?: string
+          lead_modal_phone_placeholder?: string
+          lead_modal_show_skip?: boolean
+          lead_modal_skip_text?: string
+          lead_modal_submit_text?: string
+          lead_modal_submitting_text?: string
+          lead_modal_title?: string
           linkedin_url?: string
           logo_url?: string
           primary_color?: string
@@ -299,6 +321,17 @@ export type Database = {
           hero_title?: string
           id?: string
           instagram_url?: string
+          lead_modal_description?: string
+          lead_modal_enabled?: boolean
+          lead_modal_name_label?: string
+          lead_modal_name_placeholder?: string
+          lead_modal_phone_label?: string
+          lead_modal_phone_placeholder?: string
+          lead_modal_show_skip?: boolean
+          lead_modal_skip_text?: string
+          lead_modal_submit_text?: string
+          lead_modal_submitting_text?: string
+          lead_modal_title?: string
           linkedin_url?: string
           logo_url?: string
           primary_color?: string
