@@ -471,6 +471,8 @@ export default function Index() {
                       src={properties[0].images[0]}
                       alt={properties[0].title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/50 to-transparent" />
                     <div className="relative z-10 flex flex-col justify-center h-full px-8 max-w-sm">
@@ -498,7 +500,7 @@ export default function Index() {
                         onClick={() => { setActiveType(col.type); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                         className="relative h-28 rounded-lg overflow-hidden border border-card/5"
                       >
-                        <img src={col.image} alt={col.type} className="absolute inset-0 w-full h-full object-cover" />
+                        <img src={col.image} alt={col.type} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                         <div className="absolute inset-0 bg-foreground/50" />
                         <div className="relative z-10 flex flex-col justify-center items-center h-full">
                           <span className="text-card font-bold tracking-widest text-xs uppercase">{col.type}</span>
