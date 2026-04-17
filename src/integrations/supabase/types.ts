@@ -233,6 +233,7 @@ export type Database = {
           accent_color: string
           available_amenities: string[]
           banner_interval: number
+          bing_site_verification: string
           brand_name: string
           concierge_cargo: string
           concierge_desc: string
@@ -241,6 +242,7 @@ export type Database = {
           developer_url: string
           facebook_url: string
           footer_text: string
+          google_site_verification: string
           hero_subtitle: string
           hero_title: string
           id: string
@@ -271,6 +273,7 @@ export type Database = {
           accent_color?: string
           available_amenities?: string[]
           banner_interval?: number
+          bing_site_verification?: string
           brand_name?: string
           concierge_cargo?: string
           concierge_desc?: string
@@ -279,6 +282,7 @@ export type Database = {
           developer_url?: string
           facebook_url?: string
           footer_text?: string
+          google_site_verification?: string
           hero_subtitle?: string
           hero_title?: string
           id?: string
@@ -309,6 +313,7 @@ export type Database = {
           accent_color?: string
           available_amenities?: string[]
           banner_interval?: number
+          bing_site_verification?: string
           brand_name?: string
           concierge_cargo?: string
           concierge_desc?: string
@@ -317,6 +322,7 @@ export type Database = {
           developer_url?: string
           facebook_url?: string
           footer_text?: string
+          google_site_verification?: string
           hero_subtitle?: string
           hero_title?: string
           id?: string
