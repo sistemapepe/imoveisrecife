@@ -25,6 +25,8 @@ export default function SEOHead({
 }: SEOHeadProps) {
   const ctx = useContext(PropertyContext);
   const brandName = ctx?.settings?.brandName || "Imóveis Recife";
+  const googleVerify = ctx?.settings?.googleSiteVerification || "";
+  const bingVerify = ctx?.settings?.bingSiteVerification || "";
   const fullTitle = title ? `${title} | ${brandName}` : `${brandName} — Imóveis de Alto Padrão em Recife e Região`;
   const metaDescription =
     description ||
@@ -51,6 +53,8 @@ export default function SEOHead({
       <meta name="author" content={brandName} />
       <link rel="canonical" href={canonical} />
       <html lang="pt-BR" />
+      {googleVerify && <meta name="google-site-verification" content={googleVerify} />}
+      {bingVerify && <meta name="msvalidate.01" content={bingVerify} />}
 
       {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />
