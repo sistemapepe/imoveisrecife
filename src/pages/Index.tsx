@@ -74,6 +74,21 @@ export default function Index() {
     setCurrentSlide((prev) => (prev >= heroSlides.length ? 0 : prev));
   }, [heroSlides.length]);
 
+  // Preload first hero image to optimize LCP
+  const firstHeroImage = heroSlides[0]?.image;
+  useEffect(() => {
+    if (!firstHeroImage) return;
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = firstHeroImage;
+    link.fetchPriority = "high";
+    document.head.appendChild(link);
+    return () => {
+      if (link.parentNode) link.parentNode.removeChild(link);
+    };
+  }, [firstHeroImage]);
+
   const goToSlide = (index: number) => setCurrentSlide(index);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
@@ -184,9 +199,16 @@ export default function Index() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${heroSlides[currentSlide].image})` }}
+                  className="absolute inset-0"
                 >
+                  <img
+                    src={heroSlides[currentSlide].image}
+                    alt={heroSlides[currentSlide].title || "Imóvel em destaque"}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    fetchPriority={currentSlide === 0 ? "high" : "auto"}
+                    loading={currentSlide === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
                   <div className="absolute inset-0 hero-gradient" />
                 </motion.div>
               </AnimatePresence>
@@ -397,7 +419,7 @@ export default function Index() {
                     onClick={() => navigate(`/imovel/${p.id}`)}
                   >
                     <div className="relative w-full aspect-[4/3] overflow-hidden">
-                      <img src={p.images[0]} alt={p.title} className="w-full h-full object-cover" />
+                      <img src={p.images[0]} alt={p.title} className="w-full h-full object-cover" loading="lazy" decoding="async" />
                       {p.status && p.status !== "disponivel" && (
                         <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-sm shadow-lg ${
                           p.status === "reservado" ? "bg-yellow-500/90" : "bg-red-500/90"
@@ -449,6 +471,8 @@ export default function Index() {
                       src={properties[0].images[0]}
                       alt={properties[0].title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/50 to-transparent" />
                     <div className="relative z-10 flex flex-col justify-center h-full px-8 max-w-sm">
@@ -476,7 +500,7 @@ export default function Index() {
                         onClick={() => { setActiveType(col.type); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                         className="relative h-28 rounded-lg overflow-hidden border border-card/5"
                       >
-                        <img src={col.image} alt={col.type} className="absolute inset-0 w-full h-full object-cover" />
+                        <img src={col.image} alt={col.type} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                         <div className="absolute inset-0 bg-foreground/50" />
                         <div className="relative z-10 flex flex-col justify-center items-center h-full">
                           <span className="text-card font-bold tracking-widest text-xs uppercase">{col.type}</span>
