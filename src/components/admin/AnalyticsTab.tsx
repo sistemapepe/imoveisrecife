@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
 import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp } from "lucide-react";
+import { DateRangePicker } from "./DateRangePicker";
 
 interface ViewsByProperty {
   property_id: string;
@@ -21,39 +23,54 @@ export default function AnalyticsTab() {
   const [leadsByDay, setLeadsByDay] = useState<LeadsByPeriod[]>([]);
   const [viewsByDay, setViewsByDay] = useState<LeadsByPeriod[]>([]);
   const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState<"today" | "7d" | "30d" | "90d">("today");
+  const [period, setPeriod] = useState<"today" | "7d" | "30d" | "90d" | "custom">("today");
+  const [customRange, setCustomRange] = useState<DateRange | undefined>();
 
   useEffect(() => {
     fetchAnalytics();
-  }, [period]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString()]);
 
-  const getDateFilter = () => {
+  const getDateRange = (): { from: string; to?: string } => {
+    if (period === "custom" && customRange?.from) {
+      const from = new Date(customRange.from);
+      from.setHours(0, 0, 0, 0);
+      const to = customRange.to ? new Date(customRange.to) : new Date(customRange.from);
+      to.setHours(23, 59, 59, 999);
+      return { from: from.toISOString(), to: to.toISOString() };
+    }
     if (period === "today") {
       const d = new Date();
       d.setHours(0, 0, 0, 0);
-      return d.toISOString();
+      return { from: d.toISOString() };
     }
     const days = period === "7d" ? 7 : period === "30d" ? 30 : 90;
     const d = new Date();
     d.setDate(d.getDate() - days);
-    return d.toISOString();
+    return { from: d.toISOString() };
   };
 
   const fetchAnalytics = async () => {
     setLoading(true);
-    const since = getDateFilter();
+    const { from, to } = getDateRange();
+
+    const buildQuery = (table: "property_views" | "contact_messages" | "visit_requests", cols: string) => {
+      let q = supabase.from(table).select(cols).gte("created_at", from);
+      if (to) q = q.lte("created_at", to);
+      return q;
+    };
 
     const [viewsRes, leadsRes, visitsRes, propertiesRes] = await Promise.all([
-      supabase.from("property_views").select("id, property_id, created_at").gte("created_at", since),
-      supabase.from("contact_messages").select("id, created_at").gte("created_at", since),
-      supabase.from("visit_requests").select("id, created_at").gte("created_at", since),
+      buildQuery("property_views", "id, property_id, created_at"),
+      buildQuery("contact_messages", "id, created_at"),
+      buildQuery("visit_requests", "id, created_at"),
       supabase.from("properties").select("id, title"),
     ]);
 
-    const views = viewsRes.data || [];
-    const leads = leadsRes.data || [];
-    const visits = visitsRes.data || [];
-    const properties = propertiesRes.data || [];
+    const views = (viewsRes.data || []) as { id: string; property_id: string; created_at: string }[];
+    const leads = (leadsRes.data || []) as { id: string; created_at: string }[];
+    const visits = (visitsRes.data || []) as { id: string; created_at: string }[];
+    const properties = (propertiesRes.data || []) as { id: string; title: string }[];
 
     setTotalViews(views.length);
     setTotalLeads(leads.length);
@@ -104,7 +121,7 @@ export default function AnalyticsTab() {
   return (
     <div className="space-y-6">
       {/* Period filter */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2 items-center">
         {(["today", "7d", "30d", "90d"] as const).map((p) => (
           <button
             key={p}
@@ -118,6 +135,13 @@ export default function AnalyticsTab() {
             {p === "today" ? "Hoje" : p === "7d" ? "7 dias" : p === "30d" ? "30 dias" : "90 dias"}
           </button>
         ))}
+        <DateRangePicker
+          value={customRange}
+          onChange={(r) => {
+            setCustomRange(r);
+            if (r?.from) setPeriod("custom");
+          }}
+        />
       </div>
 
       {/* KPI Cards */}
