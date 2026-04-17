@@ -1,1 +1,4 @@
 project_id = "bqxfopftcoagiautjeqz"
+
+[functions.seo-generate]
+verify_jwt = true
