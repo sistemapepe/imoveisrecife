@@ -1,6 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
+import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
 import { BarChart3, Globe, Smartphone, Monitor, Tablet, TrendingUp, Users, Eye, MousePointerClick, Share2 } from "lucide-react";
+import { DateRangePicker } from "./DateRangePicker";
 
 interface TrafficEvent {
   id: string;
@@ -22,35 +24,44 @@ interface TrafficEvent {
 export default function TrafficTab() {
   const [events, setEvents] = useState<TrafficEvent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState<"today" | "7d" | "30d" | "90d">("today");
+  const [period, setPeriod] = useState<"today" | "7d" | "30d" | "90d" | "custom">("today");
+  const [customRange, setCustomRange] = useState<DateRange | undefined>();
 
-  const getDateFilter = () => {
+  const getDateRange = (): { from: string; to?: string } => {
+    if (period === "custom" && customRange?.from) {
+      const from = new Date(customRange.from);
+      from.setHours(0, 0, 0, 0);
+      const to = customRange.to ? new Date(customRange.to) : new Date(customRange.from);
+      to.setHours(23, 59, 59, 999);
+      return { from: from.toISOString(), to: to.toISOString() };
+    }
     if (period === "today") {
       const d = new Date();
       d.setHours(0, 0, 0, 0);
-      return d.toISOString();
+      return { from: d.toISOString() };
     }
     const days = period === "7d" ? 7 : period === "30d" ? 30 : 90;
     const d = new Date();
     d.setDate(d.getDate() - days);
-    return d.toISOString();
+    return { from: d.toISOString() };
   };
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const since = getDateFilter();
-      const { data } = await supabase
+      const { from, to } = getDateRange();
+      let query = supabase
         .from("traffic_events")
         .select("id, channel, source, medium, social_network, device_type, browser, os, landing_page, event_type, created_at, campaign, visitor_id, session_id")
-        .gte("created_at", since)
-        .order("created_at", { ascending: false })
-        .limit(5000);
+        .gte("created_at", from);
+      if (to) query = query.lte("created_at", to);
+      const { data } = await query.order("created_at", { ascending: false }).limit(5000);
       setEvents(data || []);
       setLoading(false);
     };
     fetchData();
-  }, [period]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString()]);
 
   const stats = useMemo(() => {
     const pageViews = events.filter((e) => e.event_type === "page_view");
@@ -144,7 +155,7 @@ export default function TrafficTab() {
       </h2>
 
       {/* Period filter */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 items-center">
         {(["today", "7d", "30d", "90d"] as const).map((p) => (
           <button
             key={p}
@@ -156,6 +167,13 @@ export default function TrafficTab() {
             {p === "today" ? "Hoje" : p === "7d" ? "7 dias" : p === "30d" ? "30 dias" : "90 dias"}
           </button>
         ))}
+        <DateRangePicker
+          value={customRange}
+          onChange={(r) => {
+            setCustomRange(r);
+            if (r?.from) setPeriod("custom");
+          }}
+        />
       </div>
 
       {/* KPI Cards */}
