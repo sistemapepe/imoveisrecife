@@ -105,9 +105,66 @@ export default function Index() {
     }, new Map<string, { type: string; image: string; count: number }>())
   ).map(([, v]) => v);
 
+  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://imoveisrecife.lovable.app";
+  const homeJsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateAgent",
+      name: settings.brandName,
+      url: siteOrigin,
+      logo: settings.logoUrl || undefined,
+      image: settings.logoUrl || undefined,
+      description: `${settings.brandName} — Imóveis de alto padrão em Recife e região.`,
+      areaServed: { "@type": "City", name: "Recife", addressRegion: "PE", addressCountry: "BR" },
+      sameAs: [
+        settings.instagramUrl,
+        settings.facebookUrl,
+        settings.youtubeUrl,
+        settings.linkedinUrl,
+        settings.websiteUrl,
+      ].filter(Boolean),
+      contactPoint: settings.whatsappNumber
+        ? {
+            "@type": "ContactPoint",
+            telephone: `+${settings.whatsappNumber}`,
+            contactType: "sales",
+            areaServed: "BR",
+            availableLanguage: ["Portuguese"],
+          }
+        : undefined,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: settings.brandName,
+      url: siteOrigin,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${siteOrigin}/busca?location={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+    available.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          itemListElement: available.slice(0, 12).map((p, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            url: `${siteOrigin}/imovel/${p.id}`,
+            name: p.title,
+          })),
+        }
+      : null,
+  ].filter(Boolean) as Record<string, any>[];
+
   return (
     <PageTransition>
-      <SEOHead title={settings.heroTitle} description={`${settings.brandName} — Imóveis de luxo em Recife e região. Encontre casas, apartamentos e coberturas exclusivas.`} />
+      <SEOHead
+        title={settings.heroTitle}
+        description={`${settings.brandName} — Imóveis de alto padrão em Recife e região. Encontre casas, apartamentos, coberturas e terrenos exclusivos com atendimento personalizado.`}
+        jsonLd={homeJsonLd}
+      />
       <AnimatePresence mode="wait">
         {loading ? (
           <motion.div

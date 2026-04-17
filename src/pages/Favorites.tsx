@@ -12,7 +12,7 @@ export default function Favorites() {
 
   return (
     <PageTransition>
-      <SEOHead title="Favoritos" description="Seus imóveis favoritos salvos para consulta rápida." />
+      <SEOHead title="Favoritos" description="Seus imóveis favoritos salvos para consulta rápida." noIndex />
       <div className="min-h-screen bg-background pb-24">
         <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">

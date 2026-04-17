@@ -50,7 +50,7 @@ export default function Filters() {
 
   return (
     <PageTransition>
-      <SEOHead title="Filtros" description="Filtre imóveis por tipo, quartos, localização e mais." />
+      <SEOHead title="Filtros" description="Filtre imóveis por tipo, quartos, localização e mais." noIndex />
       <div className="relative flex h-screen w-full flex-col overflow-hidden max-w-md mx-auto bg-background">
         <header className="sticky top-0 z-30 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 py-4">
