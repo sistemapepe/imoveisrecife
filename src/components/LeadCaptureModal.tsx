@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { MessageCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useProperties } from "@/contexts/PropertyContext";
+import { checkHoneypot, HONEYPOT_FIELD_NAME, honeypotInputStyle } from "@/lib/honeypot";
 
 interface LeadCaptureModalProps {
   open: boolean;
@@ -40,17 +41,32 @@ export default function LeadCaptureModal({
   const { settings } = useProperties();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const openedAtRef = useRef<number>(Date.now());
 
   // If admin disabled the modal, skip it entirely
   useEffect(() => {
     if (open && settings.leadModalEnabled === false) {
       onConfirm();
     }
+    if (open) {
+      openedAtRef.current = Date.now();
+    }
   }, [open, settings.leadModalEnabled, onConfirm]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Anti-bot: honeypot + time-trap
+    const bot = checkHoneypot(honeypot, openedAtRef.current);
+    if (!bot.ok) {
+      // Silently pretend success to not tip off bots
+      onConfirm();
+      setName("");
+      setPhone("");
+      setHoneypot("");
+      return;
+    }
     const parsed = leadSchema.safeParse({ name, phone });
     if (!parsed.success) {
       toast.error(parsed.error.errors[0].message);
@@ -125,6 +141,17 @@ export default function LeadCaptureModal({
             </div>
 
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
+              {/* Honeypot - invisible to humans, bots fill it */}
+              <input
+                type="text"
+                name={HONEYPOT_FIELD_NAME}
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={honeypotInputStyle}
+              />
               <p className="text-sm text-muted-foreground whitespace-pre-line">
                 {settings.leadModalDescription}
               </p>
