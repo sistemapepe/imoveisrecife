@@ -1,4 +1,4 @@
-import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, MapPin, TrendingDown } from "lucide-react";
+import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Property, formatPriceFull } from "@/contexts/PropertyContext";
@@ -6,7 +6,7 @@ import { useProperties } from "@/contexts/PropertyContext";
 
 export default function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const navigate = useNavigate();
-  const { favorites, toggleFavorite, settings } = useProperties();
+  const { favorites, toggleFavorite } = useProperties();
   const isFav = favorites.includes(property.id);
   const hasPriceDrop = !!property.previous_price && property.previous_price > property.price;
   const dropPercent = hasPriceDrop
@@ -23,7 +23,14 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
       onClick={() => navigate(`/imovel/${property.id}`)}
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
-        <img alt={property.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={property.images[0]} />
+        <img
+          alt={property.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          src={property.images[0]}
+          loading={index < 2 ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={index === 0 ? "high" : "auto"}
+        />
         <div className="absolute top-4 left-4 flex gap-2">
           {property.status && property.status !== "disponivel" && (
             <div className={`px-3 py-1 rounded-sm shadow-lg ${
@@ -46,6 +53,8 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
           )}
         </div>
         <button
+          aria-label={isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+          aria-pressed={isFav}
           className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-foreground/20 backdrop-blur-md rounded-full border border-card/30"
           onClick={(e) => { e.stopPropagation(); toggleFavorite(property.id); }}
         >
