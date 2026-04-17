@@ -111,23 +111,28 @@ export default function PropertyDetail() {
     setLeadModalOpen(true);
   };
 
+  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://imoveisrecife.lovable.app";
+  const propertyUrl = `${siteOrigin}/imovel/${property.id}`;
   const schemaOrg = {
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
     name: property.title,
     description: property.description,
-    url: window.location.href,
+    url: propertyUrl,
+    identifier: property.code,
     datePosted: new Date().toISOString(),
     image: property.images,
     offers: {
       "@type": "Offer",
       price: property.price,
       priceCurrency: "BRL",
-      availability: property.status === "vendido"
-        ? "https://schema.org/SoldOut"
-        : property.status === "reservado"
-          ? "https://schema.org/LimitedAvailability"
-          : "https://schema.org/InStock",
+      url: propertyUrl,
+      availability:
+        property.status === "vendido"
+          ? "https://schema.org/SoldOut"
+          : property.status === "reservado"
+            ? "https://schema.org/LimitedAvailability"
+            : "https://schema.org/InStock",
     },
     address: {
       "@type": "PostalAddress",
@@ -143,6 +148,20 @@ export default function PropertyDetail() {
     },
     numberOfRooms: property.bedrooms,
     numberOfBathroomsTotal: property.bathrooms,
+    numberOfBedrooms: property.bedrooms,
+    amenityFeature: (property.amenities || []).map((a) => ({
+      "@type": "LocationFeatureSpecification",
+      name: a,
+    })),
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Início", item: siteOrigin },
+      { "@type": "ListItem", position: 2, name: "Busca", item: `${siteOrigin}/busca` },
+      { "@type": "ListItem", position: 3, name: property.title, item: propertyUrl },
+    ],
   };
 
   return (
@@ -152,10 +171,9 @@ export default function PropertyDetail() {
         description={`${property.type} com ${property.bedrooms} quartos, ${property.area}m² em ${property.neighborhood}, ${property.city}. ${property.description.slice(0, 120)}`}
         image={property.images[0]}
         type="article"
+        keywords={`${property.type} ${property.neighborhood}, ${property.type} ${property.city}, ${property.bedrooms} quartos ${property.neighborhood}, imóvel ${property.code}`}
+        jsonLd={[schemaOrg, breadcrumbJsonLd]}
       />
-      <Helmet>
-        <script type="application/ld+json">{JSON.stringify(schemaOrg)}</script>
-      </Helmet>
       <motion.div
         className="min-h-screen bg-background pb-32"
         initial={{ opacity: 0 }}
