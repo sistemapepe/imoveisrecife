@@ -26,6 +26,7 @@ export default function PropertyDetail() {
   const [currentImg, setCurrentImg] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [leadModalOpen, setLeadModalOpen] = useState(false);
   const touchStartX = useRef(0);
   const touchDelta = useRef(0);
 
@@ -99,11 +100,15 @@ export default function PropertyDetail() {
     }
   };
 
-  const handleWhatsApp = () => {
+  const openWhatsApp = () => {
     const message = encodeURIComponent(
       `Olá! Tenho interesse no imóvel ${property.code}: ${property.title} - ${formatPriceFull(property.price)}\n${window.location.href}`
     );
     window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
+  };
+
+  const handleWhatsApp = () => {
+    setLeadModalOpen(true);
   };
 
   const schemaOrg = {
@@ -159,14 +164,14 @@ export default function PropertyDetail() {
       >
         {/* Top bar */}
         <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-foreground/40 to-transparent max-w-screen-lg mx-auto">
-          <button onClick={() => navigate(-1)} className="flex h-10 w-10 items-center justify-center rounded-full bg-card/20 backdrop-blur-md text-card border border-card/30">
+          <button onClick={() => navigate(-1)} aria-label="Voltar" className="flex h-10 w-10 items-center justify-center rounded-full bg-card/20 backdrop-blur-md text-card border border-card/30">
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div className="flex gap-2">
-            <button onClick={() => toggleFavorite(property.id)} className="flex h-10 w-10 items-center justify-center rounded-full bg-card/20 backdrop-blur-md text-card border border-card/30">
+            <button onClick={() => toggleFavorite(property.id)} aria-label={isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"} aria-pressed={isFav} className="flex h-10 w-10 items-center justify-center rounded-full bg-card/20 backdrop-blur-md text-card border border-card/30">
               <Heart className={`h-5 w-5 ${isFav ? "fill-accent text-accent" : ""}`} />
             </button>
-            <button onClick={handleShare} className="flex h-10 w-10 items-center justify-center rounded-full bg-card/20 backdrop-blur-md text-card border border-card/30">
+            <button onClick={handleShare} aria-label="Compartilhar imóvel" className="flex h-10 w-10 items-center justify-center rounded-full bg-card/20 backdrop-blur-md text-card border border-card/30">
               <Share2 className="h-5 w-5" />
             </button>
           </div>
