@@ -352,6 +352,8 @@ export default function PropertyDetail() {
                 </div>
               </div>
 
+              <FinancingSimulator price={property.price} />
+
               {property.video_tour_url && (
                 <VirtualTour videoUrl={property.video_tour_url} title={property.title} />
               )}
@@ -394,16 +396,18 @@ export default function PropertyDetail() {
               </div>
             </div>
           </div>
+
+          <SimilarProperties current={property} />
         </motion.div>
 
         {/* Mobile bottom CTA */}
         <div className="fixed bottom-20 left-0 right-0 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-card/80 backdrop-blur-xl border-t border-border z-50 max-w-screen-lg mx-auto md:hidden">
           <div className="flex gap-3">
-            <button onClick={handleShare} className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-secondary text-foreground shadow-lg active:scale-95 transition-transform border border-border gap-0.5">
+            <button onClick={handleShare} aria-label="Compartilhar imóvel" className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-secondary text-foreground shadow-lg active:scale-95 transition-transform border border-border gap-0.5">
               <Share2 className="h-5 w-5" />
               <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground">Enviar</span>
             </button>
-            <button onClick={handleWhatsApp} className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-whatsapp text-card shadow-lg active:scale-95 transition-transform">
+            <button onClick={handleWhatsApp} aria-label="Falar pelo WhatsApp" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-whatsapp text-card shadow-lg active:scale-95 transition-transform">
               <MessageCircle className="h-6 w-6" />
             </button>
             <button onClick={() => navigate("/contato")} className="flex-1 flex items-center justify-center gap-2 rounded-xl gold-gradient py-4 text-accent-foreground font-bold text-base shadow-lg active:scale-95 transition-transform uppercase tracking-widest">
@@ -412,6 +416,17 @@ export default function PropertyDetail() {
           </div>
         </div>
       </motion.div>
+
+      <LeadCaptureModal
+        open={leadModalOpen}
+        onClose={() => setLeadModalOpen(false)}
+        onConfirm={() => {
+          setLeadModalOpen(false);
+          openWhatsApp();
+        }}
+        propertyTitle={property.title}
+        propertyId={property.code}
+      />
 
       <ImageLightbox
         images={property.images}
