@@ -164,14 +164,14 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
         <div className="flex items-center justify-between p-4 text-white/80">
           <span className="text-sm font-medium">{currentIndex + 1} / {images.length}</span>
           <div className="flex items-center gap-2">
-            <button onClick={() => setScale((s) => Math.max(1, s - 0.5))} className="p-2 rounded-full hover:bg-white/10 transition">
-              <ZoomOut className="h-5 w-5" />
+            <button onClick={() => setScale((s) => Math.max(1, s - 0.5))} aria-label="Diminuir zoom" className="p-2 rounded-full hover:bg-white/10 transition">
+              <ZoomOut className="h-5 w-5" aria-hidden="true" />
             </button>
-            <button onClick={() => setScale((s) => Math.min(5, s + 0.5))} className="p-2 rounded-full hover:bg-white/10 transition">
-              <ZoomIn className="h-5 w-5" />
+            <button onClick={() => setScale((s) => Math.min(5, s + 0.5))} aria-label="Aumentar zoom" className="p-2 rounded-full hover:bg-white/10 transition">
+              <ZoomIn className="h-5 w-5" aria-hidden="true" />
             </button>
-            <button onClick={onClose} className="p-2 rounded-full hover:bg-white/10 transition">
-              <X className="h-5 w-5" />
+            <button onClick={onClose} aria-label="Fechar galeria" className="p-2 rounded-full hover:bg-white/10 transition">
+              <X className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>

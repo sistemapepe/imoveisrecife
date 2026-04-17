@@ -60,8 +60,8 @@ export default function VirtualTour({ videoUrl, title }: VirtualTourProps) {
           >
             <div className="flex justify-between items-center p-4 text-white">
               <span className="text-sm font-medium">Tour Virtual — {title}</span>
-              <button onClick={() => setIsFullscreen(false)} className="p-2 rounded-full hover:bg-white/10 transition">
-                <X className="h-5 w-5" />
+              <button onClick={() => setIsFullscreen(false)} aria-label="Sair do tour virtual" className="p-2 rounded-full hover:bg-white/10 transition">
+                <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
             <iframe
