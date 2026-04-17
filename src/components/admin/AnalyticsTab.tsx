@@ -54,23 +54,22 @@ export default function AnalyticsTab() {
     setLoading(true);
     const { from, to } = getDateRange();
 
-    const buildQuery = (table: "property_views" | "contact_messages" | "visit_requests", cols: string) => {
-      let q = supabase.from(table).select(cols).gte("created_at", from);
-      if (to) q = q.lte("created_at", to);
-      return q;
+    const applyRange = <T,>(q: T): T => {
+      const qq = (q as unknown as { lte: (col: string, v: string) => T });
+      return to ? qq.lte("created_at", to) : q;
     };
 
     const [viewsRes, leadsRes, visitsRes, propertiesRes] = await Promise.all([
-      buildQuery("property_views", "id, property_id, created_at"),
-      buildQuery("contact_messages", "id, created_at"),
-      buildQuery("visit_requests", "id, created_at"),
+      applyRange(supabase.from("property_views").select("id, property_id, created_at").gte("created_at", from)),
+      applyRange(supabase.from("contact_messages").select("id, created_at").gte("created_at", from)),
+      applyRange(supabase.from("visit_requests").select("id, created_at").gte("created_at", from)),
       supabase.from("properties").select("id, title"),
     ]);
 
-    const views = (viewsRes.data || []) as { id: string; property_id: string; created_at: string }[];
-    const leads = (leadsRes.data || []) as { id: string; created_at: string }[];
-    const visits = (visitsRes.data || []) as { id: string; created_at: string }[];
-    const properties = (propertiesRes.data || []) as { id: string; title: string }[];
+    const views = viewsRes.data || [];
+    const leads = leadsRes.data || [];
+    const visits = visitsRes.data || [];
+    const properties = propertiesRes.data || [];
 
     setTotalViews(views.length);
     setTotalLeads(leads.length);
