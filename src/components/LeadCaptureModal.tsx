@@ -11,6 +11,7 @@ interface LeadCaptureModalProps {
   onConfirm: () => void;
   propertyTitle?: string;
   propertyId?: string;
+  source?: string;
 }
 
 const leadSchema = z.object({
@@ -33,6 +34,7 @@ export default function LeadCaptureModal({
   onConfirm,
   propertyTitle,
   propertyId,
+  source = "whatsapp_fab",
 }: LeadCaptureModalProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -47,14 +49,23 @@ export default function LeadCaptureModal({
     }
     setSubmitting(true);
     const interestText = propertyTitle
-      ? `WhatsApp - ${propertyTitle}${propertyId ? ` (${propertyId})` : ""}`
+      ? `WhatsApp - ${propertyTitle}`
       : "WhatsApp";
+    const messageText = [
+      "Lead capturado antes do redirecionamento ao WhatsApp.",
+      `Origem: ${source}`,
+      propertyId ? `Imóvel ID: ${propertyId}` : null,
+      propertyTitle ? `Imóvel: ${propertyTitle}` : null,
+      typeof window !== "undefined" ? `URL: ${window.location.href}` : null,
+    ]
+      .filter(Boolean)
+      .join("\n");
     const { error } = await supabase.from("contact_messages").insert({
       name: parsed.data.name,
       email: "",
       phone: parsed.data.phone,
-      interest: interestText.slice(0, 200),
-      message: "Lead capturado antes do redirecionamento ao WhatsApp",
+      interest: interestText.slice(0, 100),
+      message: messageText.slice(0, 5000),
     });
     setSubmitting(false);
     if (error) {

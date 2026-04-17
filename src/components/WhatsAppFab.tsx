@@ -1,21 +1,34 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { MessageCircle } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { trackEvent } from "@/hooks/useTrafficTracker";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
 
 export default function WhatsAppFab() {
-  const { settings } = useProperties();
+  const { settings, properties } = useProperties();
   const location = useLocation();
+  const params = useParams();
   const [open, setOpen] = useState(false);
 
   // Hide on admin/login pages
   if (location.pathname.startsWith("/admin") || location.pathname.startsWith("/login")) return null;
 
+  const currentProperty = useMemo(() => {
+    if (!location.pathname.startsWith("/imovel/")) return null;
+    const id = params.id || location.pathname.split("/imovel/")[1]?.split("/")[0];
+    return properties.find((p) => p.id === id) || null;
+  }, [location.pathname, params.id, properties]);
+
+  const source = currentProperty ? "whatsapp_fab_property" : "whatsapp_fab_global";
+
   const openWhatsApp = () => {
     trackEvent("whatsapp_click");
-    const message = encodeURIComponent(settings.whatsappMessage || "Olá! Gostaria de mais informações sobre os imóveis.");
+    const baseMsg = settings.whatsappMessage || "Olá! Gostaria de mais informações sobre os imóveis.";
+    const msg = currentProperty
+      ? `${baseMsg}\n\nImóvel: ${currentProperty.title} (${currentProperty.code || currentProperty.id})`
+      : baseMsg;
+    const message = encodeURIComponent(msg);
     window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
   };
 
@@ -38,6 +51,9 @@ export default function WhatsAppFab() {
           setOpen(false);
           openWhatsApp();
         }}
+        propertyId={currentProperty?.id}
+        propertyTitle={currentProperty?.title}
+        source={source}
       />
     </>
   );
