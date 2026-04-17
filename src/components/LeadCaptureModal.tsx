@@ -143,7 +143,9 @@ export default function LeadCaptureModal({
 
   if (settings.leadModalEnabled === false) return null;
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
@@ -251,6 +253,7 @@ export default function LeadCaptureModal({
           </div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
