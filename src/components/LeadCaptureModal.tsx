@@ -118,9 +118,11 @@ export default function LeadCaptureModal({
     ]
       .filter(Boolean)
       .join("\n");
+    // Email placeholder: política RLS exige length(email) > 0.
+    // Usamos um marcador para identificar leads vindos do modal WhatsApp.
     const { error } = await supabase.from("contact_messages").insert({
       name: parsed.data.name,
-      email: "",
+      email: "lead-whatsapp@nao-informado.local",
       phone: parsed.data.phone,
       interest: interestText.slice(0, 100),
       message: messageText.slice(0, 5000),
