@@ -1,4 +1,4 @@
-import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, MapPin, TrendingDown } from "lucide-react";
+import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Property, formatPriceFull } from "@/contexts/PropertyContext";
@@ -6,7 +6,7 @@ import { useProperties } from "@/contexts/PropertyContext";
 
 export default function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const navigate = useNavigate();
-  const { favorites, toggleFavorite, settings } = useProperties();
+  const { favorites, toggleFavorite } = useProperties();
   const isFav = favorites.includes(property.id);
   const hasPriceDrop = !!property.previous_price && property.previous_price > property.price;
   const dropPercent = hasPriceDrop
