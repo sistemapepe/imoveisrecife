@@ -73,6 +73,8 @@ export interface SiteSettings {
   leadModalSubmitText: string;
   leadModalSubmittingText: string;
   leadModalSkipText: string;
+  googleSiteVerification: string;
+  bingSiteVerification: string;
 }
 
 interface PropertyContextType {
@@ -125,6 +127,8 @@ const defaultSettings: SiteSettings = {
   leadModalSubmitText: "Continuar para o WhatsApp",
   leadModalSubmittingText: "Conectando...",
   leadModalSkipText: "Prefiro não informar agora",
+  googleSiteVerification: "",
+  bingSiteVerification: "",
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -190,6 +194,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         leadModalSubmitText: (data as any).lead_modal_submit_text ?? defaultSettings.leadModalSubmitText,
         leadModalSubmittingText: (data as any).lead_modal_submitting_text ?? defaultSettings.leadModalSubmittingText,
         leadModalSkipText: (data as any).lead_modal_skip_text ?? defaultSettings.leadModalSkipText,
+        googleSiteVerification: (data as any).google_site_verification ?? "",
+        bingSiteVerification: (data as any).bing_site_verification ?? "",
       }));
     }
   }, []);
@@ -278,6 +284,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       leadModalSubmitText: "lead_modal_submit_text",
       leadModalSubmittingText: "lead_modal_submitting_text",
       leadModalSkipText: "lead_modal_skip_text",
+      googleSiteVerification: "google_site_verification",
+      bingSiteVerification: "bing_site_verification",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];

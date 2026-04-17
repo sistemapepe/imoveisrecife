@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SiteSettings } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
-import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin, Calendar, UserPlus } from "lucide-react";
+import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin, Calendar, UserPlus, Search } from "lucide-react";
 import LogoUpload from "./LogoUpload";
 import { getAmenityIcon } from "@/lib/amenity-icons";
 
@@ -77,6 +77,14 @@ const sections: SectionDef[] = [
     fields: [
       { label: "Nome do Desenvolvedor", key: "developerName", placeholder: "Studio Digital" },
       { label: "Link do Desenvolvedor", key: "developerUrl", icon: <Globe className="h-4 w-4" />, placeholder: "https://studiodigital.com" },
+    ],
+  },
+  {
+    title: "🔎 SEO / Buscadores",
+    description: "Tokens de verificação para Google Search Console e Bing Webmaster Tools. Cole APENAS o valor do atributo content da meta tag fornecida pelo Google/Bing (ex: 'abc123XYZ...'), não a tag inteira.",
+    fields: [
+      { label: "Google Search Console (token)", key: "googleSiteVerification", icon: <Search className="h-4 w-4" />, placeholder: "abc123XYZ_seu_token..." },
+      { label: "Bing Webmaster (token)", key: "bingSiteVerification", icon: <Search className="h-4 w-4" />, placeholder: "ABCDEF1234567890..." },
     ],
   },
 ];
