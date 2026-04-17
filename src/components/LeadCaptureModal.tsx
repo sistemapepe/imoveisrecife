@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { MessageCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useProperties } from "@/contexts/PropertyContext";
 
 interface LeadCaptureModalProps {
   open: boolean;
@@ -36,9 +37,17 @@ export default function LeadCaptureModal({
   propertyId,
   source = "whatsapp_fab",
 }: LeadCaptureModalProps) {
+  const { settings } = useProperties();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // If admin disabled the modal, skip it entirely
+  useEffect(() => {
+    if (open && settings.leadModalEnabled === false) {
+      onConfirm();
+    }
+  }, [open, settings.leadModalEnabled, onConfirm]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +89,8 @@ export default function LeadCaptureModal({
     onConfirm();
   };
 
+  if (settings.leadModalEnabled === false) return null;
+
   return (
     <AnimatePresence>
       {open && (
@@ -107,7 +118,7 @@ export default function LeadCaptureModal({
                 <div className="h-9 w-9 rounded-full bg-whatsapp/10 flex items-center justify-center">
                   <MessageCircle className="h-5 w-5 text-whatsapp" />
                 </div>
-                <h2 id="lead-modal-title" className="font-bold text-base">Antes de continuar</h2>
+                <h2 id="lead-modal-title" className="font-bold text-base">{settings.leadModalTitle}</h2>
               </div>
               <button onClick={onClose} aria-label="Fechar" className="p-1 rounded-full hover:bg-muted transition-colors">
                 <X className="h-5 w-5 text-muted-foreground" />
@@ -115,13 +126,13 @@ export default function LeadCaptureModal({
             </div>
 
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Deixe seu contato para o corretor te chamar de volta caso o WhatsApp não responda.
+              <p className="text-sm text-muted-foreground whitespace-pre-line">
+                {settings.leadModalDescription}
               </p>
 
               <div>
                 <label htmlFor="lead-name" className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-muted-foreground">
-                  Seu nome
+                  {settings.leadModalNameLabel}
                 </label>
                 <input
                   id="lead-name"
@@ -131,13 +142,13 @@ export default function LeadCaptureModal({
                   maxLength={100}
                   required
                   className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
-                  placeholder="Como podemos te chamar?"
+                  placeholder={settings.leadModalNamePlaceholder}
                 />
               </div>
 
               <div>
                 <label htmlFor="lead-phone" className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-muted-foreground">
-                  Telefone / WhatsApp
+                  {settings.leadModalPhoneLabel}
                 </label>
                 <input
                   id="lead-phone"
@@ -147,7 +158,7 @@ export default function LeadCaptureModal({
                   maxLength={20}
                   required
                   className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
-                  placeholder="(81) 99999-9999"
+                  placeholder={settings.leadModalPhonePlaceholder}
                 />
               </div>
 
@@ -157,16 +168,18 @@ export default function LeadCaptureModal({
                 className="w-full rounded-xl bg-whatsapp text-white py-3.5 font-bold text-sm active:scale-95 transition-transform flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 <MessageCircle className="h-5 w-5" />
-                {submitting ? "Conectando..." : "Continuar para o WhatsApp"}
+                {submitting ? settings.leadModalSubmittingText : settings.leadModalSubmitText}
               </button>
 
-              <button
-                type="button"
-                onClick={handleSkip}
-                className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
-              >
-                Prefiro não informar agora
-              </button>
+              {settings.leadModalShowSkip !== false && (
+                <button
+                  type="button"
+                  onClick={handleSkip}
+                  className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
+                >
+                  {settings.leadModalSkipText}
+                </button>
+              )}
             </form>
           </motion.div>
         </>

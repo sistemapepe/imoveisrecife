@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SiteSettings } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
-import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin, Calendar } from "lucide-react";
+import { Globe, Instagram, Facebook, Youtube, Linkedin, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin, Calendar, UserPlus } from "lucide-react";
 import LogoUpload from "./LogoUpload";
 import { getAmenityIcon } from "@/lib/amenity-icons";
 
@@ -365,6 +365,73 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
             <span className="text-sm font-bold w-8 text-center">{localSettings.bannerInterval || 5}s</span>
           </div>
         </div>
+      </div>
+
+      {/* Lead Capture Modal */}
+      <div className="bg-card rounded-xl border border-border p-4 space-y-3">
+        <div>
+          <h3 className="font-bold text-sm flex items-center gap-2">
+            <UserPlus className="h-4 w-4 text-accent" /> Modal de Captura de Lead
+          </h3>
+          <p className="text-xs text-muted-foreground">Personalize o modal exibido antes de abrir o WhatsApp (FAB, cards e detalhes do imóvel)</p>
+        </div>
+
+        <label className="flex items-center justify-between cursor-pointer pb-2 border-b border-border">
+          <span className="text-sm font-medium">Ativar modal de captura</span>
+          <input
+            type="checkbox"
+            checked={localSettings.leadModalEnabled ?? true}
+            onChange={(e) => setLocalSettings((prev) => ({ ...prev, leadModalEnabled: e.target.checked }))}
+            className="w-5 h-5 accent-primary rounded"
+          />
+        </label>
+
+        <label className="flex items-center justify-between cursor-pointer pb-2 border-b border-border">
+          <span className="text-sm font-medium">Mostrar link "Prefiro não informar"</span>
+          <input
+            type="checkbox"
+            checked={localSettings.leadModalShowSkip ?? true}
+            onChange={(e) => setLocalSettings((prev) => ({ ...prev, leadModalShowSkip: e.target.checked }))}
+            className="w-5 h-5 accent-primary rounded"
+          />
+        </label>
+
+        {([
+          { label: "Título do modal", key: "leadModalTitle" as keyof SiteSettings, placeholder: "Antes de continuar" },
+          { label: "Descrição / texto explicativo", key: "leadModalDescription" as keyof SiteSettings, placeholder: "Deixe seu contato...", multiline: true },
+          { label: "Label do campo Nome", key: "leadModalNameLabel" as keyof SiteSettings, placeholder: "Seu nome" },
+          { label: "Placeholder do Nome", key: "leadModalNamePlaceholder" as keyof SiteSettings, placeholder: "Como podemos te chamar?" },
+          { label: "Label do campo Telefone", key: "leadModalPhoneLabel" as keyof SiteSettings, placeholder: "Telefone / WhatsApp" },
+          { label: "Placeholder do Telefone", key: "leadModalPhonePlaceholder" as keyof SiteSettings, placeholder: "(81) 99999-9999" },
+          { label: "Texto do botão de envio", key: "leadModalSubmitText" as keyof SiteSettings, placeholder: "Continuar para o WhatsApp" },
+          { label: "Texto durante envio", key: "leadModalSubmittingText" as keyof SiteSettings, placeholder: "Conectando..." },
+          { label: "Texto do link 'pular'", key: "leadModalSkipText" as keyof SiteSettings, placeholder: "Prefiro não informar agora" },
+        ] as { label: string; key: keyof SiteSettings; placeholder: string; multiline?: boolean }[]).map(({ label, key, placeholder, multiline }) => (
+          <div key={key}>
+            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              {label}
+            </label>
+            {multiline ? (
+              <textarea
+                value={(localSettings as any)[key] ?? ""}
+                onChange={(e) => setLocalSettings((prev) => ({ ...prev, [key]: e.target.value }))}
+                placeholder={placeholder}
+                rows={3}
+                maxLength={500}
+                className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            ) : (
+              <input
+                type="text"
+                value={(localSettings as any)[key] ?? ""}
+                onChange={(e) => setLocalSettings((prev) => ({ ...prev, [key]: e.target.value }))}
+                placeholder={placeholder}
+                maxLength={150}
+                className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            )}
+          </div>
+        ))}
       </div>
 
       <button
