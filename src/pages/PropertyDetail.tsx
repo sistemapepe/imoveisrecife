@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
-import { Helmet } from "react-helmet-async";
+
 import InteractiveMap from "@/components/InteractiveMap";
 import ImageLightbox from "@/components/ImageLightbox";
 import VirtualTour from "@/components/VirtualTour";
