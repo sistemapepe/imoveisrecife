@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
-import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp } from "lucide-react";
+import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp, Download } from "lucide-react";
 import { DateRangePicker } from "./DateRangePicker";
+import { downloadCSV } from "@/lib/csv-export";
 
 interface ViewsByProperty {
   property_id: string;
@@ -141,6 +142,38 @@ export default function AnalyticsTab() {
             if (r?.from) setPeriod("custom");
           }}
         />
+        <button
+          onClick={() => {
+            const stamp = new Date().toISOString().slice(0, 10);
+            const summary = [
+              { metrica: "Visualizações", valor: totalViews },
+              { metrica: "Leads", valor: totalLeads },
+              { metrica: "Agendamentos", valor: totalVisits },
+              { metrica: "Conversão (%)", valor: totalViews > 0 ? ((totalLeads + totalVisits) / totalViews * 100).toFixed(2) : "0" },
+              {},
+              { metrica: "— Top Imóveis Visualizados —", valor: "" },
+              ...viewsByProperty.map((v) => ({ metrica: v.title, valor: v.count })),
+              {},
+              { metrica: "— Visualizações por Dia —", valor: "" },
+              ...viewsByDay.map((d) => ({ metrica: d.date, valor: d.count })),
+              {},
+              { metrica: "— Leads por Dia —", valor: "" },
+              ...leadsByDay.map((d) => ({ metrica: d.date, valor: d.count })),
+            ];
+            downloadCSV(
+              summary,
+              `analytics_${period}_${stamp}.csv`,
+              [
+                { key: "metrica", label: "Métrica" },
+                { key: "valor", label: "Valor" },
+              ],
+            );
+          }}
+          disabled={totalViews === 0 && totalLeads === 0 && totalVisits === 0}
+          className="ml-auto h-9 px-4 rounded-full text-xs font-bold bg-accent text-accent-foreground hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 transition-all"
+        >
+          <Download className="h-3.5 w-3.5" /> Exportar CSV
+        </button>
       </div>
 
       {/* KPI Cards */}

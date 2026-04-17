@@ -1,8 +1,9 @@
 import { useEffect, useState, useMemo } from "react";
 import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
-import { BarChart3, Globe, Smartphone, Monitor, Tablet, TrendingUp, Users, Eye, MousePointerClick, Share2 } from "lucide-react";
+import { Globe, Smartphone, Monitor, Tablet, TrendingUp, Users, Eye, MousePointerClick, Download } from "lucide-react";
 import { DateRangePicker } from "./DateRangePicker";
+import { downloadCSV } from "@/lib/csv-export";
 
 interface TrafficEvent {
   id: string;
@@ -174,6 +175,34 @@ export default function TrafficTab() {
             if (r?.from) setPeriod("custom");
           }}
         />
+        <button
+          onClick={() => {
+            const stamp = new Date().toISOString().slice(0, 10);
+            downloadCSV(
+              events,
+              `trafego_${period}_${stamp}.csv`,
+              [
+                { key: "created_at", label: "Data" },
+                { key: "event_type", label: "Evento" },
+                { key: "channel", label: "Canal" },
+                { key: "source", label: "Origem" },
+                { key: "medium", label: "Meio" },
+                { key: "campaign", label: "Campanha" },
+                { key: "social_network", label: "Rede Social" },
+                { key: "device_type", label: "Dispositivo" },
+                { key: "browser", label: "Navegador" },
+                { key: "os", label: "SO" },
+                { key: "landing_page", label: "Página" },
+                { key: "visitor_id", label: "Visitor ID" },
+                { key: "session_id", label: "Session ID" },
+              ],
+            );
+          }}
+          disabled={events.length === 0}
+          className="ml-auto h-9 px-4 rounded-full text-xs font-bold bg-accent text-accent-foreground hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 transition-all"
+        >
+          <Download className="h-3.5 w-3.5" /> Exportar CSV ({events.length})
+        </button>
       </div>
 
       {/* KPI Cards */}
