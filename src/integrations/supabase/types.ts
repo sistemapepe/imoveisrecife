@@ -207,6 +207,27 @@ export type Database = {
           },
         ]
       }
+      rate_limits: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          scope: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          scope: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          scope?: string
+        }
+        Relationships: []
+      }
       role_permissions: {
         Row: {
           enabled: boolean
