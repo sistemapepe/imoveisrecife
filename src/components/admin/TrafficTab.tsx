@@ -1,8 +1,9 @@
 import { useEffect, useState, useMemo } from "react";
 import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
-import { BarChart3, Globe, Smartphone, Monitor, Tablet, TrendingUp, Users, Eye, MousePointerClick, Share2 } from "lucide-react";
+import { BarChart3, Globe, Smartphone, Monitor, Tablet, TrendingUp, Users, Eye, MousePointerClick, Share2, Download } from "lucide-react";
 import { DateRangePicker } from "./DateRangePicker";
+import { downloadCSV } from "@/lib/csv-export";
 
 interface TrafficEvent {
   id: string;
