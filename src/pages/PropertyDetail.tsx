@@ -280,7 +280,10 @@ export default function PropertyDetail() {
                   <MapPin className="h-4 w-4" /> {property.address}, {property.neighborhood}
                 </p>
               )}
-              <p className="text-xs font-mono text-primary/70 mb-4">Cód: {property.code}</p>
+              <div className="flex items-center gap-3 mb-4 flex-wrap">
+                <p className="text-xs font-mono text-primary/70">Cód: {property.code}</p>
+                <RecentViewsBadge propertyId={property.id} />
+              </div>
               {(() => {
                 const hasPriceDrop = !!property.previous_price && property.previous_price > property.price;
                 const dropPercent = hasPriceDrop
