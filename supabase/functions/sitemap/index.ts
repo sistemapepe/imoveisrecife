@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
   const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
 
-  const siteUrl = "https://imoveisrecife.lovable.app";
+  const siteUrl = "https://imoveisrecife.com.br";
 
   const { data: properties, error } = await supabase
     .from("properties")
