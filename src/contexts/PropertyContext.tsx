@@ -293,6 +293,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       googleSiteVerification: "google_site_verification",
       bingSiteVerification: "bing_site_verification",
       headerStyle: "header_style",
+      marqueeText: "marquee_text",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
