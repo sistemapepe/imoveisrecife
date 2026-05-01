@@ -73,9 +73,9 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             <div className="p-6 flex items-center justify-between border-b border-border">
               <div className="flex flex-col">
                 <span className="font-serif font-bold text-lg text-accent uppercase tracking-wider line-clamp-1">
-                  {settings.brandName}
+                  Menu
                 </span>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Navegação</span>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Administrativo</span>
               </div>
               <button
                 onClick={onClose}
