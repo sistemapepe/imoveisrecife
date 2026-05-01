@@ -10,6 +10,7 @@ import { PropertyProvider } from "@/contexts/PropertyContext";
 import { lazy, Suspense } from "react";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppFab from "@/components/WhatsAppFab";
+import ScrollToTop from "@/components/ScrollToTop";
 import DynamicTheme from "@/components/DynamicTheme";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
@@ -85,6 +86,7 @@ const App = () => {
             <div className="max-w-screen-lg mx-auto relative min-h-screen">
                <AnimatedRoutes />
                <WhatsAppFab />
+               <ScrollToTop />
                <CookieConsent />
                <BottomNav />
             </div>
