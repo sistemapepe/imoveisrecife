@@ -9,16 +9,21 @@ export default function Navbar() {
   
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const scrolled = window.scrollY > 20;
+      setIsScrolled(scrolled);
+      // Set CSS variable for dynamic height used by other sticky elements
+      const height = scrolled || settings.headerStyle === 'compact' ? 64 : 96;
+      document.documentElement.style.setProperty('--navbar-height', `${height}px`);
     };
+    handleScroll(); // Initial set
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [settings.headerStyle]);
 
   const isCompact = settings.headerStyle === 'compact' || isScrolled;
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 glass-nav border-b border-card/10 max-w-screen-lg mx-auto transition-all duration-300 ${
+    <nav className={`sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-6 glass-nav border-b border-card/10 max-w-screen-lg mx-auto transition-all duration-300 ${
       isCompact ? 'h-16 py-2' : 'h-24 py-4'
     }`}>
       <button 
