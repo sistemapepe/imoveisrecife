@@ -48,21 +48,21 @@ export default function Footer() {
       )}
 
       <div className="flex flex-col items-center gap-2">
-        <button 
-          onClick={() => navigate("/admin")}
-          className="text-[10px] text-accent font-bold uppercase tracking-[0.2em] hover:opacity-70 transition-opacity"
-        >
-          Área Administrativa (ADM)
-        </button>
-
         {settings.developerName && (
-          <p className="text-[9px] text-muted-foreground/50 tracking-wider text-center">
+          <p className="text-[9px] text-muted-foreground/50 tracking-wider text-center flex items-center gap-1.5">
             Desenvolvido por{" "}
             {settings.developerUrl ? (
               <a href={settings.developerUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-accent transition-colors">
                 {settings.developerName}
               </a>
             ) : settings.developerName}
+            <button 
+              onClick={() => navigate("/admin")}
+              className="p-1 hover:text-accent transition-colors opacity-60 hover:opacity-100"
+              title="Acesso Administrativo"
+            >
+              <Settings className="h-3 w-3" />
+            </button>
           </p>
         )}
       </div>
