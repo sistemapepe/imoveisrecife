@@ -42,8 +42,9 @@ export default function PrivacyPolicy() {
   return (
     <PageTransition>
       <SEOHead title="Política de Privacidade" description="Política de privacidade e proteção de dados - LGPD" />
-      <div className="min-h-screen bg-background pb-24">
-        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-4 py-3 flex items-center gap-3">
+      <div className="min-h-screen bg-background pb-24 max-w-screen-lg mx-auto">
+        <Navbar />
+        <header className="sticky top-16 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate(-1)} className="p-2 rounded-xl hover:bg-muted transition-colors">
             <ArrowLeft className="h-5 w-5" />
           </button>
