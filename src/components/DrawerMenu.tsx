@@ -30,9 +30,8 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
 
   const adminItems = [
     { label: "Dashboard", icon: LayoutDashboard, path: "/admin?tab=dashboard", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Visualizar Site", icon: Globe, path: "/", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Propriedades", icon: Home, path: "/admin?tab=properties", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Analytics", icon: BarChart3, path: "/admin?tab=analytics", roles: ["admin", "supervisor"] },
+    { label: "Site", icon: Globe, path: "/", roles: ["admin", "supervisor", "corretor"] },
+    { label: "Imóveis", icon: Home, path: "/admin?tab=properties", roles: ["admin", "supervisor", "corretor"] },
     { label: "Configurações", icon: Settings, path: "/admin?tab=settings", roles: ["admin"] },
     { label: "Usuários", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
   ];
