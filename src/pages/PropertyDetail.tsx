@@ -22,6 +22,8 @@ import { toast } from "sonner";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 
 export default function PropertyDetail() {
+  const { id } = useParams();
+  
   useEffect(() => {
     console.log("[Performance] Rendered: PropertyDetail", { timestamp: Date.now(), propertyId: id });
     const startTime = performance.now();
@@ -30,7 +32,6 @@ export default function PropertyDetail() {
       console.log(`[Performance] Unmounted: PropertyDetail (view time: ${duration.toFixed(2)}ms)`);
     };
   }, [id]);
-  const { id } = useParams();
   const navigate = useNavigate();
   const { properties, settings, favorites, toggleFavorite } = useProperties();
   const property = properties.find((p) => p.id === id);
