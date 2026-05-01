@@ -12,7 +12,8 @@ export default function Navbar() {
       const scrolled = window.scrollY > 20;
       setIsScrolled(scrolled);
       // Set CSS variable for dynamic height used by other sticky elements
-      const height = scrolled || settings.headerStyle === 'compact' ? 64 : 96;
+      // Reduced heights: Normal 72px (h-18), Compact 56px (h-14)
+      const height = scrolled || settings.headerStyle === 'compact' ? 56 : 72;
       document.documentElement.style.setProperty('--navbar-height', `${height}px`);
     };
     handleScroll(); // Initial set
@@ -24,7 +25,7 @@ export default function Navbar() {
 
   return (
     <nav className={`sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-6 glass-nav border-b border-card/10 max-w-screen-lg mx-auto transition-all duration-300 ${
-      isCompact ? 'h-16 py-2' : 'h-24 py-4'
+      isCompact ? 'h-14 py-2' : 'h-18 py-3'
     }`}>
       <button 
         onClick={() => navigate("/admin")} 
