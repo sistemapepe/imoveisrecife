@@ -206,7 +206,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.2 }}
-            src={images[currentIndex]}
+            src={getOptimizedImageUrl(images[currentIndex], IMAGE_SIZES.FULL)}
             alt={`${title || "Foto"} ${currentIndex + 1}`}
             className="max-h-full max-w-full object-contain cursor-grab active:cursor-grabbing"
             style={{
