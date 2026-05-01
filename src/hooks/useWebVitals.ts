@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { onLCP, onFID, onCLS, onINP, onFCP, onTTFB } from 'web-vitals';
+import { onLCP, onCLS, onINP, onFCP, onTTFB } from 'web-vitals';
 import { supabase } from '@/integrations/supabase/client';
 
 /**
@@ -16,7 +16,6 @@ export function useWebVitals() {
       console.log(`[Web Vitals] ${name}:`, value, `(${id})`, isSlow ? '[Slow Connection]' : '');
 
       // Log to Supabase for persistent tracking
-      // We use a non-blocking background task
       supabase.from('performance_logs' as any).insert({
         metric_name: name,
         metric_value: value,
@@ -32,7 +31,6 @@ export function useWebVitals() {
 
     // Initialize observers
     onCLS(logMetric);
-    onFID(logMetric);
     onLCP(logMetric);
     onINP(logMetric);
     onFCP(logMetric);
