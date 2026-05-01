@@ -3,6 +3,7 @@ import { Menu } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { useEffect, useState, useCallback } from "react";
 import { getOptimizedImageUrl } from "@/lib/image-optimization";
+import DrawerMenu from "./DrawerMenu";
 
 // Rota específica do componente SearchResults (lazy loaded no App.tsx)
 // Podemos dar prefetch importando manualmente o chunk
