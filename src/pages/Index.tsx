@@ -242,7 +242,7 @@ export default function Index() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24"
+            className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24 max-w-screen-lg mx-auto"
           >
             <Navbar />
 
