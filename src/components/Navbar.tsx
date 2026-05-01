@@ -41,7 +41,7 @@ export default function Navbar() {
           alt={settings.brandName} 
           onClick={() => navigate("/")}
           className={`object-contain transition-all duration-300 cursor-pointer ${
-            isCompact ? 'h-12 max-w-[180px]' : 'h-20 max-w-[280px]'
+            isCompact ? 'h-10 max-w-[160px]' : 'h-14 max-w-[240px]'
           }`} 
         />
       ) : (
@@ -55,7 +55,7 @@ export default function Navbar() {
         </h1>
       )}
       
-      {/* Espaço vazio para manter a centralização da logo, já que o ícone da direita foi removido */}
+      {/* Espaço vazio para manter a centralização da logo */}
       <div className="w-12 h-12 -mr-3" />
     </nav>
   );
