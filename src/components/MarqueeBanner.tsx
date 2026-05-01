@@ -11,6 +11,7 @@ export default function MarqueeBanner() {
   // Duplicating the list to ensure a smooth continuous loop
   const marqueeProperties = [...properties, ...properties, ...properties];
 
+  return (
     <div 
       className="w-full bg-accent/10 border-b border-accent/20 overflow-hidden py-2 select-none"
       role="region"
