@@ -15,6 +15,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { settings } = useProperties();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   
   useEffect(() => {
     const handleScroll = () => {
