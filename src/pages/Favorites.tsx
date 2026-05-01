@@ -4,6 +4,7 @@ import { useProperties } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function Favorites() {
