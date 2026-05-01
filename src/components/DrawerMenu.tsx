@@ -101,23 +101,18 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
                   </motion.button>
                 ))}
 
-                {/* Divider for Admin section */}
                 {user && role !== "user" && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 0.2 }}
+                    className="space-y-1"
                   >
-                    <div className="my-6 px-4">
-                      <div className="h-px bg-border w-full" />
-                      <span className="text-[10px] text-muted-foreground uppercase tracking-widest mt-4 block">Administrativo</span>
-                    </div>
-                    
                     {adminItems.filter(item => !item.roles || (role && item.roles.includes(role))).map((item, index) => (
                       <button
                         key={item.path}
                         onClick={() => handleNavigation(item.path)}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-foreground/80 hover:text-primary transition-all group"
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-accent/5 text-foreground/80 hover:text-accent transition-all group"
                       >
                         <item.icon className="h-5 w-5 transition-transform group-hover:scale-110" />
                         <span className="font-medium text-sm">{item.label}</span>
