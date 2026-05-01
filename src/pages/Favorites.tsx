@@ -4,6 +4,7 @@ import { useProperties } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function Favorites() {
@@ -14,8 +15,9 @@ export default function Favorites() {
   return (
     <PageTransition>
       <SEOHead title="Favoritos" description="Seus imóveis favoritos salvos para consulta rápida." noIndex />
-      <div className="min-h-screen bg-background pb-24">
-        <header className="sticky top-0 z-50 glass-header border-b border-border">
+      <div className="min-h-screen bg-background pb-24 max-w-screen-lg mx-auto">
+        <Navbar />
+        <header className="sticky top-16 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">
             <button onClick={() => navigate(-1)} aria-label="Voltar" className="w-10 h-10 flex items-center justify-center">
               <ArrowLeft className="h-6 w-6" aria-hidden="true" />

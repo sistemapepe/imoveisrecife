@@ -85,11 +85,7 @@ export default function Admin() {
     setCepLoading(false);
   };
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/login");
-    }
-  }, [user, authLoading, navigate]);
+  // A proteção agora é feita via ProtectedRoute no App.tsx
 
   // Poll for new contact messages (secure alternative to Realtime)
   const lastMsgCountRef = useCallback(() => {}, []);

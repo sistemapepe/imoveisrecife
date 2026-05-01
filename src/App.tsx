@@ -10,6 +10,7 @@ import { PropertyProvider } from "@/contexts/PropertyContext";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import DynamicTheme from "@/components/DynamicTheme";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import SearchResults from "./pages/SearchResults";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -46,7 +47,7 @@ function AnimatedRoutes() {
         <Route path="/filtros" element={<Filters />} />
         <Route path="/contato" element={<Contact />} />
         <Route path="/favoritos" element={<Favorites />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/privacidade" element={<PrivacyPolicy />} />
         <Route path="*" element={<NotFound />} />

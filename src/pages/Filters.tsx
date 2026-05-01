@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { X, Search, ChevronRight, ArrowRight, MapPin } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { searchLocations } from "@/data/pernambuco-locations";
 
 const types = ["Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"];
@@ -51,8 +53,9 @@ export default function Filters() {
   return (
     <PageTransition>
       <SEOHead title="Filtros" description="Filtre imóveis por tipo, quartos, localização e mais." noIndex />
-      <div className="relative flex h-screen w-full flex-col overflow-hidden max-w-md mx-auto bg-background">
-        <header className="sticky top-0 z-30 glass-header border-b border-border">
+      <div className="relative flex min-h-screen w-full flex-col max-w-screen-lg mx-auto bg-background">
+        <Navbar />
+        <header className="sticky top-16 z-30 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 py-4">
             <button onClick={() => navigate(-1)} aria-label="Fechar filtros" className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-secondary transition-colors">
               <X className="h-6 w-6" aria-hidden="true" />
@@ -150,6 +153,7 @@ export default function Filters() {
               </div>
             ))}
           </section>
+          <Footer />
         </main>
 
         <div className="fixed bottom-20 left-0 right-0 p-4 bg-card/90 backdrop-blur-lg border-t border-border z-50 max-w-md mx-auto">
