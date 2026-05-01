@@ -259,7 +259,9 @@ export default function Index() {
                   className="absolute inset-0"
                 >
                   <img
-                    src={heroSlides[currentSlide].image}
+                    src={getOptimizedImageUrl(heroSlides[currentSlide].image, IMAGE_SIZES.HERO)}
+                    srcSet={getImageSrcSet(heroSlides[currentSlide].image, [800, 1200, 1920])}
+                    sizes="100vw"
                     alt={heroSlides[currentSlide].title || "Imóvel em destaque"}
                     className="absolute inset-0 w-full h-full object-cover"
                     fetchPriority={currentSlide === 0 ? "high" : "auto"}
