@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, LogOut, Settings, Users, Bell, MessageSquare, BarChart3, Footprints, ShieldCheck, Home } from "lucide-react";
+import { X, LayoutDashboard, LogOut, Settings, Users, Bell, MessageSquare, BarChart3, Footprints, ShieldCheck, Home, Globe } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProperties } from "@/contexts/PropertyContext";
@@ -30,14 +30,11 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
 
   const adminItems = [
     { label: "Dashboard", icon: LayoutDashboard, path: "/admin?tab=dashboard", roles: ["admin", "supervisor", "corretor"] },
+    { label: "Visualizar Site", icon: Globe, path: "/", roles: ["admin", "supervisor", "corretor"] },
     { label: "Propriedades", icon: Home, path: "/admin?tab=properties", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Mensagens", icon: MessageSquare, path: "/admin?tab=messages", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Visitas", icon: Bell, path: "/admin?tab=visits", roles: ["admin", "supervisor", "corretor"] },
     { label: "Analytics", icon: BarChart3, path: "/admin?tab=analytics", roles: ["admin", "supervisor"] },
-    { label: "Tráfego", icon: Footprints, path: "/admin?tab=traffic", roles: ["admin", "supervisor"] },
-    { label: "Privacidade", icon: ShieldCheck, path: "/admin?tab=privacy", roles: ["admin"] },
-    { label: "Usuários", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
     { label: "Configurações", icon: Settings, path: "/admin?tab=settings", roles: ["admin"] },
+    { label: "Usuários", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
   ];
 
   const handleNavigation = (path: string) => {
