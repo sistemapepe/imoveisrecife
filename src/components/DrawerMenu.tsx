@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, Home, Search, Heart, Mail, LogOut, Settings, Users, Phone, Bell } from "lucide-react";
+import { X, LayoutDashboard, LogOut, Settings, Users, Bell, MessageSquare, BarChart3, Footprints, ShieldCheck, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProperties } from "@/contexts/PropertyContext";
@@ -29,11 +29,15 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
   const menuItems: any[] = [];
 
   const adminItems = [
-    { label: "Dashboard", icon: LayoutDashboard, path: "/admin", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Configurações", icon: Settings, path: "/admin?tab=settings", roles: ["admin"] },
-    { label: "Usuários", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
-    { label: "Mensagens", icon: Mail, path: "/admin?tab=messages", roles: ["admin", "supervisor", "corretor"] },
+    { label: "Dashboard", icon: LayoutDashboard, path: "/admin?tab=dashboard", roles: ["admin", "supervisor", "corretor"] },
+    { label: "Propriedades", icon: Home, path: "/admin?tab=properties", roles: ["admin", "supervisor", "corretor"] },
+    { label: "Mensagens", icon: MessageSquare, path: "/admin?tab=messages", roles: ["admin", "supervisor", "corretor"] },
     { label: "Visitas", icon: Bell, path: "/admin?tab=visits", roles: ["admin", "supervisor", "corretor"] },
+    { label: "Analytics", icon: BarChart3, path: "/admin?tab=analytics", roles: ["admin", "supervisor"] },
+    { label: "Tráfego", icon: Footprints, path: "/admin?tab=traffic", roles: ["admin", "supervisor"] },
+    { label: "Privacidade", icon: ShieldCheck, path: "/admin?tab=privacy", roles: ["admin"] },
+    { label: "Usuários", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
+    { label: "Configurações", icon: Settings, path: "/admin?tab=settings", roles: ["admin"] },
   ];
 
   const handleNavigation = (path: string) => {
@@ -72,10 +76,10 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             {/* Header */}
             <div className="p-6 flex items-center justify-between border-b border-border">
               <div className="flex flex-col">
-                <span className="font-serif font-bold text-lg text-accent uppercase tracking-wider line-clamp-1">
-                  Menu
+                <span className="font-serif font-bold text-xl text-accent uppercase tracking-[0.2em]">
+                  Painel
                 </span>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Administrativo</span>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-medium">Administrativo</span>
               </div>
               <button
                 onClick={onClose}
@@ -100,10 +104,10 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
                       <button
                         key={item.path}
                         onClick={() => handleNavigation(item.path)}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-accent/5 text-foreground/80 hover:text-accent transition-all group"
+                        className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl hover:bg-accent/5 text-foreground/70 hover:text-accent transition-all duration-300 group"
                       >
-                        <item.icon className="h-5 w-5 transition-transform group-hover:scale-110" />
-                        <span className="font-medium text-sm">{item.label}</span>
+                        <item.icon className="h-5 w-5 opacity-70 group-hover:opacity-100 transition-opacity" />
+                        <span className="font-bold text-xs uppercase tracking-widest">{item.label}</span>
                       </button>
                     ))}
                   </motion.div>
