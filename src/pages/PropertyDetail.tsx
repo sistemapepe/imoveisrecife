@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 import InteractiveMap from "@/components/InteractiveMap";
 import ImageLightbox from "@/components/ImageLightbox";
