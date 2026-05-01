@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useProperties } from "@/contexts/PropertyContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getOptimizedImageUrl } from "@/lib/image-optimization";
+
+// Rota específica do componente SearchResults (lazy loaded no App.tsx)
+// Podemos dar prefetch importando manualmente o chunk
+const prefetchSearchResults = () => import("@/pages/SearchResults");
+const prefetchPropertyDetail = () => import("@/pages/PropertyDetail");
+const prefetchFilters = () => import("@/pages/Filters");
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -24,6 +30,12 @@ export default function Navbar() {
 
   const isCompact = settings.headerStyle === 'compact' || isScrolled;
 
+  const handlePrefetch = useCallback((target: 'search' | 'detail' | 'filters') => {
+    if (target === 'search') prefetchSearchResults();
+    if (target === 'detail') prefetchPropertyDetail();
+    if (target === 'filters') prefetchFilters();
+  }, []);
+
   return (
     <nav className={`sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-6 glass-nav border-b border-card/10 max-w-screen-lg mx-auto transition-all duration-300 ${
       isCompact ? 'h-14 py-2' : 'h-18 py-3'
@@ -41,6 +53,8 @@ export default function Navbar() {
           src={getOptimizedImageUrl(settings.logoUrl, { width: isCompact ? 320 : 480, quality: 90 })} 
           alt={settings.brandName} 
           onClick={() => navigate("/")}
+          onMouseEnter={() => handlePrefetch('search')}
+          onFocus={() => handlePrefetch('search')}
           className={`object-contain transition-all duration-300 cursor-pointer ${
             isCompact ? 'h-10 max-w-[160px]' : 'h-14 max-w-[240px]'
           }`} 

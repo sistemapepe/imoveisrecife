@@ -23,6 +23,15 @@ import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-o
 
 export default function PropertyDetail() {
   const { id } = useParams();
+  
+  useEffect(() => {
+    console.log("[Performance] Rendered: PropertyDetail", { timestamp: Date.now(), propertyId: id });
+    const startTime = performance.now();
+    return () => {
+      const duration = performance.now() - startTime;
+      console.log(`[Performance] Unmounted: PropertyDetail (view time: ${duration.toFixed(2)}ms)`);
+    };
+  }, [id]);
   const navigate = useNavigate();
   const { properties, settings, favorites, toggleFavorite } = useProperties();
   const property = properties.find((p) => p.id === id);
