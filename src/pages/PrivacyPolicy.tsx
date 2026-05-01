@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useProperties } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const defaultPolicy = `## Política de Privacidade
