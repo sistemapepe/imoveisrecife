@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
+import { getOptimizedImageUrl, IMAGE_SIZES, getImageSrcSet, isSupabaseUrl } from "@/lib/image-optimization";
 
 interface ImageLightboxProps {
   images: string[];
@@ -63,6 +63,34 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
       document.body.style.touchAction = "";
     };
   }, [isOpen]);
+  
+  // Pre-load next and previous images for smooth navigation
+  useEffect(() => {
+    if (!isOpen || images.length <= 1) return;
+
+    const preloadImage = (index: number) => {
+      const url = images[index];
+      if (!url) return;
+
+      // Pre-load the optimized versions
+      // Using 1200 as a good balance for lightbox preloading
+      const img1200 = new Image();
+      img1200.src = getOptimizedImageUrl(url, { width: 1200, quality: 80 });
+      
+      const img800 = new Image();
+      img800.src = getOptimizedImageUrl(url, { width: 800, quality: 80 });
+    };
+
+    // Preload next image
+    preloadImage((currentIndex + 1) % images.length);
+    // Preload previous image
+    preloadImage((currentIndex - 1 + images.length) % images.length);
+    
+    // Also preload the next 2 images ahead if we have many
+    if (images.length > 3) {
+      preloadImage((currentIndex + 2) % images.length);
+    }
+  }, [currentIndex, isOpen, images]);
 
   const toggleZoom = () => {
     if (scale > 1) {
@@ -207,8 +235,12 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.2 }}
             src={getOptimizedImageUrl(images[currentIndex], IMAGE_SIZES.FULL)}
+            srcSet={getImageSrcSet(images[currentIndex], [800, 1200, 1920])}
+            sizes="100vw"
             alt={`${title || "Foto"} ${currentIndex + 1}`}
             className="max-h-full max-w-full object-contain cursor-grab active:cursor-grabbing"
+            loading="eager"
+            decoding="async"
             style={{
               transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
               transition: isDragging || isPinching.current ? "none" : "transform 0.2s ease",
@@ -239,7 +271,13 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
                   i === currentIndex ? "border-primary opacity-100" : "border-transparent opacity-40 hover:opacity-70"
                 }`}
               >
-                <img src={getOptimizedImageUrl(img, IMAGE_SIZES.THUMBNAIL)} alt="" className="w-full h-full object-cover" />
+                <img 
+                  src={getOptimizedImageUrl(img, IMAGE_SIZES.THUMBNAIL)} 
+                  alt="" 
+                  className="w-full h-full object-cover" 
+                  loading="lazy"
+                  decoding="async"
+                />
               </button>
             ))}
           </div>
