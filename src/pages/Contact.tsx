@@ -152,43 +152,7 @@ export default function Contact() {
           </section>
         )}
 
-        <footer className="px-6 py-10 border-t border-border flex flex-col items-center gap-6">
-          <div className="flex gap-8">
-            {settings.instagramUrl && (
-              <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer"><Instagram className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-            {settings.facebookUrl && (
-              <a href={settings.facebookUrl} target="_blank" rel="noopener noreferrer"><Facebook className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-            {settings.youtubeUrl && (
-              <a href={settings.youtubeUrl} target="_blank" rel="noopener noreferrer"><Youtube className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-            {settings.linkedinUrl && (
-              <a href={settings.linkedinUrl} target="_blank" rel="noopener noreferrer"><Linkedin className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-            {settings.websiteUrl && (
-              <a href={settings.websiteUrl} target="_blank" rel="noopener noreferrer"><Globe className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-            {settings.emailContact && (
-              <a href={`mailto:${settings.emailContact}`}><Mail className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-          </div>
-          {settings.footerText && (
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest text-center whitespace-pre-line">
-              {settings.footerText}
-            </p>
-          )}
-          {settings.developerName && (
-            <p className="text-[9px] text-muted-foreground/50 tracking-wider text-center mt-2">
-              Desenvolvido por{" "}
-              {settings.developerUrl ? (
-                <a href={settings.developerUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-accent transition-colors">
-                  {settings.developerName}
-                </a>
-              ) : settings.developerName}
-            </p>
-          )}
-        </footer>
+        <Footer />
       </div>
     </PageTransition>
   );
