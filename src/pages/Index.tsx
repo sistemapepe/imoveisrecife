@@ -176,9 +176,9 @@ export default function Index() {
             className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24"
           >
             {/* Skeleton Nav */}
-            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 border-b border-card/10 max-w-screen-lg mx-auto bg-luxury-dark">
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-2 border-b border-card/10 max-w-screen-lg mx-auto bg-luxury-dark">
               <div className="w-8 h-8 rounded bg-card/10 animate-pulse" />
-              <div className="h-12 w-40 rounded bg-card/10 animate-pulse" />
+              <div className="h-10 w-32 rounded bg-card/10 animate-pulse" />
               <div className="w-8 h-8 rounded-full bg-card/10 animate-pulse" />
             </nav>
 
@@ -233,12 +233,12 @@ export default function Index() {
             className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24"
           >
             {/* Header */}
-            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 glass-nav border-b border-card/10 max-w-screen-lg mx-auto">
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-2 glass-nav border-b border-card/10 max-w-screen-lg mx-auto">
               <button onClick={() => navigate("/admin")} className="text-accent">
                 <span className="text-2xl">☰</span>
               </button>
               {settings.logoUrl ? (
-                <img src={settings.logoUrl} alt={settings.brandName} className="h-[110px] max-w-[380px] object-contain" />
+                <img src={settings.logoUrl} alt={settings.brandName} className="h-16 max-w-[200px] object-contain" />
               ) : (
                 <h1 className="font-serif text-xl font-bold tracking-widest text-accent uppercase">{settings.brandName}</h1>
               )}
