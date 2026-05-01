@@ -49,21 +49,24 @@ const queryClient = new QueryClient({
 function AnimatedRoutes() {
   const location = useLocation();
   useTrafficTracker();
+  useWebVitals();
+  
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Index />} />
-        <Route path="/busca" element={<SearchResults />} />
-        <Route path="/imovel/:id" element={<PropertyDetail />} />
-        <Route path="/filtros" element={<Filters />} />
-        <Route path="/contato" element={<Contact />} />
-        <Route path="/favoritos" element={<Favorites />} />
-        <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/privacidade" element={<PrivacyPolicy />} />
-        <Route path="*" element={<NotFound />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Index />} />
+          <Route path="/busca" element={<SearchResults />} />
+          <Route path="/imovel/:id" element={<PropertyDetail />} />
+          <Route path="/filtros" element={<Filters />} />
+          <Route path="/contato" element={<Contact />} />
+          <Route path="/favoritos" element={<Favorites />} />
+          <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/privacidade" element={<PrivacyPolicy />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </AnimatePresence>
   );
 }
