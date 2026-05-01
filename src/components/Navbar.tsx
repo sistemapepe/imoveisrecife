@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Menu } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { useEffect, useState, useCallback } from "react";
 import { getOptimizedImageUrl } from "@/lib/image-optimization";
@@ -42,10 +43,10 @@ export default function Navbar() {
     }`}>
       <button 
         onClick={() => navigate("/admin")} 
-        className="text-accent w-12 h-12 flex items-center justify-center -ml-3 hover:bg-card/5 rounded-full transition-colors"
+        className="text-accent w-10 h-10 flex items-center justify-center hover:bg-card/5 rounded-full transition-colors"
         aria-label="Menu Admin"
       >
-        <span className="text-2xl leading-none">☰</span>
+        <Menu className="h-6 w-6" />
       </button>
       
       {settings.logoUrl ? (
