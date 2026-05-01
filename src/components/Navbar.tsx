@@ -43,7 +43,7 @@ export default function Navbar() {
     }`}>
       <button 
         onClick={() => navigate("/admin")} 
-        className="text-accent w-10 h-10 flex items-center justify-center hover:bg-card/5 rounded-full transition-colors shrink-0 -ml-1"
+        className="text-accent w-10 h-10 flex items-center justify-center hover:bg-accent/10 active:bg-accent/20 rounded-full transition-all duration-200 shrink-0 -ml-1 focus:outline-none focus:ring-2 focus:ring-accent/30"
         aria-label="Menu Admin"
       >
         <Menu className="h-6 w-6" />
