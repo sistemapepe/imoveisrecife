@@ -9,7 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { PropertyProvider } from "@/contexts/PropertyContext";
 import { lazy, Suspense } from "react";
 import BottomNav from "@/components/BottomNav";
-import WhatsAppFab from "@/components/WhatsAppFab";
+
 import DynamicTheme from "@/components/DynamicTheme";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
@@ -84,7 +84,7 @@ const App = () => {
           <BrowserRouter>
             <div className="max-w-screen-lg mx-auto relative min-h-screen">
                <AnimatedRoutes />
-               <WhatsAppFab />
+               
                <CookieConsent />
                <BottomNav />
             </div>
