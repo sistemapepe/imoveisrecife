@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { useEffect, useState, useCallback } from "react";
+import DrawerMenu from "./DrawerMenu";
 import { getOptimizedImageUrl } from "@/lib/image-optimization";
 
 // Rota específica do componente SearchResults (lazy loaded no App.tsx)
