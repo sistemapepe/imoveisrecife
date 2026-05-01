@@ -14,6 +14,7 @@ const prefetchFilters = () => import("@/pages/Filters");
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const { user, role } = useAuth();
   const { settings } = useProperties();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
