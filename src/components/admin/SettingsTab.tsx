@@ -110,9 +110,15 @@ const sections: SectionDef[] = [
   },
   {
     title: "📣 Banner Marquee",
-    description: "Configurações do banner rotativo que aparece no topo do site. Use '|' (barra vertical) para separar diferentes frases ou nomes.",
+    description: "Configurações do banner rotativo que aparece no topo do site.",
     fields: [
-      { label: "Texto Personalizado", key: "marqueeText", icon: <MessageCircle className="h-4 w-4" />, multiline: true, placeholder: "Ex: Mansões Exclusivas | Apartamentos de Luxo | Lançamentos 2024" },
+      { 
+        label: "Texto Personalizado (Opcional)", 
+        key: "marqueeText", 
+        icon: <MessageCircle className="h-4 w-4" />, 
+        multiline: true, 
+        placeholder: "Se deixado em branco, mostrará os títulos dos imóveis automaticamente. Use '|' para separar frases." 
+      },
     ],
   },
 ];
