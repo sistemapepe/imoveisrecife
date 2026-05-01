@@ -321,6 +321,7 @@ export type Database = {
           lead_modal_title: string
           linkedin_url: string
           logo_url: string
+          marquee_text: string | null
           primary_color: string
           privacy_policy: string
           show_location_on_card: boolean
@@ -362,6 +363,7 @@ export type Database = {
           lead_modal_title?: string
           linkedin_url?: string
           logo_url?: string
+          marquee_text?: string | null
           primary_color?: string
           privacy_policy?: string
           show_location_on_card?: boolean
@@ -403,6 +405,7 @@ export type Database = {
           lead_modal_title?: string
           linkedin_url?: string
           logo_url?: string
+          marquee_text?: string | null
           primary_color?: string
           privacy_policy?: string
           show_location_on_card?: boolean

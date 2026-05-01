@@ -76,6 +76,7 @@ export interface SiteSettings {
   googleSiteVerification: string;
   bingSiteVerification: string;
   headerStyle?: 'normal' | 'compact';
+  marqueeText?: string;
 }
 
 interface PropertyContextType {
@@ -131,6 +132,7 @@ const defaultSettings: SiteSettings = {
   googleSiteVerification: "",
   bingSiteVerification: "",
   headerStyle: 'normal',
+  marqueeText: "",
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -199,6 +201,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         googleSiteVerification: (data as any).google_site_verification ?? "",
         bingSiteVerification: (data as any).bing_site_verification ?? "",
         headerStyle: (data as any).header_style ?? 'normal',
+        marqueeText: (data as any).marquee_text ?? "",
       }));
     }
   }, []);
@@ -290,6 +293,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       googleSiteVerification: "google_site_verification",
       bingSiteVerification: "bing_site_verification",
       headerStyle: "header_style",
+      marqueeText: "marquee_text",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];

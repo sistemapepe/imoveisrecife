@@ -3,14 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 
 export default function MarqueeBanner() {
-  const { properties } = useProperties();
+  const { properties, settings } = useProperties();
   const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
 
-  if (properties.length === 0) return null;
+  const customText = settings.marqueeText?.split('|').map(t => t.trim()).filter(Boolean);
+  const items = customText && customText.length > 0 ? customText : properties.map(p => p.title);
+
+  if (items.length === 0) return null;
 
   // Duplicating the list only if motion is enabled to avoid cluttering DOM unnecessarily if static
-  const marqueeProperties = shouldReduceMotion ? properties : [...properties, ...properties, ...properties];
+  const marqueeItems = shouldReduceMotion ? items : [...items, ...items, ...items];
 
   return (
     <div 
@@ -34,17 +37,22 @@ export default function MarqueeBanner() {
         whileHover={{ animationPlayState: "paused" }}
         whileFocus={{ animationPlayState: "paused" }}
       >
-        {marqueeProperties.map((property, index) => (
-          <button
-            key={`${property.id}-${index}`}
-            onClick={() => navigate(`/imovel/${property.id}`)}
-            className="text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-accent-foreground hover:text-primary focus-visible:text-primary transition-all flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded px-2 py-1"
-            aria-label={`Ver detalhes de ${property.title}`}
-          >
-            <span className="w-2 h-2 rounded-full bg-primary/60" />
-            {property.title}
-          </button>
-        ))}
+        {marqueeItems.map((item, index) => {
+          const property = properties.find(p => p.title === item);
+          const isLink = !!property;
+          
+          return (
+            <button
+              key={`${item}-${index}`}
+              onClick={() => isLink ? navigate(`/imovel/${property.id}`) : null}
+              className={`text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-accent-foreground hover:text-primary focus-visible:text-primary transition-all flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded px-2 py-1 ${!isLink ? 'cursor-default pointer-events-none' : ''}`}
+              aria-label={isLink ? `Ver detalhes de ${item}` : item}
+            >
+              <span className="w-2 h-2 rounded-full bg-primary/60" />
+              {item}
+            </button>
+          );
+        })}
       </motion.div>
     </div>
   );

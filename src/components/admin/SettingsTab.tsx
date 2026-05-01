@@ -108,6 +108,13 @@ const sections: SectionDef[] = [
       { label: "Bing Webmaster (token)", key: "bingSiteVerification", icon: <Search className="h-4 w-4" />, placeholder: "ABCDEF1234567890..." },
     ],
   },
+  {
+    title: "📣 Banner Marquee",
+    description: "Configurações do banner rotativo que aparece no topo do site. Use '|' (barra vertical) para separar diferentes frases ou nomes.",
+    fields: [
+      { label: "Texto Personalizado", key: "marqueeText", icon: <MessageCircle className="h-4 w-4" />, multiline: true, placeholder: "Ex: Mansões Exclusivas | Apartamentos de Luxo | Lançamentos 2024" },
+    ],
+  },
 ];
 
 function hslToHex(hslStr: string): string {
