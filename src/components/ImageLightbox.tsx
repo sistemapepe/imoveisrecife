@@ -63,6 +63,34 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
       document.body.style.touchAction = "";
     };
   }, [isOpen]);
+  
+  // Pre-load next and previous images for smooth navigation
+  useEffect(() => {
+    if (!isOpen || images.length <= 1) return;
+
+    const preloadImage = (index: number) => {
+      const url = images[index];
+      if (!url) return;
+
+      // Pre-load the optimized versions
+      // Using 1200 as a good balance for lightbox preloading
+      const img1200 = new Image();
+      img1200.src = getOptimizedImageUrl(url, { width: 1200, quality: 80 });
+      
+      const img800 = new Image();
+      img800.src = getOptimizedImageUrl(url, { width: 800, quality: 80 });
+    };
+
+    // Preload next image
+    preloadImage((currentIndex + 1) % images.length);
+    // Preload previous image
+    preloadImage((currentIndex - 1 + images.length) % images.length);
+    
+    // Also preload the next 2 images ahead if we have many
+    if (images.length > 3) {
+      preloadImage((currentIndex + 2) % images.length);
+    }
+  }, [currentIndex, isOpen, images]);
 
   const toggleZoom = () => {
     if (scale > 1) {
