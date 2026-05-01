@@ -47,28 +47,37 @@ const queryClient = new QueryClient({
   },
 });
 
-function AnimatedRoutes() {
+function AppContent() {
   const location = useLocation();
   useTrafficTracker();
   useWebVitals();
   
+  const isPropertyDetail = location.pathname.startsWith('/imovel/');
+  
   return (
-    <AnimatePresence mode="wait">
-      <Suspense fallback={<PageLoader />}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Index />} />
-          <Route path="/busca" element={<SearchResults />} />
-          <Route path="/imovel/:id" element={<PropertyDetail />} />
-          <Route path="/filtros" element={<Filters />} />
-          <Route path="/contato" element={<Contact />} />
-          <Route path="/favoritos" element={<Favorites />} />
-          <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/privacidade" element={<PrivacyPolicy />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-    </AnimatePresence>
+    <div className="max-w-screen-lg mx-auto relative min-h-screen">
+      <AnimatePresence mode="wait">
+        <Suspense fallback={<PageLoader />}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Index />} />
+            <Route path="/busca" element={<SearchResults />} />
+            <Route path="/imovel/:id" element={<PropertyDetail />} />
+            <Route path="/filtros" element={<Filters />} />
+            <Route path="/contato" element={<Contact />} />
+            <Route path="/favoritos" element={<Favorites />} />
+            <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/privacidade" element={<PrivacyPolicy />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </AnimatePresence>
+      
+      {!isPropertyDetail && <WhatsAppFab />}
+      <ScrollToTop />
+      <CookieConsent />
+      <BottomNav />
+    </div>
   );
 }
 
@@ -83,13 +92,7 @@ const App = () => {
           <Sonner />
           <DynamicTheme />
           <BrowserRouter>
-            <div className="max-w-screen-lg mx-auto relative min-h-screen">
-               <AnimatedRoutes />
-               <WhatsAppFab />
-               <ScrollToTop />
-               <CookieConsent />
-               <BottomNav />
-            </div>
+            <AppContent />
           </BrowserRouter>
         </PropertyProvider>
       </AuthProvider>
