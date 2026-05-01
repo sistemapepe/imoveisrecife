@@ -13,7 +13,7 @@ export default function BottomNav() {
   const navigate = useNavigate();
   const isActive = (path: string) => location.pathname === path;
 
-  if (location.pathname.startsWith("/admin")) return null;
+  if (location.pathname.startsWith("/admin") || location.pathname === "/login") return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/90 backdrop-blur-xl border-t border-border px-6 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 flex justify-around items-center max-w-screen-lg mx-auto">
