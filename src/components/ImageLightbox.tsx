@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
+import { getOptimizedImageUrl, IMAGE_SIZES, getImageSrcSet, isSupabaseUrl } from "@/lib/image-optimization";
 
 interface ImageLightboxProps {
   images: string[];
