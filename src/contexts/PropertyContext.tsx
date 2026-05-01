@@ -76,6 +76,7 @@ export interface SiteSettings {
   googleSiteVerification: string;
   bingSiteVerification: string;
   headerStyle?: 'normal' | 'compact';
+  marqueeText?: string;
 }
 
 interface PropertyContextType {
