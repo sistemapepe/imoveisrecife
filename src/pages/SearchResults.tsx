@@ -1,6 +1,7 @@
 import { useState, useMemo, memo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, SlidersHorizontal, X, MapPin } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { useProperties } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
 import PageTransition from "@/components/PageTransition";
@@ -97,9 +98,7 @@ export default function SearchResults() {
         <Navbar />
         <header className="sticky top-[var(--navbar-height)] z-50 glass-header border-b border-border transition-all duration-300">
           <div className="flex items-center justify-between px-4 h-14">
-            <button onClick={() => navigate(-1)} aria-label="Voltar" className="flex items-center justify-center w-10 h-10">
-              <ArrowLeft className="h-6 w-6 text-foreground" aria-hidden="true" />
-            </button>
+            <BackButton variant="ghost" />
             <div className="text-center">
               <h1 className="text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">Resultados</h1>
               <p className="text-sm font-semibold text-foreground italic">{filtered.length} Imóveis encontrados</p>
