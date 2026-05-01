@@ -6,6 +6,7 @@ import { Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useProperties } from "@/contexts/PropertyContext";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
 import { trackEvent } from "@/hooks/useTrafficTracker";
+import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 
 export default function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const navigate = useNavigate();
