@@ -1,5 +1,5 @@
 import { ReactNode, useMemo } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, Transition } from "framer-motion";
 
 const pageVariants = {
   initial: { 
@@ -41,7 +41,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
   }, []);
 
   const variants = (shouldReduceMotion || isSlowDevice) ? reducedVariants : pageVariants;
-  const transition = (shouldReduceMotion || isSlowDevice) 
+  const transition: Transition = (shouldReduceMotion || isSlowDevice) 
     ? { duration: 0.2 } 
     : { duration: 0.4, ease: [0.22, 1, 0.36, 1] };
 
