@@ -23,7 +23,10 @@ export default function Filters() {
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setSuggestions(searchLocations(search));
+    const timer = setTimeout(() => {
+      setSuggestions(searchLocations(search));
+    }, 300); // Debounce de 300ms
+    return () => clearTimeout(timer);
   }, [search]);
 
   useEffect(() => {
