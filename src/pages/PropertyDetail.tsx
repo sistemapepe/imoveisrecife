@@ -207,10 +207,14 @@ export default function PropertyDetail() {
         >
           <img
             className="h-full w-full object-cover transition-opacity duration-300 cursor-pointer select-none"
-            src={property.images[currentImg]}
+            src={getOptimizedImageUrl(property.images[currentImg], IMAGE_SIZES.HERO)}
+            srcSet={getImageSrcSet(property.images[currentImg], [600, 1200, 1920])}
+            sizes="100vw"
             alt={`${property.title} - Foto ${currentImg + 1}`}
             draggable={false}
             onClick={() => { setLightboxIndex(currentImg); setLightboxOpen(true); }}
+            loading="eager"
+            fetchPriority="high"
           />
           {totalImages > 1 && (
             <>
