@@ -4,6 +4,7 @@ import { useProperties } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Footer from "@/components/Footer";
 
 export default function Favorites() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function Favorites() {
           ) : (
             favProperties.map((p, i) => <PropertyCard key={p.id} property={p} index={i} />)
           )}
+          <Footer />
         </main>
       </div>
     </PageTransition>

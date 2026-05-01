@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useProperties } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Footer from "@/components/Footer";
 
 const defaultPolicy = `## Política de Privacidade
 
@@ -56,6 +57,7 @@ export default function PrivacyPolicy() {
             return <p key={i} className="text-sm text-muted-foreground mb-2">{line}</p>;
           })}
         </div>
+        <Footer />
       </div>
     </PageTransition>
   );

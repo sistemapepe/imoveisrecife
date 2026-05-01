@@ -5,6 +5,7 @@ import { useProperties } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Footer from "@/components/Footer";
 
 const propertyTypes = ["Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"] as const;
 const statusOptions = [
@@ -158,6 +159,7 @@ export default function SearchResults() {
           {filtered.map((p, i) => (
             <PropertyCard key={p.id} property={p} index={i} />
           ))}
+          <Footer />
         </main>
       </div>
     </PageTransition>

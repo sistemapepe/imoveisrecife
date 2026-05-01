@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Verified, Globe, Instagram, Facebook, Youtube, Linkedin, Mail } from "lucide-react";
+import { Verified } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { checkHoneypot, HONEYPOT_FIELD_NAME, honeypotInputStyle } from "@/lib/honeypot";
 
 export default function Contact() {
@@ -53,15 +55,7 @@ export default function Contact() {
     <PageTransition>
       <SEOHead title="Contato" description="Entre em contato com nossa equipe de corretores especializados em imóveis de luxo em Recife." />
       <div className="relative flex min-h-screen w-full flex-col pb-32 bg-background">
-        <nav className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 glass-header border-b border-border">
-          <button onClick={() => navigate(-1)}><ArrowLeft className="h-6 w-6" /></button>
-          {settings.logoUrl ? (
-            <img src={settings.logoUrl} alt={settings.brandName} className="h-12 max-w-[200px] object-contain" />
-          ) : (
-            <h1 className="font-serif text-lg font-bold tracking-widest text-accent uppercase">{settings.brandName}</h1>
-          )}
-          <div className="w-8" />
-        </nav>
+        <Navbar />
 
         <header className="px-6 pt-10 pb-6 text-center">
           <h2 className="font-serif text-4xl mb-2">Atendimento Exclusivo</h2>
@@ -158,43 +152,7 @@ export default function Contact() {
           </section>
         )}
 
-        <footer className="px-6 py-10 border-t border-border flex flex-col items-center gap-6">
-          <div className="flex gap-8">
-            {settings.instagramUrl && (
-              <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer"><Instagram className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-            {settings.facebookUrl && (
-              <a href={settings.facebookUrl} target="_blank" rel="noopener noreferrer"><Facebook className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-            {settings.youtubeUrl && (
-              <a href={settings.youtubeUrl} target="_blank" rel="noopener noreferrer"><Youtube className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-            {settings.linkedinUrl && (
-              <a href={settings.linkedinUrl} target="_blank" rel="noopener noreferrer"><Linkedin className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-            {settings.websiteUrl && (
-              <a href={settings.websiteUrl} target="_blank" rel="noopener noreferrer"><Globe className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-            {settings.emailContact && (
-              <a href={`mailto:${settings.emailContact}`}><Mail className="h-6 w-6 text-accent hover:scale-110 transition-transform" /></a>
-            )}
-          </div>
-          {settings.footerText && (
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest text-center whitespace-pre-line">
-              {settings.footerText}
-            </p>
-          )}
-          {settings.developerName && (
-            <p className="text-[9px] text-muted-foreground/50 tracking-wider text-center mt-2">
-              Desenvolvido por{" "}
-              {settings.developerUrl ? (
-                <a href={settings.developerUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-accent transition-colors">
-                  {settings.developerName}
-                </a>
-              ) : settings.developerName}
-            </p>
-          )}
-        </footer>
+        <Footer />
       </div>
     </PageTransition>
   );
