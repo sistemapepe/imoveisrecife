@@ -244,38 +244,7 @@ export default function Index() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24"
           >
-            {/* Header */}
-            <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 glass-nav border-b border-card/10 max-w-screen-lg mx-auto transition-all duration-300 ${
-              settings.headerStyle === 'compact' || isScrolled ? 'h-14 py-2' : 'h-20 py-4'
-            }`}>
-              <button 
-                onClick={() => navigate("/admin")} 
-                className="text-accent w-12 h-12 flex items-center justify-center -ml-3 hover:bg-card/5 rounded-full transition-colors"
-                aria-label="Menu Admin"
-              >
-                <span className="text-2xl leading-none">☰</span>
-              </button>
-              {settings.logoUrl ? (
-                <img 
-                  src={settings.logoUrl} 
-                  alt={settings.brandName} 
-                  className={`object-contain transition-all duration-300 ${
-                    settings.headerStyle === 'compact' || isScrolled ? 'h-10 max-w-[150px]' : 'h-14 max-w-[200px]'
-                  }`} 
-                />
-              ) : (
-                <h1 className={`font-serif font-bold tracking-widest text-accent uppercase transition-all duration-300 ${
-                  settings.headerStyle === 'compact' || isScrolled ? 'text-lg' : 'text-xl'
-                }`}>{settings.brandName}</h1>
-              )}
-              <button 
-                onClick={() => navigate("/login")} 
-                className="text-card w-12 h-12 flex items-center justify-center -mr-3 hover:bg-card/5 rounded-full transition-colors"
-                aria-label="Login"
-              >
-                <span className="text-2xl leading-none">👤</span>
-              </button>
-            </nav>
+            <Navbar />
 
             {/* Hero Carousel */}
             <section className="relative h-[85vh] w-full shrink-0 overflow-hidden">
