@@ -33,6 +33,7 @@ export default function Favorites() {
           ) : (
             favProperties.map((p, i) => <PropertyCard key={p.id} property={p} index={i} />)
           )}
+          <Footer />
         </main>
       </div>
     </PageTransition>
