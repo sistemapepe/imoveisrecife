@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { useProperties } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
 import PageTransition from "@/components/PageTransition";
@@ -19,9 +20,7 @@ export default function Favorites() {
         <Navbar />
         <header className="sticky top-[var(--navbar-height)] z-50 glass-header border-b border-border transition-all duration-300">
           <div className="flex items-center justify-between px-4 h-14">
-            <button onClick={() => navigate(-1)} aria-label="Voltar" className="w-10 h-10 flex items-center justify-center">
-              <ArrowLeft className="h-6 w-6" aria-hidden="true" />
-            </button>
+            <BackButton variant="ghost" />
             <h1 className="text-lg font-bold">Sua Seleção</h1>
             <div className="w-10" />
           </div>
