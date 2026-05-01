@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Verified, Globe, Instagram, Facebook, Youtube, Linkedin, Mail } from "lucide-react";
+import { Verified } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { checkHoneypot, HONEYPOT_FIELD_NAME, honeypotInputStyle } from "@/lib/honeypot";
 
 export default function Contact() {
