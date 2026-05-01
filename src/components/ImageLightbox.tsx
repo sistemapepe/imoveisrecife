@@ -239,7 +239,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
                   i === currentIndex ? "border-primary opacity-100" : "border-transparent opacity-40 hover:opacity-70"
                 }`}
               >
-                <img src={img} alt="" className="w-full h-full object-cover" />
+                <img src={getOptimizedImageUrl(img, IMAGE_SIZES.THUMBNAIL)} alt="" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
