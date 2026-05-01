@@ -131,10 +131,10 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-destructive/20 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all font-medium text-sm"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-destructive/5 text-destructive hover:bg-destructive hover:text-white transition-all font-bold text-[10px] uppercase tracking-[0.2em]"
                   >
                     <LogOut className="h-4 w-4" />
-                    Sair da Conta
+                    Sair
                   </button>
                 </div>
               ) : (
