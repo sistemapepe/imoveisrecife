@@ -70,16 +70,16 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             className="fixed top-0 left-0 bottom-0 z-[70] w-[260px] bg-card flex flex-col border-r border-border shadow-none"
           >
             {/* Header */}
-            <div className="p-6 flex items-center justify-between border-b border-border">
+            <div className="p-8 flex items-center justify-between">
               <div className="flex flex-col">
-                <span className="font-serif font-bold text-xl text-accent uppercase tracking-[0.2em]">
+                <span className="font-serif font-bold text-2xl text-accent uppercase tracking-[0.2em] leading-none">
                   Painel
                 </span>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-medium">Administrativo</span>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-medium mt-1">Admin</span>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground"
+                className="p-2 -mr-2 rounded-full hover:bg-muted transition-colors text-muted-foreground"
                 aria-label="Fechar menu"
               >
                 <X className="h-5 w-5" />
