@@ -405,6 +405,7 @@ export default function PropertyDetail() {
           </div>
 
           <SimilarProperties current={property} />
+          <Footer />
         </motion.div>
 
         {/* Mobile bottom CTA */}
