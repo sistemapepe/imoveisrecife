@@ -26,12 +26,7 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
     };
   }, [isOpen]);
 
-  const menuItems = [
-    { label: "Início", icon: Home, path: "/", public: true },
-    { label: "Buscar Imóveis", icon: Search, path: "/busca", public: true },
-    { label: "Favoritos", icon: Heart, path: "/favoritos", public: true },
-    { label: "Contato", icon: Mail, path: "/contato", public: true },
-  ];
+  const menuItems: any[] = []; // Removed public items as per admin-only requirement
 
   const adminItems = [
     { label: "Painel Admin", icon: LayoutDashboard, path: "/admin", roles: ["admin", "supervisor", "corretor"] },
@@ -59,7 +54,7 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             onClick={onClose}
             className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
           />
@@ -69,7 +64,7 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 300, mass: 1 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-0 left-0 bottom-0 z-[70] w-[280px] bg-card shadow-2xl flex flex-col border-r border-border"
           >
             {/* Header */}
