@@ -1,15 +1,16 @@
 import { useProperties } from "@/contexts/PropertyContext";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function MarqueeBanner() {
   const { properties } = useProperties();
   const navigate = useNavigate();
+  const shouldReduceMotion = useReducedMotion();
 
   if (properties.length === 0) return null;
 
-  // Duplicating the list to ensure a smooth continuous loop
-  const marqueeProperties = [...properties, ...properties, ...properties];
+  // Duplicating the list only if motion is enabled to avoid cluttering DOM unnecessarily if static
+  const marqueeProperties = shouldReduceMotion ? properties : [...properties, ...properties, ...properties];
 
   return (
     <div 
@@ -18,8 +19,8 @@ export default function MarqueeBanner() {
       aria-label="Banner de propriedades em destaque"
     >
       <motion.div
-        className="flex whitespace-nowrap gap-12"
-        animate={{
+        className={`flex ${shouldReduceMotion ? 'flex-wrap justify-center gap-6' : 'whitespace-nowrap gap-12'}`}
+        animate={shouldReduceMotion ? {} : {
           x: [0, -1000],
         }}
         transition={{
