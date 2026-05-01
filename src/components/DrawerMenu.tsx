@@ -30,9 +30,8 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
 
   const adminItems = [
     { label: "DASHBOARD", icon: LayoutDashboard, path: "/admin?tab=dashboard", roles: ["admin", "supervisor", "corretor"] },
+    { label: "SITE", icon: Globe, path: "/", roles: ["admin", "supervisor", "corretor"] },
     { label: "PROPRIEDADES", icon: Home, path: "/admin?tab=properties", roles: ["admin", "supervisor", "corretor"] },
-    { label: "MENSAGENS", icon: MessageSquare, path: "/admin?tab=messages", roles: ["admin", "supervisor", "corretor"] },
-    { label: "VISITAS", icon: Footprints, path: "/admin?tab=visits", roles: ["admin", "supervisor", "corretor"] },
     { label: "ANALYTICS", icon: BarChart3, path: "/admin?tab=analytics", roles: ["admin", "supervisor", "corretor"] },
     { label: "USUÁRIOS", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
     { label: "CONFIGURAÇÕES", icon: Settings, path: "/admin?tab=settings", roles: ["admin"] },
@@ -89,26 +88,29 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto py-4">
-              <nav className="px-2">
+            <div className="flex-1 overflow-y-auto pt-4">
+              <nav className="px-4">
                 {user && role !== "user" && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.1 }}
-                    className="space-y-1"
-                  >
+                  <div className="flex flex-col gap-2">
                     {adminItems.filter(item => !item.roles || (role && item.roles.includes(role))).map((item) => (
                       <button
                         key={item.path}
                         onClick={() => handleNavigation(item.path)}
-                        className="w-full flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-50 text-gray-600 hover:text-black transition-all duration-200 group"
+                        className="w-full flex items-center gap-4 py-4 border-b border-gray-50 text-gray-800 hover:text-black transition-all group"
                       >
-                        <item.icon className="h-5 w-5 text-gray-400 group-hover:text-black transition-colors" strokeWidth={1.5} />
-                        <span className="font-medium text-[12px] uppercase tracking-[0.1em]">{item.label}</span>
+                        <item.icon className="h-5 w-5 text-gray-500 group-hover:text-black" strokeWidth={1.5} />
+                        <span className="font-bold text-[13px] uppercase tracking-[0.1em]">{item.label}</span>
                       </button>
                     ))}
-                  </motion.div>
+                    
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full flex items-center gap-4 py-4 border-b border-gray-50 text-gray-800 hover:text-red-600 transition-all group"
+                    >
+                      <LogOut className="h-5 w-5 text-gray-500 group-hover:text-red-600" strokeWidth={1.5} />
+                      <span className="font-bold text-[13px] uppercase tracking-[0.1em]">Sair</span>
+                    </button>
+                  </div>
                 )}
               </nav>
             </div>
