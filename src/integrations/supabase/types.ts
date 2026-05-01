@@ -97,6 +97,42 @@ export type Database = {
           },
         ]
       }
+      performance_logs: {
+        Row: {
+          connection_type: string | null
+          created_at: string
+          device_type: string | null
+          id: string
+          is_slow_connection: boolean | null
+          metric_name: string
+          metric_value: number
+          page_url: string
+          visitor_id: string | null
+        }
+        Insert: {
+          connection_type?: string | null
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          is_slow_connection?: boolean | null
+          metric_name: string
+          metric_value: number
+          page_url: string
+          visitor_id?: string | null
+        }
+        Update: {
+          connection_type?: string | null
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          is_slow_connection?: boolean | null
+          metric_name?: string
+          metric_value?: number
+          page_url?: string
+          visitor_id?: string | null
+        }
+        Relationships: []
+      }
       properties: {
         Row: {
           address: string
