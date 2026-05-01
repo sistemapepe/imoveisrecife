@@ -12,7 +12,11 @@ export default function MarqueeBanner() {
   const marqueeProperties = [...properties, ...properties, ...properties];
 
   return (
-    <div className="w-full bg-accent/10 border-b border-accent/20 overflow-hidden py-2 select-none">
+    <div 
+      className="w-full bg-accent/10 border-b border-accent/20 overflow-hidden py-2 select-none"
+      role="region"
+      aria-label="Banner de propriedades em destaque"
+    >
       <motion.div
         className="flex whitespace-nowrap gap-12"
         animate={{
@@ -22,16 +26,19 @@ export default function MarqueeBanner() {
           x: {
             repeat: Infinity,
             repeatType: "loop",
-            duration: 30,
+            duration: 40,
             ease: "linear",
           },
         }}
+        whileHover={{ animationPlayState: "paused" }}
+        whileFocus={{ animationPlayState: "paused" }}
       >
         {marqueeProperties.map((property, index) => (
           <button
             key={`${property.id}-${index}`}
             onClick={() => navigate(`/imovel/${property.id}`)}
-            className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-accent hover:text-primary transition-colors flex items-center gap-2 shrink-0"
+            className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-accent hover:text-primary transition-all flex items-center gap-2 shrink-0 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 rounded px-1"
+            aria-label={`Ver detalhes de ${property.title}`}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-accent" />
             {property.title}
