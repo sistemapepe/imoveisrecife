@@ -7,22 +7,33 @@ import { AnimatePresence } from "framer-motion";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PropertyProvider } from "@/contexts/PropertyContext";
+import { lazy, Suspense } from "react";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import DynamicTheme from "@/components/DynamicTheme";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Index from "./pages/Index";
-import SearchResults from "./pages/SearchResults";
-import PropertyDetail from "./pages/PropertyDetail";
-import Filters from "./pages/Filters";
-import Contact from "./pages/Contact";
-import Favorites from "./pages/Favorites";
-import Admin from "./pages/Admin";
-import Login from "./pages/Login";
-import NotFound from "./pages/NotFound";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import CookieConsent from "./components/CookieConsent";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
+import { useWebVitals } from "@/hooks/useWebVitals";
+
+// Lazy loading rotas
+const Index = lazy(() => import("./pages/Index"));
+const SearchResults = lazy(() => import("./pages/SearchResults"));
+const PropertyDetail = lazy(() => import("./pages/PropertyDetail"));
+const Filters = lazy(() => import("./pages/Filters"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Favorites = lazy(() => import("./pages/Favorites"));
+const Admin = lazy(() => import("./pages/Admin"));
+const Login = lazy(() => import("./pages/Login"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const CookieConsent = lazy(() => import("./components/CookieConsent"));
+
+// Loading fallback component
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[60vh] w-full">
+    <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
