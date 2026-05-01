@@ -159,6 +159,7 @@ export default function SearchResults() {
           {filtered.map((p, i) => (
             <PropertyCard key={p.id} property={p} index={i} />
           ))}
+          <Footer />
         </main>
       </div>
     </PageTransition>
