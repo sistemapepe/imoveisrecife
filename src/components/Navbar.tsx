@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { useEffect, useState, useCallback } from "react";
+import DrawerMenu from "./DrawerMenu";
 import { getOptimizedImageUrl } from "@/lib/image-optimization";
 
 // Rota específica do componente SearchResults (lazy loaded no App.tsx)
@@ -14,6 +15,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { settings } = useProperties();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -42,12 +44,17 @@ export default function Navbar() {
       isCompact ? 'h-14 py-2' : 'h-18 py-3'
     }`}>
       <button 
-        onClick={() => navigate("/admin")} 
+        onClick={() => setIsDrawerOpen(true)} 
         className="text-accent w-10 h-10 flex items-center justify-center hover:bg-accent/10 active:bg-accent/20 rounded-full transition-all duration-200 shrink-0 -ml-1 focus:outline-none focus:ring-2 focus:ring-accent/30"
-        aria-label="Menu Admin"
+        aria-label="Abrir menu"
       >
         <Menu className="h-6 w-6" />
       </button>
+
+      <DrawerMenu 
+        isOpen={isDrawerOpen} 
+        onClose={() => setIsDrawerOpen(false)} 
+      />
       
       {settings.logoUrl ? (
         <img 
