@@ -38,6 +38,25 @@ export default function PropertyDetail() {
     window.scrollTo(0, 0);
   }, [id]);
 
+  // Pre-load next and previous images for the main gallery
+  useEffect(() => {
+    if (!property?.images || property.images.length <= 1) return;
+
+    const preloadImage = (index: number) => {
+      const url = property.images[index];
+      if (!url) return;
+      const img = new Image();
+      img.src = getOptimizedImageUrl(url, IMAGE_SIZES.HERO);
+      
+      // Also preload a slightly smaller version for tablets/mobile
+      const imgMobile = new Image();
+      imgMobile.src = getOptimizedImageUrl(url, { width: 600 });
+    };
+
+    preloadImage((currentImg + 1) % property.images.length);
+    preloadImage((currentImg - 1 + property.images.length) % property.images.length);
+  }, [currentImg, property?.images]);
+
   // Track property view
   useEffect(() => {
     if (!id) return;
