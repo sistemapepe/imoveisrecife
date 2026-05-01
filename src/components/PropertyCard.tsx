@@ -134,7 +134,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         )}
         </div>
       </div>
-    </motion.div>
+    </div>
 
     <LeadCaptureModal
       open={leadOpen}
