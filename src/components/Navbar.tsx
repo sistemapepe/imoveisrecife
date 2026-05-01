@@ -62,7 +62,7 @@ export default function Navbar() {
           onMouseEnter={() => handlePrefetch('search')}
           onFocus={() => handlePrefetch('search')}
           className={`object-contain transition-all duration-300 cursor-pointer ${
-            isCompact ? 'h-12 max-w-[180px]' : 'h-16 max-w-[260px]'
+            isCompact ? 'h-14 max-w-[200px]' : 'h-20 max-w-[300px]'
           }`}
         />
       ) : (
