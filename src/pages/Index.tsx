@@ -478,7 +478,15 @@ export default function Index() {
                     onClick={() => navigate(`/imovel/${p.id}`)}
                   >
                     <div className="relative w-full aspect-[4/3] overflow-hidden">
-                      <img src={p.images[0]} alt={p.title} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                      <img 
+                        src={getOptimizedImageUrl(p.images[0], IMAGE_SIZES.CARD)} 
+                        srcSet={getImageSrcSet(p.images[0], [400, 600])}
+                        sizes="(max-width: 640px) 100vw, 300px"
+                        alt={p.title} 
+                        className="w-full h-full object-cover" 
+                        loading="lazy" 
+                        decoding="async" 
+                      />
                       {p.status && p.status !== "disponivel" && (
                         <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-sm shadow-lg ${
                           p.status === "reservado" ? "bg-yellow-500/90" : "bg-red-500/90"
