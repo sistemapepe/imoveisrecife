@@ -30,9 +30,10 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
 
   const adminItems = [
     { label: "Dashboard", icon: LayoutDashboard, path: "/admin", roles: ["admin", "supervisor", "corretor"] },
+    { label: "Configurações", icon: Settings, path: "/admin?tab=settings", roles: ["admin"] },
     { label: "Usuários", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
     { label: "Mensagens", icon: Mail, path: "/admin?tab=messages", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Configurações", icon: Settings, path: "/admin?tab=settings", roles: ["admin"] },
+    { label: "Visitas", icon: Bell, path: "/admin?tab=visits", roles: ["admin", "supervisor", "corretor"] },
   ];
 
   const handleNavigation = (path: string) => {
