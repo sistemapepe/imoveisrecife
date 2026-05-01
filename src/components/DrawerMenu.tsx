@@ -64,7 +64,7 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 300, mass: 1 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-0 left-0 bottom-0 z-[70] w-[280px] bg-card shadow-2xl flex flex-col border-r border-border"
           >
             {/* Header */}
