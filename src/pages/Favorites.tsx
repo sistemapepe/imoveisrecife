@@ -17,7 +17,7 @@ export default function Favorites() {
       <SEOHead title="Favoritos" description="Seus imóveis favoritos salvos para consulta rápida." noIndex />
       <div className="min-h-screen bg-background pb-24 max-w-screen-lg mx-auto">
         <Navbar />
-        <header className="sticky top-16 z-50 glass-header border-b border-border">
+        <header className="sticky top-[var(--navbar-height)] z-50 glass-header border-b border-border transition-all duration-300">
           <div className="flex items-center justify-between px-4 h-14">
             <button onClick={() => navigate(-1)} aria-label="Voltar" className="w-10 h-10 flex items-center justify-center">
               <ArrowLeft className="h-6 w-6" aria-hidden="true" />

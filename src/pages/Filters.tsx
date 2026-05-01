@@ -55,7 +55,7 @@ export default function Filters() {
       <SEOHead title="Filtros" description="Filtre imóveis por tipo, quartos, localização e mais." noIndex />
       <div className="relative flex min-h-screen w-full flex-col max-w-screen-lg mx-auto bg-background">
         <Navbar />
-        <header className="sticky top-16 z-30 glass-header border-b border-border">
+        <header className="sticky top-[var(--navbar-height)] z-30 glass-header border-b border-border transition-all duration-300">
           <div className="flex items-center justify-between px-4 py-4">
             <button onClick={() => navigate(-1)} aria-label="Fechar filtros" className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-secondary transition-colors">
               <X className="h-6 w-6" aria-hidden="true" />
