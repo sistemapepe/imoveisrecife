@@ -38,7 +38,7 @@ export default function Navbar() {
       
       {settings.logoUrl ? (
         <img 
-          src={settings.logoUrl} 
+          src={getOptimizedImageUrl(settings.logoUrl, { width: isCompact ? 320 : 480, quality: 90 })} 
           alt={settings.brandName} 
           onClick={() => navigate("/")}
           className={`object-contain transition-all duration-300 cursor-pointer ${
