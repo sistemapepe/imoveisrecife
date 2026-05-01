@@ -26,7 +26,12 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
     };
   }, [isOpen]);
 
-  const menuItems: any[] = []; // Removidos itens públicos, menu exclusivo para admin
+  const menuItems = [
+    { label: "Início", icon: Home, path: "/", public: true },
+    { label: "Buscar Imóveis", icon: Search, path: "/busca", public: true },
+    { label: "Favoritos", icon: Heart, path: "/favoritos", public: true },
+    { label: "Contato", icon: Mail, path: "/contato", public: true },
+  ];
 
   const adminItems = [
     { label: "Painel Admin", icon: LayoutDashboard, path: "/admin", roles: ["admin", "supervisor", "corretor"] },
@@ -87,7 +92,26 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             {/* Content */}
             <div className="flex-1 overflow-y-auto py-4">
               <nav className="px-4 space-y-1">
-                {/* Itens públicos removidos */}
+                {menuItems.map((item, index) => (
+                  <motion.button
+                    key={item.path}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + index * 0.05 }}
+                    onClick={() => handleNavigation(item.path)}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-accent/5 text-foreground/80 hover:text-accent transition-all group"
+                  >
+                    <item.icon className="h-5 w-5 transition-transform group-hover:scale-110" />
+                    <span className="font-medium text-sm">{item.label}</span>
+                  </motion.button>
+                ))}
+
+                {user && role !== "user" && (
+                  <div className="my-6 px-4">
+                    <div className="h-px bg-border w-full" />
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mt-4 block font-bold">Administrativo</span>
+                  </div>
+                )}
 
                 {user && role !== "user" && (
                   <motion.div
@@ -145,6 +169,15 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
                   >
                     Acessar Admin
                   </button>
+                  <a 
+                    href={`https://wa.me/${settings.whatsappNumber}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border text-foreground/70 font-medium text-sm hover:bg-muted transition-all"
+                  >
+                    <Phone className="h-4 w-4" />
+                    Falar com Corretor
+                  </a>
                 </div>
               )}
             </motion.div>
