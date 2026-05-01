@@ -320,6 +320,40 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
         </div>
       </div>
 
+      {/* Layout Options */}
+      <div className="bg-card rounded-xl border border-border p-4 space-y-3">
+        <div>
+          <h3 className="font-bold text-sm">📐 Layout do Cabeçalho</h3>
+          <p className="text-xs text-muted-foreground">Escolha o estilo visual do menu superior</p>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setLocalSettings(prev => ({ ...prev, headerStyle: 'normal' }))}
+            className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${
+              localSettings.headerStyle !== 'compact' 
+                ? 'border-primary bg-primary/5 text-primary' 
+                : 'border-border bg-background text-muted-foreground hover:border-primary/50'
+            }`}
+          >
+            <div className="w-full h-8 bg-current/10 rounded-md flex items-center justify-center font-bold text-[10px]">NORMAL</div>
+            <span className="text-xs font-bold uppercase tracking-wider">Padrão</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setLocalSettings(prev => ({ ...prev, headerStyle: 'compact' }))}
+            className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${
+              localSettings.headerStyle === 'compact' 
+                ? 'border-primary bg-primary/5 text-primary' 
+                : 'border-border bg-background text-muted-foreground hover:border-primary/50'
+            }`}
+          >
+            <div className="w-full h-5 bg-current/10 rounded-md flex items-center justify-center font-bold text-[10px]">COMPACTO</div>
+            <span className="text-xs font-bold uppercase tracking-wider">Reduzido</span>
+          </button>
+        </div>
+      </div>
+
       {/* Display Options */}
       <div className="bg-card rounded-xl border border-border p-4 space-y-3">
         <div>

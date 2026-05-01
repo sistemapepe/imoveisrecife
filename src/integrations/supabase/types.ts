@@ -267,6 +267,7 @@ export type Database = {
           facebook_url: string
           footer_text: string
           google_site_verification: string
+          header_style: string | null
           hero_subtitle: string
           hero_title: string
           id: string
@@ -307,6 +308,7 @@ export type Database = {
           facebook_url?: string
           footer_text?: string
           google_site_verification?: string
+          header_style?: string | null
           hero_subtitle?: string
           hero_title?: string
           id?: string
@@ -347,6 +349,7 @@ export type Database = {
           facebook_url?: string
           footer_text?: string
           google_site_verification?: string
+          header_style?: string | null
           hero_subtitle?: string
           hero_title?: string
           id?: string
