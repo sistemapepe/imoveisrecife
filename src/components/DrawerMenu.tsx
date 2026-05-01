@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, Home, Search, Heart, Mail, LogOut, Settings, Users, Phone } from "lucide-react";
+import { X, LayoutDashboard, Home, Search, Heart, Mail, LogOut, Settings, Users, Phone, Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProperties } from "@/contexts/PropertyContext";
@@ -29,9 +29,11 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
   const menuItems: any[] = [];
 
   const adminItems = [
-    { label: "Painel Admin", icon: LayoutDashboard, path: "/admin", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Usuários", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
+    { label: "Dashboard", icon: LayoutDashboard, path: "/admin", roles: ["admin", "supervisor", "corretor"] },
     { label: "Configurações", icon: Settings, path: "/admin?tab=settings", roles: ["admin"] },
+    { label: "Usuários", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
+    { label: "Mensagens", icon: Mail, path: "/admin?tab=messages", roles: ["admin", "supervisor", "corretor"] },
+    { label: "Visitas", icon: Bell, path: "/admin?tab=visits", roles: ["admin", "supervisor", "corretor"] },
   ];
 
   const handleNavigation = (path: string) => {
@@ -71,9 +73,9 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             <div className="p-6 flex items-center justify-between border-b border-border">
               <div className="flex flex-col">
                 <span className="font-serif font-bold text-lg text-accent uppercase tracking-wider line-clamp-1">
-                  {settings.brandName}
+                  Menu
                 </span>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Navegação</span>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Administrativo</span>
               </div>
               <button
                 onClick={onClose}
