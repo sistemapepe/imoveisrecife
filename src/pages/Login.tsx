@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProperties } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
-import { Lock, Eye, EyeOff } from "lucide-react";
+import { Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
@@ -123,9 +124,9 @@ export default function Login() {
           <div className="mt-5 text-center">
             <button
               onClick={() => navigate("/")}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-2 px-4 rounded-lg hover:bg-secondary/50"
             >
-              ← Voltar ao site
+              <ArrowLeft className="h-4 w-4" /> Voltar ao site
             </button>
           </div>
         </motion.div>
