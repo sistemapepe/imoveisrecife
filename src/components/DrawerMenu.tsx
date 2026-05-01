@@ -69,7 +69,7 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             {/* Header */}
             <div className="p-8 pb-4 flex items-center justify-between">
               <span className="font-sans font-black text-[18px] text-black uppercase tracking-[0.1em]">
-                Gestão do Site
+                GESTÃO DO SITE
               </span>
             </div>
 
