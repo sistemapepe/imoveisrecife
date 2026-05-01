@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useProperties } from "@/contexts/PropertyContext";
 import { useEffect, useState } from "react";
+import { getOptimizedImageUrl } from "@/lib/image-optimization";
 
 export default function Navbar() {
   const navigate = useNavigate();
