@@ -153,6 +153,7 @@ export default function Filters() {
               </div>
             ))}
           </section>
+          <Footer />
         </main>
 
         <div className="fixed bottom-20 left-0 right-0 p-4 bg-card/90 backdrop-blur-lg border-t border-border z-50 max-w-md mx-auto">
