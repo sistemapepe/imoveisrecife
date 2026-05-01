@@ -9,6 +9,7 @@ import PageTransition from "@/components/PageTransition";
 import PropertyCard from "@/components/PropertyCard";
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
+import MarqueeBanner from "@/components/MarqueeBanner";
 import Footer from "@/components/Footer";
 import { searchLocations } from "@/data/pernambuco-locations";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
@@ -246,6 +247,7 @@ export default function Index() {
             className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24 max-w-screen-lg mx-auto"
           >
             <Navbar />
+            <MarqueeBanner />
 
             {/* Hero Carousel */}
             <section className="relative h-[85vh] w-full shrink-0 overflow-hidden">
