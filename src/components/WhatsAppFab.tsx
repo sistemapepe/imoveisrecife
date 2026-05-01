@@ -37,8 +37,7 @@ export default function WhatsAppFab() {
       <button
         onClick={() => setOpen(true)}
         aria-label="Fale conosco pelo WhatsApp"
-        className="fixed bottom-24 right-4 z-50 h-14 w-14 rounded-full bg-whatsapp text-white shadow-lg flex items-center justify-center animate-bounce hover:scale-110 transition-transform md:bottom-8 md:right-8"
-        style={{ animationDuration: "2s", animationIterationCount: "infinite" }}
+        className="fixed bottom-24 right-4 z-50 h-14 w-14 rounded-full bg-whatsapp text-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform md:bottom-8 md:right-8"
       >
         <MessageCircle className="h-7 w-7" />
         <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent border-2 border-background animate-pulse" />

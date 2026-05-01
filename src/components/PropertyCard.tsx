@@ -27,12 +27,8 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
 
   return (
     <>
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.08 }}
-      className="group bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer transition-shadow duration-300 hover:shadow-2xl"
-      whileHover={{ y: -4 }}
+    <div
+      className="group bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
       onClick={() => navigate(`/imovel/${property.id}`)}
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
@@ -138,7 +134,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         )}
         </div>
       </div>
-    </motion.div>
+    </div>
 
     <LeadCaptureModal
       open={leadOpen}
