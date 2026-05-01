@@ -37,8 +37,8 @@ export default function Index() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const available = properties.filter((p) => !p.status || p.status === "disponivel");
-  const featured = available.filter((p) => p.featured);
+  const available = useMemo(() => properties.filter((p) => !p.status || p.status === "disponivel"), [properties]);
+  const featured = useMemo(() => available.filter((p) => p.featured), [available]);
   const [activeType, setActiveType] = useState("Todos");
   const [sortBy, setSortBy] = useState("");
   const [showAll, setShowAll] = useState(false);
@@ -52,9 +52,9 @@ export default function Index() {
   const displayedProperties = showAll ? filteredProperties : filteredProperties.slice(0, 6);
 
   // Hero carousel - show ALL properties
-  const heroSlides = properties.length > 0
+  const heroSlides = useMemo(() => properties.length > 0
     ? properties.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
-    : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }];
+    : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }], [properties, settings.heroTitle]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [quickSearch, setQuickSearch] = useState("");
