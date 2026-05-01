@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Verified } from "lucide-react";
+import { Verified, ArrowLeft } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -56,6 +56,21 @@ export default function Contact() {
       <SEOHead title="Contato" description="Entre em contato com nossa equipe de corretores especializados em imóveis de luxo em Recife." />
       <div className="relative flex min-h-screen w-full flex-col pb-32 bg-background max-w-screen-lg mx-auto">
         <Navbar />
+        
+        {/* Floating Back Button */}
+        <button 
+          onClick={() => {
+            if (window.history.length > 1) {
+              navigate(-1);
+            } else {
+              navigate('/');
+            }
+          }}
+          className="fixed top-24 left-6 z-[60] h-11 w-11 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-gray-100 flex items-center justify-center text-gray-800 hover:bg-white transition-all active:scale-90 md:left-10"
+          aria-label="Voltar"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
 
         <header className="px-6 pt-10 pb-6 text-center">
           <h2 className="font-serif text-4xl mb-2">Atendimento Exclusivo</h2>
