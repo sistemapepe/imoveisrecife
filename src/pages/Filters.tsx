@@ -14,9 +14,9 @@ const parkingOptions = ["1", "2", "3", "4+", "6+"];
 
 export default function Filters() {
   const navigate = useNavigate();
-  const [selectedTypes, setSelectedTypes] = useState<string[]>(["Casa"]);
-  const [selectedBedrooms, setSelectedBedrooms] = useState("3");
-  const [selectedParking, setSelectedParking] = useState("4+");
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedBedrooms, setSelectedBedrooms] = useState("");
+  const [selectedParking, setSelectedParking] = useState("");
   const [search, setSearch] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState<{ city: string; neighborhood?: string }[]>([]);
