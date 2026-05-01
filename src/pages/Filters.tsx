@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { X, Search, ChevronRight, ArrowRight, MapPin } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { searchLocations } from "@/data/pernambuco-locations";
 
 const types = ["Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"];
