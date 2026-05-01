@@ -11,6 +11,7 @@ import { lazy, Suspense } from "react";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import ScrollToTop from "@/components/ScrollToTop";
+import BackButton from "@/components/BackButton";
 import DynamicTheme from "@/components/DynamicTheme";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
@@ -73,6 +74,7 @@ function AppContent() {
         </Suspense>
       </AnimatePresence>
       
+      <BackButton />
       {!isPropertyDetail && <WhatsAppFab />}
       <ScrollToTop />
       <CookieConsent />
