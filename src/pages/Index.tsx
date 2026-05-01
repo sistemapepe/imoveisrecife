@@ -535,7 +535,9 @@ export default function Index() {
                     onClick={() => navigate(`/imovel/${properties[0].id}`)}
                   >
                     <img
-                      src={properties[0].images[0]}
+                      src={getOptimizedImageUrl(properties[0].images[0], IMAGE_SIZES.HERO)}
+                      srcSet={getImageSrcSet(properties[0].images[0], [600, 1200])}
+                      sizes="(max-width: 1024px) 100vw, 800px"
                       alt={properties[0].title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       loading="lazy"
