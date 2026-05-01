@@ -248,7 +248,12 @@ export default function PropertyDetail() {
                   i === currentImg ? "border-primary ring-2 ring-primary/30" : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
-                <img src={img} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover" />
+                <img 
+                  src={getOptimizedImageUrl(img, IMAGE_SIZES.THUMBNAIL)} 
+                  alt={`Miniatura ${i + 1}`} 
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </button>
             ))}
           </div>
