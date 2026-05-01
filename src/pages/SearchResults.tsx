@@ -16,6 +16,14 @@ const statusOptions = [
 ] as const;
 
 export default function SearchResults() {
+  useEffect(() => {
+    console.log("[Performance] Rendered: SearchResults", { timestamp: Date.now() });
+    const startTime = performance.now();
+    return () => {
+      const duration = performance.now() - startTime;
+      console.log(`[Performance] Unmounted: SearchResults (view time: ${duration.toFixed(2)}ms)`);
+    };
+  }, []);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { properties } = useProperties();
