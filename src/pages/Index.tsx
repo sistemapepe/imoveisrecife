@@ -188,10 +188,10 @@ export default function Index() {
             className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24"
           >
             {/* Skeleton Nav */}
-            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-2 border-b border-card/10 max-w-screen-lg mx-auto bg-luxury-dark h-14">
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-2 border-b border-card/10 max-w-screen-lg mx-auto bg-luxury-dark h-16">
               <div className="w-10 h-10 rounded-full bg-card/10 animate-pulse" />
-              <div className="h-8 w-32 rounded bg-card/10 animate-pulse" />
-              <div className="w-10 h-10 rounded-full bg-card/10 animate-pulse" />
+              <div className="h-10 w-40 rounded bg-card/10 animate-pulse" />
+              <div className="w-10" />
             </nav>
 
             {/* Skeleton Hero */}
