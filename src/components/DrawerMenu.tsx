@@ -115,8 +115,8 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="p-6 border-t border-border bg-muted/30"
+              transition={{ delay: 0.3 }}
+              className="p-8 bg-muted/20"
             >
               {user ? (
                 <div className="space-y-4">
