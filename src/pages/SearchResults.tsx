@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, memo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, SlidersHorizontal, X, MapPin } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
@@ -158,12 +158,20 @@ export default function SearchResults() {
               <button onClick={() => navigate("/filtros")} className="text-primary font-semibold text-sm">Ajustar filtros</button>
             </div>
           )}
-          {filtered.map((p, i) => (
-            <PropertyCard key={p.id} property={p} index={i} />
-          ))}
+          <PropertyGrid properties={filtered} />
           <Footer />
         </main>
       </div>
     </PageTransition>
   );
 }
+
+const PropertyGrid = memo(({ properties }: { properties: any[] }) => {
+  return (
+    <>
+      {properties.map((p, i) => (
+        <PropertyCard key={p.id} property={p} index={i} />
+      ))}
+    </>
+  );
+});
