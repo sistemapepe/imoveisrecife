@@ -82,18 +82,16 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
                       <button
                         key={item.path}
                         onClick={() => handleNavigation(item.path)}
-                        className="w-full flex items-center gap-4 py-5 border-b border-gray-100 text-gray-900 hover:text-black transition-all group"
+                        className="w-full flex items-center py-5 border-b border-gray-100 text-gray-900 hover:text-black transition-all group"
                       >
-                        <item.icon className="h-5 w-5 text-gray-400 group-hover:text-black" strokeWidth={1.2} />
                         <span className="font-bold text-[14px] uppercase tracking-[0.15em]">{item.label}</span>
                       </button>
                     ))}
                     
                     <button
                       onClick={handleSignOut}
-                      className="w-full flex items-center gap-4 py-5 border-b border-gray-100 text-gray-900 hover:text-red-600 transition-all group"
+                      className="w-full flex items-center py-5 border-b border-gray-100 text-gray-900 hover:text-red-600 transition-all group"
                     >
-                      <LogOut className="h-5 w-5 text-gray-400 group-hover:text-red-600" strokeWidth={1.2} />
                       <span className="font-bold text-[14px] uppercase tracking-[0.15em]">Sair</span>
                     </button>
                   </div>
