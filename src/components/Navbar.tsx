@@ -30,6 +30,12 @@ export default function Navbar() {
 
   const isCompact = settings.headerStyle === 'compact' || isScrolled;
 
+  const handlePrefetch = useCallback((target: 'search' | 'detail' | 'filters') => {
+    if (target === 'search') prefetchSearchResults();
+    if (target === 'detail') prefetchPropertyDetail();
+    if (target === 'filters') prefetchFilters();
+  }, []);
+
   return (
     <nav className={`sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-6 glass-nav border-b border-card/10 max-w-screen-lg mx-auto transition-all duration-300 ${
       isCompact ? 'h-14 py-2' : 'h-18 py-3'
