@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { X, Search, ChevronRight, ArrowRight, MapPin } from "lucide-react";
+import { X, Search, ChevronRight, ArrowRight, MapPin, ArrowLeft } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
@@ -60,9 +61,7 @@ export default function Filters() {
         <Navbar />
         <header className="sticky top-[var(--navbar-height)] z-30 glass-header border-b border-border transition-all duration-300">
           <div className="flex items-center justify-between px-4 py-4">
-            <button onClick={() => navigate(-1)} aria-label="Fechar filtros" className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-secondary transition-colors">
-              <X className="h-6 w-6" aria-hidden="true" />
-            </button>
+            <BackButton variant="ghost" label="Fechar filtros" />
             <h1 className="text-lg font-bold tracking-tight">Refinar Busca</h1>
             <button className="text-primary text-sm font-semibold" onClick={() => { setSearch(""); setSelectedTypes([]); setSelectedBedrooms(""); setSelectedParking(""); }}>Limpar</button>
           </div>

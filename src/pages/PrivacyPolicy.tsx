@@ -1,5 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "@/components/BackButton";
 import { useProperties } from "@/contexts/PropertyContext";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
@@ -45,9 +46,7 @@ export default function PrivacyPolicy() {
       <div className="min-h-screen bg-background pb-24 max-w-screen-lg mx-auto">
         <Navbar />
         <header className="sticky top-[var(--navbar-height)] z-30 bg-background/80 backdrop-blur-lg border-b border-border px-4 py-3 flex items-center gap-3 transition-all duration-300">
-          <button onClick={() => navigate(-1)} className="p-2 rounded-xl hover:bg-muted transition-colors">
-            <ArrowLeft className="h-5 w-5" />
-          </button>
+          <BackButton variant="ghost" />
           <h1 className="text-lg font-bold">Política de Privacidade</h1>
         </header>
         <div className="px-4 py-6 max-w-3xl mx-auto prose prose-sm dark:prose-invert prose-headings:text-foreground prose-p:text-muted-foreground">
