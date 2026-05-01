@@ -132,6 +132,7 @@ const defaultSettings: SiteSettings = {
   googleSiteVerification: "",
   bingSiteVerification: "",
   headerStyle: 'normal',
+  marqueeText: "",
 };
 
 const localImages = [property1, property2, property3, property4];
