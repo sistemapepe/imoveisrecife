@@ -26,12 +26,7 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
     };
   }, [isOpen]);
 
-  const menuItems = [
-    { label: "Início", icon: Home, path: "/", public: true },
-    { label: "Buscar Imóveis", icon: Search, path: "/busca", public: true },
-    { label: "Favoritos", icon: Heart, path: "/favoritos", public: true },
-    { label: "Contato", icon: Mail, path: "/contato", public: true },
-  ];
+  const menuItems: any[] = []; // Removed public items as per admin-only requirement
 
   const adminItems = [
     { label: "Painel Admin", icon: LayoutDashboard, path: "/admin", roles: ["admin", "supervisor", "corretor"] },
