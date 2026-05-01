@@ -313,8 +313,17 @@ export default function Index() {
                       className="relative w-full h-14 pl-13 pr-5 bg-foreground/20 backdrop-blur-2xl rounded-full text-sm font-medium text-card shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)] border border-card/15 focus:border-accent/40 focus:shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_20px_hsl(var(--accent)/0.15)] focus:outline-none transition-all duration-300 placeholder:text-card/50"
                       style={{ paddingLeft: '3rem' }}
                       value={quickSearch}
-                      onChange={(e) => { setQuickSearch(e.target.value); setShowQuickSuggestions(true); }}
-                      onFocus={() => setShowQuickSuggestions(true)}
+                      onChange={(e) => { 
+                        setQuickSearch(e.target.value); 
+                        if (e.target.value.trim().length >= 2) {
+                          setShowQuickSuggestions(true);
+                        }
+                      }}
+                      onFocus={() => {
+                        if (quickSearch.trim().length >= 2) {
+                          setShowQuickSuggestions(true);
+                        }
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && quickSearch.trim()) {
                           navigate(`/busca?location=${encodeURIComponent(quickSearch.trim())}`);
