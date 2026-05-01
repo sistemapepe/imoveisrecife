@@ -11,6 +11,7 @@ import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { searchLocations } from "@/data/pernambuco-locations";
+import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 
 const typeFilters = [
   { label: "Todos", icon: LayoutGrid },
