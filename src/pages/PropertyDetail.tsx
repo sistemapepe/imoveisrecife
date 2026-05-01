@@ -19,6 +19,7 @@ import FinancingSimulator from "@/components/FinancingSimulator";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 
 export default function PropertyDetail() {
   const { id } = useParams();
