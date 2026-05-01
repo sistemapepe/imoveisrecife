@@ -9,6 +9,7 @@ import PageTransition from "@/components/PageTransition";
 import PropertyCard from "@/components/PropertyCard";
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
+import MarqueeBanner from "@/components/MarqueeBanner";
 import Footer from "@/components/Footer";
 import { searchLocations } from "@/data/pernambuco-locations";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
