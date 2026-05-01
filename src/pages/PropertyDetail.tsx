@@ -19,6 +19,7 @@ import FinancingSimulator from "@/components/FinancingSimulator";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 
 export default function PropertyDetail() {
   const { id } = useParams();
@@ -206,10 +207,14 @@ export default function PropertyDetail() {
         >
           <img
             className="h-full w-full object-cover transition-opacity duration-300 cursor-pointer select-none"
-            src={property.images[currentImg]}
+            src={getOptimizedImageUrl(property.images[currentImg], IMAGE_SIZES.HERO)}
+            srcSet={getImageSrcSet(property.images[currentImg], [600, 1200, 1920])}
+            sizes="100vw"
             alt={`${property.title} - Foto ${currentImg + 1}`}
             draggable={false}
             onClick={() => { setLightboxIndex(currentImg); setLightboxOpen(true); }}
+            loading="eager"
+            fetchPriority="high"
           />
           {totalImages > 1 && (
             <>
@@ -243,7 +248,12 @@ export default function PropertyDetail() {
                   i === currentImg ? "border-primary ring-2 ring-primary/30" : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
-                <img src={img} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover" />
+                <img 
+                  src={getOptimizedImageUrl(img, IMAGE_SIZES.THUMBNAIL)} 
+                  alt={`Miniatura ${i + 1}`} 
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </button>
             ))}
           </div>

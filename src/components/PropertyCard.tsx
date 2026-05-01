@@ -6,6 +6,7 @@ import { Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useProperties } from "@/contexts/PropertyContext";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
 import { trackEvent } from "@/hooks/useTrafficTracker";
+import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 
 export default function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const navigate = useNavigate();
@@ -35,7 +36,9 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         <img
           alt={property.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          src={property.images[0]}
+          src={getOptimizedImageUrl(property.images[0], IMAGE_SIZES.CARD)}
+          srcSet={getImageSrcSet(property.images[0], [400, 600, 800])}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           loading={index < 2 ? "eager" : "lazy"}
           decoding="async"
           fetchPriority={index === 0 ? "high" : "auto"}

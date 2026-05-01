@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
 
 interface ImageLightboxProps {
   images: string[];
@@ -205,7 +206,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.2 }}
-            src={images[currentIndex]}
+            src={getOptimizedImageUrl(images[currentIndex], IMAGE_SIZES.FULL)}
             alt={`${title || "Foto"} ${currentIndex + 1}`}
             className="max-h-full max-w-full object-contain cursor-grab active:cursor-grabbing"
             style={{
@@ -238,7 +239,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
                   i === currentIndex ? "border-primary opacity-100" : "border-transparent opacity-40 hover:opacity-70"
                 }`}
               >
-                <img src={img} alt="" className="w-full h-full object-cover" />
+                <img src={getOptimizedImageUrl(img, IMAGE_SIZES.THUMBNAIL)} alt="" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>

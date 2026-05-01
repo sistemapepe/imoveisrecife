@@ -10,6 +10,7 @@ import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyCon
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
 import PageTransition from "@/components/PageTransition";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -352,7 +353,12 @@ export default function Admin() {
                     )}
                     {filtered.map((p) => (
                 <div key={p.id} className="bg-card rounded-xl p-4 border border-border flex items-center gap-4">
-                  <img src={p.images[0] || "/placeholder.svg"} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0" />
+                  <img 
+                    src={getOptimizedImageUrl(p.images[0], IMAGE_SIZES.THUMBNAIL) || "/placeholder.svg"} 
+                    alt="" 
+                    className="w-16 h-16 rounded-lg object-cover shrink-0" 
+                    loading="lazy"
+                  />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-sm truncate">{p.title}</h3>

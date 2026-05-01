@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Upload, X, Loader2, ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getOptimizedImageUrl } from "@/lib/image-optimization";
 import { toast } from "sonner";
 
 interface LogoUploadProps {
@@ -55,7 +56,7 @@ export default function LogoUpload({ logoUrl, onChange }: LogoUploadProps) {
       {logoUrl ? (
         <div className="relative inline-block">
           <img
-            src={logoUrl}
+            src={getOptimizedImageUrl(logoUrl, { width: 400 })}
             alt="Logo"
             className="h-16 max-w-[200px] object-contain rounded-lg border border-border bg-background p-2"
           />

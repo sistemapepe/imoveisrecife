@@ -11,6 +11,7 @@ import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { searchLocations } from "@/data/pernambuco-locations";
+import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 
 const typeFilters = [
   { label: "Todos", icon: LayoutGrid },
@@ -258,7 +259,9 @@ export default function Index() {
                   className="absolute inset-0"
                 >
                   <img
-                    src={heroSlides[currentSlide].image}
+                    src={getOptimizedImageUrl(heroSlides[currentSlide].image, IMAGE_SIZES.HERO)}
+                    srcSet={getImageSrcSet(heroSlides[currentSlide].image, [800, 1200, 1920])}
+                    sizes="100vw"
                     alt={heroSlides[currentSlide].title || "Imóvel em destaque"}
                     className="absolute inset-0 w-full h-full object-cover"
                     fetchPriority={currentSlide === 0 ? "high" : "auto"}
@@ -475,7 +478,15 @@ export default function Index() {
                     onClick={() => navigate(`/imovel/${p.id}`)}
                   >
                     <div className="relative w-full aspect-[4/3] overflow-hidden">
-                      <img src={p.images[0]} alt={p.title} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                      <img 
+                        src={getOptimizedImageUrl(p.images[0], IMAGE_SIZES.CARD)} 
+                        srcSet={getImageSrcSet(p.images[0], [400, 600])}
+                        sizes="(max-width: 640px) 100vw, 300px"
+                        alt={p.title} 
+                        className="w-full h-full object-cover" 
+                        loading="lazy" 
+                        decoding="async" 
+                      />
                       {p.status && p.status !== "disponivel" && (
                         <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-sm shadow-lg ${
                           p.status === "reservado" ? "bg-yellow-500/90" : "bg-red-500/90"
@@ -524,7 +535,9 @@ export default function Index() {
                     onClick={() => navigate(`/imovel/${properties[0].id}`)}
                   >
                     <img
-                      src={properties[0].images[0]}
+                      src={getOptimizedImageUrl(properties[0].images[0], IMAGE_SIZES.HERO)}
+                      srcSet={getImageSrcSet(properties[0].images[0], [600, 1200])}
+                      sizes="(max-width: 1024px) 100vw, 800px"
                       alt={properties[0].title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       loading="lazy"
