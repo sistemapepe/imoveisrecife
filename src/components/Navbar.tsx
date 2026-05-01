@@ -53,6 +53,8 @@ export default function Navbar() {
           src={getOptimizedImageUrl(settings.logoUrl, { width: isCompact ? 320 : 480, quality: 90 })} 
           alt={settings.brandName} 
           onClick={() => navigate("/")}
+          onMouseEnter={() => handlePrefetch('search')}
+          onFocus={() => handlePrefetch('search')}
           className={`object-contain transition-all duration-300 cursor-pointer ${
             isCompact ? 'h-10 max-w-[160px]' : 'h-14 max-w-[240px]'
           }`} 
