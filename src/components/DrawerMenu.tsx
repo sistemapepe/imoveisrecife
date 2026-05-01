@@ -145,15 +145,6 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
                   >
                     Acessar Admin
                   </button>
-                  <a 
-                    href={`https://wa.me/${settings.whatsappNumber}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border text-foreground/70 font-medium text-sm hover:bg-muted transition-all"
-                  >
-                    <Phone className="h-4 w-4" />
-                    Falar com Corretor
-                  </a>
                 </div>
               )}
             </motion.div>
