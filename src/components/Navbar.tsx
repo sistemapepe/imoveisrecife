@@ -44,12 +44,17 @@ export default function Navbar() {
       isCompact ? 'h-14 py-2' : 'h-18 py-3'
     }`}>
       <button 
-        onClick={() => navigate("/admin")} 
+        onClick={() => setIsDrawerOpen(true)} 
         className="text-accent w-10 h-10 flex items-center justify-center hover:bg-accent/10 active:bg-accent/20 rounded-full transition-all duration-200 shrink-0 -ml-1 focus:outline-none focus:ring-2 focus:ring-accent/30"
-        aria-label="Menu Admin"
+        aria-label="Abrir menu"
       >
         <Menu className="h-6 w-6" />
       </button>
+
+      <DrawerMenu 
+        isOpen={isDrawerOpen} 
+        onClose={() => setIsDrawerOpen(false)} 
+      />
       
       {settings.logoUrl ? (
         <img 
