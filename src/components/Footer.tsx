@@ -1,6 +1,6 @@
 import { useProperties } from "@/contexts/PropertyContext";
 import { useNavigate } from "react-router-dom";
-import { Instagram, Facebook, Youtube, Linkedin, Globe, Mail } from "lucide-react";
+import { Instagram, Facebook, Youtube, Linkedin, Globe, Mail, Settings } from "lucide-react";
 
 export default function Footer() {
   const { settings } = useProperties();
