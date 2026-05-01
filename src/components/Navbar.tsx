@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useProperties } from "@/contexts/PropertyContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getOptimizedImageUrl } from "@/lib/image-optimization";
+
+// Rota específica do componente SearchResults (lazy loaded no App.tsx)
+// Podemos dar prefetch importando manualmente o chunk
+const prefetchSearchResults = () => import("@/pages/SearchResults");
+const prefetchPropertyDetail = () => import("@/pages/PropertyDetail");
+const prefetchFilters = () => import("@/pages/Filters");
 
 export default function Navbar() {
   const navigate = useNavigate();
