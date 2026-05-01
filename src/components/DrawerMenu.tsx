@@ -87,37 +87,20 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             {/* Content */}
             <div className="flex-1 overflow-y-auto py-4">
               <nav className="px-4 space-y-1">
-                {menuItems.map((item, index) => (
-                  <motion.button
-                    key={item.path}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + index * 0.05 }}
-                    onClick={() => handleNavigation(item.path)}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-accent/5 text-foreground/80 hover:text-accent transition-all group"
-                  >
-                    <item.icon className="h-5 w-5 transition-transform group-hover:scale-110" />
-                    <span className="font-medium text-sm">{item.label}</span>
-                  </motion.button>
-                ))}
+                {/* Itens públicos removidos */}
 
-                {/* Divider for Admin section */}
                 {user && role !== "user" && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 0.2 }}
+                    className="space-y-1"
                   >
-                    <div className="my-6 px-4">
-                      <div className="h-px bg-border w-full" />
-                      <span className="text-[10px] text-muted-foreground uppercase tracking-widest mt-4 block">Administrativo</span>
-                    </div>
-                    
                     {adminItems.filter(item => !item.roles || (role && item.roles.includes(role))).map((item, index) => (
                       <button
                         key={item.path}
                         onClick={() => handleNavigation(item.path)}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-foreground/80 hover:text-primary transition-all group"
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-accent/5 text-foreground/80 hover:text-accent transition-all group"
                       >
                         <item.icon className="h-5 w-5 transition-transform group-hover:scale-110" />
                         <span className="font-medium text-sm">{item.label}</span>
@@ -162,15 +145,6 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
                   >
                     Acessar Admin
                   </button>
-                  <a 
-                    href={`https://wa.me/${settings.whatsappNumber}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border text-foreground/70 font-medium text-sm hover:bg-muted transition-all"
-                  >
-                    <Phone className="h-4 w-4" />
-                    Falar com Corretor
-                  </a>
                 </div>
               )}
             </motion.div>
