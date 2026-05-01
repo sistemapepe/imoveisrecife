@@ -13,7 +13,7 @@ export default function BackButton({ variant = "floating", className = "", onCli
   const location = useLocation();
 
   // Pages that already have a header back button - don't show the floating one
-  const pagesWithHeaderBack = ["/busca", "/favoritos", "/admin", "/filtros", "/login"];
+  const pagesWithHeaderBack = ["/busca", "/favoritos", "/admin", "/filtros", "/login", "/privacidade"];
   if (variant === "floating" && (location.pathname === "/" || pagesWithHeaderBack.includes(location.pathname))) return null;
 
   const handleBack = () => {
