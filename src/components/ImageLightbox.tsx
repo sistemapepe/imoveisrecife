@@ -235,8 +235,12 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.2 }}
             src={getOptimizedImageUrl(images[currentIndex], IMAGE_SIZES.FULL)}
+            srcSet={getImageSrcSet(images[currentIndex], [800, 1200, 1920])}
+            sizes="100vw"
             alt={`${title || "Foto"} ${currentIndex + 1}`}
             className="max-h-full max-w-full object-contain cursor-grab active:cursor-grabbing"
+            loading="eager"
+            decoding="async"
             style={{
               transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
               transition: isDragging || isPinching.current ? "none" : "transform 0.2s ease",
