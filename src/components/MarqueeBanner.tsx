@@ -19,7 +19,7 @@ export default function MarqueeBanner() {
       aria-label="Banner de propriedades em destaque"
     >
       <motion.div
-        className={`flex ${shouldReduceMotion ? 'flex-wrap justify-center gap-6' : 'whitespace-nowrap gap-12'}`}
+        className={`flex ${shouldReduceMotion ? 'flex-wrap justify-center gap-x-4 gap-y-2 px-4' : 'whitespace-nowrap gap-12'}`}
         animate={shouldReduceMotion ? {} : {
           x: [0, -1000],
         }}
