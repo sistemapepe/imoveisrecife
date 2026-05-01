@@ -87,19 +87,7 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             {/* Content */}
             <div className="flex-1 overflow-y-auto py-4">
               <nav className="px-4 space-y-1">
-                {menuItems.map((item, index) => (
-                  <motion.button
-                    key={item.path}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + index * 0.05 }}
-                    onClick={() => handleNavigation(item.path)}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-accent/5 text-foreground/80 hover:text-accent transition-all group"
-                  >
-                    <item.icon className="h-5 w-5 transition-transform group-hover:scale-110" />
-                    <span className="font-medium text-sm">{item.label}</span>
-                  </motion.button>
-                ))}
+                {/* Itens públicos removidos */}
 
                 {user && role !== "user" && (
                   <motion.div
