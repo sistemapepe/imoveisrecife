@@ -201,6 +201,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         googleSiteVerification: (data as any).google_site_verification ?? "",
         bingSiteVerification: (data as any).bing_site_verification ?? "",
         headerStyle: (data as any).header_style ?? 'normal',
+        marqueeText: (data as any).marquee_text ?? "",
       }));
     }
   }, []);
