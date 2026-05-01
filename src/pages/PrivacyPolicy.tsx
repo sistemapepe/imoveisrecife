@@ -57,6 +57,7 @@ export default function PrivacyPolicy() {
             return <p key={i} className="text-sm text-muted-foreground mb-2">{line}</p>;
           })}
         </div>
+        <Footer />
       </div>
     </PageTransition>
   );
