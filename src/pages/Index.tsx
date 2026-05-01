@@ -8,6 +8,8 @@ import { Ruler, BedDouble, Car } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import PropertyCard from "@/components/PropertyCard";
 import SEOHead from "@/components/SEOHead";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { searchLocations } from "@/data/pernambuco-locations";
 
 const typeFilters = [
