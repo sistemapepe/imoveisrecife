@@ -87,23 +87,23 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto py-4">
-              <nav className="px-4 space-y-1">
+            <div className="flex-1 overflow-y-auto px-4 py-2">
+              <nav className="space-y-0.5">
                 {user && role !== "user" && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="space-y-1"
+                    transition={{ delay: 0.1 }}
+                    className="space-y-0.5"
                   >
-                    {adminItems.filter(item => !item.roles || (role && item.roles.includes(role))).map((item, index) => (
+                    {adminItems.filter(item => !item.roles || (role && item.roles.includes(role))).map((item) => (
                       <button
                         key={item.path}
                         onClick={() => handleNavigation(item.path)}
-                        className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl hover:bg-accent/5 text-foreground/70 hover:text-accent transition-all duration-300 group"
+                        className="w-full flex items-center gap-4 px-4 py-4 rounded-xl hover:bg-accent/5 text-foreground/80 hover:text-accent transition-all duration-300 group"
                       >
-                        <item.icon className="h-5 w-5 opacity-70 group-hover:opacity-100 transition-opacity" />
-                        <span className="font-bold text-xs uppercase tracking-widest">{item.label}</span>
+                        <item.icon className="h-5 w-5 opacity-60 group-hover:opacity-100 transition-opacity" />
+                        <span className="font-bold text-[11px] uppercase tracking-[0.2em]">{item.label}</span>
                       </button>
                     ))}
                   </motion.div>
