@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, LogOut, Settings, Users, Bell, MessageSquare, BarChart3, Footprints, ShieldCheck, Home, Globe } from "lucide-react";
+import { X, LayoutDashboard, LogOut, Settings, Users, Bell, MessageSquare, BarChart3, Footprints, ShieldCheck, Home, Globe, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProperties } from "@/contexts/PropertyContext";
