@@ -71,13 +71,6 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
               <span className="font-sans font-black text-[18px] text-black uppercase tracking-[0.1em]">
                 Gestão do Site
               </span>
-              <button
-                onClick={onClose}
-                className="p-1 rounded-full hover:bg-gray-100 transition-colors text-gray-400"
-                aria-label="Fechar menu"
-              >
-                <X className="h-6 w-6" />
-              </button>
             </div>
 
             {/* Content */}
@@ -108,17 +101,7 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
               </nav>
             </div>
 
-            {/* Minimal Footer */}
-            <div className="p-8 mt-auto">
-              {user && (
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Logado como</span>
-                  <span className="text-[12px] font-bold text-black uppercase tracking-tight truncate">
-                    {user.email?.split('@')[0]}
-                  </span>
-                </div>
-              )}
-            </div>
+            {/* Minimal Footer Removed to match layout */}
           </motion.div>
         </>
       )}
