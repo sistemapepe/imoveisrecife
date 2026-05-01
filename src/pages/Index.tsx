@@ -185,7 +185,7 @@ export default function Index() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24"
+            className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24 max-w-screen-lg mx-auto"
           >
             {/* Skeleton Nav */}
             <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-2 border-b border-card/10 max-w-screen-lg mx-auto bg-luxury-dark h-16">
