@@ -71,6 +71,13 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
               <span className="font-sans font-black text-[18px] text-black uppercase tracking-[0.1em]">
                 GESTÃO DO SITE
               </span>
+              <button
+                onClick={onClose}
+                className="p-1 rounded-full hover:bg-gray-100 transition-colors text-gray-400"
+                aria-label="Fechar menu"
+              >
+                <X className="h-6 w-6" />
+              </button>
             </div>
 
             {/* Content */}
