@@ -29,11 +29,13 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
   const menuItems: any[] = [];
 
   const adminItems = [
-    { label: "Dashboard", icon: LayoutDashboard, path: "/admin?tab=dashboard", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Site", icon: Globe, path: "/", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Imóveis", icon: Home, path: "/admin?tab=properties", roles: ["admin", "supervisor", "corretor"] },
-    { label: "Configurações", icon: Settings, path: "/admin?tab=settings", roles: ["admin"] },
-    { label: "Usuários", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
+    { label: "DASHBOARD", icon: LayoutDashboard, path: "/admin?tab=dashboard", roles: ["admin", "supervisor", "corretor"] },
+    { label: "PROPRIEDADES", icon: Home, path: "/admin?tab=properties", roles: ["admin", "supervisor", "corretor"] },
+    { label: "MENSAGENS", icon: MessageSquare, path: "/admin?tab=messages", roles: ["admin", "supervisor", "corretor"] },
+    { label: "VISITAS", icon: Footprints, path: "/admin?tab=visits", roles: ["admin", "supervisor", "corretor"] },
+    { label: "ANALYTICS", icon: BarChart3, path: "/admin?tab=analytics", roles: ["admin", "supervisor", "corretor"] },
+    { label: "USUÁRIOS", icon: Users, path: "/admin?tab=users", roles: ["admin"] },
+    { label: "CONFIGURAÇÕES", icon: Settings, path: "/admin?tab=settings", roles: ["admin"] },
   ];
 
   const handleNavigation = (path: string) => {
@@ -67,19 +69,19 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-0 left-0 bottom-0 z-[70] w-[260px] bg-card flex flex-col border-r border-border shadow-none"
+            className="fixed top-0 left-0 bottom-0 z-[70] w-[300px] bg-white flex flex-col shadow-2xl"
           >
             {/* Header */}
-            <div className="p-8 flex items-center justify-between">
+            <div className="p-6 flex items-center justify-between border-b border-gray-100">
               <div className="flex flex-col">
-                <span className="font-serif font-bold text-2xl text-accent uppercase tracking-[0.2em] leading-none">
-                  Painel
+                <span className="font-serif font-bold text-xl text-black uppercase tracking-[0.1em] leading-none">
+                  Gestão do Site
                 </span>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-medium mt-1">Admin</span>
+                <span className="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-medium mt-1">Menu Administrativo</span>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 -mr-2 rounded-full hover:bg-muted transition-colors text-muted-foreground"
+                className="p-2 -mr-2 rounded-full hover:bg-gray-100 transition-colors text-gray-400"
                 aria-label="Fechar menu"
               >
                 <X className="h-5 w-5" />
@@ -87,23 +89,23 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto px-4 py-2">
-              <nav className="space-y-0.5">
+            <div className="flex-1 overflow-y-auto py-4">
+              <nav className="px-2">
                 {user && role !== "user" && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.1 }}
-                    className="space-y-0.5"
+                    className="space-y-1"
                   >
                     {adminItems.filter(item => !item.roles || (role && item.roles.includes(role))).map((item) => (
                       <button
                         key={item.path}
                         onClick={() => handleNavigation(item.path)}
-                        className="w-full flex items-center gap-4 px-4 py-4 rounded-xl hover:bg-accent/5 text-foreground/80 hover:text-accent transition-all duration-300 group"
+                        className="w-full flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-50 text-gray-600 hover:text-black transition-all duration-200 group"
                       >
-                        <item.icon className="h-5 w-5 opacity-60 group-hover:opacity-100 transition-opacity" />
-                        <span className="font-bold text-[11px] uppercase tracking-[0.2em]">{item.label}</span>
+                        <item.icon className="h-5 w-5 text-gray-400 group-hover:text-black transition-colors" strokeWidth={1.5} />
+                        <span className="font-medium text-[12px] uppercase tracking-[0.1em]">{item.label}</span>
                       </button>
                     ))}
                   </motion.div>
@@ -113,35 +115,35 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
 
             {/* Footer */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="p-8 bg-muted/20"
+              className="p-6 border-t border-gray-100 bg-gray-50/50"
             >
               {user ? (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-4 px-2 mb-6">
-                    <div className="h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                  <div className="flex items-center gap-3 px-2">
+                    <div className="h-10 w-10 rounded-full bg-black text-white flex items-center justify-center">
                       <User className="h-5 w-5" />
                     </div>
                     <div className="flex flex-col overflow-hidden">
-                      <span className="text-[11px] font-bold text-foreground truncate tracking-wider">{user.email?.split('@')[0]}</span>
-                      <span className="text-[9px] text-muted-foreground uppercase tracking-[0.2em]">{role}</span>
+                      <span className="text-[12px] font-bold text-black truncate tracking-tight">{user.email?.split('@')[0].toUpperCase()}</span>
+                      <span className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold">{role}</span>
                     </div>
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-destructive/5 text-destructive hover:bg-destructive hover:text-white transition-all font-bold text-[10px] uppercase tracking-[0.2em]"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-gray-200 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all font-bold text-[10px] uppercase tracking-[0.1em]"
                   >
                     <LogOut className="h-4 w-4" />
-                    Sair
+                    Encerrar Sessão
                   </button>
                 </div>
               ) : (
                 <div className="space-y-3">
                   <button
                     onClick={() => handleNavigation("/login")}
-                    className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-bold text-sm shadow-lg hover:shadow-accent/20 transition-all active:scale-95"
+                    className="w-full py-3 rounded-lg bg-black text-white font-bold text-xs tracking-widest uppercase hover:bg-gray-900 transition-all active:scale-[0.98]"
                   >
                     Acessar Admin
                   </button>
