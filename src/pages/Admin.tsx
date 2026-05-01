@@ -353,7 +353,12 @@ export default function Admin() {
                     )}
                     {filtered.map((p) => (
                 <div key={p.id} className="bg-card rounded-xl p-4 border border-border flex items-center gap-4">
-                  <img src={p.images[0] || "/placeholder.svg"} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0" />
+                  <img 
+                    src={getOptimizedImageUrl(p.images[0], IMAGE_SIZES.THUMBNAIL) || "/placeholder.svg"} 
+                    alt="" 
+                    className="w-16 h-16 rounded-lg object-cover shrink-0" 
+                    loading="lazy"
+                  />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-sm truncate">{p.title}</h3>
