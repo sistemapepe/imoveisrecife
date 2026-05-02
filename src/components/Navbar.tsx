@@ -48,7 +48,7 @@ export default function Navbar() {
       <div className="flex items-center gap-2 shrink-0">
         <button 
           onClick={() => setIsDrawerOpen(true)}
-          className="p-2 rounded-full hover:bg-black/5 transition-colors focus:outline-none"
+          className="p-2.5 rounded-full hover:bg-black/5 transition-colors focus:outline-none flex items-center justify-center"
           aria-label="Menu"
         >
           <Menu className="h-6 w-6 text-accent" />
