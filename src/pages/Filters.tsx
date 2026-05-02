@@ -63,7 +63,12 @@ export default function Filters() {
           <div className="flex items-center justify-between px-4 py-4">
             <BackButton variant="ghost" label="Fechar filtros" />
             <h1 className="text-lg font-bold tracking-tight">Refinar Busca</h1>
-            <button className="text-primary text-sm font-semibold" onClick={() => { setSearch(""); setSelectedTypes([]); setSelectedBedrooms(""); setSelectedParking(""); }}>Limpar</button>
+            <button 
+              className="text-primary text-sm font-semibold h-11 px-2 flex items-center justify-center hover:bg-primary/5 rounded-lg transition-colors" 
+              onClick={() => { setSearch(""); setSelectedTypes([]); setSelectedBedrooms(""); setSelectedParking(""); }}
+            >
+              Limpar
+            </button>
           </div>
           <div className="px-4 pb-4 relative">
             <div className="relative flex items-center">
