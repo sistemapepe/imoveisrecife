@@ -199,48 +199,7 @@ export default function Admin() {
           <div className="flex items-center justify-between px-4 h-14">
             <div className="flex items-center">
               <BackButton variant="ghost" onClick={() => navigate("/")} />
-              {/* Mobile menu trigger */}
-              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger asChild>
-                  <button className="md:hidden w-10 h-10 flex items-center justify-center" aria-label="Abrir menu">
-                    <Menu className="h-6 w-6" />
-                  </button>
-                </SheetTrigger>
-                <SheetContent side="left" className="w-72 p-0 flex flex-col">
-                  <SheetHeader className="px-5 pt-5 pb-3 border-b border-border">
-                    <SheetTitle className="text-left">Painel {role === "admin" ? "Admin" : role === "supervisor" ? "Supervisor" : "Corretor"}</SheetTitle>
-                  </SheetHeader>
-                  <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-1">
-                    {visibleTabs.map((t) => {
-                      const Icon = t.icon;
-                      const active = tab === t.key;
-                      return (
-                        <button
-                          key={t.key}
-                          onClick={() => switchTab(t.key)}
-                          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-semibold transition-colors ${
-                            active ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
-                          }`}
-                        >
-                          <Icon className="h-5 w-5 shrink-0" />
-                          <span className="flex-1 text-left">{t.label}</span>
-                          {!!t.badge && t.badge > 0 && (
-                            <span className="h-5 min-w-[20px] px-1.5 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
-                              {t.badge}
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </nav>
-                  <button
-                    onClick={handleSignOut}
-                    className="m-3 flex items-center justify-center gap-2 py-3 rounded-xl bg-destructive/10 text-destructive font-bold text-sm"
-                  >
-                    <LogOut className="h-4 w-4" /> Sair
-                  </button>
-                </SheetContent>
-              </Sheet>
+              {/* Removido botão de menu mobile lateral conforme solicitado */}
             </div>
             <h1 className="text-base md:text-lg font-bold truncate px-2">
               <span className="md:hidden">{currentTabLabel}</span>
