@@ -22,7 +22,7 @@ export default function Favorites() {
           <div className="flex items-center justify-between px-4 h-14">
             <BackButton variant="ghost" />
             <h1 className="text-lg font-bold">Sua Seleção</h1>
-            <div className="w-10" />
+            <div className="w-11" />
           </div>
         </header>
         <main className="p-4 space-y-6">
