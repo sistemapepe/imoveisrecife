@@ -46,7 +46,13 @@ export default function Navbar() {
       isCompact ? 'h-14 py-2' : 'h-18 py-3'
     }`}>
       <div className="flex items-center gap-2 shrink-0">
-        <div className="w-10 h-10" />
+        <button 
+          onClick={() => setIsDrawerOpen(true)}
+          className="p-2 rounded-full hover:bg-black/5 transition-colors focus:outline-none"
+          aria-label="Menu"
+        >
+          <Menu className="h-6 w-6 text-accent" />
+        </button>
       </div>
 
       <DrawerMenu 
