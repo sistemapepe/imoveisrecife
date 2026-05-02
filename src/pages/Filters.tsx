@@ -122,20 +122,6 @@ export default function Filters() {
           </section>
           <div className="h-px bg-border mx-4 my-6" />
           <section className="px-4">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Investimento</h3>
-              <div className="text-accent font-bold text-sm">R$ 2.5M - R$ 15M+</div>
-            </div>
-            <div className="relative h-10 flex items-center">
-              <div className="absolute w-full h-1.5 bg-secondary rounded-full" />
-              <div className="absolute left-[20%] right-[10%] h-1.5 gold-gradient rounded-full" />
-              <div className="absolute left-[20%] -ml-3 h-6 w-6 rounded-full bg-card border-2 border-accent shadow-lg" />
-              <div className="absolute right-[10%] -mr-3 h-6 w-6 rounded-full bg-card border-2 border-accent shadow-lg" />
-            </div>
-            <div className="flex justify-between mt-2 text-[10px] font-bold text-muted-foreground uppercase"><span>R$500K</span><span>R$50M+</span></div>
-          </section>
-          <div className="h-px bg-border mx-4 my-6" />
-          <section className="px-4">
             <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-4">Quartos</h3>
             <div className="grid grid-cols-5 gap-2">
               {bedroomOptions.map((b) => (
