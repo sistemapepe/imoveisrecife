@@ -46,7 +46,13 @@ export default function Navbar() {
       isCompact ? 'h-14 py-2' : 'h-18 py-3'
     }`}>
       <div className="flex items-center gap-2 shrink-0">
-        <div className="w-10 h-10" />
+        <button 
+          onClick={() => setIsDrawerOpen(true)}
+          className="p-2.5 rounded-full hover:bg-black/5 transition-colors focus:outline-none flex items-center justify-center"
+          aria-label="Menu"
+        >
+          <Menu className="h-6 w-6 text-accent" />
+        </button>
       </div>
 
       <DrawerMenu 
@@ -62,7 +68,7 @@ export default function Navbar() {
           onMouseEnter={() => handlePrefetch('search')}
           onFocus={() => handlePrefetch('search')}
           className={`object-contain transition-all duration-300 cursor-pointer ${
-            isCompact ? 'h-14 max-w-[200px]' : 'h-20 max-w-[300px]'
+            isCompact ? 'h-9 max-w-[140px] md:h-10 md:max-w-[180px]' : 'h-12 max-w-[180px] md:h-14 md:max-w-[240px]'
           }`}
         />
       ) : (

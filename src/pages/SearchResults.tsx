@@ -103,7 +103,7 @@ export default function SearchResults() {
               <h1 className="text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">Resultados</h1>
               <p className="text-sm font-semibold text-foreground italic">{filtered.length} Imóveis encontrados</p>
             </div>
-            <button onClick={() => navigate("/filtros")} aria-label="Abrir filtros" className="flex items-center justify-center w-10 h-10">
+            <button onClick={() => navigate("/filtros")} aria-label="Abrir filtros" className="flex items-center justify-center w-11 h-11 hover:bg-black/5 rounded-full transition-colors">
               <SlidersHorizontal className="h-6 w-6 text-foreground" aria-hidden="true" />
             </button>
           </div>

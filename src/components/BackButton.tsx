@@ -33,7 +33,7 @@ export default function BackButton({ variant = "floating", className = "", onCli
     return (
       <button
         onClick={handleBack}
-        className={`flex items-center justify-center w-10 h-10 rounded-full hover:bg-secondary transition-colors ${className}`}
+        className={`flex items-center justify-center w-11 h-11 rounded-full hover:bg-secondary transition-colors ${className}`}
         aria-label={label}
       >
         <ArrowLeft className="h-6 w-6 text-foreground" aria-hidden="true" />

@@ -73,7 +73,7 @@ export default function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
               </span>
               <button
                 onClick={onClose}
-                className="p-1 rounded-full hover:bg-gray-100 transition-colors text-gray-400"
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-400"
                 aria-label="Fechar menu"
               >
                 <X className="h-6 w-6" />
