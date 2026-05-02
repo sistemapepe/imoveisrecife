@@ -45,15 +45,7 @@ export default function Navbar() {
     <nav className={`sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 glass-nav border-b border-card/10 max-w-screen-lg mx-auto transition-all duration-300 w-full ${
       isCompact ? 'h-14 py-2' : 'h-18 py-3'
     }`}>
-      <div className="flex items-center gap-2 shrink-0">
-        <button 
-          onClick={() => setIsDrawerOpen(true)}
-          className="p-2.5 rounded-full hover:bg-black/5 transition-colors focus:outline-none flex items-center justify-center"
-          aria-label="Menu"
-        >
-          <Menu className="h-6 w-6 text-accent" />
-        </button>
-      </div>
+      <div className="w-10 h-10 -ml-1" />
 
       <DrawerMenu 
         isOpen={isDrawerOpen} 
