@@ -60,11 +60,11 @@ export default function Filters() {
       <div className="relative flex min-h-screen w-full flex-col max-w-screen-lg mx-auto bg-background">
         <Navbar />
         <header className="sticky top-[var(--navbar-height)] z-30 glass-header border-b border-border transition-all duration-300">
-          <div className="flex items-center justify-between px-4 py-4">
+          <div className="flex items-center justify-between px-4 h-14">
             <BackButton variant="ghost" label="Fechar filtros" />
-            <h1 className="text-lg font-bold tracking-tight">Refinar Busca</h1>
+            <h1 className="text-base font-bold absolute left-1/2 -translate-x-1/2 pointer-events-none">Refinar Busca</h1>
             <button 
-              className="text-primary text-sm font-semibold h-11 px-2 flex items-center justify-center hover:bg-primary/5 rounded-lg transition-colors" 
+              className="text-primary text-sm font-bold h-10 px-2 flex items-center justify-center hover:bg-primary/5 rounded-lg transition-colors -mr-1" 
               onClick={() => { setSearch(""); setSelectedTypes([]); setSelectedBedrooms(""); setSelectedParking(""); }}
             >
               Limpar

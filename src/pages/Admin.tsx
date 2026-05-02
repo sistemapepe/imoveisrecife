@@ -197,7 +197,7 @@ export default function Admin() {
       <div className="min-h-screen bg-background pb-8">
         <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center">
               <BackButton variant="ghost" onClick={() => navigate("/")} />
               {/* Mobile menu trigger */}
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
