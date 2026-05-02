@@ -94,14 +94,19 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         )}
       </div>
       <div className="p-5">
-        <h2 className="font-serif font-bold text-2xl text-foreground line-clamp-2 leading-tight">{property.title}</h2>
-        <div className="flex items-baseline gap-2 mb-4 flex-wrap">
-          <p className="font-serif text-2xl text-accent italic">{formatPriceFull(property.price)}</p>
-          <span className="text-xs text-muted-foreground">
+        <h2 className="font-serif font-bold text-2xl text-foreground line-clamp-2 leading-tight mb-3">{property.title}</h2>
+        <div className="flex items-baseline gap-2 mb-4 flex-wrap relative">
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-accent/5 -rotate-1 rounded-sm scale-110" />
+            <p className="relative font-serif text-2xl text-accent italic font-medium tracking-tight">
+              {formatPriceFull(property.price)}
+            </p>
+          </div>
+          <span className="text-xs text-muted-foreground ml-1">
             ({property.neighborhood})
           </span>
           {hasPriceDrop && (
-            <span className="text-sm text-muted-foreground line-through">
+            <span className="text-sm text-muted-foreground line-through decoration-destructive/40 ml-1">
               {formatPriceFull(property.previous_price!)}
             </span>
           )}

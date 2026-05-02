@@ -339,9 +339,14 @@ export default function PropertyDetail() {
                 return (
                   <div className="mb-8">
                     <div className="flex items-baseline gap-3 flex-wrap">
-                      <div className="text-2xl md:text-3xl font-extrabold text-accent tracking-tight">{formatPriceFull(property.price)}</div>
+                      <div className="relative inline-block">
+                        <div className="absolute inset-0 bg-accent/5 -rotate-1 rounded-md scale-110 blur-[1px]" />
+                        <div className="relative text-3xl md:text-4xl font-extrabold text-accent tracking-tight py-1 px-2">
+                          {formatPriceFull(property.price)}
+                        </div>
+                      </div>
                       {hasPriceDrop && (
-                        <span className="text-base md:text-lg text-muted-foreground line-through">
+                        <span className="text-lg md:text-xl text-muted-foreground line-through decoration-destructive/40 ml-2">
                           {formatPriceFull(property.previous_price!)}
                         </span>
                       )}
