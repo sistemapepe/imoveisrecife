@@ -340,8 +340,8 @@ export default function PropertyDetail() {
                   <div className="mb-8">
                     <div className="flex items-baseline gap-3 flex-wrap">
                       <div className="relative inline-block">
-                        <div className="absolute inset-0 bg-accent/5 -rotate-1 rounded-md scale-110 blur-[1px]" />
-                        <div className="relative text-3xl md:text-4xl font-extrabold text-accent tracking-tight py-1 px-2">
+                        <div className="absolute inset-0 bg-white/40 backdrop-blur-xl -rotate-1 rounded-xl scale-110 shadow-md border border-white/30" />
+                        <div className="relative text-3xl md:text-4xl font-black text-accent tracking-tighter py-2 px-3">
                           {formatPriceFull(property.price)}
                         </div>
                       </div>
