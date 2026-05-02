@@ -45,9 +45,11 @@ export default function PrivacyPolicy() {
       <SEOHead title="Política de Privacidade" description="Política de privacidade e proteção de dados - LGPD" />
       <div className="min-h-screen bg-background pb-24 max-w-screen-lg mx-auto">
         <Navbar />
-        <header className="sticky top-[var(--navbar-height)] z-30 bg-background/80 backdrop-blur-lg border-b border-border px-4 py-3 flex items-center gap-3 transition-all duration-300">
-          <BackButton variant="ghost" />
-          <h1 className="text-lg font-bold">Política de Privacidade</h1>
+        <header className="sticky top-[var(--navbar-height)] z-30 glass-header border-b border-border transition-all duration-300">
+          <div className="flex items-center px-4 h-14 gap-2">
+            <BackButton variant="ghost" />
+            <h1 className="text-base font-bold">Política de Privacidade</h1>
+          </div>
         </header>
         <div className="px-4 py-6 max-w-3xl mx-auto prose prose-sm dark:prose-invert prose-headings:text-foreground prose-p:text-muted-foreground">
           {content.split("\n").map((line, i) => {

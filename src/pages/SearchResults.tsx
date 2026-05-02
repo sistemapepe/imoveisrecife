@@ -99,11 +99,11 @@ export default function SearchResults() {
         <header className="sticky top-[var(--navbar-height)] z-50 glass-header border-b border-border transition-all duration-300">
           <div className="flex items-center justify-between px-4 h-14">
             <BackButton variant="ghost" />
-            <div className="text-center">
-              <h1 className="text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">Resultados</h1>
-              <p className="text-sm font-semibold text-foreground italic">{filtered.length} Imóveis encontrados</p>
+            <div className="text-center absolute left-1/2 -translate-x-1/2 pointer-events-none">
+              <h1 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground leading-none mb-0.5">Resultados</h1>
+              <p className="text-sm font-bold text-foreground italic">{filtered.length} Imóveis</p>
             </div>
-            <button onClick={() => navigate("/filtros")} aria-label="Abrir filtros" className="flex items-center justify-center w-11 h-11 hover:bg-black/5 rounded-full transition-colors">
+            <button onClick={() => navigate("/filtros")} aria-label="Abrir filtros" className="flex items-center justify-center w-10 h-10 hover:bg-black/5 rounded-full transition-colors -mr-1">
               <SlidersHorizontal className="h-6 w-6 text-foreground" aria-hidden="true" />
             </button>
           </div>
