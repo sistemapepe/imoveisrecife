@@ -510,6 +510,74 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
         ))}
       </div>
 
+      {/* Domínio Próprio */}
+      <div className="bg-card rounded-xl border border-border p-4 space-y-4">
+        <div>
+          <h3 className="font-bold text-sm flex items-center gap-2">
+            <Globe className="h-4 w-4 text-accent" /> Domínio Próprio
+          </h3>
+          <p className="text-xs text-muted-foreground">
+            Conecte seu domínio personalizado (ex: meusite.com.br) ao site. Configure os registros DNS abaixo no painel do seu provedor (Registro.br, GoDaddy, Hostgator, Cloudflare, etc).
+          </p>
+        </div>
+
+        <div>
+          <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+            <Globe className="h-4 w-4" /> Seu domínio
+          </label>
+          <input
+            type="text"
+            value={(localSettings as any).customDomain || ""}
+            onChange={(e) => setLocalSettings((prev) => ({ ...prev, customDomain: e.target.value } as any))}
+            placeholder="meusite.com.br"
+            className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+          />
+          <p className="text-[11px] text-muted-foreground mt-1">Informe sem http:// ou www.</p>
+        </div>
+
+        <div className="rounded-lg border border-border bg-background/50 p-3 space-y-3">
+          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Registros DNS necessários</p>
+
+          {[
+            { type: "A", name: "@", value: "185.158.133.1", ttl: "3600", desc: "Domínio raiz" },
+            { type: "A", name: "www", value: "185.158.133.1", ttl: "3600", desc: "Subdomínio www" },
+            { type: "TXT", name: "_lovable", value: "Token gerado no painel da Lovable", ttl: "3600", desc: "Verificação de propriedade" },
+          ].map((rec) => (
+            <div key={rec.type + rec.name} className="grid grid-cols-[60px_1fr] gap-2 text-xs border-b border-border/60 last:border-0 pb-2 last:pb-0">
+              <span className="font-bold text-primary">{rec.type}</span>
+              <div className="space-y-0.5">
+                <div><span className="text-muted-foreground">Nome:</span> <code className="font-mono">{rec.name}</code></div>
+                <div><span className="text-muted-foreground">Valor:</span> <code className="font-mono break-all">{rec.value}</code></div>
+                <div><span className="text-muted-foreground">TTL:</span> <code className="font-mono">{rec.ttl}</code></div>
+                <div className="text-[10px] text-muted-foreground italic">{rec.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="rounded-lg bg-accent/5 border border-accent/20 p-3 space-y-2">
+          <p className="text-xs font-bold text-accent">⚡ Como ativar</p>
+          <ol className="text-xs text-muted-foreground list-decimal list-inside space-y-1">
+            <li>Acesse o painel do seu provedor de domínio</li>
+            <li>Adicione os registros DNS exibidos acima</li>
+            <li>Aguarde a propagação (até 72h, normalmente alguns minutos)</li>
+            <li>Conclua a ativação e o SSL será emitido automaticamente</li>
+          </ol>
+        </div>
+
+        <label className="flex items-center justify-between cursor-pointer pt-2 border-t border-border">
+          <span className="text-sm font-medium flex items-center gap-2">
+            🔒 Forçar HTTPS
+          </span>
+          <input
+            type="checkbox"
+            checked={(localSettings as any).forceHttps ?? true}
+            onChange={(e) => setLocalSettings((prev) => ({ ...prev, forceHttps: e.target.checked } as any))}
+            className="w-5 h-5 accent-primary rounded"
+          />
+        </label>
+      </div>
+
       <button
         onClick={handleSave}
         className="w-full py-3 rounded-xl gold-gradient text-accent-foreground font-bold uppercase tracking-wider text-sm"
