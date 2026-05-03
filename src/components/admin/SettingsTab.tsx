@@ -170,8 +170,40 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
     setLocalSettings(settings);
   }, [settings]);
 
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const normalizeDomain = (raw: string) =>
+    raw.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/+$/, "");
+
+  const isValidDomain = (d: string) =>
+    /^(?=.{1,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/.test(d);
+
+  const handleCopy = async (key: string, value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedKey(key);
+      toast.success("Copiado!");
+      setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1500);
+    } catch {
+      toast.error("Não foi possível copiar");
+    }
+  };
+
   const handleSave = async () => {
-    await updateSettings(localSettings);
+    const toSave = { ...localSettings } as any;
+    const rawDomain = (toSave.customDomain || "").trim();
+    if (rawDomain) {
+      const normalized = normalizeDomain(rawDomain);
+      if (!isValidDomain(normalized)) {
+        toast.error("Domínio inválido. Use o formato: meusite.com.br");
+        return;
+      }
+      toSave.customDomain = normalized;
+      setLocalSettings(toSave);
+    } else {
+      toSave.customDomain = "";
+    }
+    await updateSettings(toSave);
     toast.success("Configurações salvas!");
   };
 
