@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SiteSettings } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
-import { Globe, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin, Calendar, UserPlus, Search } from "lucide-react";
+import { Globe, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin, Calendar, UserPlus, Search, Copy, Check } from "lucide-react";
 // Usando SVG simples para ícones sociais que podem faltar no Lucide
 const Instagram = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
