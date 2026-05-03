@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SiteSettings } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
-import { Globe, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin, Calendar, UserPlus, Search } from "lucide-react";
+import { Globe, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin, Calendar, UserPlus, Search, Copy, Check } from "lucide-react";
 // Usando SVG simples para ícones sociais que podem faltar no Lucide
 const Instagram = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -170,8 +170,40 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
     setLocalSettings(settings);
   }, [settings]);
 
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const normalizeDomain = (raw: string) =>
+    raw.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/+$/, "");
+
+  const isValidDomain = (d: string) =>
+    /^(?=.{1,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/.test(d);
+
+  const handleCopy = async (key: string, value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedKey(key);
+      toast.success("Copiado!");
+      setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1500);
+    } catch {
+      toast.error("Não foi possível copiar");
+    }
+  };
+
   const handleSave = async () => {
-    await updateSettings(localSettings);
+    const toSave = { ...localSettings } as any;
+    const rawDomain = (toSave.customDomain || "").trim();
+    if (rawDomain) {
+      const normalized = normalizeDomain(rawDomain);
+      if (!isValidDomain(normalized)) {
+        toast.error("Domínio inválido. Use o formato: meusite.com.br");
+        return;
+      }
+      toSave.customDomain = normalized;
+      setLocalSettings(toSave);
+    } else {
+      toSave.customDomain = "";
+    }
+    await updateSettings(toSave);
     toast.success("Configurações salvas!");
   };
 
@@ -543,14 +575,26 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
             { type: "A", name: "www", value: "185.158.133.1", ttl: "3600", desc: "Subdomínio www" },
             { type: "TXT", name: "_lovable", value: "Token gerado no painel da Lovable", ttl: "3600", desc: "Verificação de propriedade" },
           ].map((rec) => (
-            <div key={rec.type + rec.name} className="grid grid-cols-[60px_1fr] gap-2 text-xs border-b border-border/60 last:border-0 pb-2 last:pb-0">
+            <div key={rec.type + rec.name} className="grid grid-cols-[60px_1fr_auto] gap-2 text-xs border-b border-border/60 last:border-0 pb-2 last:pb-0 items-start">
               <span className="font-bold text-primary">{rec.type}</span>
-              <div className="space-y-0.5">
+              <div className="space-y-0.5 min-w-0">
                 <div><span className="text-muted-foreground">Nome:</span> <code className="font-mono">{rec.name}</code></div>
                 <div><span className="text-muted-foreground">Valor:</span> <code className="font-mono break-all">{rec.value}</code></div>
                 <div><span className="text-muted-foreground">TTL:</span> <code className="font-mono">{rec.ttl}</code></div>
                 <div className="text-[10px] text-muted-foreground italic">{rec.desc}</div>
               </div>
+              <button
+                type="button"
+                onClick={() => handleCopy(rec.type + rec.name, rec.value)}
+                className="flex items-center gap-1 px-2 py-1 rounded-md border border-border bg-background hover:bg-primary/5 hover:border-primary/40 transition-colors text-[11px] font-semibold"
+                title={`Copiar valor do registro ${rec.type} ${rec.name}`}
+              >
+                {copiedKey === rec.type + rec.name ? (
+                  <><Check className="h-3 w-3 text-primary" /> Copiado</>
+                ) : (
+                  <><Copy className="h-3 w-3" /> Copiar</>
+                )}
+              </button>
             </div>
           ))}
         </div>
