@@ -20,6 +20,7 @@ import LeadCaptureModal from "@/components/LeadCaptureModal";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
+import { useResolvedImages, getPublicUrl } from "@/lib/property-image-url";
 
 export default function PropertyDetail() {
   const { id } = useParams();
@@ -35,6 +36,7 @@ export default function PropertyDetail() {
   const navigate = useNavigate();
   const { properties, settings, favorites, toggleFavorite } = useProperties();
   const property = properties.find((p) => p.id === id);
+  const resolvedImages = useResolvedImages(property?.images ?? []);
   const [currentImg, setCurrentImg] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -49,22 +51,21 @@ export default function PropertyDetail() {
 
   // Pre-load next and previous images for the main gallery
   useEffect(() => {
-    if (!property?.images || property.images.length <= 1) return;
+    if (!resolvedImages || resolvedImages.length <= 1) return;
 
     const preloadImage = (index: number) => {
-      const url = property.images[index];
+      const url = resolvedImages[index];
       if (!url) return;
       const img = new Image();
       img.src = getOptimizedImageUrl(url, IMAGE_SIZES.HERO);
-      
-      // Also preload a slightly smaller version for tablets/mobile
+
       const imgMobile = new Image();
       imgMobile.src = getOptimizedImageUrl(url, { width: 600 });
     };
 
-    preloadImage((currentImg + 1) % property.images.length);
-    preloadImage((currentImg - 1 + property.images.length) % property.images.length);
-  }, [currentImg, property?.images]);
+    preloadImage((currentImg + 1) % resolvedImages.length);
+    preloadImage((currentImg - 1 + resolvedImages.length) % resolvedImages.length);
+  }, [currentImg, resolvedImages]);
 
   // Track property view
   useEffect(() => {
@@ -200,7 +201,7 @@ export default function PropertyDetail() {
       <SEOHead
         title={`${property.title} — ${formatPriceFull(property.price)}`}
         description={`${property.type} com ${property.bedrooms} quartos, ${property.area}m² em ${property.neighborhood}, ${property.city}. ${property.description.slice(0, 120)}`}
-        image={property.images[0]}
+        image={getPublicUrl(property.images[0])}
         type="article"
         keywords={`${property.type} ${property.neighborhood}, ${property.type} ${property.city}, ${property.bedrooms} quartos ${property.neighborhood}, imóvel ${property.code}`}
         jsonLd={[schemaOrg, breadcrumbJsonLd]}
@@ -237,8 +238,8 @@ export default function PropertyDetail() {
         >
           <img
             className="h-full w-full object-cover transition-opacity duration-300 cursor-pointer select-none"
-            src={getOptimizedImageUrl(property.images[currentImg], IMAGE_SIZES.HERO)}
-            srcSet={getImageSrcSet(property.images[currentImg], [600, 1200, 1920])}
+            src={getOptimizedImageUrl(resolvedImages[currentImg] ?? property.images[currentImg], IMAGE_SIZES.HERO)}
+            srcSet={getImageSrcSet(resolvedImages[currentImg] ?? property.images[currentImg], [600, 1200, 1920])}
             sizes="100vw"
             alt={`${property.title} - Foto ${currentImg + 1}`}
             draggable={false}
@@ -270,7 +271,7 @@ export default function PropertyDetail() {
         {/* Thumbnails */}
         {totalImages > 1 && (
           <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide max-w-screen-lg mx-auto">
-            {property.images.map((img, i) => (
+            {(resolvedImages.length ? resolvedImages : property.images).map((img, i) => (
               <button
                 key={i}
                 onClick={() => setCurrentImg(i)}
@@ -482,7 +483,7 @@ export default function PropertyDetail() {
       />
 
       <ImageLightbox
-        images={property.images}
+        images={resolvedImages.length ? resolvedImages : property.images}
         initialIndex={lightboxIndex}
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
