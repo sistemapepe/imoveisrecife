@@ -54,6 +54,10 @@ describe("RLS · performance_logs", () => {
   const adminPassword = import.meta.env.VITE_TEST_ADMIN_PASSWORD as
     | string
     | undefined;
+  const commonEmail = import.meta.env.VITE_TEST_USER_EMAIL as string | undefined;
+  const commonPassword = import.meta.env.VITE_TEST_USER_PASSWORD as
+    | string
+    | undefined;
 
   it.skipIf(!adminEmail || !adminPassword)(
     "admin/supervisor CAN SELECT performance_logs",
@@ -71,6 +75,27 @@ describe("RLS · performance_logs", () => {
         .limit(5);
       expect(error).toBeNull();
       expect(Array.isArray(data)).toBe(true);
+      await client.auth.signOut();
+    }
+  );
+
+  it.skipIf(!commonEmail || !commonPassword)(
+    "common authenticated user CANNOT SELECT performance_logs",
+    async () => {
+      const client = createClient(SUPABASE_URL, ANON_KEY);
+      const { error: signInErr } = await client.auth.signInWithPassword({
+        email: commonEmail!,
+        password: commonPassword!,
+      });
+      expect(signInErr).toBeNull();
+
+      const { data, error } = await client
+        .from("performance_logs")
+        .select("id")
+        .limit(5);
+      // RLS returns empty array (not error) when no rows pass the policy
+      expect(error).toBeNull();
+      expect(data ?? []).toHaveLength(0);
       await client.auth.signOut();
     }
   );
