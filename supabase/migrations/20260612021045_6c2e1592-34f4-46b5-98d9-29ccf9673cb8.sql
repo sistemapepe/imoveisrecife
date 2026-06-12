@@ -1,0 +1,1 @@
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS images_access_mode text NOT NULL DEFAULT 'public' CHECK (images_access_mode IN ('public', 'signed'));
