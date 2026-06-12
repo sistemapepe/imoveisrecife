@@ -307,6 +307,7 @@ export type Database = {
           hero_subtitle: string
           hero_title: string
           id: string
+          images_access_mode: string
           instagram_url: string
           lead_modal_description: string
           lead_modal_enabled: boolean
@@ -349,6 +350,7 @@ export type Database = {
           hero_subtitle?: string
           hero_title?: string
           id?: string
+          images_access_mode?: string
           instagram_url?: string
           lead_modal_description?: string
           lead_modal_enabled?: boolean
@@ -391,6 +393,7 @@ export type Database = {
           hero_subtitle?: string
           hero_title?: string
           id?: string
+          images_access_mode?: string
           instagram_url?: string
           lead_modal_description?: string
           lead_modal_enabled?: boolean

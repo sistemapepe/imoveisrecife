@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
@@ -22,8 +22,9 @@ import VisitsTab from "@/components/admin/VisitsTab";
 import TrafficTab from "@/components/admin/TrafficTab";
 import DashboardTab from "@/components/admin/DashboardTab";
 import SeoAuditTab from "@/components/admin/SeoAuditTab";
+import BucketAccessTab from "@/components/admin/BucketAccessTab";
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -178,6 +179,7 @@ export default function Admin() {
     { key: "seo", label: "SEO Audit", icon: Sparkles, show: !!canManageProperties },
     { key: "users", label: "Equipe", icon: Users, show: !!canManageUsers },
     { key: "settings", label: "Configurações", icon: Settings, show: !!canManageSettings },
+    { key: "bucket", label: "Imagens (Acesso)", icon: ImageIcon, show: !!canManageSettings },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManageSettings },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
@@ -598,6 +600,10 @@ export default function Admin() {
 
           {tab === "privacy" && canManageSettings && (
             <PrivacyTab settings={settings} updateSettings={updateSettings} />
+          )}
+
+          {tab === "bucket" && canManageSettings && (
+            <BucketAccessTab settings={settings} updateSettings={updateSettings} />
           )}
 
           {tab === "users" && canManageUsers && (

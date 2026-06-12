@@ -7,6 +7,7 @@ import { useProperties } from "@/contexts/PropertyContext";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
 import { trackEvent } from "@/hooks/useTrafficTracker";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
+import { useResolvedImage } from "@/lib/property-image-url";
 
 export default function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
     ? Math.round(((property.previous_price! - property.price) / property.previous_price!) * 100)
     : 0;
   const [leadOpen, setLeadOpen] = useState(false);
+  const heroImage = useResolvedImage(property.images[0]);
 
   const openWhatsApp = () => {
     trackEvent("whatsapp_click", property.id);
@@ -36,8 +38,8 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         <img
           alt={property.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          src={getOptimizedImageUrl(property.images[0], IMAGE_SIZES.CARD)}
-          srcSet={getImageSrcSet(property.images[0], [400, 600, 800])}
+          src={getOptimizedImageUrl(heroImage, IMAGE_SIZES.CARD)}
+          srcSet={getImageSrcSet(heroImage, [400, 600, 800])}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           loading={index < 2 ? "eager" : "lazy"}
           decoding="async"
