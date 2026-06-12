@@ -31,6 +31,7 @@ describe("RLS · performance_logs", () => {
     const { error } = await anon.from("performance_logs").insert({
       metric_name: "LCP",
       metric_value: 1234,
+      page_url: "https://test.example/vitest",
     });
     expect(error).toBeNull();
   });
