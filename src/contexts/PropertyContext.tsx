@@ -77,6 +77,7 @@ export interface SiteSettings {
   bingSiteVerification: string;
   headerStyle?: 'normal' | 'compact';
   marqueeText?: string;
+  imagesAccessMode?: 'public' | 'signed';
 }
 
 interface PropertyContextType {
@@ -133,6 +134,7 @@ const defaultSettings: SiteSettings = {
   bingSiteVerification: "",
   headerStyle: 'normal',
   marqueeText: "",
+  imagesAccessMode: 'public',
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -202,6 +204,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         bingSiteVerification: (data as any).bing_site_verification ?? "",
         headerStyle: (data as any).header_style ?? 'normal',
         marqueeText: (data as any).marquee_text ?? "",
+        imagesAccessMode: ((data as any).images_access_mode ?? 'public') as 'public' | 'signed',
       }));
     }
   }, []);
@@ -294,6 +297,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       bingSiteVerification: "bing_site_verification",
       headerStyle: "header_style",
       marqueeText: "marquee_text",
+      imagesAccessMode: "images_access_mode",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
