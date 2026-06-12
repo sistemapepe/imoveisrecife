@@ -153,7 +153,7 @@ export default function PropertyDetail() {
     url: propertyUrl,
     identifier: property.code,
     datePosted: new Date().toISOString(),
-    image: property.images,
+    image: property.images.map(getPublicUrl),
     offers: {
       "@type": "Offer",
       price: property.price,
