@@ -63,6 +63,18 @@ export default function Admin() {
   const [cepLoading, setCepLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const DEFAULT_CATEGORIES = ["Venda", "Locação", "Temporada", "Repasse"];
+  const [categories, setCategories] = useState<string[]>(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("admin_property_categories") || "null");
+      if (Array.isArray(stored) && stored.length > 0) return stored;
+    } catch {}
+    return DEFAULT_CATEGORIES;
+  });
+  useEffect(() => {
+    localStorage.setItem("admin_property_categories", JSON.stringify(categories));
+  }, [categories]);
+
   const fetchCep = async (value: string) => {
     const clean = value.replace(/\D/g, "");
     setCep(value);
@@ -452,16 +464,52 @@ export default function Admin() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Categoria</label>
-                <select
-                  value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm"
-                >
-                  {["Venda", "Locação", "Temporada", "Repasse"].map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Categoria</label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const name = window.prompt("Nome da nova categoria:")?.trim();
+                      if (!name) return;
+                      if (categories.some((c) => c.toLowerCase() === name.toLowerCase())) {
+                        toast.error("Categoria já existe");
+                        return;
+                      }
+                      setCategories((prev) => [...prev, name]);
+                      setForm((prev) => ({ ...prev, category: name }));
+                      toast.success(`Categoria "${name}" adicionada`);
+                    }}
+                    className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md border border-primary/40 bg-primary/10 hover:bg-primary/20 text-primary transition-colors"
+                    title="Adicionar nova categoria"
+                  >
+                    <Plus className="h-3 w-3" /> Nova
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <select
+                    value={form.category}
+                    onChange={(e) => setForm({ ...form, category: e.target.value })}
+                    className="flex-1 px-3 py-2 rounded-lg border border-border bg-card text-sm"
+                  >
+                    {categories.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                  {!DEFAULT_CATEGORIES.includes(form.category) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!window.confirm(`Remover categoria "${form.category}"?`)) return;
+                        setCategories((prev) => prev.filter((c) => c !== form.category));
+                        setForm((prev) => ({ ...prev, category: DEFAULT_CATEGORIES[0] }));
+                      }}
+                      className="px-2 rounded-lg border border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/20"
+                      title="Remover categoria selecionada"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
               </div>
               <div>
                 <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Tipo</label>
