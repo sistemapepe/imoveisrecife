@@ -177,6 +177,8 @@ const defaultSettings: SiteSettings = {
   logoWidthPx: 270,
   logoHeightPx: 140,
   marqueePaddingYPx: 4,
+  priceStyles: DEFAULT_PRICE_STYLES,
+  priceFormat: DEFAULT_PRICE_FORMAT,
 };
 
 const localImages = [property1, property2, property3, property4];
