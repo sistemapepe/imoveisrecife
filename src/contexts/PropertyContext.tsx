@@ -419,3 +419,13 @@ export function formatPrice(price: number): string {
 export function formatPriceFull(price: number): string {
   return `R$ ${price.toLocaleString("pt-BR")}`;
 }
+
+export function formatPriceWith(price: number, fmt?: PriceFormat): string {
+  const f: PriceFormat = { ...DEFAULT_PRICE_FORMAT, ...(fmt ?? {}) };
+  const fixed = Math.abs(price).toFixed(Math.max(0, Math.min(4, f.decimals)));
+  const [intPart, decPart] = fixed.split(".");
+  const intWithSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, f.thousandsSeparator);
+  const body = decPart ? `${intWithSep}${f.decimalSeparator}${decPart}` : intWithSep;
+  const sign = price < 0 ? "-" : "";
+  return `${f.prefix}${sign}${body}${f.suffix}`;
+}
