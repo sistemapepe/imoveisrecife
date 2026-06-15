@@ -104,10 +104,10 @@ export interface SiteSettings {
 }
 
 export const DEFAULT_PRICE_STYLES: Record<PriceSection, PriceStyle> = {
-  card:      { fontFamily: "Manrope", fontSize: 18, fontWeight: "800", color: "hsl(var(--accent))" },
-  detail:    { fontFamily: "Manrope", fontSize: 32, fontWeight: "800", color: "hsl(var(--accent))" },
-  banner:    { fontFamily: "Manrope", fontSize: 20, fontWeight: "700", color: "hsl(var(--accent))" },
-  simulator: { fontFamily: "Manrope", fontSize: 24, fontWeight: "800", color: "hsl(var(--accent))" },
+  card:      { fontFamily: "Manrope", fontSize: 18, fontWeight: "800", color: "hsl(var(--price-color))" },
+  detail:    { fontFamily: "Manrope", fontSize: 32, fontWeight: "800", color: "hsl(var(--price-color))" },
+  banner:    { fontFamily: "Manrope", fontSize: 20, fontWeight: "700", color: "hsl(var(--price-color-dark))" },
+  simulator: { fontFamily: "Manrope", fontSize: 24, fontWeight: "800", color: "hsl(var(--price-color))" },
 };
 
 export const DEFAULT_PRICE_FORMAT: PriceFormat = {
