@@ -93,6 +93,7 @@ const sections: SectionDef[] = [
     description: "Texto exibido no rodapé do site",
     fields: [
       { label: "Texto do rodapé", key: "footerText", multiline: true, placeholder: "© 2024 JHR Imóveis..." },
+      { label: "CRECI (obrigatório)", key: "creci", placeholder: "CRECI-PE 12345-J" },
     ],
   },
   {

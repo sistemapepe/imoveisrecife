@@ -63,6 +63,7 @@ export interface SiteSettings {
   brandName: string;
   logoUrl: string;
   footerText: string;
+  creci: string;
   instagramUrl: string;
   facebookUrl: string;
   youtubeUrl: string;
@@ -141,6 +142,7 @@ const defaultSettings: SiteSettings = {
   brandName: "JHR LUXURY",
   logoUrl: "",
   footerText: "© 2024 JHR Imóveis de Luxo. Todos os direitos reservados.",
+  creci: "",
   instagramUrl: "",
   facebookUrl: "",
   youtubeUrl: "",
@@ -218,6 +220,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         brandName: data.brand_name,
         logoUrl: data.logo_url,
         footerText: data.footer_text,
+        creci: (data as any).creci ?? "",
         instagramUrl: data.instagram_url,
         facebookUrl: data.facebook_url,
         youtubeUrl: data.youtube_url,
@@ -320,6 +323,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       conciergeNome: "concierge_nome", conciergeCargo: "concierge_cargo",
       conciergeDesc: "concierge_desc",
       brandName: "brand_name", logoUrl: "logo_url", footerText: "footer_text",
+      creci: "creci",
       instagramUrl: "instagram_url", facebookUrl: "facebook_url",
       youtubeUrl: "youtube_url", linkedinUrl: "linkedin_url",
       websiteUrl: "website_url",

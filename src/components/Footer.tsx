@@ -85,6 +85,12 @@ export default function Footer() {
         </p>
       )}
 
+      {settings.creci && (
+        <p className="text-xs font-semibold text-accent uppercase tracking-[0.2em] text-center border border-accent/40 rounded-full px-4 py-1.5 bg-accent/5">
+          CRECI: {settings.creci}
+        </p>
+      )}
+
       <div className="flex flex-col items-center gap-2">
         {settings.developerName && (
           <p className="text-[9px] text-muted-foreground/50 tracking-wider text-center flex items-center gap-1.5">
