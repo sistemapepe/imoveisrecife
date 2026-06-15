@@ -213,6 +213,10 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         headerStyle: (data as any).header_style ?? 'normal',
         marqueeText: (data as any).marquee_text ?? "",
         imagesAccessMode: ((data as any).images_access_mode ?? 'public') as 'public' | 'signed',
+        navbarHeightPx: (data as any).navbar_height_px ?? 100,
+        logoWidthPx: (data as any).logo_width_px ?? 270,
+        logoHeightPx: (data as any).logo_height_px ?? 140,
+        marqueePaddingYPx: (data as any).marquee_padding_y_px ?? 4,
       }));
     }
   }, []);
