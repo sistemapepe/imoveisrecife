@@ -24,43 +24,53 @@ export async function extractPaletteFromImage(src: string): Promise<{ primary: s
     throw new Error("Imagem bloqueada por CORS — hospede a logo no mesmo domínio.");
   }
 
-  // 12 baldes de 30° (hue 0..360)
-  const buckets: Array<{ count: number; h: number; s: number; l: number }> = Array.from(
-    { length: 12 },
-    () => ({ count: 0, h: 0, s: 0, l: 0 })
-  );
+  // tenta com limiares progressivamente mais permissivos
+  const attempts = [
+    { minS: 0.15, minL: 0.12, maxL: 0.92 },
+    { minS: 0.08, minL: 0.08, maxL: 0.95 },
+    { minS: 0.03, minL: 0.04, maxL: 0.98 },
+    { minS: 0,    minL: 0,    maxL: 1    }, // último recurso: aceita tudo (inclui cinzas/preto/branco)
+  ];
 
-  for (let i = 0; i < pixels.data.length; i += 4) {
-    const r = pixels.data[i];
-    const g = pixels.data[i + 1];
-    const b = pixels.data[i + 2];
-    const a = pixels.data[i + 3];
-    if (a < 128) continue;
-    const [h, s, l] = rgbToHsl(r, g, b);
-    if (s < 0.15) continue; // pula tons de cinza
-    if (l < 0.12 || l > 0.92) continue; // pula quase preto/branco
-    const idx = Math.min(11, Math.floor(h / 30));
-    const b0 = buckets[idx];
-    b0.count++;
-    b0.h += h;
-    b0.s += s;
-    b0.l += l;
+  for (const { minS, minL, maxL } of attempts) {
+    const buckets: Array<{ count: number; h: number; s: number; l: number }> = Array.from(
+      { length: 12 },
+      () => ({ count: 0, h: 0, s: 0, l: 0 })
+    );
+
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      const a = pixels.data[i + 3];
+      if (a < 32) continue;
+      const r = pixels.data[i];
+      const g = pixels.data[i + 1];
+      const b = pixels.data[i + 2];
+      const [h, s, l] = rgbToHsl(r, g, b);
+      if (s < minS) continue;
+      if (l < minL || l > maxL) continue;
+      const idx = Math.min(11, Math.floor(h / 30));
+      const b0 = buckets[idx];
+      b0.count++;
+      b0.h += h;
+      b0.s += s;
+      b0.l += l;
+    }
+
+    const ranked = buckets
+      .filter((b) => b.count > 0)
+      .map((b) => ({ h: b.h / b.count, s: b.s / b.count, l: b.l / b.count, count: b.count }))
+      .sort((a, b) => b.count - a.count);
+
+    if (ranked.length === 0) continue;
+
+    const primaryRaw = ranked[0];
+    const accentRaw = ranked[1] ?? shiftHue(primaryRaw, 30);
+    return {
+      primary: toHslString(primaryRaw),
+      accent: toHslString(accentRaw),
+    };
   }
 
-  const ranked = buckets
-    .filter((b) => b.count > 0)
-    .map((b) => ({ h: b.h / b.count, s: b.s / b.count, l: b.l / b.count, count: b.count }))
-    .sort((a, b) => b.count - a.count);
-
-  if (ranked.length === 0) throw new Error("Não foi possível identificar cores na logo");
-
-  const primaryRaw = ranked[0];
-  const accentRaw = ranked[1] ?? shiftHue(primaryRaw, 30);
-
-  return {
-    primary: toHslString(primaryRaw),
-    accent: toHslString(accentRaw),
-  };
+  throw new Error("Não foi possível identificar cores na logo");
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
