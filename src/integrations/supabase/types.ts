@@ -106,9 +106,11 @@ export type Database = {
           file_size: number
           id: string
           log: Json
+          parent_import_id: string | null
           properties_created: number
           properties_failed: number
           properties_total: number
+          reprocess: boolean
           status: string
           updated_at: string
           user_id: string | null
@@ -121,9 +123,11 @@ export type Database = {
           file_size?: number
           id?: string
           log?: Json
+          parent_import_id?: string | null
           properties_created?: number
           properties_failed?: number
           properties_total?: number
+          reprocess?: boolean
           status?: string
           updated_at?: string
           user_id?: string | null
@@ -136,14 +140,24 @@ export type Database = {
           file_size?: number
           id?: string
           log?: Json
+          parent_import_id?: string | null
           properties_created?: number
           properties_failed?: number
           properties_total?: number
+          reprocess?: boolean
           status?: string
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "import_history_parent_import_id_fkey"
+            columns: ["parent_import_id"]
+            isOneToOne: false
+            referencedRelation: "import_history"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       performance_logs: {
         Row: {
