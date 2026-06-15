@@ -78,6 +78,10 @@ export interface SiteSettings {
   headerStyle?: 'normal' | 'compact';
   marqueeText?: string;
   imagesAccessMode?: 'public' | 'signed';
+  navbarHeightPx: number;
+  logoWidthPx: number;
+  logoHeightPx: number;
+  marqueePaddingYPx: number;
 }
 
 interface PropertyContextType {
