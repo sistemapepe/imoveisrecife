@@ -299,6 +299,7 @@ export type Database = {
           concierge_desc: string
           concierge_nome: string
           creci: string
+          creci_uf: string
           developer_name: string
           developer_url: string
           facebook_url: string
@@ -349,6 +350,7 @@ export type Database = {
           concierge_desc?: string
           concierge_nome?: string
           creci?: string
+          creci_uf?: string
           developer_name?: string
           developer_url?: string
           facebook_url?: string
@@ -399,6 +401,7 @@ export type Database = {
           concierge_desc?: string
           concierge_nome?: string
           creci?: string
+          creci_uf?: string
           developer_name?: string
           developer_url?: string
           facebook_url?: string
