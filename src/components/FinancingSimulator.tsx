@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Calculator, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatPriceFull } from "@/contexts/PropertyContext";
+import { PriceDisplay } from "@/components/PriceDisplay";
 
 interface FinancingSimulatorProps {
   price: number;
