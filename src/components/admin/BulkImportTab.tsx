@@ -549,3 +549,27 @@ function StatusBadge({ status }: { status: string }) {
   const m = map[status] ?? { label: status, cls: "bg-muted text-muted-foreground border-border" };
   return <span className={`inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full border ${m.cls}`}>{m.label}</span>;
 }
+
+function ProgressBar({ current, total, startedAt }: { current: number; total: number; startedAt: number }) {
+  const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+  const elapsedMs = Date.now() - startedAt;
+  const perItem = current > 0 ? elapsedMs / current : 0;
+  const remainingMs = perItem * Math.max(0, total - current);
+  const fmt = (ms: number) => {
+    const s = Math.max(0, Math.round(ms / 1000));
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s / 60);
+    return `${m}m ${s % 60}s`;
+  };
+  return (
+    <div className="space-y-1.5">
+      <div className="flex justify-between text-[11px] text-muted-foreground font-mono">
+        <span>{current} / {total} ({pct}%)</span>
+        <span>⏱ {fmt(elapsedMs)} · restam ~{current > 0 ? fmt(remainingMs) : "—"}</span>
+      </div>
+      <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+        <div className="h-full bg-accent transition-[width] duration-300" style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
+}
