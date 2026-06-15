@@ -197,7 +197,7 @@ export default function Index() {
             </nav>
 
             {/* Skeleton Hero */}
-            <section className="relative h-[85vh] w-full shrink-0 overflow-hidden bg-card/5 animate-pulse">
+            <section className="relative h-[calc(100svh-220px)] md:h-[85vh] w-full shrink-0 overflow-hidden bg-card/5 animate-pulse">
               <div className="absolute inset-0 bg-gradient-to-t from-luxury-dark via-transparent to-transparent" />
               <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 px-8 gap-4">
                 <div className="h-10 w-64 rounded bg-card/10 animate-pulse" />
