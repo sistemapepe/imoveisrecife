@@ -490,6 +490,12 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
           <div className="flex-1 h-8 rounded-md" style={{ backgroundColor: `hsl(${localSettings.accentColor})` }} />
         </div>
         <p className="text-[10px] text-muted-foreground text-center">Pré-visualização: Primária + Destaque</p>
+
+        <PalettePreview
+          primary={localSettings.primaryColor}
+          accent={localSettings.accentColor}
+          onSuggest={(p, a) => setLocalSettings((prev) => ({ ...prev, primaryColor: p, accentColor: a }))}
+        />
       </div>
 
       {/* Amenities Management */}
