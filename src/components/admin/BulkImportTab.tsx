@@ -356,10 +356,21 @@ export default function BulkImportTab() {
 
   const confirmImport = async () => {
     if (!parsed || !fileMeta) return;
+    if (parsed.headerError) {
+      toast.error("Cabeçalhos do template inválidos. Importação bloqueada.");
+      return;
+    }
     const allErrors = [
       ...parsed.empresaErrors.map((e) => ({ ...e, sheet: "Empresa" })),
       ...parsed.imoveisErrors.map((e) => ({ ...e, sheet: "Imóveis" })),
     ];
+
+    // Em modo reprocesso: importar apenas linhas que estavam com erro na importação pai
+    const reprocessRows: Set<number> | null = reprocessOf
+      ? new Set((reprocessOf.errors as any[] | null ?? [])
+          .filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis" && typeof e.row === "number")
+          .map((e: any) => e.row))
+      : null;
 
     setImporting(true);
     const { data: histRow, error: histErr } = await supabase.from("import_history").insert({
@@ -368,6 +379,8 @@ export default function BulkImportTab() {
       status: "em_andamento",
       properties_total: parsed.imoveis.length,
       errors: allErrors as any,
+      parent_import_id: reprocessOf?.id ?? null,
+      reprocess: !!reprocessOf,
     }).select().single();
 
     if (histErr || !histRow) {
@@ -375,6 +388,7 @@ export default function BulkImportTab() {
       setImporting(false);
       return;
     }
+
 
     const log: any[] = [];
     let companyUpdated = false;
