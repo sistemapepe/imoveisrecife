@@ -160,18 +160,24 @@ const FIELD_LABELS: Record<string, string> = {
   images: "Imagens", suites: "Suítes",
 };
 
-function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[] } {
+function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[]; raw: any[]; headers: string[]; headerError: string | null } {
   const raw = XLSX.utils.sheet_to_json<any>(ws, { defval: "" });
+  const headers = raw.length > 0 ? Object.keys(raw[0]) : (XLSX.utils.sheet_to_json<any>(ws, { header: 1 })[0] as string[] ?? []);
+  const headerError = validateImoveisHeaders(headers);
+  if (headerError) {
+    return { data: [], errors: [{ row: 1, message: headerError }], raw, headers, headerError };
+  }
+
   const mapped = remap(raw, IMOVEL_MAP);
   const errors: RowError[] = [];
   const data: any[] = [];
 
   if (raw.length === 0) {
-    return { data: [], errors: [{ row: 1, message: "A aba 'Imóveis' está vazia." }] };
+    return { data: [], errors: [{ row: 1, message: "A aba 'Imóveis' está vazia." }], raw, headers, headerError: null };
   }
 
   mapped.forEach((m, i) => {
-    const rowNum = i + 2; // header na linha 1
+    const rowNum = i + 2;
     if (!Object.values(m).some((v) => String(v ?? "").trim() !== "")) return;
 
     const rawNum = (k: string) => {
@@ -205,25 +211,19 @@ function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[
       previous_price: 0,
     };
 
-    // Strings obrigatórias
     (["title","type","category","address","neighborhood","city"] as const).forEach((f) => {
       if (!item[f]) errors.push({ row: rowNum, field: f, message: `Campo obrigatório ausente: ${FIELD_LABELS[f]}` });
     });
-
-    // Números obrigatórios > 0
     (["price","area","bedrooms","bathrooms","parking"] as const).forEach((f) => {
       const r = rawNum(f);
       if (r.missing) errors.push({ row: rowNum, field: f, message: `${FIELD_LABELS[f]} é obrigatório` });
       else if (!r.ok) errors.push({ row: rowNum, field: f, message: `${FIELD_LABELS[f]} deve ser numérico` });
       else if (r.n <= 0) errors.push({ row: rowNum, field: f, message: `${FIELD_LABELS[f]} deve ser maior que 0` });
     });
-
-    // Suítes opcional, mas se preenchido deve ser número >= 0
     if (m.suites !== "" && m.suites !== undefined && m.suites !== null) {
       const r = rawNum("suites");
       if (!r.ok || r.n < 0) errors.push({ row: rowNum, field: "suites", message: "Suítes deve ser número >= 0" });
     }
-
     if (!["disponivel","reservado","vendido"].includes(item.status)) {
       errors.push({ row: rowNum, field: "status", message: `Status inválido: "${item.status}". Use disponivel, reservado ou vendido.` });
     }
@@ -240,12 +240,9 @@ function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[
     data.push({ __row: rowNum, ...item });
   });
 
-  return { data, errors };
+  return { data, errors, raw, headers, headerError: null };
 }
 
-
-
-// Procura aba por nome aproximado
 function findSheet(wb: XLSX.WorkBook, names: string[]) {
   for (const n of names) {
     const found = wb.SheetNames.find((s) => norm(s) === norm(n));
