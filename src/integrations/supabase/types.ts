@@ -321,8 +321,12 @@ export type Database = {
           lead_modal_submitting_text: string
           lead_modal_title: string
           linkedin_url: string
+          logo_height_px: number
           logo_url: string
+          logo_width_px: number
+          marquee_padding_y_px: number
           marquee_text: string | null
+          navbar_height_px: number
           primary_color: string
           privacy_policy: string
           show_location_on_card: boolean
@@ -364,8 +368,12 @@ export type Database = {
           lead_modal_submitting_text?: string
           lead_modal_title?: string
           linkedin_url?: string
+          logo_height_px?: number
           logo_url?: string
+          logo_width_px?: number
+          marquee_padding_y_px?: number
           marquee_text?: string | null
+          navbar_height_px?: number
           primary_color?: string
           privacy_policy?: string
           show_location_on_card?: boolean
@@ -407,8 +415,12 @@ export type Database = {
           lead_modal_submitting_text?: string
           lead_modal_title?: string
           linkedin_url?: string
+          logo_height_px?: number
           logo_url?: string
+          logo_width_px?: number
+          marquee_padding_y_px?: number
           marquee_text?: string | null
+          navbar_height_px?: number
           primary_color?: string
           privacy_policy?: string
           show_location_on_card?: boolean
