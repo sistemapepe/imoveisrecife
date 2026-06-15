@@ -275,6 +275,7 @@ export default function BulkImportTab() {
   const [importing, setImporting] = useState(false);
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [reprocessOf, setReprocessOf] = useState<HistoryRow | null>(null);
 
   const loadHistory = useCallback(async () => {
     setLoadingHistory(true);
@@ -299,13 +300,16 @@ export default function BulkImportTab() {
       const imoveisWs = findSheet(wb, ["Imóveis", "Imoveis", "imoveis", "properties"]);
 
       const emp = empresaWs ? parseEmpresaSheet(empresaWs) : { data: null, errors: [{ row: 0, message: "Aba 'Empresa' não encontrada." } as RowError] };
-      const imo = imoveisWs ? parseImoveisSheet(imoveisWs) : { data: [], errors: [{ row: 0, message: "Aba 'Imóveis' não encontrada." } as RowError] };
+      const imo = imoveisWs ? parseImoveisSheet(imoveisWs) : { data: [], errors: [{ row: 0, message: "Aba 'Imóveis' não encontrada." } as RowError], raw: [], headers: [], headerError: "Aba 'Imóveis' não encontrada." };
 
       setParsed({
         empresa: emp.data,
         empresaErrors: emp.errors,
-        imoveis: imo.data,
-        imoveisErrors: imo.errors,
+        imoveis: (imo as any).data,
+        imoveisErrors: (imo as any).errors,
+        headerError: (imo as any).headerError ?? null,
+        rawImoveisRows: (imo as any).raw ?? [],
+        imoveisHeaders: (imo as any).headers ?? [],
       });
     } catch (e: any) {
       toast.error("Não foi possível ler o arquivo: " + e.message);
@@ -313,19 +317,42 @@ export default function BulkImportTab() {
     }
   };
 
-  const downloadErrorReport = (errs: { row: number; field?: string; message: string; sheet: string }[], fileName: string) => {
-    const wsData = [["Aba","Linha","Campo","Mensagem"], ...errs.map((e) => [e.sheet, e.row, e.field ?? "", e.message])];
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
+  // Relatório por linha: 1 linha por linha-do-Excel com erros, contendo TODAS as colunas originais + "Erros"
+  const downloadErrorReport = (
+    errs: { row: number; field?: string; message: string; sheet: string }[],
+    fileName: string,
+  ) => {
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Erros");
+    // Aba 1: resumo
+    const resumo = [["Aba","Linha","Campo","Mensagem"], ...errs.map((e) => [e.sheet, e.row, e.field ?? "", e.message])];
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(resumo), "Erros");
+    // Aba 2: linhas inválidas com colunas originais
+    if (parsed?.rawImoveisRows && parsed?.imoveisHeaders && parsed.imoveisHeaders.length > 0) {
+      const headers = parsed.imoveisHeaders;
+      const errsByRow = new Map<number, string[]>();
+      errs.filter((e) => e.sheet === "Imóveis").forEach((e) => {
+        const arr = errsByRow.get(e.row) ?? [];
+        arr.push(e.field ? `${e.field}: ${e.message}` : e.message);
+        errsByRow.set(e.row, arr);
+      });
+      const rows = [[...headers, "Linha", "Erros"]];
+      parsed.rawImoveisRows.forEach((r, i) => {
+        const rowNum = i + 2;
+        if (!errsByRow.has(rowNum)) return;
+        rows.push([...headers.map((h) => r[h] ?? ""), rowNum, errsByRow.get(rowNum)!.join(" | ")]);
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), "Linhas inválidas");
+    }
     XLSX.writeFile(wb, `relatorio_erros_${fileName.replace(/\.[^.]+$/, "")}.xlsx`);
   };
 
   const reset = () => {
     setParsed(null);
     setFileMeta(null);
+    setReprocessOf(null);
     if (fileRef.current) fileRef.current.value = "";
   };
+
 
   const confirmImport = async () => {
     if (!parsed || !fileMeta) return;
