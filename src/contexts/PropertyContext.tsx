@@ -310,6 +310,10 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       headerStyle: "header_style",
       marqueeText: "marquee_text",
       imagesAccessMode: "images_access_mode",
+      navbarHeightPx: "navbar_height_px",
+      logoWidthPx: "logo_width_px",
+      logoHeightPx: "logo_height_px",
+      marqueePaddingYPx: "marquee_padding_y_px",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
