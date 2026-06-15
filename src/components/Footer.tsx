@@ -48,32 +48,32 @@ export default function Footer() {
     <footer className="px-6 py-10 mt-6 border-t border-card/10 flex flex-col items-center gap-6 mb-20">
       <div className="flex gap-6 flex-wrap justify-center">
         {settings.instagramUrl && (
-          <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:scale-110 transition-transform">
+          <a href={normalizeSocialUrl(settings.instagramUrl, "instagram")} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-accent hover:scale-110 transition-transform">
             <Instagram className="h-5 w-5" />
           </a>
         )}
         {settings.facebookUrl && (
-          <a href={settings.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:scale-110 transition-transform">
+          <a href={normalizeSocialUrl(settings.facebookUrl, "facebook")} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-accent hover:scale-110 transition-transform">
             <Facebook className="h-5 w-5" />
           </a>
         )}
         {settings.youtubeUrl && (
-          <a href={settings.youtubeUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:scale-110 transition-transform">
+          <a href={normalizeSocialUrl(settings.youtubeUrl, "youtube")} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-accent hover:scale-110 transition-transform">
             <Youtube className="h-5 w-5" />
           </a>
         )}
         {settings.linkedinUrl && (
-          <a href={settings.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:scale-110 transition-transform">
+          <a href={normalizeSocialUrl(settings.linkedinUrl, "linkedin")} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-accent hover:scale-110 transition-transform">
             <Linkedin className="h-5 w-5" />
           </a>
         )}
         {settings.websiteUrl && (
-          <a href={settings.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:scale-110 transition-transform">
+          <a href={normalizeSocialUrl(settings.websiteUrl, "website")} target="_blank" rel="noopener noreferrer" aria-label="Site" className="text-accent hover:scale-110 transition-transform">
             <Globe className="h-5 w-5" />
           </a>
         )}
         {settings.emailContact && (
-          <a href={`mailto:${settings.emailContact}`} className="text-accent hover:scale-110 transition-transform">
+          <a href={`mailto:${settings.emailContact}`} aria-label="E-mail" className="text-accent hover:scale-110 transition-transform">
             <Mail className="h-5 w-5" />
           </a>
         )}
