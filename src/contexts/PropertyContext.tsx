@@ -139,6 +139,10 @@ const defaultSettings: SiteSettings = {
   headerStyle: 'normal',
   marqueeText: "",
   imagesAccessMode: 'public',
+  navbarHeightPx: 100,
+  logoWidthPx: 270,
+  logoHeightPx: 140,
+  marqueePaddingYPx: 4,
 };
 
 const localImages = [property1, property2, property3, property4];
