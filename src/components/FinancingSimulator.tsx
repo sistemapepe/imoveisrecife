@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Calculator, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatPriceFull } from "@/contexts/PropertyContext";
+import { PriceDisplay } from "@/components/PriceDisplay";
 
 interface FinancingSimulatorProps {
   price: number;
@@ -145,7 +146,7 @@ export default function FinancingSimulator({ price }: FinancingSimulatorProps) {
                   </div>
                   <div>
                     <div className="text-muted-foreground">Imóvel</div>
-                    <div className="font-semibold">{formatPriceFull(price)}</div>
+                    <PriceDisplay as="div" section="simulator" value={price} />
                   </div>
                 </div>
               </div>

@@ -4,6 +4,7 @@ import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calenda
 import { getAmenityIcon } from "@/lib/amenity-icons";
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
+import { PriceDisplay } from "@/components/PriceDisplay";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
@@ -342,14 +343,21 @@ export default function PropertyDetail() {
                     <div className="flex items-baseline gap-3 flex-wrap">
                       <div className="relative inline-block">
                         <div className="absolute inset-0 bg-white/40 backdrop-blur-xl -rotate-1 rounded-xl scale-110 shadow-md border border-white/30" />
-                        <div className="relative text-3xl md:text-4xl font-black text-accent tracking-tighter py-2 px-3">
-                          {formatPriceFull(property.price)}
-                        </div>
+                        <PriceDisplay
+                          as="div"
+                          section="detail"
+                          value={property.price}
+                          className="relative tracking-tighter py-2 px-3"
+                        />
                       </div>
                       {hasPriceDrop && (
-                        <span className="text-lg md:text-xl text-muted-foreground line-through decoration-destructive/40 ml-2">
-                          {formatPriceFull(property.previous_price!)}
-                        </span>
+                        <PriceDisplay
+                          as="span"
+                          section="detail"
+                          value={property.previous_price!}
+                          className="ml-2 line-through decoration-destructive/40"
+                          styleOverride={{ fontSize: "0.55em", opacity: 0.7, color: "hsl(var(--muted-foreground))" }}
+                        />
                       )}
                     </div>
                     {hasPriceDrop && (
@@ -428,9 +436,15 @@ export default function PropertyDetail() {
             <div className="hidden md:block">
               <div className="sticky top-24 space-y-4 p-6 rounded-2xl bg-card border border-border shadow-sm">
                 <div>
-                  <p className="text-2xl font-extrabold text-accent">{formatPriceFull(property.price)}</p>
+                  <PriceDisplay as="p" section="detail" value={property.price} />
                   {!!property.previous_price && property.previous_price > property.price && (
-                    <p className="text-sm text-muted-foreground line-through">{formatPriceFull(property.previous_price)}</p>
+                    <PriceDisplay
+                      as="p"
+                      section="detail"
+                      value={property.previous_price}
+                      className="line-through"
+                      styleOverride={{ fontSize: "0.45em", color: "hsl(var(--muted-foreground))" }}
+                    />
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground">{property.title}</p>

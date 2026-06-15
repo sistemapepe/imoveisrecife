@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, TrendingDown, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Property, formatPriceFull } from "@/contexts/PropertyContext";
+import { Property } from "@/contexts/PropertyContext";
+import { PriceDisplay } from "@/components/PriceDisplay";
 import { useProperties } from "@/contexts/PropertyContext";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
 import { trackEvent } from "@/hooks/useTrafficTracker";
@@ -100,17 +101,24 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         <div className="flex items-baseline gap-2 mb-4 flex-wrap relative">
           <div className="relative inline-block">
             <div className="absolute inset-0 bg-white/40 backdrop-blur-md -rotate-1 rounded-lg scale-110 shadow-sm border border-white/20" />
-            <p className="relative font-serif text-2xl text-accent italic font-bold tracking-tight px-1">
-              {formatPriceFull(property.price)}
-            </p>
+            <PriceDisplay
+              as="p"
+              section="card"
+              value={property.price}
+              className="relative italic tracking-tight px-1"
+            />
           </div>
           <span className="text-xs text-muted-foreground ml-2">
             ({property.neighborhood})
           </span>
           {hasPriceDrop && (
-            <span className="text-sm text-muted-foreground line-through decoration-destructive/40 ml-1">
-              {formatPriceFull(property.previous_price!)}
-            </span>
+            <PriceDisplay
+              as="span"
+              section="card"
+              value={property.previous_price!}
+              className="ml-1 line-through decoration-destructive/40"
+              styleOverride={{ fontSize: "0.75em", opacity: 0.7, color: "hsl(var(--muted-foreground))" }}
+            />
           )}
         </div>
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 border-t border-border pt-4">

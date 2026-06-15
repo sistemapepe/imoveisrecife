@@ -35,6 +35,23 @@ export interface Property {
   previous_price?: number;
 }
 
+export type PriceSection = "card" | "detail" | "banner" | "simulator";
+
+export interface PriceStyle {
+  fontFamily: string;
+  fontSize: number;
+  fontWeight: string;
+  color: string;
+}
+
+export interface PriceFormat {
+  prefix: string;
+  suffix: string;
+  decimals: number;
+  thousandsSeparator: string;
+  decimalSeparator: string;
+}
+
 export interface SiteSettings {
   id?: string;
   heroTitle: string;
@@ -82,7 +99,24 @@ export interface SiteSettings {
   logoWidthPx: number;
   logoHeightPx: number;
   marqueePaddingYPx: number;
+  priceStyles: Record<PriceSection, PriceStyle>;
+  priceFormat: PriceFormat;
 }
+
+export const DEFAULT_PRICE_STYLES: Record<PriceSection, PriceStyle> = {
+  card:      { fontFamily: "Manrope", fontSize: 18, fontWeight: "800", color: "hsl(var(--accent))" },
+  detail:    { fontFamily: "Manrope", fontSize: 32, fontWeight: "800", color: "hsl(var(--accent))" },
+  banner:    { fontFamily: "Manrope", fontSize: 20, fontWeight: "700", color: "hsl(var(--accent))" },
+  simulator: { fontFamily: "Manrope", fontSize: 24, fontWeight: "800", color: "hsl(var(--accent))" },
+};
+
+export const DEFAULT_PRICE_FORMAT: PriceFormat = {
+  prefix: "R$ ",
+  suffix: "",
+  decimals: 0,
+  thousandsSeparator: ".",
+  decimalSeparator: ",",
+};
 
 interface PropertyContextType {
   properties: Property[];
@@ -143,6 +177,8 @@ const defaultSettings: SiteSettings = {
   logoWidthPx: 270,
   logoHeightPx: 140,
   marqueePaddingYPx: 4,
+  priceStyles: DEFAULT_PRICE_STYLES,
+  priceFormat: DEFAULT_PRICE_FORMAT,
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -217,6 +253,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         logoWidthPx: (data as any).logo_width_px ?? 270,
         logoHeightPx: (data as any).logo_height_px ?? 140,
         marqueePaddingYPx: (data as any).marquee_padding_y_px ?? 4,
+        priceStyles: { ...DEFAULT_PRICE_STYLES, ...((data as any).price_styles ?? {}) },
+        priceFormat: { ...DEFAULT_PRICE_FORMAT, ...((data as any).price_format ?? {}) },
       }));
     }
   }, []);
@@ -314,6 +352,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       logoWidthPx: "logo_width_px",
       logoHeightPx: "logo_height_px",
       marqueePaddingYPx: "marquee_padding_y_px",
+      priceStyles: "price_styles",
+      priceFormat: "price_format",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
@@ -378,4 +418,14 @@ export function formatPrice(price: number): string {
 
 export function formatPriceFull(price: number): string {
   return `R$ ${price.toLocaleString("pt-BR")}`;
+}
+
+export function formatPriceWith(price: number, fmt?: PriceFormat): string {
+  const f: PriceFormat = { ...DEFAULT_PRICE_FORMAT, ...(fmt ?? {}) };
+  const fixed = Math.abs(price).toFixed(Math.max(0, Math.min(4, f.decimals)));
+  const [intPart, decPart] = fixed.split(".");
+  const intWithSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, f.thousandsSeparator);
+  const body = decPart ? `${intWithSep}${f.decimalSeparator}${decPart}` : intWithSep;
+  const sign = price < 0 ? "-" : "";
+  return `${f.prefix}${sign}${body}${f.suffix}`;
 }

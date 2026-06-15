@@ -4,6 +4,7 @@ import { ArrowRight, Heart, ChevronLeft, ChevronRight, Search, MapPin, LayoutGri
 import { motion, AnimatePresence } from "framer-motion";
 import heroImage from "@/assets/hero-mansion.jpg";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
+import { PriceDisplay } from "@/components/PriceDisplay";
 import { Ruler, BedDouble, Car } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import PropertyCard from "@/components/PropertyCard";
@@ -517,7 +518,7 @@ export default function Index() {
                       </button>
                     </div>
                     <div className="p-5">
-                      <p className="text-accent text-lg font-bold">{formatPriceFull(p.price)}</p>
+                      <PriceDisplay as="p" section="banner" value={p.price} />
                       <p className="text-card/70 text-sm font-medium mb-3">
                         {p.title}
                         {settings.showLocationOnCard && ` - ${p.neighborhood}`}
