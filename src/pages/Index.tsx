@@ -518,7 +518,7 @@ export default function Index() {
                       </button>
                     </div>
                     <div className="p-5">
-                      <p className="text-accent text-lg font-bold">{formatPriceFull(p.price)}</p>
+                      <PriceDisplay as="p" section="banner" value={p.price} />
                       <p className="text-card/70 text-sm font-medium mb-3">
                         {p.title}
                         {settings.showLocationOnCard && ` - ${p.neighborhood}`}
