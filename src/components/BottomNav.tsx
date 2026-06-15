@@ -24,12 +24,16 @@ export default function BottomNav() {
           <button
             key={tab.path}
             onClick={() => {
+              const scrollTop = () => {
+                try { window.scrollTo({ top: 0, left: 0, behavior: "smooth" }); } catch { window.scrollTo(0, 0); }
+                document.documentElement.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                document.body.scrollTo?.({ top: 0, left: 0, behavior: "smooth" });
+              };
               if (location.pathname === tab.path) {
-                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                scrollTop();
               } else {
                 navigate(tab.path);
-                // garante topo ao trocar de rota (ScrollToTop também trata, mas reforça em mobile)
-                requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0 }));
+                requestAnimationFrame(scrollTop);
               }
             }}
             aria-label={tab.label}
