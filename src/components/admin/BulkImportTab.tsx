@@ -60,7 +60,21 @@ const IMOVEL_MAP: Record<string, string> = {
   url_video_tour_virtual: "video_tour_url", video: "video_tour_url", tour_virtual: "video_tour_url", video_tour_url: "video_tour_url",
 };
 
+// Cabeçalhos esperados da aba "Imóveis" (na ordem do template)
+const EXPECTED_IMOVEIS_HEADERS = [
+  "Título","Tipo","Categoria","Endereço","Bairro","Cidade","UF",
+  "Preço (R$)","Área (m²)","Quartos","Suítes","Banheiros","Vagas",
+  "Status","Exclusivo (sim/não)","Destaque (sim/não)","Descrição",
+  "Comodidades (separadas por vírgula)","URLs das imagens (separadas por vírgula)",
+  "URL Vídeo / Tour virtual",
+];
 
+function validateImoveisHeaders(actual: string[]): string | null {
+  const a = actual.map((h) => norm(h));
+  const missing = EXPECTED_IMOVEIS_HEADERS.filter((h) => !a.includes(norm(h)));
+  if (missing.length) return `Cabeçalhos ausentes na aba "Imóveis": ${missing.join(", ")}. Baixe o modelo oficial e mantenha os nomes/ordem das colunas.`;
+  return null;
+}
 
 type RowError = { row: number; field?: string; message: string };
 
@@ -69,6 +83,9 @@ interface ParsedResult {
   empresaErrors: RowError[];
   imoveis: any[];
   imoveisErrors: RowError[];
+  headerError?: string | null;
+  rawImoveisRows?: any[];
+  imoveisHeaders?: string[];
 }
 
 function remap(rows: any[], map: Record<string, string>) {
