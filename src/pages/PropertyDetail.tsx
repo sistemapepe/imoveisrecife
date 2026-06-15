@@ -4,6 +4,7 @@ import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calenda
 import { getAmenityIcon } from "@/lib/amenity-icons";
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
+import { PriceDisplay } from "@/components/PriceDisplay";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
