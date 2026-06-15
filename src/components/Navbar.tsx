@@ -43,7 +43,7 @@ export default function Navbar() {
 
   return (
     <nav className={`sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 glass-nav border-b border-card/10 max-w-screen-lg mx-auto transition-all duration-300 w-full ${
-      isCompact ? 'h-14 py-2' : 'h-18 py-3'
+      isCompact ? 'h-16 py-2' : 'h-24 py-3'
     }`}>
       <div className="w-10 h-10 -ml-1" />
 
@@ -54,13 +54,13 @@ export default function Navbar() {
       
       {settings.logoUrl ? (
         <img 
-          src={getOptimizedImageUrl(settings.logoUrl, { width: isCompact ? 320 : 480, quality: 90 })} 
+          src={getOptimizedImageUrl(settings.logoUrl, { width: isCompact ? 480 : 640, quality: 90 })} 
           alt={settings.brandName} 
           onClick={() => navigate("/")}
           onMouseEnter={() => handlePrefetch('search')}
           onFocus={() => handlePrefetch('search')}
           className={`object-contain transition-all duration-300 cursor-pointer ${
-            isCompact ? 'h-12 max-w-[180px] md:h-14 md:max-w-[220px]' : 'h-16 max-w-[220px] md:h-20 md:max-w-[300px]'
+            isCompact ? 'h-14 max-w-[220px] md:h-16 md:max-w-[260px]' : 'h-20 max-w-[260px] md:h-24 md:max-w-[360px]'
           }`}
         />
       ) : (
