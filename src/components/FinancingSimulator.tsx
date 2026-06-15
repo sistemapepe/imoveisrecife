@@ -146,7 +146,7 @@ export default function FinancingSimulator({ price }: FinancingSimulatorProps) {
                   </div>
                   <div>
                     <div className="text-muted-foreground">Imóvel</div>
-                    <div className="font-semibold">{formatPriceFull(price)}</div>
+                    <PriceDisplay as="div" section="simulator" value={price} />
                   </div>
                 </div>
               </div>
