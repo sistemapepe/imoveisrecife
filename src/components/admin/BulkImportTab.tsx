@@ -344,7 +344,7 @@ export default function BulkImportTab() {
           failed++;
           log.push({ at: new Date().toISOString(), row: __row, error: err.message });
         }
-        setProgress({ current: idx + 1, total: valid.length, startedAt: progress?.startedAt ?? Date.now() });
+        setProgress({ current: idx + 1, total: valid.length, startedAt });
       }
 
       const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && updated === 0 && !companyUpdated ? "falhou" : "concluido");
