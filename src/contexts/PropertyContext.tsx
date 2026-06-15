@@ -35,6 +35,23 @@ export interface Property {
   previous_price?: number;
 }
 
+export type PriceSection = "card" | "detail" | "banner" | "simulator";
+
+export interface PriceStyle {
+  fontFamily: string;
+  fontSize: number;
+  fontWeight: string;
+  color: string;
+}
+
+export interface PriceFormat {
+  prefix: string;
+  suffix: string;
+  decimals: number;
+  thousandsSeparator: string;
+  decimalSeparator: string;
+}
+
 export interface SiteSettings {
   id?: string;
   heroTitle: string;
@@ -82,7 +99,24 @@ export interface SiteSettings {
   logoWidthPx: number;
   logoHeightPx: number;
   marqueePaddingYPx: number;
+  priceStyles: Record<PriceSection, PriceStyle>;
+  priceFormat: PriceFormat;
 }
+
+export const DEFAULT_PRICE_STYLES: Record<PriceSection, PriceStyle> = {
+  card:      { fontFamily: "Manrope", fontSize: 18, fontWeight: "800", color: "hsl(var(--accent))" },
+  detail:    { fontFamily: "Manrope", fontSize: 32, fontWeight: "800", color: "hsl(var(--accent))" },
+  banner:    { fontFamily: "Manrope", fontSize: 20, fontWeight: "700", color: "hsl(var(--accent))" },
+  simulator: { fontFamily: "Manrope", fontSize: 24, fontWeight: "800", color: "hsl(var(--accent))" },
+};
+
+export const DEFAULT_PRICE_FORMAT: PriceFormat = {
+  prefix: "R$ ",
+  suffix: "",
+  decimals: 0,
+  thousandsSeparator: ".",
+  decimalSeparator: ",",
+};
 
 interface PropertyContextType {
   properties: Property[];
