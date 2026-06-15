@@ -23,6 +23,23 @@ const Linkedin = ({ className }: { className?: string }) => (
   </svg>
 );
 
+/** Aceita "user", "@user", "instagram.com/user" ou URL completa e devolve sempre uma URL absoluta */
+function normalizeSocialUrl(value: string, platform: "instagram" | "facebook" | "youtube" | "linkedin" | "website"): string {
+  const v = (value || "").trim();
+  if (!v) return "";
+  if (/^https?:\/\//i.test(v)) return v;
+  const handle = v.replace(/^@/, "").replace(/^\/+/, "");
+  const base: Record<typeof platform, string> = {
+    instagram: "https://instagram.com/",
+    facebook: "https://facebook.com/",
+    youtube: "https://youtube.com/@",
+    linkedin: "https://linkedin.com/in/",
+    website: "https://",
+  };
+  if (handle.includes(".") || handle.includes("/")) return `https://${handle}`;
+  return `${base[platform]}${handle}`;
+}
+
 export default function Footer() {
   const { settings } = useProperties();
   const navigate = useNavigate();
