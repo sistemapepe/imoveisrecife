@@ -26,6 +26,7 @@ const Linkedin = ({ className }: { className?: string }) => (
 import LogoUpload from "./LogoUpload";
 import PriceTypographyPanel from "./PriceTypographyPanel";
 import { extractPaletteFromImage } from "@/lib/extract-palette";
+import { parseHsl, contrastRatio, adjustForContrast, formatHsl, pickBestContrast } from "@/lib/color-contrast";
 import { getAmenityIcon } from "@/lib/amenity-icons";
 
 interface SettingsTabProps {
