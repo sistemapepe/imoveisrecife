@@ -43,7 +43,7 @@ export default function Navbar() {
 
   return (
     <nav className={`sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 glass-nav border-b border-card/10 max-w-screen-lg mx-auto transition-all duration-300 w-full ${
-      isCompact ? 'h-[110px] py-2' : 'h-[150px] py-3'
+      isCompact ? 'h-[90px] py-0' : 'h-[120px] py-0'
     }`}>
       <div className="w-10 h-10 -ml-1" />
 
