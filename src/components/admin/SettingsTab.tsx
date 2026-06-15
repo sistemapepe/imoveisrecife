@@ -494,7 +494,12 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
         <PalettePreview
           primary={localSettings.primaryColor}
           accent={localSettings.accentColor}
-          onSuggest={(p, a) => setLocalSettings((prev) => ({ ...prev, primaryColor: p, accentColor: a }))}
+          onSuggest={async (p, a) => {
+            const next = { ...localSettings, primaryColor: p, accentColor: a };
+            setLocalSettings(next);
+            await updateSettings(next);
+            toast.success("Paleta corrigida salva!");
+          }}
         />
       </div>
 
