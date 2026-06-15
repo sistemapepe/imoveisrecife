@@ -254,11 +254,89 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
 
       {/* Cabeçalho & Banner — dimensões editáveis */}
       <div className="bg-card rounded-xl border border-border p-4 space-y-4">
-        <div>
-          <h3 className="font-bold text-sm">📐 Cabeçalho & Banner</h3>
-          <p className="text-xs text-muted-foreground">
-            Ajuste o tamanho da logo, a altura da navbar e o espaçamento do banner amarelo. Valores em pixels — em telas pequenas a logo escala automaticamente.
-          </p>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <h3 className="font-bold text-sm">📐 Cabeçalho & Banner</h3>
+            <p className="text-xs text-muted-foreground">
+              Ajuste o tamanho da logo, a altura da navbar e o espaçamento do banner amarelo. Em telas pequenas a logo escala automaticamente.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              setLocalSettings((prev) => ({
+                ...prev,
+                logoWidthPx: 270,
+                logoHeightPx: 140,
+                navbarHeightPx: 100,
+                marqueePaddingYPx: 4,
+              }))
+            }
+            className="shrink-0 text-[11px] font-semibold px-2 py-1 rounded-md border border-border hover:bg-muted transition-colors"
+          >
+            ↺ Restaurar padrão
+          </button>
+        </div>
+
+        {/* Presets rápidos */}
+        <div className="space-y-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Presets sugeridos</span>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { name: "🖥️ Desktop — Compacto", v: { logoWidthPx: 200, logoHeightPx: 100, navbarHeightPx: 80, marqueePaddingYPx: 2 } },
+              { name: "🖥️ Desktop — Padrão",   v: { logoWidthPx: 270, logoHeightPx: 140, navbarHeightPx: 100, marqueePaddingYPx: 4 } },
+              { name: "📱 Mobile — Compacto",  v: { logoWidthPx: 150, logoHeightPx: 78,  navbarHeightPx: 70,  marqueePaddingYPx: 2 } },
+              { name: "📱 Mobile — Padrão",    v: { logoWidthPx: 180, logoHeightPx: 94,  navbarHeightPx: 80,  marqueePaddingYPx: 4 } },
+            ] as const).map((p) => (
+              <button
+                key={p.name}
+                type="button"
+                onClick={() => setLocalSettings((prev) => ({ ...prev, ...p.v }))}
+                className="text-xs font-medium px-2 py-1.5 rounded-md border border-border hover:bg-primary/10 hover:border-primary/30 transition-colors text-left"
+              >
+                {p.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Pré-visualização ao vivo */}
+        <div className="space-y-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pré-visualização</span>
+          <div className="rounded-lg border border-border bg-luxury-dark overflow-hidden">
+            <div
+              className="flex items-center justify-center w-full bg-card/30"
+              style={{ height: `${localSettings.navbarHeightPx}px` }}
+            >
+              {localSettings.logoUrl ? (
+                <img
+                  src={localSettings.logoUrl}
+                  alt="preview"
+                  style={{
+                    width: `min(${localSettings.logoWidthPx}px, 70%)`,
+                    height: `${localSettings.logoHeightPx}px`,
+                    maxHeight: `${Math.max(localSettings.navbarHeightPx - 4, 20)}px`,
+                  }}
+                  className="object-contain"
+                />
+              ) : (
+                <span className="text-accent font-serif font-bold tracking-widest uppercase text-sm">
+                  {localSettings.brandName}
+                </span>
+              )}
+            </div>
+            <div
+              className="w-full bg-accent/20 border-t border-accent/30 flex items-center justify-center"
+              style={{
+                paddingTop: `${localSettings.marqueePaddingYPx}px`,
+                paddingBottom: `${localSettings.marqueePaddingYPx}px`,
+              }}
+            >
+              <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] text-accent-foreground">
+                • CASA EXEMPLO • COBERTURA EXEMPLO • TERRENO EXEMPLO
+              </span>
+            </div>
+          </div>
         </div>
 
         {([
