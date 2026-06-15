@@ -482,9 +482,15 @@ export default function BulkImportTab() {
       ]
     : [];
   const hasBlockingErrors = parsed
-    ? parsed.empresaErrors.length > 0 || parsed.imoveis.length === parsed.imoveisErrors.length
+    ? !!parsed.headerError || parsed.empresaErrors.length > 0 || parsed.imoveis.length === parsed.imoveisErrors.length
     : false;
   const validImoveis = parsed ? parsed.imoveis.length - parsed.imoveisErrors.filter((e) => parsed.imoveis.some((i) => i.__row === e.row)).length : 0;
+  const reprocessTargetRows = reprocessOf
+    ? new Set(((reprocessOf.errors as any[] | null) ?? []).filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis" && typeof e.row === "number").map((e: any) => e.row))
+    : null;
+  const reprocessAvailable = parsed && reprocessTargetRows
+    ? parsed.imoveis.filter((i) => reprocessTargetRows.has(i.__row) && !parsed.imoveisErrors.some((e) => e.row === i.__row)).length
+    : 0;
 
   return (
     <div className="space-y-5">
