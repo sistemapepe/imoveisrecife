@@ -250,7 +250,7 @@ export default function Index() {
             <MarqueeBanner />
 
             {/* Hero Carousel */}
-            <section className="relative h-[85vh] w-full shrink-0 overflow-hidden">
+            <section className="relative h-[calc(100svh-220px)] md:h-[85vh] w-full shrink-0 overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentSlide}
