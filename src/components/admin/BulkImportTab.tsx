@@ -214,7 +214,7 @@ interface HistoryRow {
 }
 
 export default function BulkImportTab() {
-  const { updateSettings, fetchProperties } = useProperties() as any;
+  const { updateSettings, refreshProperties } = useProperties() as any;
   const fileRef = useRef<HTMLInputElement>(null);
   const [parsed, setParsed] = useState<ParsedResult | null>(null);
   const [fileMeta, setFileMeta] = useState<{ name: string; size: number } | null>(null);
@@ -330,7 +330,7 @@ export default function BulkImportTab() {
       }).eq("id", histRow.id);
 
       toast.success(`Importação concluída: ${created} imóvel(is) criado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
-      await fetchProperties?.();
+      await refreshProperties?.();
       reset();
       loadHistory();
     } catch (e: any) {
