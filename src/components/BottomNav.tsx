@@ -23,7 +23,15 @@ export default function BottomNav() {
         return (
           <button
             key={tab.path}
-            onClick={() => navigate(tab.path)}
+            onClick={() => {
+              if (location.pathname === tab.path) {
+                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+              } else {
+                navigate(tab.path);
+                // garante topo ao trocar de rota (ScrollToTop também trata, mas reforça em mobile)
+                requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0 }));
+              }
+            }}
             aria-label={tab.label}
             aria-current={active ? "page" : undefined}
             className={`flex flex-col items-center gap-1 ${active ? "text-accent" : "text-muted-foreground"}`}
