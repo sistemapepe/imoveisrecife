@@ -352,6 +352,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       logoWidthPx: "logo_width_px",
       logoHeightPx: "logo_height_px",
       marqueePaddingYPx: "marquee_padding_y_px",
+      priceStyles: "price_styles",
+      priceFormat: "price_format",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
