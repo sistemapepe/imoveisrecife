@@ -42,9 +42,10 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className={`sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 glass-nav border-b border-card/10 max-w-screen-lg mx-auto transition-all duration-300 w-full ${
-      isCompact ? 'h-[90px] py-0' : 'h-[120px] py-0'
-    }`}>
+    <nav
+      style={{ height: `var(--navbar-h, 100px)` }}
+      className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 glass-nav max-w-screen-lg mx-auto transition-all duration-300 w-full py-0"
+    >
       <div className="w-10 h-10 -ml-1" />
 
       <DrawerMenu 
@@ -59,9 +60,12 @@ export default function Navbar() {
           onClick={() => navigate("/")}
           onMouseEnter={() => handlePrefetch('search')}
           onFocus={() => handlePrefetch('search')}
-          className={`object-contain transition-all duration-300 cursor-pointer ${
-            isCompact ? 'w-[190px] h-[98px]' : 'w-[270px] h-[140px]'
-          }`}
+          style={{
+            width: `min(var(--logo-w, 270px), 70vw)`,
+            height: `var(--logo-h, 140px)`,
+            maxHeight: `calc(var(--navbar-h, 100px) - 4px)`,
+          }}
+          className="object-contain transition-all duration-300 cursor-pointer"
         />
       ) : (
         <h1 

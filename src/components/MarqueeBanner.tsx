@@ -17,7 +17,8 @@ export default function MarqueeBanner() {
 
   return (
     <div 
-      className="w-full bg-accent/20 border-b border-accent/30 overflow-hidden py-3 select-none"
+      style={{ paddingTop: `var(--marquee-py, 4px)`, paddingBottom: `var(--marquee-py, 4px)` }}
+      className="w-full bg-accent/20 border-b border-accent/30 overflow-hidden select-none"
       role="region"
       aria-label="Banner de propriedades em destaque"
     >

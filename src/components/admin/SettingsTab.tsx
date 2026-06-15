@@ -252,6 +252,43 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
         </div>
       ))}
 
+      {/* Cabeçalho & Banner — dimensões editáveis */}
+      <div className="bg-card rounded-xl border border-border p-4 space-y-4">
+        <div>
+          <h3 className="font-bold text-sm">📐 Cabeçalho & Banner</h3>
+          <p className="text-xs text-muted-foreground">
+            Ajuste o tamanho da logo, a altura da navbar e o espaçamento do banner amarelo. Valores em pixels — em telas pequenas a logo escala automaticamente.
+          </p>
+        </div>
+
+        {([
+          { key: "logoWidthPx" as const, label: "Largura da logo (px)", min: 80, max: 480, step: 5 },
+          { key: "logoHeightPx" as const, label: "Altura da logo (px)", min: 40, max: 240, step: 5 },
+          { key: "navbarHeightPx" as const, label: "Altura da navbar (px)", min: 60, max: 200, step: 2 },
+          { key: "marqueePaddingYPx" as const, label: "Espessura do banner (px)", min: 0, max: 24, step: 1 },
+        ]).map(({ key, label, min, max, step }) => {
+          const value = Number((localSettings as any)[key] ?? 0);
+          return (
+            <div key={key} className="space-y-1">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{label}</label>
+                <span className="text-xs font-mono tabular-nums">{value}px</span>
+              </div>
+              <input
+                type="range"
+                min={min}
+                max={max}
+                step={step}
+                value={value}
+                onChange={(e) => setLocalSettings((prev) => ({ ...prev, [key]: Number(e.target.value) }))}
+                className="w-full accent-primary"
+              />
+            </div>
+          );
+        })}
+      </div>
+
+
       {/* Color Picker Section */}
       <div className="bg-card rounded-xl border border-border p-4 space-y-4">
         <div>

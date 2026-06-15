@@ -78,6 +78,10 @@ export interface SiteSettings {
   headerStyle?: 'normal' | 'compact';
   marqueeText?: string;
   imagesAccessMode?: 'public' | 'signed';
+  navbarHeightPx: number;
+  logoWidthPx: number;
+  logoHeightPx: number;
+  marqueePaddingYPx: number;
 }
 
 interface PropertyContextType {
@@ -135,6 +139,10 @@ const defaultSettings: SiteSettings = {
   headerStyle: 'normal',
   marqueeText: "",
   imagesAccessMode: 'public',
+  navbarHeightPx: 100,
+  logoWidthPx: 270,
+  logoHeightPx: 140,
+  marqueePaddingYPx: 4,
 };
 
 const localImages = [property1, property2, property3, property4];
@@ -205,6 +213,10 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         headerStyle: (data as any).header_style ?? 'normal',
         marqueeText: (data as any).marquee_text ?? "",
         imagesAccessMode: ((data as any).images_access_mode ?? 'public') as 'public' | 'signed',
+        navbarHeightPx: (data as any).navbar_height_px ?? 100,
+        logoWidthPx: (data as any).logo_width_px ?? 270,
+        logoHeightPx: (data as any).logo_height_px ?? 140,
+        marqueePaddingYPx: (data as any).marquee_padding_y_px ?? 4,
       }));
     }
   }, []);
@@ -298,6 +310,10 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       headerStyle: "header_style",
       marqueeText: "marquee_text",
       imagesAccessMode: "images_access_mode",
+      navbarHeightPx: "navbar_height_px",
+      logoWidthPx: "logo_width_px",
+      logoHeightPx: "logo_height_px",
+      marqueePaddingYPx: "marquee_padding_y_px",
     };
     for (const [key, dbKey] of Object.entries(map)) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
