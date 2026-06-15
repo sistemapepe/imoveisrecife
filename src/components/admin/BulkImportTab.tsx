@@ -404,7 +404,9 @@ export default function BulkImportTab() {
         log.push({ at: new Date().toISOString(), msg: "Empresa ignorada por erros", errors: parsed.empresaErrors });
       }
 
-      const valid = parsed.imoveis.filter((i) => !parsed.imoveisErrors.some((e) => e.row === i.__row));
+      const valid = parsed.imoveis
+        .filter((i) => !parsed.imoveisErrors.some((e) => e.row === i.__row))
+        .filter((i) => !reprocessRows || reprocessRows.has(i.__row));
       let updated = 0;
       const startedAt = Date.now();
       setProgress({ current: 0, total: valid.length, startedAt });
