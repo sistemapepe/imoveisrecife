@@ -24,6 +24,7 @@ const Linkedin = ({ className }: { className?: string }) => (
   </svg>
 );
 import LogoUpload from "./LogoUpload";
+import PriceTypographyPanel from "./PriceTypographyPanel";
 import { getAmenityIcon } from "@/lib/amenity-icons";
 
 interface SettingsTabProps {
