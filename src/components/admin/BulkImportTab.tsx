@@ -60,7 +60,7 @@ const IMOVEL_MAP: Record<string, string> = {
   url_video_tour_virtual: "video_tour_url", video: "video_tour_url", tour_virtual: "video_tour_url", video_tour_url: "video_tour_url",
 };
 
-const REQUIRED_PROPERTY = ["title","type","category","address","neighborhood","city","price","area","bedrooms","bathrooms","parking","status"];
+
 
 type RowError = { row: number; field?: string; message: string };
 
@@ -133,16 +133,37 @@ function parseEmpresaSheet(ws: XLSX.WorkSheet): { data: Partial<SiteSettings> | 
   return { data: settings, errors };
 }
 
+const isUrl = (v: string) => /^https?:\/\/\S+\.\S+/i.test(v);
+
+const FIELD_LABELS: Record<string, string> = {
+  title: "Título", type: "Tipo", category: "Categoria",
+  address: "Endereço", neighborhood: "Bairro", city: "Cidade",
+  price: "Preço", area: "Área", bedrooms: "Quartos",
+  bathrooms: "Banheiros", parking: "Vagas", status: "Status",
+  images: "Imagens", suites: "Suítes",
+};
+
 function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[] } {
   const raw = XLSX.utils.sheet_to_json<any>(ws, { defval: "" });
   const mapped = remap(raw, IMOVEL_MAP);
   const errors: RowError[] = [];
   const data: any[] = [];
 
+  if (raw.length === 0) {
+    return { data: [], errors: [{ row: 1, message: "A aba 'Imóveis' está vazia." }] };
+  }
+
   mapped.forEach((m, i) => {
     const rowNum = i + 2; // header na linha 1
-    // pular linhas totalmente vazias
     if (!Object.values(m).some((v) => String(v ?? "").trim() !== "")) return;
+
+    const rawNum = (k: string) => {
+      const v = m[k];
+      if (v === "" || v === null || v === undefined) return { ok: false, n: 0, missing: true };
+      const n = toNum(v);
+      const valid = Number.isFinite(n) && (typeof v === "number" || /^[\d.,\s-]+$/.test(String(v)));
+      return { ok: valid, n, missing: false };
+    };
 
     const item: any = {
       title: String(m.title ?? "").trim(),
@@ -151,12 +172,12 @@ function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[
       address: String(m.address ?? "").trim(),
       neighborhood: String(m.neighborhood ?? "").trim(),
       city: String(m.city ?? "").trim(),
-      price: toNum(m.price),
-      area: toNum(m.area),
-      bedrooms: Math.trunc(toNum(m.bedrooms)),
-      suites: Math.trunc(toNum(m.suites)),
-      bathrooms: Math.trunc(toNum(m.bathrooms)),
-      parking: Math.trunc(toNum(m.parking)),
+      price: rawNum("price").n,
+      area: rawNum("area").n,
+      bedrooms: Math.trunc(rawNum("bedrooms").n),
+      suites: Math.trunc(rawNum("suites").n),
+      bathrooms: Math.trunc(rawNum("bathrooms").n),
+      parking: Math.trunc(rawNum("parking").n),
       status: String(m.status ?? "disponivel").trim().toLowerCase(),
       exclusive: toBool(m.exclusive),
       featured: toBool(m.featured),
@@ -167,21 +188,36 @@ function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[
       previous_price: 0,
     };
 
-    REQUIRED_PROPERTY.forEach((f) => {
-      const v = (item as any)[f];
-      if (v === "" || v === null || v === undefined || (typeof v === "number" && f !== "suites" && v <= 0 && ["price","area","bedrooms","bathrooms","parking"].includes(f))) {
-        if (f === "bedrooms" || f === "bathrooms" || f === "parking") {
-          if (Number(v) < 0) errors.push({ row: rowNum, field: f, message: `${f} inválido` });
-        } else if (v === "" || v === null || v === undefined || (typeof v === "number" && v <= 0)) {
-          errors.push({ row: rowNum, field: f, message: `Campo obrigatório ausente: ${f}` });
-        }
-      }
+    // Strings obrigatórias
+    (["title","type","category","address","neighborhood","city"] as const).forEach((f) => {
+      if (!item[f]) errors.push({ row: rowNum, field: f, message: `Campo obrigatório ausente: ${FIELD_LABELS[f]}` });
     });
+
+    // Números obrigatórios > 0
+    (["price","area","bedrooms","bathrooms","parking"] as const).forEach((f) => {
+      const r = rawNum(f);
+      if (r.missing) errors.push({ row: rowNum, field: f, message: `${FIELD_LABELS[f]} é obrigatório` });
+      else if (!r.ok) errors.push({ row: rowNum, field: f, message: `${FIELD_LABELS[f]} deve ser numérico` });
+      else if (r.n <= 0) errors.push({ row: rowNum, field: f, message: `${FIELD_LABELS[f]} deve ser maior que 0` });
+    });
+
+    // Suítes opcional, mas se preenchido deve ser número >= 0
+    if (m.suites !== "" && m.suites !== undefined && m.suites !== null) {
+      const r = rawNum("suites");
+      if (!r.ok || r.n < 0) errors.push({ row: rowNum, field: "suites", message: "Suítes deve ser número >= 0" });
+    }
+
     if (!["disponivel","reservado","vendido"].includes(item.status)) {
-      errors.push({ row: rowNum, field: "status", message: `Status inválido: ${item.status}` });
+      errors.push({ row: rowNum, field: "status", message: `Status inválido: "${item.status}". Use disponivel, reservado ou vendido.` });
     }
     if (item.images.length === 0) {
       errors.push({ row: rowNum, field: "images", message: "Adicione ao menos 1 imagem (URL)" });
+    } else {
+      const bad = item.images.filter((u: string) => !isUrl(u));
+      if (bad.length) errors.push({ row: rowNum, field: "images", message: `URL(s) de imagem inválida(s): ${bad.join(", ")}` });
+    }
+    if (item.video_tour_url && !isUrl(item.video_tour_url)) {
+      errors.push({ row: rowNum, field: "video_tour_url", message: "URL de vídeo/tour inválida" });
     }
 
     data.push({ __row: rowNum, ...item });
@@ -189,6 +225,8 @@ function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[
 
   return { data, errors };
 }
+
+
 
 // Procura aba por nome aproximado
 function findSheet(wb: XLSX.WorkBook, names: string[]) {
