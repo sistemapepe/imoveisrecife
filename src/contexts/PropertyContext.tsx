@@ -253,6 +253,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         logoWidthPx: (data as any).logo_width_px ?? 270,
         logoHeightPx: (data as any).logo_height_px ?? 140,
         marqueePaddingYPx: (data as any).marquee_padding_y_px ?? 4,
+        priceStyles: { ...DEFAULT_PRICE_STYLES, ...((data as any).price_styles ?? {}) },
+        priceFormat: { ...DEFAULT_PRICE_FORMAT, ...((data as any).price_format ?? {}) },
       }));
     }
   }, []);
