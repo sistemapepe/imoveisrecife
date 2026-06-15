@@ -218,6 +218,8 @@ export default function BulkImportTab() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [parsed, setParsed] = useState<ParsedResult | null>(null);
   const [fileMeta, setFileMeta] = useState<{ name: string; size: number } | null>(null);
+  const [upsertMode, setUpsertMode] = useState(true);
+  const [progress, setProgress] = useState<{ current: number; total: number; startedAt: number } | null>(null);
   const [importing, setImporting] = useState(false);
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
@@ -310,26 +312,48 @@ export default function BulkImportTab() {
       }
 
       const valid = parsed.imoveis.filter((i) => !parsed.imoveisErrors.some((e) => e.row === i.__row));
-      for (const item of valid) {
+      let updated = 0;
+      setProgress({ current: 0, total: valid.length, startedAt: Date.now() });
+      for (let idx = 0; idx < valid.length; idx++) {
+        const item = valid[idx];
         const { __row, ...payload } = item;
-        const { error } = await supabase.from("properties").insert(payload as any);
-        if (error) {
+        try {
+          let existingId: string | null = null;
+          if (upsertMode && Array.isArray(payload.images) && payload.images.length > 0) {
+            const { data: found } = await supabase
+              .from("properties")
+              .select("id")
+              .overlaps("images", payload.images)
+              .limit(1)
+              .maybeSingle();
+            existingId = (found as any)?.id ?? null;
+          }
+          if (existingId) {
+            const { error } = await supabase.from("properties").update(payload as any).eq("id", existingId);
+            if (error) throw error;
+            updated++;
+            log.push({ at: new Date().toISOString(), row: __row, msg: "Atualizado", id: existingId });
+          } else {
+            const { error } = await supabase.from("properties").insert(payload as any);
+            if (error) throw error;
+            created++;
+            log.push({ at: new Date().toISOString(), row: __row, msg: "Criado" });
+          }
+        } catch (err: any) {
           failed++;
-          log.push({ at: new Date().toISOString(), row: __row, error: error.message });
-        } else {
-          created++;
-          log.push({ at: new Date().toISOString(), row: __row, msg: "Criado" });
+          log.push({ at: new Date().toISOString(), row: __row, error: err.message });
         }
+        setProgress({ current: idx + 1, total: valid.length, startedAt: progress?.startedAt ?? Date.now() });
       }
 
-      const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && !companyUpdated ? "falhou" : "concluido");
+      const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && updated === 0 && !companyUpdated ? "falhou" : "concluido");
       await supabase.from("import_history").update({
         status, company_updated: companyUpdated,
-        properties_created: created, properties_failed: failed,
+        properties_created: created + updated, properties_failed: failed,
         log: log as any,
       }).eq("id", histRow.id);
 
-      toast.success(`Importação concluída: ${created} imóvel(is) criado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
+      toast.success(`Importação concluída: ${created} criado(s), ${updated} atualizado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
       await refreshProperties?.();
       reset();
       loadHistory();
@@ -341,6 +365,7 @@ export default function BulkImportTab() {
       loadHistory();
     } finally {
       setImporting(false);
+      setProgress(null);
     }
   };
 
