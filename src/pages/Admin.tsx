@@ -63,6 +63,18 @@ export default function Admin() {
   const [cepLoading, setCepLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const DEFAULT_CATEGORIES = ["Venda", "Locação", "Temporada", "Repasse"];
+  const [categories, setCategories] = useState<string[]>(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("admin_property_categories") || "null");
+      if (Array.isArray(stored) && stored.length > 0) return stored;
+    } catch {}
+    return DEFAULT_CATEGORIES;
+  });
+  useEffect(() => {
+    localStorage.setItem("admin_property_categories", JSON.stringify(categories));
+  }, [categories]);
+
   const fetchCep = async (value: string) => {
     const clean = value.replace(/\D/g, "");
     setCep(value);
