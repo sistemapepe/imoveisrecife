@@ -400,6 +400,14 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
         })}
       </div>
 
+      {/* 💰 Tipografia & Formato do Preço */}
+      <PriceTypographyPanel
+        settings={localSettings}
+        onChange={(patch) => setLocalSettings((prev) => ({ ...prev, ...patch }))}
+      />
+
+
+
 
       {/* Color Picker Section */}
       <div className="bg-card rounded-xl border border-border p-4 space-y-4">
