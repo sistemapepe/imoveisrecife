@@ -448,6 +448,26 @@ export default function BulkImportTab() {
             </div>
           )}
 
+          <label className="flex items-start gap-2 text-xs cursor-pointer select-none p-3 rounded-lg border border-border bg-muted/30">
+            <input
+              type="checkbox"
+              checked={upsertMode}
+              onChange={(e) => setUpsertMode(e.target.checked)}
+              className="mt-0.5 accent-current"
+              disabled={importing}
+            />
+            <span>
+              <span className="font-semibold">Atualizar registros existentes (upsert)</span>
+              <span className="block text-muted-foreground text-[11px] mt-0.5">
+                Empresa: sempre atualizada (CRECI + UF). Imóveis: se alguma URL de imagem já existir no banco, o registro é atualizado em vez de criar duplicado.
+              </span>
+            </span>
+          </label>
+
+          {progress && (
+            <ProgressBar current={progress.current} total={progress.total} startedAt={progress.startedAt} />
+          )}
+
           <div className="flex gap-2 flex-wrap">
             <Button onClick={confirmImport} disabled={importing || hasBlockingErrors || (validImoveis === 0 && !(parsed.empresa && parsed.empresaErrors.length === 0))}>
               {importing ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <CheckCircle2 className="h-4 w-4 mr-1" />}
