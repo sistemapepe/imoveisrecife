@@ -647,10 +647,24 @@ export default function BulkImportTab() {
                       <span className="text-destructive font-semibold">{h.properties_failed}</span>
                       <span className="text-muted-foreground"> de {h.properties_total}</span>
                     </td>
-                    <td className="py-2">
+                    <td className="py-2 space-x-1 whitespace-nowrap">
                       <Button variant="ghost" size="sm" onClick={() => downloadLog(h)}>
                         <Download className="h-3 w-3 mr-1" /> Baixar
                       </Button>
+                      {h.properties_failed > 0 && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setReprocessOf(h);
+                            reset();
+                            setReprocessOf(h);
+                            fileRef.current?.click();
+                          }}
+                        >
+                          <RefreshCw className="h-3 w-3 mr-1" /> Reprocessar erros
+                        </Button>
+                      )}
                     </td>
                   </tr>
                 ))}
