@@ -288,15 +288,6 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
         })}
       </div>
 
-      {/* spacer below custom section */}
-      {false && (
-        <div />
-      )}
-      {/* end custom section */}
-      {/* keep map closed above */}
-      {[].map(() => null)}
-      {/* placeholder to keep diff minimal */}
-      {sections.length === -1 && (
 
       {/* Color Picker Section */}
       <div className="bg-card rounded-xl border border-border p-4 space-y-4">
