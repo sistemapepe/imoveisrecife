@@ -528,9 +528,32 @@ export default function BulkImportTab() {
         </label>
       </div>
 
+      {reprocessOf && (
+        <div className="bg-accent/10 border border-accent/40 rounded-xl p-4 text-xs flex items-center justify-between gap-3 flex-wrap">
+          <span>
+            🔁 <strong>Modo reprocesso</strong>: importando apenas linhas com erro da importação <span className="font-mono">{reprocessOf.file_name}</span> ({(reprocessOf.errors as any[] ?? []).filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis").length} linha(s) alvo).
+          </span>
+          <Button size="sm" variant="ghost" onClick={() => setReprocessOf(null)}>Cancelar reprocesso</Button>
+        </div>
+      )}
+
       {parsed && (
         <div className="bg-card rounded-xl border border-border p-5 space-y-4">
           <h4 className="font-bold text-sm">📊 Pré-visualização</h4>
+
+          {parsed.headerError && (
+            <div className="rounded-lg border border-destructive bg-destructive/10 p-3 text-xs text-destructive">
+              <p className="font-bold flex items-center gap-1.5"><AlertTriangle className="h-4 w-4" /> Template inválido</p>
+              <p className="mt-1">{parsed.headerError}</p>
+            </div>
+          )}
+
+          {reprocessOf && (
+            <p className="text-[11px] text-muted-foreground">
+              Linhas alvo encontradas neste arquivo: <strong>{reprocessAvailable}</strong>.
+            </p>
+          )}
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Stat label="Empresa" value={parsed.empresa && parsed.empresaErrors.length === 0 ? "1 pronta" : "0"} ok={!!parsed.empresa && parsed.empresaErrors.length === 0} />
             <Stat label="Imóveis válidos" value={String(validImoveis)} ok={validImoveis > 0} />
