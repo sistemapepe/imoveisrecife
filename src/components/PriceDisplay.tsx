@@ -38,11 +38,15 @@ export function PriceDisplay({
   const fmt = forceFormat ?? settings.priceFormat;
   const Tag = as as any;
 
+  // Fallback automático: usa --price-color (auto-calculado por contraste em DynamicTheme)
+  // quando o admin não definir cor ou deixar em branco.
+  const color = style?.color?.trim() ? style.color : "hsl(var(--price-color))";
+
   const inline: CSSProperties = {
     fontFamily: style?.fontFamily,
     fontSize: style?.fontSize ? `${style.fontSize}px` : undefined,
     fontWeight: style?.fontWeight as any,
-    color: style?.color,
+    color,
     ...styleOverride,
   };
 
