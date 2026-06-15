@@ -412,9 +412,28 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
 
       {/* Color Picker Section */}
       <div className="bg-card rounded-xl border border-border p-4 space-y-4">
-        <div>
-          <h3 className="font-bold text-sm">🎨 Cores</h3>
-          <p className="text-xs text-muted-foreground">Escolha as cores do site visualmente</p>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <h3 className="font-bold text-sm">🎨 Cores</h3>
+            <p className="text-xs text-muted-foreground">Escolha as cores do site visualmente</p>
+          </div>
+          <button
+            type="button"
+            disabled={!localSettings.logoUrl}
+            onClick={async () => {
+              try {
+                const { primary, accent } = await extractPaletteFromImage(localSettings.logoUrl);
+                setLocalSettings((prev) => ({ ...prev, primaryColor: primary, accentColor: accent }));
+                toast.success("Paleta extraída da logo!");
+              } catch (e: any) {
+                toast.error("Não foi possível extrair a paleta: " + (e?.message || "erro"));
+              }
+            }}
+            className="shrink-0 text-[11px] font-semibold px-2 py-1 rounded-md border border-primary/40 bg-primary/10 hover:bg-primary/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            title={localSettings.logoUrl ? "Detecta as cores dominantes da logo" : "Envie uma logo primeiro"}
+          >
+            🪄 Extrair da logo
+          </button>
         </div>
 
         {([
