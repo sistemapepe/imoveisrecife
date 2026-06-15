@@ -234,7 +234,29 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
               <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
                 {icon} {label}
               </label>
-              {multiline ? (
+              {key === "creci" ? (
+                <div className="mt-1 flex gap-2">
+                  <select
+                    required
+                    value={(localSettings as any).creciUf || ""}
+                    onChange={(e) => setLocalSettings((prev) => ({ ...prev, creciUf: e.target.value }))}
+                    className="px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  >
+                    <option value="">UF</option>
+                    {["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"].map((uf) => (
+                      <option key={uf} value={uf}>{uf}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    required
+                    value={(localSettings as any).creci || ""}
+                    onChange={(e) => setLocalSettings((prev) => ({ ...prev, creci: e.target.value }))}
+                    placeholder="20020"
+                    className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+              ) : multiline ? (
                 <textarea
                   value={(localSettings as any)[key] || ""}
                   onChange={(e) => setLocalSettings((prev) => ({ ...prev, [key]: e.target.value }))}
@@ -250,6 +272,11 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
                   placeholder={placeholder}
                   className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
+              )}
+              {key === "creci" && (localSettings as any).creciUf && (localSettings as any).creci && (
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  Prévia: <span className="font-semibold text-accent">CRECI - {(localSettings as any).creciUf} {(localSettings as any).creci}</span>
+                </p>
               )}
             </div>
           ))}
