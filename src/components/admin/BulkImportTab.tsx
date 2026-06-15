@@ -313,7 +313,8 @@ export default function BulkImportTab() {
 
       const valid = parsed.imoveis.filter((i) => !parsed.imoveisErrors.some((e) => e.row === i.__row));
       let updated = 0;
-      setProgress({ current: 0, total: valid.length, startedAt: Date.now() });
+      const startedAt = Date.now();
+      setProgress({ current: 0, total: valid.length, startedAt });
       for (let idx = 0; idx < valid.length; idx++) {
         const item = valid[idx];
         const { __row, ...payload } = item;
