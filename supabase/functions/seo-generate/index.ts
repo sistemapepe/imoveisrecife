@@ -114,17 +114,16 @@ Retorne APENAS um JSON válido com este formato exato:
     }
     if (!aiRes.ok) {
       const txt = await aiRes.text();
-      console.error("AI error:", txt);
-      return new Response(JSON.stringify({ error: "Falha na geração da IA" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      console.error("AI error:", aiRes.status, txt);
+      return new Response(
+        JSON.stringify({ error: "Falha na geração da IA", fallback: true }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
     const aiData = await aiRes.json();
     const content: string = aiData.choices?.[0]?.message?.content || "";
 
-    // Extract JSON from response (may have code fences)
     let parsed: any = null;
     try {
       const jsonMatch = content.match(/\{[\s\S]*\}/);
@@ -134,10 +133,10 @@ Retorne APENAS um JSON válido com este formato exato:
     }
 
     if (!parsed) {
-      return new Response(JSON.stringify({ error: "Resposta inválida da IA", raw: content }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Resposta inválida da IA", fallback: true, raw: content }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
     return new Response(JSON.stringify(parsed), {
@@ -145,9 +144,9 @@ Retorne APENAS um JSON válido com este formato exato:
     });
   } catch (err) {
     console.error("seo-generate error:", err);
-    return new Response(JSON.stringify({ error: "Erro interno" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "Erro interno", fallback: true }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
   }
 });
