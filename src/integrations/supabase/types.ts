@@ -97,6 +97,54 @@ export type Database = {
           },
         ]
       }
+      import_history: {
+        Row: {
+          company_updated: boolean
+          created_at: string
+          errors: Json
+          file_name: string
+          file_size: number
+          id: string
+          log: Json
+          properties_created: number
+          properties_failed: number
+          properties_total: number
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          company_updated?: boolean
+          created_at?: string
+          errors?: Json
+          file_name: string
+          file_size?: number
+          id?: string
+          log?: Json
+          properties_created?: number
+          properties_failed?: number
+          properties_total?: number
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          company_updated?: boolean
+          created_at?: string
+          errors?: Json
+          file_name?: string
+          file_size?: number
+          id?: string
+          log?: Json
+          properties_created?: number
+          properties_failed?: number
+          properties_total?: number
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       performance_logs: {
         Row: {
           connection_type: string | null
