@@ -300,44 +300,78 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
           </div>
         </div>
 
-        {/* Pré-visualização ao vivo */}
+        {/* Pré-visualização lado a lado (desktop + mobile) */}
         <div className="space-y-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pré-visualização</span>
-          <div className="rounded-lg border border-border bg-luxury-dark overflow-hidden">
-            <div
-              className="flex items-center justify-center w-full bg-card/30"
-              style={{ height: `${localSettings.navbarHeightPx}px` }}
-            >
-              {localSettings.logoUrl ? (
-                <img
-                  src={localSettings.logoUrl}
-                  alt="preview"
-                  style={{
-                    width: `min(${localSettings.logoWidthPx}px, 70%)`,
-                    height: `${localSettings.logoHeightPx}px`,
-                    maxHeight: `${Math.max(localSettings.navbarHeightPx - 4, 20)}px`,
-                  }}
-                  className="object-contain"
-                />
-              ) : (
-                <span className="text-accent font-serif font-bold tracking-widest uppercase text-sm">
-                  {localSettings.brandName}
-                </span>
-              )}
-            </div>
-            <div
-              className="w-full bg-accent/20 border-t border-accent/30 flex items-center justify-center"
-              style={{
-                paddingTop: `${localSettings.marqueePaddingYPx}px`,
-                paddingBottom: `${localSettings.marqueePaddingYPx}px`,
-              }}
-            >
-              <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] text-accent-foreground">
-                • CASA EXEMPLO • COBERTURA EXEMPLO • TERRENO EXEMPLO
-              </span>
-            </div>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pré-visualização (desktop × mobile)</span>
+          <div className="grid grid-cols-2 gap-3">
+            {([
+              { label: "🖥️ Desktop (1024px)", width: 1024, scale: 0.32 },
+              { label: "📱 Mobile (375px)", width: 375, scale: 0.7 },
+            ] as const).map((device) => {
+              const navH = localSettings.navbarHeightPx;
+              const logoW = Math.min(localSettings.logoWidthPx, device.width * 0.7);
+              const logoH = Math.min(localSettings.logoHeightPx, Math.max(navH - 4, 20));
+              return (
+                <div key={device.label} className="space-y-1">
+                  <span className="text-[10px] text-muted-foreground">{device.label}</span>
+                  <div
+                    className="rounded-md border border-border bg-luxury-dark overflow-hidden mx-auto"
+                    style={{ width: `${device.width * device.scale}px` }}
+                  >
+                    <div
+                      className="flex items-center justify-center w-full bg-card/30"
+                      style={{ height: `${navH * device.scale}px` }}
+                    >
+                      {localSettings.logoUrl ? (
+                        <img
+                          src={localSettings.logoUrl}
+                          alt="preview"
+                          style={{ width: `${logoW * device.scale}px`, height: `${logoH * device.scale}px` }}
+                          className="object-contain"
+                        />
+                      ) : (
+                        <span className="text-accent font-serif font-bold uppercase" style={{ fontSize: `${10 * device.scale * 2}px` }}>
+                          {localSettings.brandName}
+                        </span>
+                      )}
+                    </div>
+                    <div
+                      className="w-full bg-accent/20 border-t border-accent/30 flex items-center justify-center"
+                      style={{
+                        paddingTop: `${localSettings.marqueePaddingYPx * device.scale}px`,
+                        paddingBottom: `${localSettings.marqueePaddingYPx * device.scale}px`,
+                      }}
+                    >
+                      <span className="font-bold uppercase tracking-[0.15em] text-accent-foreground truncate px-1" style={{ fontSize: `${9 * device.scale * 1.6}px` }}>
+                        • CASA • COBERTURA • TERRENO
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
+
+        {/* Validação / avisos */}
+        {(() => {
+          const warnings: string[] = [];
+          if (localSettings.logoWidthPx > 240) warnings.push("Largura da logo > 240px pode estourar em mobiles ≤ 360px (será reduzida automaticamente).");
+          if (localSettings.logoHeightPx > localSettings.navbarHeightPx - 4) warnings.push("Altura da logo é maior que a navbar — a logo será cortada.");
+          if (localSettings.navbarHeightPx > 140) warnings.push("Navbar > 140px ocupa muito espaço no mobile.");
+          if (localSettings.marqueePaddingYPx > 16) warnings.push("Espessura do banner > 16px deixa o cabeçalho desproporcional no mobile.");
+          if (warnings.length === 0) return null;
+          return (
+            <div className="rounded-md border border-yellow-500/40 bg-yellow-500/10 p-2 space-y-1">
+              <p className="text-[11px] font-bold text-yellow-600 dark:text-yellow-400">⚠️ Atenção à responsividade</p>
+              <ul className="list-disc pl-4 space-y-0.5">
+                {warnings.map((w) => (
+                  <li key={w} className="text-[11px] text-yellow-700 dark:text-yellow-300">{w}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        })()}
 
         {([
           { key: "logoWidthPx" as const, label: "Largura da logo (px)", min: 80, max: 480, step: 5 },
