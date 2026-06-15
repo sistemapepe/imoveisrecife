@@ -327,6 +327,8 @@ export type Database = {
           marquee_padding_y_px: number
           marquee_text: string | null
           navbar_height_px: number
+          price_format: Json
+          price_styles: Json
           primary_color: string
           privacy_policy: string
           show_location_on_card: boolean
@@ -374,6 +376,8 @@ export type Database = {
           marquee_padding_y_px?: number
           marquee_text?: string | null
           navbar_height_px?: number
+          price_format?: Json
+          price_styles?: Json
           primary_color?: string
           privacy_policy?: string
           show_location_on_card?: boolean
@@ -421,6 +425,8 @@ export type Database = {
           marquee_padding_y_px?: number
           marquee_text?: string | null
           navbar_height_px?: number
+          price_format?: Json
+          price_styles?: Json
           primary_color?: string
           privacy_policy?: string
           show_location_on_card?: boolean
