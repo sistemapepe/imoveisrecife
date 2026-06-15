@@ -381,7 +381,7 @@ export default function BulkImportTab() {
       errors: allErrors as any,
       parent_import_id: reprocessOf?.id ?? null,
       reprocess: !!reprocessOf,
-    }).select().single();
+    } as any).select().single();
 
     if (histErr || !histRow) {
       toast.error("Falha ao iniciar importação: " + (histErr?.message || ""));
