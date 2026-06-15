@@ -60,7 +60,21 @@ const IMOVEL_MAP: Record<string, string> = {
   url_video_tour_virtual: "video_tour_url", video: "video_tour_url", tour_virtual: "video_tour_url", video_tour_url: "video_tour_url",
 };
 
+// Cabeçalhos esperados da aba "Imóveis" (na ordem do template)
+const EXPECTED_IMOVEIS_HEADERS = [
+  "Título","Tipo","Categoria","Endereço","Bairro","Cidade","UF",
+  "Preço (R$)","Área (m²)","Quartos","Suítes","Banheiros","Vagas",
+  "Status","Exclusivo (sim/não)","Destaque (sim/não)","Descrição",
+  "Comodidades (separadas por vírgula)","URLs das imagens (separadas por vírgula)",
+  "URL Vídeo / Tour virtual",
+];
 
+function validateImoveisHeaders(actual: string[]): string | null {
+  const a = actual.map((h) => norm(h));
+  const missing = EXPECTED_IMOVEIS_HEADERS.filter((h) => !a.includes(norm(h)));
+  if (missing.length) return `Cabeçalhos ausentes na aba "Imóveis": ${missing.join(", ")}. Baixe o modelo oficial e mantenha os nomes/ordem das colunas.`;
+  return null;
+}
 
 type RowError = { row: number; field?: string; message: string };
 
@@ -69,6 +83,9 @@ interface ParsedResult {
   empresaErrors: RowError[];
   imoveis: any[];
   imoveisErrors: RowError[];
+  headerError?: string | null;
+  rawImoveisRows?: any[];
+  imoveisHeaders?: string[];
 }
 
 function remap(rows: any[], map: Record<string, string>) {
@@ -143,18 +160,24 @@ const FIELD_LABELS: Record<string, string> = {
   images: "Imagens", suites: "Suítes",
 };
 
-function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[] } {
+function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[]; raw: any[]; headers: string[]; headerError: string | null } {
   const raw = XLSX.utils.sheet_to_json<any>(ws, { defval: "" });
+  const headers = raw.length > 0 ? Object.keys(raw[0]) : (XLSX.utils.sheet_to_json<any>(ws, { header: 1 })[0] as string[] ?? []);
+  const headerError = validateImoveisHeaders(headers);
+  if (headerError) {
+    return { data: [], errors: [{ row: 1, message: headerError }], raw, headers, headerError };
+  }
+
   const mapped = remap(raw, IMOVEL_MAP);
   const errors: RowError[] = [];
   const data: any[] = [];
 
   if (raw.length === 0) {
-    return { data: [], errors: [{ row: 1, message: "A aba 'Imóveis' está vazia." }] };
+    return { data: [], errors: [{ row: 1, message: "A aba 'Imóveis' está vazia." }], raw, headers, headerError: null };
   }
 
   mapped.forEach((m, i) => {
-    const rowNum = i + 2; // header na linha 1
+    const rowNum = i + 2;
     if (!Object.values(m).some((v) => String(v ?? "").trim() !== "")) return;
 
     const rawNum = (k: string) => {
@@ -188,25 +211,19 @@ function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[
       previous_price: 0,
     };
 
-    // Strings obrigatórias
     (["title","type","category","address","neighborhood","city"] as const).forEach((f) => {
       if (!item[f]) errors.push({ row: rowNum, field: f, message: `Campo obrigatório ausente: ${FIELD_LABELS[f]}` });
     });
-
-    // Números obrigatórios > 0
     (["price","area","bedrooms","bathrooms","parking"] as const).forEach((f) => {
       const r = rawNum(f);
       if (r.missing) errors.push({ row: rowNum, field: f, message: `${FIELD_LABELS[f]} é obrigatório` });
       else if (!r.ok) errors.push({ row: rowNum, field: f, message: `${FIELD_LABELS[f]} deve ser numérico` });
       else if (r.n <= 0) errors.push({ row: rowNum, field: f, message: `${FIELD_LABELS[f]} deve ser maior que 0` });
     });
-
-    // Suítes opcional, mas se preenchido deve ser número >= 0
     if (m.suites !== "" && m.suites !== undefined && m.suites !== null) {
       const r = rawNum("suites");
       if (!r.ok || r.n < 0) errors.push({ row: rowNum, field: "suites", message: "Suítes deve ser número >= 0" });
     }
-
     if (!["disponivel","reservado","vendido"].includes(item.status)) {
       errors.push({ row: rowNum, field: "status", message: `Status inválido: "${item.status}". Use disponivel, reservado ou vendido.` });
     }
@@ -223,12 +240,9 @@ function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[
     data.push({ __row: rowNum, ...item });
   });
 
-  return { data, errors };
+  return { data, errors, raw, headers, headerError: null };
 }
 
-
-
-// Procura aba por nome aproximado
 function findSheet(wb: XLSX.WorkBook, names: string[]) {
   for (const n of names) {
     const found = wb.SheetNames.find((s) => norm(s) === norm(n));
@@ -261,6 +275,7 @@ export default function BulkImportTab() {
   const [importing, setImporting] = useState(false);
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [reprocessOf, setReprocessOf] = useState<HistoryRow | null>(null);
 
   const loadHistory = useCallback(async () => {
     setLoadingHistory(true);
@@ -285,13 +300,16 @@ export default function BulkImportTab() {
       const imoveisWs = findSheet(wb, ["Imóveis", "Imoveis", "imoveis", "properties"]);
 
       const emp = empresaWs ? parseEmpresaSheet(empresaWs) : { data: null, errors: [{ row: 0, message: "Aba 'Empresa' não encontrada." } as RowError] };
-      const imo = imoveisWs ? parseImoveisSheet(imoveisWs) : { data: [], errors: [{ row: 0, message: "Aba 'Imóveis' não encontrada." } as RowError] };
+      const imo = imoveisWs ? parseImoveisSheet(imoveisWs) : { data: [], errors: [{ row: 0, message: "Aba 'Imóveis' não encontrada." } as RowError], raw: [], headers: [], headerError: "Aba 'Imóveis' não encontrada." };
 
       setParsed({
         empresa: emp.data,
         empresaErrors: emp.errors,
-        imoveis: imo.data,
-        imoveisErrors: imo.errors,
+        imoveis: (imo as any).data,
+        imoveisErrors: (imo as any).errors,
+        headerError: (imo as any).headerError ?? null,
+        rawImoveisRows: (imo as any).raw ?? [],
+        imoveisHeaders: (imo as any).headers ?? [],
       });
     } catch (e: any) {
       toast.error("Não foi possível ler o arquivo: " + e.message);
@@ -299,26 +317,60 @@ export default function BulkImportTab() {
     }
   };
 
-  const downloadErrorReport = (errs: { row: number; field?: string; message: string; sheet: string }[], fileName: string) => {
-    const wsData = [["Aba","Linha","Campo","Mensagem"], ...errs.map((e) => [e.sheet, e.row, e.field ?? "", e.message])];
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
+  // Relatório por linha: 1 linha por linha-do-Excel com erros, contendo TODAS as colunas originais + "Erros"
+  const downloadErrorReport = (
+    errs: { row: number; field?: string; message: string; sheet: string }[],
+    fileName: string,
+  ) => {
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Erros");
+    // Aba 1: resumo
+    const resumo = [["Aba","Linha","Campo","Mensagem"], ...errs.map((e) => [e.sheet, e.row, e.field ?? "", e.message])];
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(resumo), "Erros");
+    // Aba 2: linhas inválidas com colunas originais
+    if (parsed?.rawImoveisRows && parsed?.imoveisHeaders && parsed.imoveisHeaders.length > 0) {
+      const headers = parsed.imoveisHeaders;
+      const errsByRow = new Map<number, string[]>();
+      errs.filter((e) => e.sheet === "Imóveis").forEach((e) => {
+        const arr = errsByRow.get(e.row) ?? [];
+        arr.push(e.field ? `${e.field}: ${e.message}` : e.message);
+        errsByRow.set(e.row, arr);
+      });
+      const rows = [[...headers, "Linha", "Erros"]];
+      parsed.rawImoveisRows.forEach((r, i) => {
+        const rowNum = i + 2;
+        if (!errsByRow.has(rowNum)) return;
+        rows.push([...headers.map((h) => r[h] ?? ""), rowNum, errsByRow.get(rowNum)!.join(" | ")]);
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), "Linhas inválidas");
+    }
     XLSX.writeFile(wb, `relatorio_erros_${fileName.replace(/\.[^.]+$/, "")}.xlsx`);
   };
 
   const reset = () => {
     setParsed(null);
     setFileMeta(null);
+    setReprocessOf(null);
     if (fileRef.current) fileRef.current.value = "";
   };
 
+
   const confirmImport = async () => {
     if (!parsed || !fileMeta) return;
+    if (parsed.headerError) {
+      toast.error("Cabeçalhos do template inválidos. Importação bloqueada.");
+      return;
+    }
     const allErrors = [
       ...parsed.empresaErrors.map((e) => ({ ...e, sheet: "Empresa" })),
       ...parsed.imoveisErrors.map((e) => ({ ...e, sheet: "Imóveis" })),
     ];
+
+    // Em modo reprocesso: importar apenas linhas que estavam com erro na importação pai
+    const reprocessRows: Set<number> | null = reprocessOf
+      ? new Set((reprocessOf.errors as any[] | null ?? [])
+          .filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis" && typeof e.row === "number")
+          .map((e: any) => e.row))
+      : null;
 
     setImporting(true);
     const { data: histRow, error: histErr } = await supabase.from("import_history").insert({
@@ -327,13 +379,16 @@ export default function BulkImportTab() {
       status: "em_andamento",
       properties_total: parsed.imoveis.length,
       errors: allErrors as any,
-    }).select().single();
+      parent_import_id: reprocessOf?.id ?? null,
+      reprocess: !!reprocessOf,
+    } as any).select().single();
 
     if (histErr || !histRow) {
       toast.error("Falha ao iniciar importação: " + (histErr?.message || ""));
       setImporting(false);
       return;
     }
+
 
     const log: any[] = [];
     let companyUpdated = false;
@@ -349,7 +404,9 @@ export default function BulkImportTab() {
         log.push({ at: new Date().toISOString(), msg: "Empresa ignorada por erros", errors: parsed.empresaErrors });
       }
 
-      const valid = parsed.imoveis.filter((i) => !parsed.imoveisErrors.some((e) => e.row === i.__row));
+      const valid = parsed.imoveis
+        .filter((i) => !parsed.imoveisErrors.some((e) => e.row === i.__row))
+        .filter((i) => !reprocessRows || reprocessRows.has(i.__row));
       let updated = 0;
       const startedAt = Date.now();
       setProgress({ current: 0, total: valid.length, startedAt });
@@ -425,9 +482,15 @@ export default function BulkImportTab() {
       ]
     : [];
   const hasBlockingErrors = parsed
-    ? parsed.empresaErrors.length > 0 || parsed.imoveis.length === parsed.imoveisErrors.length
+    ? !!parsed.headerError || parsed.empresaErrors.length > 0 || parsed.imoveis.length === parsed.imoveisErrors.length
     : false;
   const validImoveis = parsed ? parsed.imoveis.length - parsed.imoveisErrors.filter((e) => parsed.imoveis.some((i) => i.__row === e.row)).length : 0;
+  const reprocessTargetRows = reprocessOf
+    ? new Set(((reprocessOf.errors as any[] | null) ?? []).filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis" && typeof e.row === "number").map((e: any) => e.row))
+    : null;
+  const reprocessAvailable = parsed && reprocessTargetRows
+    ? parsed.imoveis.filter((i) => reprocessTargetRows.has(i.__row) && !parsed.imoveisErrors.some((e) => e.row === i.__row)).length
+    : 0;
 
   return (
     <div className="space-y-5">
@@ -465,9 +528,32 @@ export default function BulkImportTab() {
         </label>
       </div>
 
+      {reprocessOf && (
+        <div className="bg-accent/10 border border-accent/40 rounded-xl p-4 text-xs flex items-center justify-between gap-3 flex-wrap">
+          <span>
+            🔁 <strong>Modo reprocesso</strong>: importando apenas linhas com erro da importação <span className="font-mono">{reprocessOf.file_name}</span> ({(reprocessOf.errors as any[] ?? []).filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis").length} linha(s) alvo).
+          </span>
+          <Button size="sm" variant="ghost" onClick={() => setReprocessOf(null)}>Cancelar reprocesso</Button>
+        </div>
+      )}
+
       {parsed && (
         <div className="bg-card rounded-xl border border-border p-5 space-y-4">
           <h4 className="font-bold text-sm">📊 Pré-visualização</h4>
+
+          {parsed.headerError && (
+            <div className="rounded-lg border border-destructive bg-destructive/10 p-3 text-xs text-destructive">
+              <p className="font-bold flex items-center gap-1.5"><AlertTriangle className="h-4 w-4" /> Template inválido</p>
+              <p className="mt-1">{parsed.headerError}</p>
+            </div>
+          )}
+
+          {reprocessOf && (
+            <p className="text-[11px] text-muted-foreground">
+              Linhas alvo encontradas neste arquivo: <strong>{reprocessAvailable}</strong>.
+            </p>
+          )}
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Stat label="Empresa" value={parsed.empresa && parsed.empresaErrors.length === 0 ? "1 pronta" : "0"} ok={!!parsed.empresa && parsed.empresaErrors.length === 0} />
             <Stat label="Imóveis válidos" value={String(validImoveis)} ok={validImoveis > 0} />
@@ -561,10 +647,24 @@ export default function BulkImportTab() {
                       <span className="text-destructive font-semibold">{h.properties_failed}</span>
                       <span className="text-muted-foreground"> de {h.properties_total}</span>
                     </td>
-                    <td className="py-2">
+                    <td className="py-2 space-x-1 whitespace-nowrap">
                       <Button variant="ghost" size="sm" onClick={() => downloadLog(h)}>
                         <Download className="h-3 w-3 mr-1" /> Baixar
                       </Button>
+                      {h.properties_failed > 0 && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setReprocessOf(h);
+                            reset();
+                            setReprocessOf(h);
+                            fileRef.current?.click();
+                          }}
+                        >
+                          <RefreshCw className="h-3 w-3 mr-1" /> Reprocessar erros
+                        </Button>
+                      )}
                     </td>
                   </tr>
                 ))}
