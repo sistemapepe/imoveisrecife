@@ -401,7 +401,14 @@ export default function BulkImportTab() {
               Envie o formulário Excel preenchido. O sistema valida, mostra uma prévia e só importa após sua confirmação.
             </p>
           </div>
-          <Button variant="outline" size="sm" onClick={loadHistory}><RefreshCw className="h-4 w-4 mr-1" /> Atualizar histórico</Button>
+          <div className="flex gap-2 flex-wrap">
+            <Button variant="default" size="sm" asChild>
+              <a href="/modelo-importacao-imoveis.xlsx" download>
+                <Download className="h-4 w-4 mr-1" /> Baixar modelo (.xlsx)
+              </a>
+            </Button>
+            <Button variant="outline" size="sm" onClick={loadHistory}><RefreshCw className="h-4 w-4 mr-1" /> Atualizar histórico</Button>
+          </div>
         </div>
 
         <label className="mt-4 block">
