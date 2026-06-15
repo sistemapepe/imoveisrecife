@@ -60,7 +60,7 @@ const IMOVEL_MAP: Record<string, string> = {
   url_video_tour_virtual: "video_tour_url", video: "video_tour_url", tour_virtual: "video_tour_url", video_tour_url: "video_tour_url",
 };
 
-const REQUIRED_PROPERTY = ["title","type","category","address","neighborhood","city","price","area","bedrooms","bathrooms","parking","status"];
+
 
 type RowError = { row: number; field?: string; message: string };
 
