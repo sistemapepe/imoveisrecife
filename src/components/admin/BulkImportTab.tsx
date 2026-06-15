@@ -218,6 +218,8 @@ export default function BulkImportTab() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [parsed, setParsed] = useState<ParsedResult | null>(null);
   const [fileMeta, setFileMeta] = useState<{ name: string; size: number } | null>(null);
+  const [upsertMode, setUpsertMode] = useState(true);
+  const [progress, setProgress] = useState<{ current: number; total: number; startedAt: number } | null>(null);
   const [importing, setImporting] = useState(false);
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
@@ -310,26 +312,49 @@ export default function BulkImportTab() {
       }
 
       const valid = parsed.imoveis.filter((i) => !parsed.imoveisErrors.some((e) => e.row === i.__row));
-      for (const item of valid) {
+      let updated = 0;
+      const startedAt = Date.now();
+      setProgress({ current: 0, total: valid.length, startedAt });
+      for (let idx = 0; idx < valid.length; idx++) {
+        const item = valid[idx];
         const { __row, ...payload } = item;
-        const { error } = await supabase.from("properties").insert(payload as any);
-        if (error) {
+        try {
+          let existingId: string | null = null;
+          if (upsertMode && Array.isArray(payload.images) && payload.images.length > 0) {
+            const { data: found } = await supabase
+              .from("properties")
+              .select("id")
+              .overlaps("images", payload.images)
+              .limit(1)
+              .maybeSingle();
+            existingId = (found as any)?.id ?? null;
+          }
+          if (existingId) {
+            const { error } = await supabase.from("properties").update(payload as any).eq("id", existingId);
+            if (error) throw error;
+            updated++;
+            log.push({ at: new Date().toISOString(), row: __row, msg: "Atualizado", id: existingId });
+          } else {
+            const { error } = await supabase.from("properties").insert(payload as any);
+            if (error) throw error;
+            created++;
+            log.push({ at: new Date().toISOString(), row: __row, msg: "Criado" });
+          }
+        } catch (err: any) {
           failed++;
-          log.push({ at: new Date().toISOString(), row: __row, error: error.message });
-        } else {
-          created++;
-          log.push({ at: new Date().toISOString(), row: __row, msg: "Criado" });
+          log.push({ at: new Date().toISOString(), row: __row, error: err.message });
         }
+        setProgress({ current: idx + 1, total: valid.length, startedAt });
       }
 
-      const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && !companyUpdated ? "falhou" : "concluido");
+      const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && updated === 0 && !companyUpdated ? "falhou" : "concluido");
       await supabase.from("import_history").update({
         status, company_updated: companyUpdated,
-        properties_created: created, properties_failed: failed,
+        properties_created: created + updated, properties_failed: failed,
         log: log as any,
       }).eq("id", histRow.id);
 
-      toast.success(`Importação concluída: ${created} imóvel(is) criado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
+      toast.success(`Importação concluída: ${created} criado(s), ${updated} atualizado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
       await refreshProperties?.();
       reset();
       loadHistory();
@@ -341,6 +366,7 @@ export default function BulkImportTab() {
       loadHistory();
     } finally {
       setImporting(false);
+      setProgress(null);
     }
   };
 
@@ -423,6 +449,26 @@ export default function BulkImportTab() {
             </div>
           )}
 
+          <label className="flex items-start gap-2 text-xs cursor-pointer select-none p-3 rounded-lg border border-border bg-muted/30">
+            <input
+              type="checkbox"
+              checked={upsertMode}
+              onChange={(e) => setUpsertMode(e.target.checked)}
+              className="mt-0.5 accent-current"
+              disabled={importing}
+            />
+            <span>
+              <span className="font-semibold">Atualizar registros existentes (upsert)</span>
+              <span className="block text-muted-foreground text-[11px] mt-0.5">
+                Empresa: sempre atualizada (CRECI + UF). Imóveis: se alguma URL de imagem já existir no banco, o registro é atualizado em vez de criar duplicado.
+              </span>
+            </span>
+          </label>
+
+          {progress && (
+            <ProgressBar current={progress.current} total={progress.total} startedAt={progress.startedAt} />
+          )}
+
           <div className="flex gap-2 flex-wrap">
             <Button onClick={confirmImport} disabled={importing || hasBlockingErrors || (validImoveis === 0 && !(parsed.empresa && parsed.empresaErrors.length === 0))}>
               {importing ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <CheckCircle2 className="h-4 w-4 mr-1" />}
@@ -503,4 +549,28 @@ function StatusBadge({ status }: { status: string }) {
   };
   const m = map[status] ?? { label: status, cls: "bg-muted text-muted-foreground border-border" };
   return <span className={`inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full border ${m.cls}`}>{m.label}</span>;
+}
+
+function ProgressBar({ current, total, startedAt }: { current: number; total: number; startedAt: number }) {
+  const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+  const elapsedMs = Date.now() - startedAt;
+  const perItem = current > 0 ? elapsedMs / current : 0;
+  const remainingMs = perItem * Math.max(0, total - current);
+  const fmt = (ms: number) => {
+    const s = Math.max(0, Math.round(ms / 1000));
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s / 60);
+    return `${m}m ${s % 60}s`;
+  };
+  return (
+    <div className="space-y-1.5">
+      <div className="flex justify-between text-[11px] text-muted-foreground font-mono">
+        <span>{current} / {total} ({pct}%)</span>
+        <span>⏱ {fmt(elapsedMs)} · restam ~{current > 0 ? fmt(remainingMs) : "—"}</span>
+      </div>
+      <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+        <div className="h-full bg-accent transition-[width] duration-300" style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
 }
