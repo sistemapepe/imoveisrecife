@@ -3,7 +3,6 @@ import { Menu } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState, useCallback } from "react";
-import { getOptimizedImageUrl } from "@/lib/image-optimization";
 import DrawerMenu from "./DrawerMenu";
 
 // Rota específica do componente SearchResults (lazy loaded no App.tsx)
@@ -18,6 +17,7 @@ export default function Navbar() {
   const { settings } = useProperties();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -32,6 +32,10 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [settings.headerStyle]);
+
+  useEffect(() => {
+    setLogoFailed(false);
+  }, [settings.logoUrl]);
 
   const isCompact = settings.headerStyle === 'compact' || isScrolled;
 
@@ -53,13 +57,14 @@ export default function Navbar() {
         onClose={() => setIsDrawerOpen(false)} 
       />
       
-      {settings.logoUrl ? (
+      {settings.logoUrl && !logoFailed ? (
         <img 
-          src={getOptimizedImageUrl(settings.logoUrl, { width: 540, quality: 90 })} 
+          src={settings.logoUrl} 
           alt={settings.brandName} 
           onClick={() => navigate("/")}
           onMouseEnter={() => handlePrefetch('search')}
           onFocus={() => handlePrefetch('search')}
+          onError={() => setLogoFailed(true)}
           style={{
             width: `min(var(--logo-w, 270px), 70vw)`,
             height: `var(--logo-h, 140px)`,
