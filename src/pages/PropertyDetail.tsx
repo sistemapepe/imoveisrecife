@@ -35,7 +35,7 @@ export default function PropertyDetail() {
     };
   }, [id]);
   const navigate = useNavigate();
-  const { properties, settings, favorites, toggleFavorite } = useProperties();
+  const { properties, settings, favorites, toggleFavorite, loading } = useProperties();
   const property = properties.find((p) => p.id === id);
   const resolvedImages = useResolvedImages(property?.images ?? []);
   const [currentImg, setCurrentImg] = useState(0);
