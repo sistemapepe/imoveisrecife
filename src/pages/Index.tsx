@@ -16,12 +16,12 @@ import { searchLocations } from "@/data/pernambuco-locations";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 
 const typeFilters = [
-  { label: "Todos", icon: LayoutGrid },
-  { label: "Casa", icon: Home },
-  { label: "Apartamento", icon: Building2 },
-  { label: "Cobertura", icon: Layers },
-  { label: "Terreno", icon: LandPlot },
-  { label: "Comercial", icon: Store },
+  { label: "Todos", short: "Todos", icon: LayoutGrid },
+  { label: "Casa", short: "Casa", icon: Home },
+  { label: "Apartamento", short: "Apt", icon: Building2 },
+  { label: "Cobertura", short: "Cobertura", icon: Layers },
+  { label: "Terreno", short: "Terreno", icon: LandPlot },
+  { label: "Comercial", short: "Comercial", icon: Store },
 ];
 const sortOptions = [
   { value: "area_desc", label: "Maior área", icon: ArrowUpDown },
@@ -395,35 +395,35 @@ export default function Index() {
 
             {/* Inline Filters - Minimal top bar */}
             <div className="sticky top-[var(--navbar-height)] z-40 bg-luxury-dark/95 backdrop-blur-xl border-b border-card/10 shadow-lg transition-all duration-300">
-              <div className="flex overflow-x-auto hide-scrollbar gap-2.5 px-4 py-3">
-                {typeFilters.map(({ label, icon: Icon }) => (
+              <div className="flex overflow-x-auto hide-scrollbar gap-1.5 px-3 py-2">
+                {typeFilters.map(({ label, short, icon: Icon }) => (
                   <button
                     key={label}
                     onClick={() => { setActiveType(label); setShowAll(false); }}
-                    className={`shrink-0 flex items-center gap-1.5 px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all active:scale-95 ${
+                    className={`shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all active:scale-95 ${
                       activeType === label
                         ? "bg-accent text-accent-foreground shadow-md"
                         : "bg-card/5 text-card/50 hover:text-card hover:bg-card/10"
                     }`}
                   >
-                    <Icon className="h-3.5 w-3.5" />
-                    {label}
+                    <Icon className="h-3 w-3" />
+                    {short}
                   </button>
                 ))}
-                <div className="shrink-0 w-px h-6 bg-card/10 self-center mx-1" />
+                <div className="shrink-0 w-px h-5 bg-card/10 self-center mx-0.5" />
                 {sortOptions.map((opt) => {
                   const SortIcon = opt.icon;
                   return (
                   <button
                     key={opt.value}
                     onClick={() => setSortBy(sortBy === opt.value ? "" : opt.value)}
-                    className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-semibold tracking-wider transition-all active:scale-95 ${
+                    className={`shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] font-semibold tracking-wider transition-all active:scale-95 ${
                       sortBy === opt.value
                         ? "text-primary bg-primary/10"
                         : "text-card/30 hover:text-card/60"
                     }`}
                   >
-                    <SortIcon className="h-3.5 w-3.5" />
+                    <SortIcon className="h-3 w-3" />
                     {opt.label}
                   </button>
                   );
