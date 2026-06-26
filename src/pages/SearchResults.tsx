@@ -130,7 +130,7 @@ export default function SearchResults() {
                     active ? "bg-luxury-dark text-card" : "bg-card border border-border text-muted-foreground"
                   }`}
                 >
-                  {type}
+                  {type === "Apartamento" ? "Apt" : type}
                   {active && <X className="h-3 w-3" />}
                 </button>
               );
