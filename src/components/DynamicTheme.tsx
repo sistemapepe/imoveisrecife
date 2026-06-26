@@ -49,6 +49,29 @@ export default function DynamicTheme() {
     root.style.setProperty("--logo-w", `${settings.logoWidthPx ?? 270}px`);
     root.style.setProperty("--logo-h", `${settings.logoHeightPx ?? 140}px`);
     root.style.setProperty("--marquee-py", `${settings.marqueePaddingYPx ?? 4}px`);
+
+    // Atualiza favicon e apple-touch-icon dinamicamente com a logo do site
+    if (settings.logoUrl) {
+      const setIcon = (rel: string) => {
+        let link = document.querySelector<HTMLLinkElement>(`link[rel="${rel}"]`);
+        if (!link) {
+          link = document.createElement("link");
+          link.rel = rel;
+          document.head.appendChild(link);
+        }
+        link.href = settings.logoUrl!;
+      };
+      setIcon("icon");
+      setIcon("apple-touch-icon");
+    }
+
+    // Atualiza o título da aba com o nome da marca
+    if (settings.brandName) {
+      const current = document.title;
+      if (!current.includes(settings.brandName)) {
+        document.title = `${settings.brandName} — ${current}`;
+      }
+    }
   }, [
     settings.primaryColor,
     settings.accentColor,
@@ -56,7 +79,10 @@ export default function DynamicTheme() {
     settings.logoWidthPx,
     settings.logoHeightPx,
     settings.marqueePaddingYPx,
+    settings.logoUrl,
+    settings.brandName,
   ]);
+
 
   return null;
 }
