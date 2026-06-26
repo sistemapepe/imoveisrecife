@@ -16,12 +16,12 @@ import { searchLocations } from "@/data/pernambuco-locations";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 
 const typeFilters = [
-  { label: "Todos", icon: LayoutGrid },
-  { label: "Casa", icon: Home },
-  { label: "Apartamento", icon: Building2 },
-  { label: "Cobertura", icon: Layers },
-  { label: "Terreno", icon: LandPlot },
-  { label: "Comercial", icon: Store },
+  { label: "Todos", short: "Todos", icon: LayoutGrid },
+  { label: "Casa", short: "Casa", icon: Home },
+  { label: "Apartamento", short: "Apt", icon: Building2 },
+  { label: "Cobertura", short: "Cobertura", icon: Layers },
+  { label: "Terreno", short: "Terreno", icon: LandPlot },
+  { label: "Comercial", short: "Comercial", icon: Store },
 ];
 const sortOptions = [
   { value: "area_desc", label: "Maior área", icon: ArrowUpDown },
