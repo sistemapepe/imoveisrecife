@@ -50,20 +50,66 @@ export default function DynamicTheme() {
     root.style.setProperty("--logo-h", `${settings.logoHeightPx ?? 140}px`);
     root.style.setProperty("--marquee-py", `${settings.marqueePaddingYPx ?? 4}px`);
 
-    // Atualiza favicon e apple-touch-icon dinamicamente com a logo do site
+    // Atualiza favicon e apple-touch-icon dinamicamente com a logo do site.
+    // Renderiza a logo sobre um fundo escuro para garantir visibilidade
+    // mesmo quando a logo é branca/clara contra a aba clara do navegador.
     if (settings.logoUrl) {
-      const setIcon = (rel: string) => {
-        let link = document.querySelector<HTMLLinkElement>(`link[rel="${rel}"]`);
-        if (!link) {
-          link = document.createElement("link");
-          link.rel = rel;
-          document.head.appendChild(link);
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        try {
+          const size = 64;
+          const canvas = document.createElement("canvas");
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return;
+          // Fundo escuro com cantos arredondados
+          const radius = 12;
+          ctx.fillStyle = "#0a0a0a";
+          ctx.beginPath();
+          ctx.moveTo(radius, 0);
+          ctx.lineTo(size - radius, 0);
+          ctx.quadraticCurveTo(size, 0, size, radius);
+          ctx.lineTo(size, size - radius);
+          ctx.quadraticCurveTo(size, size, size - radius, size);
+          ctx.lineTo(radius, size);
+          ctx.quadraticCurveTo(0, size, 0, size - radius);
+          ctx.lineTo(0, radius);
+          ctx.quadraticCurveTo(0, 0, radius, 0);
+          ctx.closePath();
+          ctx.fill();
+          // Desenha a logo centralizada com padding
+          const pad = 6;
+          const maxW = size - pad * 2;
+          const maxH = size - pad * 2;
+          const ratio = Math.min(maxW / img.width, maxH / img.height);
+          const w = img.width * ratio;
+          const h = img.height * ratio;
+          ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+          const dataUrl = canvas.toDataURL("image/png");
+          const setIcon = (rel: string) => {
+            let link = document.querySelector<HTMLLinkElement>(`link[rel="${rel}"]`);
+            if (!link) {
+              link = document.createElement("link");
+              link.rel = rel;
+              document.head.appendChild(link);
+            }
+            link.type = "image/png";
+            link.href = dataUrl;
+          };
+          setIcon("icon");
+          setIcon("apple-touch-icon");
+        } catch {
+          // Fallback: usa diretamente a URL da logo
+          const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+          if (link) link.href = settings.logoUrl!;
         }
-        link.href = settings.logoUrl!;
       };
-      setIcon("icon");
-      setIcon("apple-touch-icon");
+      img.onerror = () => {/* mantém favicon atual */};
+      img.src = settings.logoUrl;
     }
+
 
     // Atualiza o título da aba com o nome da marca
     if (settings.brandName) {
