@@ -35,7 +35,7 @@ export default function PropertyDetail() {
     };
   }, [id]);
   const navigate = useNavigate();
-  const { properties, settings, favorites, toggleFavorite } = useProperties();
+  const { properties, settings, favorites, toggleFavorite, loading } = useProperties();
   const property = properties.find((p) => p.id === id);
   const resolvedImages = useResolvedImages(property?.images ?? []);
   const [currentImg, setCurrentImg] = useState(0);
@@ -73,6 +73,22 @@ export default function PropertyDetail() {
     if (!id) return;
     supabase.from("property_views").insert({ property_id: id, ip_hash: "" }).then();
   }, [id]);
+
+  if (!property && !loading) return (
+    <PageTransition>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
+        <Navbar />
+        <h1 className="text-2xl font-bold mb-2 mt-24">Imóvel não encontrado</h1>
+        <p className="text-muted-foreground mb-6">Este anúncio pode ter sido removido ou o link está incorreto.</p>
+        <button
+          onClick={() => navigate("/")}
+          className="px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold"
+        >
+          Voltar ao início
+        </button>
+      </div>
+    </PageTransition>
+  );
 
   if (!property) return (
     <PageTransition>
