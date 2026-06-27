@@ -49,7 +49,7 @@ const emptyProperty: Omit<Property, "id" | "code"> = {
 
 export default function Admin() {
   const navigate = useNavigate();
-  const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket } = useAuth();
+  const { user, isAdmin, role, loading: authLoading, signOut, canViewProperties, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket } = useAuth();
   const { properties, settings, addProperty, updateProperty, deleteProperty, updateSettings } = useProperties();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [search, setSearch] = useState("");
