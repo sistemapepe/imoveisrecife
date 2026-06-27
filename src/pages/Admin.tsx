@@ -49,7 +49,7 @@ const emptyProperty: Omit<Property, "id" | "code"> = {
 
 export default function Admin() {
   const navigate = useNavigate();
-  const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts } = useAuth();
+  const { user, isAdmin, role, loading: authLoading, signOut, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket } = useAuth();
   const { properties, settings, addProperty, updateProperty, deleteProperty, updateSettings } = useProperties();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [search, setSearch] = useState("");
@@ -185,16 +185,16 @@ export default function Admin() {
   const allTabs: { key: Tab; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = [
     { key: "dashboard", label: "Resumo", icon: Home, show: true },
     { key: "properties", label: "Imóveis", icon: LayoutDashboard, show: true },
-    { key: "import", label: "Importar (Excel)", icon: Upload, show: !!canManageProperties },
+    { key: "import", label: "Importar (Excel)", icon: Upload, show: !!canBulkImport },
     { key: "messages", label: "Contatos", icon: MessageSquare, show: !!canViewContacts, badge: newMsgCount },
-    { key: "visits", label: "Visitas", icon: Calendar, show: isAdmin || role === "supervisor", badge: pendingVisitsCount },
-    { key: "analytics", label: "Analytics", icon: BarChart3, show: isAdmin || role === "supervisor" },
-    { key: "traffic", label: "Tráfego", icon: Globe, show: isAdmin || role === "supervisor" },
-    { key: "seo", label: "SEO Audit", icon: Sparkles, show: !!canManageProperties },
+    { key: "visits", label: "Visitas", icon: Calendar, show: !!canViewVisits, badge: pendingVisitsCount },
+    { key: "analytics", label: "Analytics", icon: BarChart3, show: !!canViewAnalytics },
+    { key: "traffic", label: "Tráfego", icon: Globe, show: !!canViewTraffic },
+    { key: "seo", label: "SEO Audit", icon: Sparkles, show: !!canManageSeo },
     { key: "users", label: "Equipe", icon: Users, show: !!canManageUsers },
     { key: "settings", label: "Configurações", icon: Settings, show: !!canManageSettings },
-    { key: "bucket", label: "Imagens (Acesso)", icon: ImageIcon, show: !!canManageSettings },
-    { key: "privacy", label: "LGPD", icon: FileText, show: !!canManageSettings },
+    { key: "bucket", label: "Imagens (Acesso)", icon: ImageIcon, show: !!canManageBucket },
+    { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
 
@@ -656,11 +656,11 @@ export default function Admin() {
             <SettingsTab settings={settings} updateSettings={updateSettings} />
           )}
 
-          {tab === "privacy" && canManageSettings && (
+          {tab === "privacy" && canManagePrivacy && (
             <PrivacyTab settings={settings} updateSettings={updateSettings} />
           )}
 
-          {tab === "bucket" && canManageSettings && (
+          {tab === "bucket" && canManageBucket && (
             <BucketAccessTab settings={settings} updateSettings={updateSettings} />
           )}
 
@@ -668,27 +668,27 @@ export default function Admin() {
             <UsersTab />
           )}
 
-          {tab === "messages" && (
+          {tab === "messages" && canViewContacts && (
             <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
           )}
 
-          {tab === "analytics" && (isAdmin || role === "supervisor") && (
+          {tab === "analytics" && canViewAnalytics && (
             <AnalyticsTab />
           )}
 
-          {tab === "visits" && (isAdmin || role === "supervisor") && (
+          {tab === "visits" && canViewVisits && (
             <VisitsTab />
           )}
 
-          {tab === "traffic" && (isAdmin || role === "supervisor") && (
+          {tab === "traffic" && canViewTraffic && (
             <TrafficTab />
           )}
 
-          {tab === "seo" && canManageProperties && (
+          {tab === "seo" && canManageSeo && (
             <SeoAuditTab />
           )}
 
-          {tab === "import" && canManageProperties && (
+          {tab === "import" && canBulkImport && (
             <BulkImportTab />
           )}
           </main>

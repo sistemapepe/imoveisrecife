@@ -8,8 +8,15 @@ const PERMISSIONS = [
   { key: "view_properties", label: "Visualizar Imóveis" },
   { key: "manage_properties", label: "Criar/Editar Imóveis" },
   { key: "delete_properties", label: "Excluir Imóveis" },
+  { key: "bulk_import", label: "Importar em Massa (Excel)" },
   { key: "view_contacts", label: "Visualizar Contatos" },
+  { key: "view_visits", label: "Visualizar Visitas" },
+  { key: "view_analytics", label: "Visualizar Analytics" },
+  { key: "view_traffic", label: "Visualizar Tráfego" },
+  { key: "manage_seo", label: "SEO Audit" },
   { key: "manage_settings", label: "Configurações do Site" },
+  { key: "manage_bucket", label: "Acesso a Imagens (Bucket)" },
+  { key: "manage_privacy", label: "Gerenciar LGPD" },
   { key: "manage_users", label: "Gestão de Equipe" },
 ];
 

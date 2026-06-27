@@ -4,7 +4,20 @@ import type { User } from "@supabase/supabase-js";
 
 type AppRole = "admin" | "supervisor" | "corretor" | "user";
 
-type PermissionKey = "view_properties" | "manage_properties" | "delete_properties" | "view_contacts" | "manage_settings" | "manage_users";
+type PermissionKey =
+  | "view_properties"
+  | "manage_properties"
+  | "delete_properties"
+  | "view_contacts"
+  | "manage_settings"
+  | "manage_users"
+  | "view_analytics"
+  | "view_visits"
+  | "view_traffic"
+  | "manage_seo"
+  | "bulk_import"
+  | "manage_privacy"
+  | "manage_bucket";
 
 interface AuthContextType {
   user: User | null;
@@ -20,6 +33,13 @@ interface AuthContextType {
   canManageSettings: boolean;
   canManageUsers: boolean;
   canViewContacts: boolean;
+  canViewAnalytics: boolean;
+  canViewVisits: boolean;
+  canViewTraffic: boolean;
+  canManageSeo: boolean;
+  canBulkImport: boolean;
+  canManagePrivacy: boolean;
+  canManageBucket: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -34,6 +54,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     view_contacts: false,
     manage_settings: false,
     manage_users: false,
+    view_analytics: false,
+    view_visits: false,
+    view_traffic: false,
+    manage_seo: false,
+    bulk_import: false,
+    manage_privacy: false,
+    manage_bucket: false,
   });
   const [loading, setLoading] = useState(true);
 
@@ -45,6 +72,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const canManageSettings = isAdmin || permissions.manage_settings;
   const canManageUsers = isAdmin || permissions.manage_users;
   const canViewContacts = isAdmin || permissions.view_contacts;
+  const canViewAnalytics = isAdmin || role === "supervisor" || permissions.view_analytics;
+  const canViewVisits = isAdmin || role === "supervisor" || permissions.view_visits;
+  const canViewTraffic = isAdmin || role === "supervisor" || permissions.view_traffic;
+  const canManageSeo = isAdmin || permissions.manage_seo;
+  const canBulkImport = isAdmin || permissions.bulk_import;
+  const canManagePrivacy = isAdmin || permissions.manage_privacy;
+  const canManageBucket = isAdmin || permissions.manage_bucket;
 
   const loadPermissions = useCallback(async (userRole: AppRole) => {
     if (userRole === "admin") return; // admin has all
@@ -132,7 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, role, loading, signIn, signUp, signOut, canManageProperties, canDeleteProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts }}>
+    <AuthContext.Provider value={{ user, isAdmin, role, loading, signIn, signUp, signOut, canManageProperties, canDeleteProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket }}>
       {children}
     </AuthContext.Provider>
   );
