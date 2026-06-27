@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getOptimizedImageUrl, IMAGE_SIZES, getImageSrcSet, isSupabaseUrl } from "@/lib/image-optimization";
+import Watermark from "@/components/Watermark";
+
 
 interface ImageLightboxProps {
   images: string[];
