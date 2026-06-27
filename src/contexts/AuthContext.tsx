@@ -4,7 +4,20 @@ import type { User } from "@supabase/supabase-js";
 
 type AppRole = "admin" | "supervisor" | "corretor" | "user";
 
-type PermissionKey = "view_properties" | "manage_properties" | "delete_properties" | "view_contacts" | "manage_settings" | "manage_users";
+type PermissionKey =
+  | "view_properties"
+  | "manage_properties"
+  | "delete_properties"
+  | "view_contacts"
+  | "manage_settings"
+  | "manage_users"
+  | "view_analytics"
+  | "view_visits"
+  | "view_traffic"
+  | "manage_seo"
+  | "bulk_import"
+  | "manage_privacy"
+  | "manage_bucket";
 
 interface AuthContextType {
   user: User | null;
