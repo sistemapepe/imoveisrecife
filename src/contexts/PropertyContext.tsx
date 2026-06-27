@@ -101,6 +101,8 @@ export interface SiteSettings {
   logoWidthPx: number;
   logoHeightPx: number;
   marqueePaddingYPx: number;
+  watermarkOpacity: number;
+  watermarkPosition: 'center' | 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   priceStyles: Record<PriceSection, PriceStyle>;
   priceFormat: PriceFormat;
 }
@@ -181,6 +183,8 @@ const defaultSettings: SiteSettings = {
   logoWidthPx: 270,
   logoHeightPx: 140,
   marqueePaddingYPx: 4,
+  watermarkOpacity: 40,
+  watermarkPosition: 'center',
   priceStyles: DEFAULT_PRICE_STYLES,
   priceFormat: DEFAULT_PRICE_FORMAT,
 };
@@ -259,6 +263,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         logoWidthPx: (data as any).logo_width_px ?? 270,
         logoHeightPx: (data as any).logo_height_px ?? 140,
         marqueePaddingYPx: (data as any).marquee_padding_y_px ?? 4,
+        watermarkOpacity: (data as any).watermark_opacity ?? 40,
+        watermarkPosition: ((data as any).watermark_position ?? 'center') as any,
         priceStyles: { ...DEFAULT_PRICE_STYLES, ...((data as any).price_styles ?? {}) },
         priceFormat: { ...DEFAULT_PRICE_FORMAT, ...((data as any).price_format ?? {}) },
       }));
@@ -360,6 +366,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       logoWidthPx: "logo_width_px",
       logoHeightPx: "logo_height_px",
       marqueePaddingYPx: "marquee_padding_y_px",
+      watermarkOpacity: "watermark_opacity",
+      watermarkPosition: "watermark_position",
       priceStyles: "price_styles",
       priceFormat: "price_format",
     };

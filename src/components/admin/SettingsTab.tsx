@@ -431,7 +431,87 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
         })}
       </div>
 
+      {/* 💧 Marca d'água nas fotos dos imóveis */}
+      <div className="bg-card rounded-xl border border-border p-4 space-y-4">
+        <div>
+          <h3 className="font-bold text-sm">💧 Marca d'água nas fotos</h3>
+          <p className="text-xs text-muted-foreground">
+            A logo é aplicada automaticamente como marca d'água em todas as fotos dos imóveis (cards, galeria e novos cadastros).
+          </p>
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Opacidade</label>
+            <span className="text-xs font-mono tabular-nums">{localSettings.watermarkOpacity ?? 40}%</span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={5}
+            value={localSettings.watermarkOpacity ?? 40}
+            onChange={(e) => setLocalSettings((prev) => ({ ...prev, watermarkOpacity: Number(e.target.value) }))}
+            className="w-full accent-primary"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Posição</label>
+          <div className="grid grid-cols-3 gap-2">
+            {([
+              { v: "top-left", label: "↖ Topo Esq." },
+              { v: "top-right", label: "↗ Topo Dir." },
+              { v: "center", label: "● Centro" },
+              { v: "bottom-left", label: "↙ Base Esq." },
+              { v: "bottom-right", label: "↘ Base Dir." },
+            ] as const).map((opt) => {
+              const active = (localSettings.watermarkPosition ?? "center") === opt.v;
+              return (
+                <button
+                  key={opt.v}
+                  type="button"
+                  onClick={() => setLocalSettings((prev) => ({ ...prev, watermarkPosition: opt.v }))}
+                  className={`text-[11px] font-semibold px-2 py-1.5 rounded-md border transition-colors ${
+                    active
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "border-border hover:bg-muted"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {localSettings.logoUrl && (
+          <div className="space-y-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pré-visualização</span>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-gradient-to-br from-luxury-dark to-secondary border border-border">
+              <div
+                className={`pointer-events-none absolute ${{
+                  center: "inset-0 flex items-center justify-center",
+                  "bottom-right": "inset-0 flex items-end justify-end p-3",
+                  "bottom-left": "inset-0 flex items-end justify-start p-3",
+                  "top-right": "inset-0 flex items-start justify-end p-3",
+                  "top-left": "inset-0 flex items-start justify-start p-3",
+                }[localSettings.watermarkPosition ?? "center"]}`}
+              >
+                <img
+                  src={localSettings.logoUrl}
+                  alt=""
+                  className="w-24 h-24 object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] mix-blend-screen"
+                  style={{ opacity: (localSettings.watermarkOpacity ?? 40) / 100 }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* 💰 Tipografia & Formato do Preço */}
+
       <PriceTypographyPanel
         settings={localSettings}
         onChange={(patch) => setLocalSettings((prev) => ({ ...prev, ...patch }))}
