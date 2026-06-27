@@ -552,14 +552,20 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
                 <img
                   src={localSettings.logoUrl}
                   alt=""
-                  className="w-24 h-24 object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] mix-blend-screen"
-                  style={{ opacity: (localSettings.watermarkOpacity ?? 40) / 100 }}
+                  className="object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] mix-blend-screen"
+                  style={{
+                    opacity: (localSettings.watermarkOpacity ?? 40) / 100,
+                    width: `${localSettings.watermarkSizePct ?? 30}%`,
+                    height: `${localSettings.watermarkSizePct ?? 30}%`,
+                  }}
                 />
               </div>
             </div>
           </div>
         )}
+        </div>
       </div>
+
 
       {/* 💰 Tipografia & Formato do Preço */}
 
