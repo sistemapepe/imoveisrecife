@@ -47,6 +47,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
           decoding="async"
           fetchPriority={index === 0 ? "high" : "auto"}
         />
+        <Watermark size="w-20 h-20 md:w-24 md:h-24" position="center" opacity={30} />
         <div className="absolute top-4 left-4 flex gap-2">
           {property.status && property.status !== "disponivel" && (
             <div className={`px-3 py-1 rounded-sm shadow-lg ${
