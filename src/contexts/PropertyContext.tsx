@@ -101,6 +101,8 @@ export interface SiteSettings {
   logoWidthPx: number;
   logoHeightPx: number;
   marqueePaddingYPx: number;
+  watermarkOpacity: number;
+  watermarkPosition: 'center' | 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   priceStyles: Record<PriceSection, PriceStyle>;
   priceFormat: PriceFormat;
 }
