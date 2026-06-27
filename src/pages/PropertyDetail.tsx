@@ -265,7 +265,7 @@ export default function PropertyDetail() {
             loading="eager"
             fetchPriority="high"
           />
-          <Watermark size="w-40 h-40 md:w-56 md:h-56" />
+          <Watermark />
 
           {totalImages > 1 && (
             <>
@@ -305,7 +305,7 @@ export default function PropertyDetail() {
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />
-                <Watermark size="w-8 h-8 md:w-10 md:h-10" />
+                <Watermark />
               </button>
 
             ))}

@@ -47,7 +47,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
           decoding="async"
           fetchPriority={index === 0 ? "high" : "auto"}
         />
-        <Watermark size="w-24 h-24 md:w-32 md:h-32" />
+        <Watermark />
 
         {/* Gradient top scrim for badge legibility */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/55 via-black/20 to-transparent" />
