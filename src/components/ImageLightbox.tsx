@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getOptimizedImageUrl, IMAGE_SIZES, getImageSrcSet, isSupabaseUrl } from "@/lib/image-optimization";
+import Watermark from "@/components/Watermark";
+
 
 interface ImageLightboxProps {
   images: string[];
@@ -251,7 +253,9 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
             onDoubleClick={toggleZoom}
             draggable={false}
           />
+          <Watermark size="w-32 h-32 md:w-56 md:h-56" />
         </div>
+
 
         {/* Zoom indicator */}
         {scale > 1 && (
@@ -267,7 +271,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
               <button
                 key={i}
                 onClick={() => { resetZoom(); setCurrentIndex(i); }}
-                className={`shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
+                className={`relative shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
                   i === currentIndex ? "border-primary opacity-100" : "border-transparent opacity-40 hover:opacity-70"
                 }`}
               >
@@ -278,7 +282,9 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
                   loading="lazy"
                   decoding="async"
                 />
+                <Watermark size="w-8 h-8" />
               </button>
+
             ))}
           </div>
         )}

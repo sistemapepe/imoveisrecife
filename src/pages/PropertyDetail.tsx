@@ -295,7 +295,7 @@ export default function PropertyDetail() {
               <button
                 key={i}
                 onClick={() => setCurrentImg(i)}
-                className={`shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                className={`relative shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all ${
                   i === currentImg ? "border-primary ring-2 ring-primary/30" : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
@@ -305,7 +305,9 @@ export default function PropertyDetail() {
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />
+                <Watermark size="w-8 h-8 md:w-10 md:h-10" />
               </button>
+
             ))}
           </div>
         )}
