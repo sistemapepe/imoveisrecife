@@ -433,12 +433,28 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
 
       {/* 💧 Marca d'água nas fotos dos imóveis */}
       <div className="bg-card rounded-xl border border-border p-4 space-y-4">
-        <div>
-          <h3 className="font-bold text-sm">💧 Marca d'água nas fotos</h3>
-          <p className="text-xs text-muted-foreground">
-            A logo é aplicada automaticamente como marca d'água em todas as fotos dos imóveis (cards, galeria e novos cadastros).
-          </p>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <h3 className="font-bold text-sm">💧 Marca d'água nas fotos</h3>
+            <p className="text-xs text-muted-foreground">
+              A logo é aplicada automaticamente como marca d'água em todas as fotos dos imóveis (cards, galeria, miniaturas, lightbox e novos cadastros).
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              setLocalSettings((prev) => ({
+                ...prev,
+                watermarkOpacity: 40,
+                watermarkPosition: "center",
+              }))
+            }
+            className="shrink-0 text-[11px] font-semibold px-2 py-1 rounded-md border border-border hover:bg-muted transition-colors"
+          >
+            ↺ Restaurar padrão
+          </button>
         </div>
+
 
         <div className="space-y-1">
           <div className="flex items-center justify-between">
