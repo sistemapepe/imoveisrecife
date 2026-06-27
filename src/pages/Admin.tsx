@@ -246,32 +246,40 @@ export default function Admin() {
               📋 Modo visualização — você pode consultar os imóveis cadastrados.
             </div>
           )}
-          {/* Desktop tabs - horizontal scroll on overflow */}
-          <div className="hidden md:flex border-b border-border overflow-x-auto scrollbar-hide">
-            {visibleTabs.map((t) => {
-              const Icon = t.icon;
-              const active = tab === t.key;
-              return (
-                <button
-                  key={t.key}
-                  onClick={() => switchTab(t.key)}
-                  className={`shrink-0 min-w-[120px] py-3 px-4 text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors ${
-                    active ? "text-primary border-b-2 border-primary" : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" /> {t.label}
-                  {!!t.badge && t.badge > 0 && (
-                    <span className="h-4 min-w-[16px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
-                      {t.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
         </header>
 
-        <main className="p-4">
+        <div className="md:flex md:items-start">
+          {/* Vertical sidebar (desktop) */}
+          <aside className="hidden md:flex md:flex-col sticky top-14 self-start h-[calc(100vh-3.5rem)] w-56 shrink-0 border-r border-border bg-card/40 overflow-y-auto py-3">
+            <nav className="flex flex-col gap-1 px-2">
+              {visibleTabs.map((t) => {
+                const Icon = t.icon;
+                const active = tab === t.key;
+                return (
+                  <button
+                    key={t.key}
+                    onClick={() => switchTab(t.key)}
+                    className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+                      active
+                        ? "bg-primary/15 text-primary border-l-2 border-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/60 border-l-2 border-transparent"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span className="truncate flex-1 text-left">{t.label}</span>
+                    {!!t.badge && t.badge > 0 && (
+                      <span className="h-4 min-w-[16px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
+                        {t.badge}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
+          </aside>
+
+          <main className="flex-1 min-w-0 p-4">
+
           {tab === "dashboard" && (
             <DashboardTab onNavigate={(t) => switchTab(t)} />
           )}
