@@ -301,13 +301,30 @@ export default function Index() {
                   </motion.h2>
                 </AnimatePresence>
 
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  onClick={() => {
+                    const slide = heroSlides[currentSlide];
+                    if (slide.id) {
+                      navigate(`/imovel/${slide.id}`);
+                    } else {
+                      navigate("/busca");
+                    }
+                  }}
+                  className="flex min-w-[160px] items-center justify-center overflow-hidden rounded-full h-12 px-8 mb-6 border-2 border-accent text-accent bg-transparent text-sm font-bold uppercase tracking-[0.2em] transition-all hover:bg-accent hover:text-accent-foreground"
+                >
+                  Descobrir
+                </motion.button>
+
                 {/* Quick Search */}
                 <motion.div
                   ref={quickSearchRef}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className="relative w-full max-w-md mb-6 mx-auto"
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="relative w-full max-w-md mx-auto"
                 >
                   <div className="relative flex items-center group">
                     <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-accent/40 via-primary/20 to-accent/40 opacity-60 blur-sm group-focus-within:opacity-100 transition-opacity duration-500" />
@@ -363,22 +380,6 @@ export default function Index() {
                   )}
                 </motion.div>
 
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  onClick={() => {
-                    const slide = heroSlides[currentSlide];
-                    if (slide.id) {
-                      navigate(`/imovel/${slide.id}`);
-                    } else {
-                      navigate("/busca");
-                    }
-                  }}
-                  className="flex min-w-[160px] items-center justify-center overflow-hidden rounded-full h-12 px-8 border-2 border-accent text-accent bg-transparent text-sm font-bold uppercase tracking-[0.2em] transition-all hover:bg-accent hover:text-accent-foreground"
-                >
-                  Descobrir
-                </motion.button>
 
                 {/* Dots */}
                 <div className="mt-8 flex gap-2">
