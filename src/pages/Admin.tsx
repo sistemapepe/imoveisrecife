@@ -184,7 +184,7 @@ export default function Admin() {
 
   const allTabs: { key: Tab; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = [
     { key: "dashboard", label: "Resumo", icon: Home, show: true },
-    { key: "properties", label: "Imóveis", icon: LayoutDashboard, show: true },
+    { key: "properties", label: "Imóveis", icon: LayoutDashboard, show: isAdmin || !!canViewProperties || !!canManageProperties },
     { key: "import", label: "Importar (Excel)", icon: Upload, show: !!canBulkImport },
     { key: "messages", label: "Contatos", icon: MessageSquare, show: !!canViewContacts, badge: newMsgCount },
     { key: "visits", label: "Visitas", icon: Calendar, show: !!canViewVisits, badge: pendingVisitsCount },
