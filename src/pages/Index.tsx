@@ -278,11 +278,11 @@ export default function Index() {
               {/* Navigation arrows */}
               {heroSlides.length > 1 && (
                 <>
-                  <button onClick={prevSlide} className="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-2 rounded-full">
-                    <ChevronLeft className="h-5 w-5 text-card" />
+                  <button onClick={prevSlide} aria-label="Slide anterior" className="absolute left-1 sm:left-3 top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-1.5 sm:p-2 rounded-full">
+                    <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5 text-card" />
                   </button>
-                  <button onClick={nextSlide} className="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-2 rounded-full">
-                    <ChevronRight className="h-5 w-5 text-card" />
+                  <button onClick={nextSlide} aria-label="Próximo slide" className="absolute right-1 sm:right-3 top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-1.5 sm:p-2 rounded-full">
+                    <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-card" />
                   </button>
                 </>
               )}
@@ -307,7 +307,7 @@ export default function Index() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
-                  className="relative w-[80%] max-w-md mb-6 mx-auto sm:w-full"
+                  className="relative w-[70%] max-w-md mb-6 mx-auto sm:w-full"
                 >
                   <div className="relative flex items-center group">
                     <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-accent/40 via-primary/20 to-accent/40 opacity-60 blur-sm group-focus-within:opacity-100 transition-opacity duration-500" />
