@@ -253,7 +253,9 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
             onDoubleClick={toggleZoom}
             draggable={false}
           />
+          <Watermark size="w-32 h-32 md:w-56 md:h-56" />
         </div>
+
 
         {/* Zoom indicator */}
         {scale > 1 && (
