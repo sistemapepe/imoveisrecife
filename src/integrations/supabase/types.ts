@@ -398,8 +398,10 @@ export type Database = {
           show_location_on_card: boolean
           show_visit_schedule: boolean
           updated_at: string
+          watermark_enabled: boolean
           watermark_opacity: number
           watermark_position: string
+          watermark_size_pct: number
           website_url: string
           whatsapp_message: string
           youtube_url: string
@@ -451,8 +453,10 @@ export type Database = {
           show_location_on_card?: boolean
           show_visit_schedule?: boolean
           updated_at?: string
+          watermark_enabled?: boolean
           watermark_opacity?: number
           watermark_position?: string
+          watermark_size_pct?: number
           website_url?: string
           whatsapp_message?: string
           youtube_url?: string
@@ -504,8 +508,10 @@ export type Database = {
           show_location_on_card?: boolean
           show_visit_schedule?: boolean
           updated_at?: string
+          watermark_enabled?: boolean
           watermark_opacity?: number
           watermark_position?: string
+          watermark_size_pct?: number
           website_url?: string
           whatsapp_message?: string
           youtube_url?: string
