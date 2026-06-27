@@ -366,6 +366,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       logoWidthPx: "logo_width_px",
       logoHeightPx: "logo_height_px",
       marqueePaddingYPx: "marquee_padding_y_px",
+      watermarkOpacity: "watermark_opacity",
+      watermarkPosition: "watermark_position",
       priceStyles: "price_styles",
       priceFormat: "price_format",
     };
