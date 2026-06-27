@@ -18,6 +18,7 @@ import SimilarProperties from "@/components/SimilarProperties";
 import RecentViewsBadge from "@/components/RecentViewsBadge";
 import FinancingSimulator from "@/components/FinancingSimulator";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
+import Watermark from "@/components/Watermark";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
@@ -264,6 +265,8 @@ export default function PropertyDetail() {
             loading="eager"
             fetchPriority="high"
           />
+          <Watermark size="w-32 h-32 md:w-48 md:h-48" position="center" opacity={28} />
+
           {totalImages > 1 && (
             <>
               <button
