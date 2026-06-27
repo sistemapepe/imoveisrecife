@@ -303,8 +303,22 @@ export default function Index() {
 
                 <motion.button
                   initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
+                  animate={{
+                    opacity: 1,
+                    scale: [1, 1.05, 1],
+                    boxShadow: [
+                      "0 0 0 0 hsl(var(--accent) / 0.5)",
+                      "0 0 0 12px hsl(var(--accent) / 0)",
+                      "0 0 0 0 hsl(var(--accent) / 0)",
+                    ],
+                  }}
+                  transition={{
+                    opacity: { duration: 0.5, delay: 0.2 },
+                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                    boxShadow: { duration: 2, repeat: Infinity, ease: "easeOut" },
+                  }}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.96 }}
                   onClick={() => {
                     const slide = heroSlides[currentSlide];
                     if (slide.id) {
@@ -313,10 +327,12 @@ export default function Index() {
                       navigate("/busca");
                     }
                   }}
-                  className="flex min-w-[160px] items-center justify-center overflow-hidden rounded-full h-12 px-8 mb-6 border-2 border-accent text-accent bg-transparent text-sm font-bold uppercase tracking-[0.2em] transition-all hover:bg-accent hover:text-accent-foreground"
+                  className="group relative flex min-w-[160px] items-center justify-center overflow-hidden rounded-full h-12 px-8 mb-6 border-2 border-accent text-accent bg-transparent text-sm font-bold uppercase tracking-[0.2em] transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
-                  Descobrir
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-accent/40 to-transparent group-hover:via-accent-foreground/30 animate-[shimmer_2.5s_infinite]" />
+                  <span className="relative z-10">Descobrir</span>
                 </motion.button>
+
 
                 {/* Quick Search */}
                 <motion.div
