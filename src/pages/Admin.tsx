@@ -656,11 +656,11 @@ export default function Admin() {
             <SettingsTab settings={settings} updateSettings={updateSettings} />
           )}
 
-          {tab === "privacy" && canManageSettings && (
+          {tab === "privacy" && canManagePrivacy && (
             <PrivacyTab settings={settings} updateSettings={updateSettings} />
           )}
 
-          {tab === "bucket" && canManageSettings && (
+          {tab === "bucket" && canManageBucket && (
             <BucketAccessTab settings={settings} updateSettings={updateSettings} />
           )}
 
@@ -668,27 +668,27 @@ export default function Admin() {
             <UsersTab />
           )}
 
-          {tab === "messages" && (
+          {tab === "messages" && canViewContacts && (
             <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
           )}
 
-          {tab === "analytics" && (isAdmin || role === "supervisor") && (
+          {tab === "analytics" && canViewAnalytics && (
             <AnalyticsTab />
           )}
 
-          {tab === "visits" && (isAdmin || role === "supervisor") && (
+          {tab === "visits" && canViewVisits && (
             <VisitsTab />
           )}
 
-          {tab === "traffic" && (isAdmin || role === "supervisor") && (
+          {tab === "traffic" && canViewTraffic && (
             <TrafficTab />
           )}
 
-          {tab === "seo" && canManageProperties && (
+          {tab === "seo" && canManageSeo && (
             <SeoAuditTab />
           )}
 
-          {tab === "import" && canManageProperties && (
+          {tab === "import" && canBulkImport && (
             <BulkImportTab />
           )}
           </main>
