@@ -253,7 +253,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
             onDoubleClick={toggleZoom}
             draggable={false}
           />
-          <Watermark size="w-32 h-32 md:w-56 md:h-56" />
+          <Watermark />
         </div>
 
 
@@ -282,7 +282,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
                   loading="lazy"
                   decoding="async"
                 />
-                <Watermark size="w-8 h-8" />
+                <Watermark />
               </button>
 
             ))}
