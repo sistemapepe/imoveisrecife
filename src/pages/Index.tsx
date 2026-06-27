@@ -307,7 +307,7 @@ export default function Index() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
-                  className="relative w-[70%] max-w-md mb-6 mx-auto sm:w-full"
+                  className="relative w-full max-w-md mb-6 mx-auto"
                 >
                   <div className="relative flex items-center group">
                     <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-accent/40 via-primary/20 to-accent/40 opacity-60 blur-sm group-focus-within:opacity-100 transition-opacity duration-500" />
