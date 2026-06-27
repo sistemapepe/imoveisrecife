@@ -265,7 +265,7 @@ export default function PropertyDetail() {
             loading="eager"
             fetchPriority="high"
           />
-          <Watermark size="w-32 h-32 md:w-48 md:h-48" position="center" opacity={28} />
+          <Watermark size="w-40 h-40 md:w-56 md:h-56" position="center" opacity={40} />
 
           {totalImages > 1 && (
             <>
