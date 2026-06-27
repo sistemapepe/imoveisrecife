@@ -278,11 +278,11 @@ export default function Index() {
               {/* Navigation arrows */}
               {heroSlides.length > 1 && (
                 <>
-                  <button onClick={prevSlide} aria-label="Slide anterior" className="absolute left-1 sm:left-3 top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-1.5 sm:p-2 rounded-full">
-                    <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5 text-card" />
+                  <button onClick={prevSlide} aria-label="Slide anterior" className="absolute left-3 top-1/3 sm:top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-2 rounded-full">
+                    <ChevronLeft className="h-5 w-5 text-card" />
                   </button>
-                  <button onClick={nextSlide} aria-label="Próximo slide" className="absolute right-1 sm:right-3 top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-1.5 sm:p-2 rounded-full">
-                    <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-card" />
+                  <button onClick={nextSlide} aria-label="Próximo slide" className="absolute right-3 top-1/3 sm:top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-2 rounded-full">
+                    <ChevronRight className="h-5 w-5 text-card" />
                   </button>
                 </>
               )}
