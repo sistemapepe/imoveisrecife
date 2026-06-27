@@ -47,31 +47,39 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
           decoding="async"
           fetchPriority={index === 0 ? "high" : "auto"}
         />
-        <Watermark size="w-24 h-24 md:w-32 md:h-32" position="center" opacity={40} />
-        <div className="absolute top-4 left-4 flex gap-2 items-center">
+        <Watermark size="w-24 h-24 md:w-32 md:h-32" />
+
+        {/* Gradient top scrim for badge legibility */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/55 via-black/20 to-transparent" />
+
+        <div className="absolute top-3 left-3 right-16 flex flex-wrap gap-1.5 items-center">
           {property.status && property.status !== "disponivel" && (
-            <div className={`px-3 py-1.5 rounded-md backdrop-blur-md border shadow-[0_4px_20px_rgba(0,0,0,0.25)] ${
+            <div className={`inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full backdrop-blur-md border shadow-[0_4px_14px_rgba(0,0,0,0.35)] ${
               property.status === "reservado"
-                ? "bg-yellow-500/85 border-yellow-300/40"
-                : "bg-red-500/85 border-red-300/40"
+                ? "bg-yellow-500/90 border-yellow-200/50"
+                : "bg-red-600/90 border-red-200/40"
             }`}>
-              <span className="text-[10px] font-semibold text-white uppercase tracking-[0.18em]">
+              <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+              <span className="text-[10px] font-bold text-white uppercase tracking-[0.16em]">
                 {property.status === "reservado" ? "Reservado" : "Vendido"}
               </span>
             </div>
           )}
           {property.category && (
-            <div className="px-3 py-1.5 rounded-md bg-foreground/45 backdrop-blur-md border border-card/20 shadow-[0_4px_20px_rgba(0,0,0,0.25)]">
-              <span className="text-[10px] font-semibold text-card uppercase tracking-[0.18em]">{property.category}</span>
+            <div className="inline-flex items-center px-2.5 py-1 rounded-full bg-background/85 backdrop-blur-md border border-white/30 shadow-[0_4px_14px_rgba(0,0,0,0.3)]">
+              <span className="text-[10px] font-bold text-foreground uppercase tracking-[0.16em]">{property.category}</span>
             </div>
           )}
           {property.exclusive && (
-            <div className="relative px-3 py-1.5 rounded-md gold-gradient border border-accent/40 shadow-[0_6px_24px_-4px_hsl(var(--accent)/0.6)] overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-[shimmer_3s_infinite]" />
-              <span className="relative text-[10px] font-bold text-accent-foreground uppercase tracking-[0.22em]">★ Exclusivo</span>
+            <div className="relative inline-flex items-center gap-1 px-2.5 py-1 rounded-full gold-gradient border border-accent/60 shadow-[0_6px_20px_-4px_hsl(var(--accent)/0.7)] overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full animate-[shimmer_3s_infinite]" />
+              <span className="relative text-[10px] font-extrabold text-accent-foreground uppercase tracking-[0.2em] flex items-center gap-1">
+                <span className="text-[11px] leading-none">★</span> Exclusivo
+              </span>
             </div>
           )}
         </div>
+
 
         <button
           aria-label={isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
