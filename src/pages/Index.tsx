@@ -318,7 +318,7 @@ export default function Index() {
                     boxShadow: { duration: 2, repeat: Infinity, ease: "easeOut" },
                   }}
                   whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.96 }}
+                  whileTap={{ scale: 0.92, transition: { type: "spring", stiffness: 600, damping: 18 } }}
                   onClick={() => {
                     const slide = heroSlides[currentSlide];
                     if (slide.id) {
@@ -327,10 +327,19 @@ export default function Index() {
                       navigate("/busca");
                     }
                   }}
-                  className="group relative flex min-w-[160px] items-center justify-center overflow-hidden rounded-full h-12 px-8 mb-6 border-2 border-accent text-accent bg-transparent text-sm font-bold uppercase tracking-[0.2em] transition-colors hover:bg-accent hover:text-accent-foreground"
+                  className="group relative flex min-w-[160px] items-center justify-center overflow-hidden rounded-full h-12 px-8 mb-6 border-2 border-accent text-card text-sm font-bold uppercase tracking-[0.2em] transition-colors active:brightness-95"
                 >
-                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-accent/40 to-transparent group-hover:via-accent-foreground/30 animate-[shimmer_2.5s_infinite]" />
+                  <span
+                    className="pointer-events-none absolute inset-0 animate-[gradient-shift_4s_ease_infinite]"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(120deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 35%, hsl(var(--accent)) 65%, hsl(var(--primary)) 100%)",
+                      backgroundSize: "300% 300%",
+                    }}
+                  />
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_2.5s_infinite]" />
                   <span className="relative z-10">Descobrir</span>
+
                 </motion.button>
 
 
