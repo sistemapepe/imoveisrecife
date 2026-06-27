@@ -271,7 +271,7 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
               <button
                 key={i}
                 onClick={() => { resetZoom(); setCurrentIndex(i); }}
-                className={`shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
+                className={`relative shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
                   i === currentIndex ? "border-primary opacity-100" : "border-transparent opacity-40 hover:opacity-70"
                 }`}
               >
@@ -282,7 +282,9 @@ export default function ImageLightbox({ images, initialIndex, isOpen, onClose, t
                   loading="lazy"
                   decoding="async"
                 />
+                <Watermark size="w-8 h-8" />
               </button>
+
             ))}
           </div>
         )}
