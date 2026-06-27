@@ -33,6 +33,13 @@ interface AuthContextType {
   canManageSettings: boolean;
   canManageUsers: boolean;
   canViewContacts: boolean;
+  canViewAnalytics: boolean;
+  canViewVisits: boolean;
+  canViewTraffic: boolean;
+  canManageSeo: boolean;
+  canBulkImport: boolean;
+  canManagePrivacy: boolean;
+  canManageBucket: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
