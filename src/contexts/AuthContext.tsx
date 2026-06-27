@@ -54,6 +54,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     view_contacts: false,
     manage_settings: false,
     manage_users: false,
+    view_analytics: false,
+    view_visits: false,
+    view_traffic: false,
+    manage_seo: false,
+    bulk_import: false,
+    manage_privacy: false,
+    manage_bucket: false,
   });
   const [loading, setLoading] = useState(true);
 
@@ -65,6 +72,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const canManageSettings = isAdmin || permissions.manage_settings;
   const canManageUsers = isAdmin || permissions.manage_users;
   const canViewContacts = isAdmin || permissions.view_contacts;
+  const canViewAnalytics = isAdmin || role === "supervisor" || permissions.view_analytics;
+  const canViewVisits = isAdmin || role === "supervisor" || permissions.view_visits;
+  const canViewTraffic = isAdmin || role === "supervisor" || permissions.view_traffic;
+  const canManageSeo = isAdmin || permissions.manage_seo;
+  const canBulkImport = isAdmin || permissions.bulk_import;
+  const canManagePrivacy = isAdmin || permissions.manage_privacy;
+  const canManageBucket = isAdmin || permissions.manage_bucket;
 
   const loadPermissions = useCallback(async (userRole: AppRole) => {
     if (userRole === "admin") return; // admin has all
