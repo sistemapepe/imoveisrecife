@@ -183,6 +183,8 @@ const defaultSettings: SiteSettings = {
   logoWidthPx: 270,
   logoHeightPx: 140,
   marqueePaddingYPx: 4,
+  watermarkOpacity: 40,
+  watermarkPosition: 'center',
   priceStyles: DEFAULT_PRICE_STYLES,
   priceFormat: DEFAULT_PRICE_FORMAT,
 };
