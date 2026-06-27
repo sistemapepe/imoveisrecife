@@ -691,7 +691,10 @@ export default function Admin() {
           {tab === "import" && canManageProperties && (
             <BulkImportTab />
           )}
-        </main>
+          </main>
+        </div>
+
+
 
         <Dialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
           <DialogContent>
