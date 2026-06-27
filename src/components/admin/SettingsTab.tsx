@@ -445,7 +445,9 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
             onClick={() =>
               setLocalSettings((prev) => ({
                 ...prev,
+                watermarkEnabled: true,
                 watermarkOpacity: 40,
+                watermarkSizePct: 30,
                 watermarkPosition: "center",
               }))
             }
@@ -455,7 +457,23 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
           </button>
         </div>
 
+        {/* Liga/Desliga */}
+        <label className="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2 cursor-pointer">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-wider">Marca d'água ativa</div>
+            <div className="text-[11px] text-muted-foreground">
+              {localSettings.watermarkEnabled !== false ? "Aplicada em todas as fotos" : "Desativada — fotos exibidas sem logo"}
+            </div>
+          </div>
+          <input
+            type="checkbox"
+            checked={localSettings.watermarkEnabled !== false}
+            onChange={(e) => setLocalSettings((prev) => ({ ...prev, watermarkEnabled: e.target.checked }))}
+            className="h-5 w-9 accent-primary cursor-pointer"
+          />
+        </label>
 
+        <div className={`space-y-4 ${localSettings.watermarkEnabled === false ? "opacity-50 pointer-events-none" : ""}`}>
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Opacidade</label>
@@ -471,6 +489,23 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
             className="w-full accent-primary"
           />
         </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Tamanho</label>
+            <span className="text-xs font-mono tabular-nums">{localSettings.watermarkSizePct ?? 30}%</span>
+          </div>
+          <input
+            type="range"
+            min={5}
+            max={100}
+            step={5}
+            value={localSettings.watermarkSizePct ?? 30}
+            onChange={(e) => setLocalSettings((prev) => ({ ...prev, watermarkSizePct: Number(e.target.value) }))}
+            className="w-full accent-primary"
+          />
+        </div>
+
 
         <div className="space-y-1">
           <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Posição</label>
