@@ -31,7 +31,7 @@ export default function Watermark({
   }[position];
 
   return (
-    <div className={`pointer-events-none absolute ${posClass} z-10`} aria-hidden="true">
+    <div className={`pointer-events-none absolute ${posClass}`} aria-hidden="true">
       <img
         src={settings.logoUrl}
         alt=""
