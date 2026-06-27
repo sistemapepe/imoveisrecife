@@ -47,28 +47,32 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
           decoding="async"
           fetchPriority={index === 0 ? "high" : "auto"}
         />
-        <Watermark size="w-20 h-20 md:w-24 md:h-24" position="center" opacity={30} />
-        <div className="absolute top-4 left-4 flex gap-2">
+        <Watermark size="w-24 h-24 md:w-32 md:h-32" position="center" opacity={40} />
+        <div className="absolute top-4 left-4 flex gap-2 items-center">
           {property.status && property.status !== "disponivel" && (
-            <div className={`px-3 py-1 rounded-sm shadow-lg ${
-              property.status === "reservado" ? "bg-yellow-500/90" : "bg-red-500/90"
+            <div className={`px-3 py-1.5 rounded-md backdrop-blur-md border shadow-[0_4px_20px_rgba(0,0,0,0.25)] ${
+              property.status === "reservado"
+                ? "bg-yellow-500/85 border-yellow-300/40"
+                : "bg-red-500/85 border-red-300/40"
             }`}>
-              <span className="text-[10px] font-bold text-white uppercase tracking-[0.15em]">
+              <span className="text-[10px] font-semibold text-white uppercase tracking-[0.18em]">
                 {property.status === "reservado" ? "Reservado" : "Vendido"}
               </span>
             </div>
           )}
           {property.category && (
-            <div className="bg-primary px-3 py-1 rounded-sm shadow-lg">
-              <span className="text-[10px] font-bold text-primary-foreground uppercase tracking-[0.15em]">{property.category}</span>
+            <div className="px-3 py-1.5 rounded-md bg-foreground/45 backdrop-blur-md border border-card/20 shadow-[0_4px_20px_rgba(0,0,0,0.25)]">
+              <span className="text-[10px] font-semibold text-card uppercase tracking-[0.18em]">{property.category}</span>
             </div>
           )}
           {property.exclusive && (
-            <div className="gold-gradient px-3 py-1 rounded-sm shadow-lg">
-              <span className="text-[10px] font-bold text-accent-foreground uppercase tracking-[0.2em]">Exclusivo</span>
+            <div className="relative px-3 py-1.5 rounded-md gold-gradient border border-accent/40 shadow-[0_6px_24px_-4px_hsl(var(--accent)/0.6)] overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-[shimmer_3s_infinite]" />
+              <span className="relative text-[10px] font-bold text-accent-foreground uppercase tracking-[0.22em]">★ Exclusivo</span>
             </div>
           )}
         </div>
+
         <button
           aria-label={isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
           aria-pressed={isFav}
