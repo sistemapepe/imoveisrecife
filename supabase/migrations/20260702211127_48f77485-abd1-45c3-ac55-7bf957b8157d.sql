@@ -1,0 +1,1 @@
+ALTER TABLE public.properties ADD COLUMN IF NOT EXISTS status_aluguel VARCHAR(20) NOT NULL DEFAULT 'disponivel' CHECK (status_aluguel IN ('disponivel','alugado'));

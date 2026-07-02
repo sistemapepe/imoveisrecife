@@ -216,6 +216,7 @@ export type Database = {
           previous_price: number
           price: number
           status: string
+          status_aluguel: string
           suites: number
           title: string
           type: string
@@ -242,6 +243,7 @@ export type Database = {
           previous_price?: number
           price?: number
           status?: string
+          status_aluguel?: string
           suites?: number
           title: string
           type?: string
@@ -268,6 +270,7 @@ export type Database = {
           previous_price?: number
           price?: number
           status?: string
+          status_aluguel?: string
           suites?: number
           title?: string
           type?: string
