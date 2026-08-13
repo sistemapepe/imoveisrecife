@@ -78,7 +78,7 @@ export default function PermissionsConfig() {
     try {
       const rows = CONFIGURABLE_ROLES.flatMap((role) =>
         PERMISSIONS.map((perm) => ({
-          role: role.value as "supervisor" | "corretor",
+          role: role.value,
           permission: perm.key,
           enabled: getEnabled(role.value, perm.key),
         }))
@@ -87,11 +87,18 @@ export default function PermissionsConfig() {
       for (const row of rows) {
         const { error } = await supabase
           .from("role_permissions")
-          .upsert(row, { onConflict: "role,permission" });
+          .upsert({
+            role: row.role as any,
+            permission: row.permission,
+            enabled: row.enabled
+          }, { 
+            onConflict: "role,permission" 
+          });
         if (error) throw error;
       }
       toast.success("Permissões salvas!");
-    } catch {
+    } catch (err) {
+      console.error("Erro ao salvar permissões:", err);
       toast.error("Erro ao salvar permissões");
     }
     setSaving(false);
