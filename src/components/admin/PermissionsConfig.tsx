@@ -99,7 +99,7 @@ export default function PermissionsConfig() {
       toast.success("Permissões salvas!");
     } catch (err) {
       console.error("Erro ao salvar permissões:", err);
-      toast.error("Erro ao salvar permissões\n\npersiste");
+      toast.error("Erro ao salvar permissões persiste\n\nna consigo salvar alteracao em equipe> painel super admim");
     }
     setSaving(false);
   };
