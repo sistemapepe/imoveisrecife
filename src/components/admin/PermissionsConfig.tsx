@@ -90,8 +90,9 @@ export default function PermissionsConfig() {
         }))
       );
 
-      // Teste de chamada RPC sem argumentos para verificar cache
-      const { error } = await (supabase as any).rpc("reset_all_perms");
+      const { error } = await (supabase as any).rpc("save_role_permissions", {
+        p_perms: rows
+      });
       
       if (error) throw error;
       
