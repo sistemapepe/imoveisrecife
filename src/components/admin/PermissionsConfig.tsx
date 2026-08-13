@@ -76,11 +76,17 @@ export default function PermissionsConfig() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const rows = CONFIGURABLE_ROLES.flatMap((role) =>
+      // Incluir super_admin para garantir que ele tenha tudo habilitado no banco
+      const rolesToSave = [
+        { value: "super_admin", label: "Super Admin" },
+        ...CONFIGURABLE_ROLES
+      ];
+
+      const rows = rolesToSave.flatMap((role) =>
         PERMISSIONS.map((perm) => ({
           role: role.value,
           permission: perm.key,
-          enabled: getEnabled(role.value, perm.key),
+          enabled: role.value === "super_admin" ? true : getEnabled(role.value, perm.key),
         }))
       );
 
