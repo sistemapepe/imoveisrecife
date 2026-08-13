@@ -21,6 +21,7 @@ const PERMISSIONS = [
 ];
 
 const CONFIGURABLE_ROLES = [
+  { value: "admin", label: "Administrador" },
   { value: "supervisor", label: "Supervisor" },
   { value: "corretor", label: "Corretor" },
 ];

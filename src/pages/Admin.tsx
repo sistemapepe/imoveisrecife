@@ -49,7 +49,7 @@ const emptyProperty: Omit<Property, "id" | "code"> = {
 
 export default function Admin() {
   const navigate = useNavigate();
-  const { user, isAdmin, role, loading: authLoading, signOut, canViewProperties, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket } = useAuth();
+  const { user, isAdmin, isSuperAdmin, role, loading: authLoading, signOut, canViewProperties, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket } = useAuth();
   const { properties, settings, addProperty, updateProperty, deleteProperty, updateSettings } = useProperties();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [search, setSearch] = useState("");
@@ -184,7 +184,7 @@ export default function Admin() {
 
   const allTabs: { key: Tab; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = [
     { key: "dashboard", label: "Resumo", icon: Home, show: true },
-    { key: "properties", label: "Imóveis", icon: LayoutDashboard, show: isAdmin || !!canViewProperties || !!canManageProperties },
+    { key: "properties", label: "Imóveis", icon: LayoutDashboard, show: !!canViewProperties || !!canManageProperties },
     { key: "import", label: "Importar (Excel)", icon: Upload, show: !!canBulkImport },
     { key: "messages", label: "Contatos", icon: MessageSquare, show: !!canViewContacts, badge: newMsgCount },
     { key: "visits", label: "Visitas", icon: Calendar, show: !!canViewVisits, badge: pendingVisitsCount },
@@ -219,7 +219,7 @@ export default function Admin() {
             </div>
             <h1 className="text-base md:text-lg font-bold truncate px-2">
               <span className="md:hidden">{currentTabLabel}</span>
-              <span className="hidden md:inline">Painel {role === "admin" ? "Admin" : role === "supervisor" ? "Supervisor" : "Corretor"}</span>
+              <span className="hidden md:inline">Painel {role === "super_admin" ? "Super Admin" : role === "admin" ? "Admin" : role === "supervisor" ? "Supervisor" : "Corretor"}</span>
             </h1>
             <div className="flex items-center gap-1">
               {canViewContacts && (

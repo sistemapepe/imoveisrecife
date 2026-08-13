@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode, useCallback 
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
-type AppRole = "admin" | "supervisor" | "corretor" | "user";
+type AppRole = "super_admin" | "admin" | "supervisor" | "corretor" | "user";
 
 type PermissionKey =
   | "view_properties"
@@ -22,6 +22,7 @@ type PermissionKey =
 interface AuthContextType {
   user: User | null;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
   role: AppRole | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
@@ -64,13 +65,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
   const [loading, setLoading] = useState(true);
 
-  const isAdmin = role === "admin";
+  const isSuperAdmin = role === "super_admin";
+  const isAdmin = isSuperAdmin || role === "admin";
 
   const canManageProperties = isAdmin || permissions.manage_properties;
   const canDeleteProperties = isAdmin || permissions.delete_properties;
   const canViewProperties = isAdmin || permissions.view_properties;
   const canManageSettings = isAdmin || permissions.manage_settings;
-  const canManageUsers = isAdmin || permissions.manage_users;
+  const canManageUsers = isSuperAdmin || permissions.manage_users;
   const canViewContacts = isAdmin || permissions.view_contacts;
   const canViewAnalytics = isAdmin || role === "supervisor" || permissions.view_analytics;
   const canViewVisits = isAdmin || role === "supervisor" || permissions.view_visits;
@@ -81,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const canManageBucket = isAdmin || permissions.manage_bucket;
 
   const loadPermissions = useCallback(async (userRole: AppRole) => {
-    if (userRole === "admin") return; // admin has all
+    if (userRole === "super_admin") return; // super_admin has all
     try {
       const { data } = await supabase
         .from("role_permissions")
@@ -166,7 +168,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, role, loading, signIn, signUp, signOut, canManageProperties, canDeleteProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket }}>
+    <AuthContext.Provider value={{ user, isAdmin, isSuperAdmin, role, loading, signIn, signUp, signOut, canManageProperties, canDeleteProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket }}>
       {children}
     </AuthContext.Provider>
   );
