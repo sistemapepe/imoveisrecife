@@ -90,9 +90,9 @@ export default function PermissionsConfig() {
         }))
       );
 
-      const { error } = await (supabase as any).rpc("save_role_permissions", {
-        p_perms: rows
-      });
+      const { error } = await supabase
+        .from("role_permissions")
+        .upsert(rows, { onConflict: 'role,permission' });
       
       if (error) throw error;
       
