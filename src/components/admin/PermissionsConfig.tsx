@@ -78,7 +78,7 @@ export default function PermissionsConfig() {
     try {
       const rows = CONFIGURABLE_ROLES.flatMap((role) =>
         PERMISSIONS.map((perm) => ({
-          role: role.value as "supervisor" | "corretor",
+          role: role.value,
           permission: perm.key,
           enabled: getEnabled(role.value, perm.key),
         }))
