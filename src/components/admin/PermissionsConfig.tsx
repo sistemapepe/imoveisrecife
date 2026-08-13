@@ -90,18 +90,15 @@ export default function PermissionsConfig() {
         }))
       );
 
-      for (const row of rows) {
-        const { error } = await supabase
-          .from("role_permissions")
-          .upsert({
-            role: row.role as any,
-            permission: row.permission,
-            enabled: row.enabled
-          }, { 
-            onConflict: "role,permission" 
-          });
-        if (error) throw error;
-      }
+      const { data, error } = await supabase.functions.invoke("manage-users", {
+        body: { 
+          action: "update_perms", 
+          perms: rows 
+        },
+      });
+      
+      if (error || data?.error) throw error || new Error(data?.error);
+      
       toast.success("Permissões salvas!");
     } catch (err) {
       console.error("Erro ao salvar permissões:", err);
