@@ -84,7 +84,7 @@ export default function PermissionsConfig() {
 
       const rows = rolesToSave.flatMap((role) =>
         PERMISSIONS.map((perm) => ({
-          role: role.value,
+          role: role.value as "admin" | "corretor" | "super_admin" | "supervisor" | "user",
           permission: perm.key,
           enabled: role.value === "super_admin" ? true : getEnabled(role.value, perm.key),
         }))
