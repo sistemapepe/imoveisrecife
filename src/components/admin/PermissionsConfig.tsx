@@ -90,10 +90,8 @@ export default function PermissionsConfig() {
         }))
       );
 
-      // Chamar RPC por posição para evitar erros de cache de nomes de parâmetros
-      const { error } = await (supabase as any).rpc("save_perms", {
-        "": rows
-      });
+      // Teste de chamada RPC sem argumentos para verificar cache
+      const { error } = await (supabase as any).rpc("reset_all_perms");
       
       if (error) throw error;
       
