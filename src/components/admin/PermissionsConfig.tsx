@@ -87,7 +87,13 @@ export default function PermissionsConfig() {
       for (const row of rows) {
         const { error } = await supabase
           .from("role_permissions")
-          .upsert(row, { onConflict: "role,permission" });
+          .upsert({
+            role: row.role,
+            permission: row.permission,
+            enabled: row.enabled
+          }, { 
+            onConflict: "role,permission" 
+          });
         if (error) throw error;
       }
       toast.success("Permissões salvas!");
