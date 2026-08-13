@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { logger } from "@/lib/logger";
 import type { User } from "@supabase/supabase-js";
 
 type AppRole = "super_admin" | "admin" | "supervisor" | "corretor" | "user";
@@ -98,8 +99,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
         setPermissions(perms);
       }
-    } catch {
-      // keep defaults
+    } catch (error) {
+      logger.error("Failed to load permissions", { role: userRole }, error as Error);
     }
   }, []);
 
@@ -109,7 +110,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userRole = (data?.role as AppRole) || "user";
       setRole(userRole);
       await loadPermissions(userRole);
-    } catch {
+    } catch (error) {
+      logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
     }
   };
@@ -152,7 +154,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error, data } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      logger.warn("Sign in failed", { email });
+    } else {
+      logger.info("User signed in", { userId: data.user?.id });
+    }
     return { error: error?.message ?? null };
   };
 

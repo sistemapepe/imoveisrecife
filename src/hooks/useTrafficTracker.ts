@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { logger } from "@/lib/logger";
 
 function getVisitorId(): string {
   let id = localStorage.getItem("visitor_id");
@@ -137,7 +138,11 @@ export function trackEvent(eventType: string, propertyId?: string) {
     property_id: propertyId || null,
   };
 
-  supabase.from("traffic_events").insert(event).then();
+  supabase.from("traffic_events").insert(event).then(({ error }) => {
+    if (error) {
+      logger.error("Failed to track traffic event", { eventType }, error as unknown as Error);
+    }
+  });
 }
 
 export function useTrafficTracker() {
