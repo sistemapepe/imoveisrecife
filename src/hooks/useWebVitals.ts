@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { onLCP, onCLS, onINP, onFCP, onTTFB } from 'web-vitals';
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
 
 /**
  * Hook to measure Web Vitals and log them to Supabase for analysis.
@@ -25,7 +26,9 @@ export function useWebVitals() {
         is_slow_connection: !!isSlow,
         connection_type: connection?.effectiveType || 'unknown'
       }).then(({ error }) => {
-        if (error) console.error('Error logging web vitals:', error);
+        if (error) {
+          logger.error('Error logging web vitals', { metricName: name, id }, error as unknown as Error);
+        }
       });
     };
 
