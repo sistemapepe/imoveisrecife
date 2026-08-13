@@ -88,7 +88,7 @@ export default function PermissionsConfig() {
         const { error } = await supabase
           .from("role_permissions")
           .upsert({
-            role: row.role,
+            role: row.role as any,
             permission: row.permission,
             enabled: row.enabled
           }, { 
@@ -97,7 +97,8 @@ export default function PermissionsConfig() {
         if (error) throw error;
       }
       toast.success("Permissões salvas!");
-    } catch {
+    } catch (err) {
+      console.error("Erro ao salvar permissões:", err);
       toast.error("Erro ao salvar permissões");
     }
     setSaving(false);
