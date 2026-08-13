@@ -35,7 +35,24 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "Sem permissão" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { action, email, password, role, userId } = await req.json();
+    const { action, email, password, role, userId, perms } = await req.json();
+
+    if (action === "update_perms") {
+      for (const row of perms) {
+        const { error } = await supabaseAdmin
+          .from("role_permissions")
+          .upsert({
+            role: row.role as any,
+            permission: row.permission,
+            enabled: row.enabled
+          }, { 
+            onConflict: "role,permission" 
+          });
+        if (error) throw error;
+      }
+      return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
 
     if (action === "create") {
       const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
