@@ -687,6 +687,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      save_role_perms: { Args: { p_rows: Json }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user" | "supervisor" | "corretor" | "super_admin"
