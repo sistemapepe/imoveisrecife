@@ -43,6 +43,8 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: "Permissões inválidas ou ausentes" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
+      console.log(`Atualizando ${perms.length} permissões...`);
+
       for (const row of perms) {
         const { error } = await supabaseAdmin
           .from("role_permissions")
@@ -60,8 +62,6 @@ serve(async (req) => {
       }
       return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
-
-
 
     if (action === "create") {
       const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
