@@ -84,24 +84,18 @@ export default function PermissionsConfig() {
 
       const rows = rolesToSave.flatMap((role) =>
         PERMISSIONS.map((perm) => ({
-          role: role.value,
+          role: role.value as "admin" | "corretor" | "super_admin" | "supervisor" | "user",
           permission: perm.key,
           enabled: role.value === "super_admin" ? true : getEnabled(role.value, perm.key),
         }))
       );
 
-      for (const row of rows) {
-        const { error } = await supabase
-          .from("role_permissions")
-          .upsert({
-            role: row.role as any,
-            permission: row.permission,
-            enabled: row.enabled
-          }, { 
-            onConflict: "role,permission" 
-          });
-        if (error) throw error;
-      }
+      const { error } = await (supabase as any).rpc("save_role_perms", {
+        "": rows
+      });
+      
+      if (error) throw error;
+      
       toast.success("Permissões salvas!");
     } catch (err) {
       console.error("Erro ao salvar permissões:", err);
