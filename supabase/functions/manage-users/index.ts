@@ -35,9 +35,14 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "Sem permissão" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { action, email, password, role, userId, perms } = await req.json();
+    const body = await req.json();
+    const { action, email, password, role, userId, perms } = body;
 
     if (action === "update_perms") {
+      if (!perms || !Array.isArray(perms)) {
+        return new Response(JSON.stringify({ error: "Permissões inválidas ou ausentes" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
       for (const row of perms) {
         const { error } = await supabaseAdmin
           .from("role_permissions")
@@ -48,10 +53,14 @@ serve(async (req) => {
           }, { 
             onConflict: "role,permission" 
           });
-        if (error) throw error;
+        if (error) {
+          console.error("Erro no upsert:", error);
+          return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
       }
       return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
+
 
 
     if (action === "create") {
