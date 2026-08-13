@@ -90,14 +90,11 @@ export default function PermissionsConfig() {
         }))
       );
 
-      const { data, error } = await supabase.functions.invoke("manage-users", {
-        body: { 
-          action: "update_perms", 
-          perms: rows 
-        },
+      const { error } = await supabase.rpc("upsert_role_permissions", {
+        p_perms: rows
       });
       
-      if (error || data?.error) throw error || new Error(data?.error);
+      if (error) throw error;
       
       toast.success("Permissões salvas!");
     } catch (err) {
