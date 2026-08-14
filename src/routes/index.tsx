@@ -53,6 +53,18 @@ export default function Index() {
           <div className="flex items-center gap-2 text-accent font-bold">
             <ArrowRight className="w-4 h-4" /> Implementar a tela de “Solicitar acesso ao site” para que eu possa pedir permissão de edição quando não for Admin automaticamente no site duplicado.
           </div>
+
+          <div className="flex items-center gap-2 text-accent font-bold border-t border-white/5 pt-4">
+            <ArrowRight className="w-4 h-4" /> Adicione uma confirmação e um resumo (nome, base original e permissões) antes de eu duplicar um site para evitar criações acidentais.
+          </div>
+
+          <div className="flex items-center gap-2 text-accent font-bold">
+            <ArrowRight className="w-4 h-4" /> Implemente uma página de detalhes do site duplicado com ações como editar, gerenciar permissões e acessar o site em um clique.
+          </div>
+
+          <div className="flex items-center gap-2 text-accent font-bold">
+            <ArrowRight className="w-4 h-4" /> Exiba o status do processo de duplicação (em fila, processando, concluído ou erro) para eu saber quando o site novo está pronto.
+          </div>
         </div>
       </section>
 
