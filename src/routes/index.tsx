@@ -87,6 +87,14 @@ export default function Index() {
           <div className="flex items-center gap-2 text-green-500 font-bold">
             <CheckCircle2 className="w-4 h-4" /> Correção da página de Login e telemetria aplicada.
           </div>
+          
+          <div className="flex items-center gap-2 text-accent font-bold border-t border-white/5 pt-4">
+            <ArrowRight className="w-4 h-4" /> Implemente testes de ponta a ponta para garantir que o fluxo de login funcione com sucesso e com falha de credenciais em diferentes cenários.
+          </div>
+
+          <div className="flex items-center gap-2 text-accent font-bold">
+            <ArrowRight className="w-4 h-4" /> Adicione a funcionalidade de recuperação de senha, com envio de e-mail e redefinição segura, para usuários que esquecerem a senha.
+          </div>
         </div>
       </section>
 
