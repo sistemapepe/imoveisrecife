@@ -175,7 +175,7 @@ export default function LeadCaptureModal({
                   <div className="h-9 w-9 rounded-full bg-whatsapp/10 flex items-center justify-center">
                     <MessageCircle className="h-5 w-5 text-whatsapp" />
                   </div>
-                  <h2 id="lead-modal-title" className="font-bold text-base">{settings.leadModalTitle}</h2>
+                  <h2 id="lead-modal-title" className="font-bold text-base outline-none" tabIndex={-1}>{settings.leadModalTitle}</h2>
                 </div>
                 <button onClick={onClose} aria-label="Fechar" className="p-1 rounded-full hover:bg-muted transition-colors">
                   <X className="h-5 w-5 text-muted-foreground" />
