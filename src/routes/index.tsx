@@ -101,8 +101,11 @@ export default function Index() {
           <div className="flex items-center gap-2 text-green-500 font-bold border-t border-white/5 pt-4 italic text-xs">
             <CheckCircle2 className="w-4 h-4" /> Verificar se o redirecionamento para /admin funciona sem mostrar tela de loading ou disparar o erro de Suspense após o login.
           </div>
-          <div className="flex items-center gap-2 text-green-500 font-bold border-t border-white/5 pt-4 italic text-xs">
-            <CheckCircle2 className="w-4 h-4" /> Investigação e reforço da persistência de login no AuthContext.
+          <div className="flex items-center gap-2 text-accent font-bold border-t border-white/5 pt-4">
+            <ArrowRight className="w-4 h-4" /> Crie testes de ponta a ponta para garantir que após o login o redirecionamento para /admin ocorra sem erro de Suspense e com navegação correta.
+          </div>
+          <div className="flex items-center gap-2 text-accent font-bold">
+            <ArrowRight className="w-4 h-4" /> Adicione um fallback de carregamento específico para a rota /admin para garantir que nunca apareça tela em branco durante o redirecionamento.
           </div>
         </div>
       </section>
