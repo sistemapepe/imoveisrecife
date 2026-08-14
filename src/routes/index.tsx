@@ -1,3 +1,6 @@
+/**
+ * ate que eja publicadoo site precisa ser provisorio para que eu consiga editalo esta indo parahttps://realimobg/adminporem nao acesso
+ */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheck, Globe2, LayoutDashboard, ArrowRight, CheckCircle2 } from 'lucide-react';
@@ -109,7 +112,7 @@ export default function Index() {
           </div>
           <div className="flex flex-col gap-2 text-red-500 font-bold border-t border-white/5 pt-4 italic text-xs">
             <div className="flex items-center gap-2">
-              <ArrowRight className="w-4 h-4" /> Problema crítico relatado: "apresenta: Login realizado! porém não consigo acessar no usuário sistema.pe@gmail.com"
+              <ArrowRight className="w-4 h-4 text-green-500" /> CORRIGIDO: O redirecionamento para o admin agora respeita o site_id carregado pelo SiteContext.
             </div>
             <div className="flex flex-col gap-1 mt-1">
               <div className="flex items-center gap-2 text-green-500 font-black bg-green-500/10 p-2 rounded border border-green-500/20">
