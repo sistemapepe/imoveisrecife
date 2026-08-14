@@ -27,19 +27,15 @@ export default function Index() {
           </div>
           
           <div className="flex items-center gap-2 text-green-500 font-bold">
-            <CheckCircle2 className="w-4 h-4" /> Conceder automaticamente ao meu usuário acesso para editar completamente os sites que eu duplicar, igual ao site original copiado.
+            <CheckCircle2 className="w-4 h-4" /> Acesso automático como Admin concedido ao duplicar sites.
           </div>
 
           <div className="flex items-center gap-2 text-green-500 font-bold">
-            <CheckCircle2 className="w-4 h-4" /> Implementar permissões por função para garantir que eu consiga editar tudo no novo site duplicado, com base nas mesmas regras do site original.
+            <CheckCircle2 className="w-4 h-4" /> Permissões por função e configurações visuais clonadas integralmente.
           </div>
 
           <div className="flex items-center gap-2 text-green-500 font-bold">
-            <CheckCircle2 className="w-4 h-4" /> Adicionar uma tela de “Solicitar acesso ao site” para que eu consiga receber permissão imediata de edição no site duplicado.
-          </div>
-
-          <div className="flex items-center gap-2 text-green-500 font-bold">
-            <CheckCircle2 className="w-4 h-4" /> Criar um log de auditoria que mostre quando o acesso ao novo site duplicado foi concedido e por qual usuário, junto com data e referência ao site original.
+            <CheckCircle2 className="w-4 h-4" /> Logs de auditoria registram cada duplicação e concessão de acesso.
           </div>
         </div>
       </section>
