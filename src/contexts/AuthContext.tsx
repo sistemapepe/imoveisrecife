@@ -106,14 +106,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkRole = async (userId: string) => {
     try {
-      const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
+      // Direct query to user_roles with cache-busting logic if needed
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (error) throw error;
+
       const userRole = (data?.role as AppRole) || "user";
       logger.info("Role check result", { userId, role: userRole });
+      
       setRole(userRole);
       await loadPermissions(userRole);
+      
+      // Force loading false after role is established
+      setLoading(false);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
+      setLoading(false);
     }
   };
 
