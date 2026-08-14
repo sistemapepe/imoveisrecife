@@ -117,8 +117,8 @@ export default function Index() {
             <div className="flex items-center gap-2 mt-2">
               <ArrowRight className="w-4 h-4" /> Implemente uma verificação/atualização automática das permissões do usuário após o login para evitar que AppRole fique desatualizado.
             </div>
-            <div className="flex items-center gap-2 mt-2 border-t border-white/5 pt-2">
-              <ArrowRight className="w-4 h-4" /> Crie uma tela no painel/admin para eu visualizar as roles/permissões do usuário logado e confirmar por que ele não acessa o sistema.
+            <div className="flex items-center gap-2 mt-2 border-t border-white/5 pt-2 text-green-500 font-bold">
+              <CheckCircle2 className="w-4 h-4" /> Tela de diagnóstico de segurança e permissões implementada no painel administrativo.
             </div>
           </div>
         </div>
