@@ -1,6 +1,7 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/lib/logger";
+import { useSite } from "./SiteContext";
 import type { User } from "@supabase/supabase-js";
 
 type AppRole = "super_admin" | "admin" | "supervisor" | "corretor" | "user";
@@ -48,6 +49,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { site } = useSite();
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
   const [permissions, setPermissions] = useState<Record<PermissionKey, boolean>>({
@@ -175,7 +177,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logger.error("Initial session check failed", {}, error as Error);
       } finally {
         if (mounted) {
-          setLoading(false);
           setIsInitializing(false);
         }
       }
@@ -187,7 +188,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [checkRole]);
 
   const signIn = async (email: string, password: string) => {
     const { error, data } = await supabase.auth.signInWithPassword({ email, password });
