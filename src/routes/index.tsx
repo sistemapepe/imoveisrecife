@@ -110,6 +110,14 @@ export default function Index() {
           <div className="flex items-center gap-2 text-red-500 font-bold border-t border-white/5 pt-4 italic text-xs">
             <ArrowRight className="w-4 h-4" /> Problema crítico relatado: "apresenta: Login realizado! porém não consigo acessar no usuário sistema.pe@gmail.com"
           </div>
+          <div className="flex flex-col gap-2 text-accent font-bold border-t border-white/5 pt-4">
+            <div className="flex items-center gap-2">
+              <ArrowRight className="w-4 h-4" /> Adicione testes automatizados que reproduzam o bloqueio do usuário sistema.pe@gmail.com e garantam que o redirecionamento para /admin funcione após login.
+            </div>
+            <div className="flex items-center gap-2 mt-2">
+              <ArrowRight className="w-4 h-4" /> Implemente uma verificação/atualização automática das permissões do usuário após o login para evitar que AppRole fique desatualizado.
+            </div>
+          </div>
         </div>
       </section>
 
