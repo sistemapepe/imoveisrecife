@@ -200,6 +200,7 @@ export default function Admin() {
     { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
     { key: "sites", label: "Sites", icon: Globe2, show: isSuperAdmin },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
+    { key: "security", label: "Segurança", icon: Shield, show: true },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
 
