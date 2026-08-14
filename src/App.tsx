@@ -101,8 +101,8 @@ const App = () => {
               <AppContent />
             </BrowserRouter>
           </PropertyProvider>
-        </SiteProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </SiteProvider>
     </TooltipProvider>
   </QueryClientProvider>
   </HelmetProvider>
