@@ -43,6 +43,8 @@ export default function Index() {
               preciso acessalosparaeditar eadministrar
               
               nao consigo acessar para editar
+              
+              em sites preciso gerenciar editar duplicar
             </CardDescription>
           </CardHeader>
           <CardContent>
