@@ -36,10 +36,12 @@ export default function Index() {
           <CardHeader>
             <div className="flex items-center gap-3 mb-2">
               <Globe2 className="w-6 h-6 text-accent" />
-              <CardTitle className="text-accent font-serif">Gerenciar Sites</CardTitle>
+              <CardTitle className="text-accent font-serif">Gerenciar Sites (Domínios)</CardTitle>
             </div>
             <CardDescription className="text-muted-foreground/80">
-              Acesse o painel para gerenciar domínios e tenants.
+              Crie e gerencie múltiplas instâncias da plataforma.
+              
+              preciso acessalosparaeditar eadministrar
             </CardDescription>
           </CardHeader>
           <CardContent>
