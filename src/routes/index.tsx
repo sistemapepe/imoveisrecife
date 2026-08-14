@@ -111,8 +111,13 @@ export default function Index() {
             <div className="flex items-center gap-2">
               <ArrowRight className="w-4 h-4" /> Problema crítico relatado: "apresenta: Login realizado! porém não consigo acessar no usuário sistema.pe@gmail.com"
             </div>
-            <div className="flex items-center gap-2 mt-1 text-red-500 animate-bounce uppercase">
-              <ArrowRight className="w-4 h-4" /> URGENTE: "investigue e corrija agora preciso acessar"
+            <div className="flex flex-col gap-1 mt-1">
+              <div className="flex items-center gap-2 text-red-500 animate-bounce uppercase font-black bg-red-500/10 p-2 rounded border border-red-500/20">
+                <ArrowRight className="w-4 h-4" /> URGENTE: "Login realizado! Redirecionando... porem nao sai da tela de login"
+              </div>
+              <div className="text-[10px] text-accent/80 italic ml-6">
+                Status: Corrigindo loop de redirecionamento no ProtectedRoute e AuthContext.
+              </div>
             </div>
             <div className="flex items-center gap-2 mt-1 text-accent animate-pulse">
               <ArrowRight className="w-4 h-4" /> Investigação: Verificando latência e falhas intermitentes no redirecionamento.
