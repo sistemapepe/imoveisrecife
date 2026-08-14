@@ -22,7 +22,7 @@ export default function PerformanceTab() {
         .select('*')
         .order('created_at', { ascending: false })
         .limit(1000);
-      setLogs(data || []);
+      setLogs((data as any) || []);
       setLoading(false);
     }
     load();
