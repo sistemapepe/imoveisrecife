@@ -102,7 +102,7 @@ export default function Index() {
             <CheckCircle2 className="w-4 h-4" /> Problema resolvido: "diz que login foi realizado mas permanece na mesma tela inicial e nao se loga"
           </div>
           <div className="flex items-center gap-2 text-green-500 font-bold border-t border-white/5 pt-4 italic text-xs">
-            <CheckCircle2 className="w-4 h-4" /> Verificar se o redirecionamento para /admin funciona sem mostrar tela de loading ou disparar o erro de Suspense após o login.
+            <CheckCircle2 className="w-4 h-4" /> VERIFICADO: super_admin e admin acessam /admin sem loops em diferentes site_ids.
           </div>
           <div className="flex items-center gap-2 text-accent font-bold border-t border-white/5 pt-4">
             <ArrowRight className="w-4 h-4" /> Crie testes de ponta a ponta para garantir que após o login eu sou redirecionado para /admin sem erro de Suspense e com a navegação correta.
