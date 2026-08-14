@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProperties } from "@/contexts/PropertyContext";
@@ -27,7 +27,7 @@ export default function Login() {
       toast.error(error);
     } else {
       toast.success("Login realizado!");
-      navigate("/admin");
+      startTransition(() => navigate("/admin", { replace: true }));
     }
   };
 
