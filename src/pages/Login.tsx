@@ -26,11 +26,11 @@ export default function Login() {
     if (error) {
       toast.error(error);
     } else {
-      toast.success("Login realizado!");
-      // Ensure auth state is updated before navigating
-      setTimeout(() => {
-        startTransition(() => navigate("/admin", { replace: true }));
-      }, 100);
+      toast.success("Login realizado! Redirecionando...");
+      // Reduced delay and ensuring immediate transition
+      startTransition(() => {
+        navigate("/admin", { replace: true });
+      });
     }
   };
 
