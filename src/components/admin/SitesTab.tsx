@@ -225,7 +225,19 @@ export default function SitesTab() {
                   size="sm" 
                   className="w-full h-8 text-xs font-bold bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all"
                   onClick={() => {
-                    const url = site.domain.startsWith('http') ? site.domain : `http://${site.domain}:8080/admin`;
+                    const isLocal = site.domain === 'localhost' || site.domain.includes('8080');
+                    let url = '';
+                    
+                    if (isLocal) {
+                      url = `${window.location.origin}/admin`;
+                    } else {
+                      // Para domínios externos, assume HTTPS e porta padrão, 
+                      // a menos que o domínio já contenha um protocolo
+                      url = site.domain.startsWith('http') 
+                        ? site.domain 
+                        : `https://${site.domain}/admin`;
+                    }
+                    
                     window.open(url, '_blank');
                   }}
                 >
