@@ -102,10 +102,10 @@ export default function Index() {
             <CheckCircle2 className="w-4 h-4" /> Verificar se o redirecionamento para /admin funciona sem mostrar tela de loading ou disparar o erro de Suspense após o login.
           </div>
           <div className="flex items-center gap-2 text-accent font-bold border-t border-white/5 pt-4">
-            <ArrowRight className="w-4 h-4" /> Crie testes de ponta a ponta para garantir que após o login o redirecionamento para /admin ocorra sem erro de Suspense e com navegação correta.
+            <ArrowRight className="w-4 h-4" /> Crie testes de ponta a ponta para garantir que após o login eu sou redirecionado para /admin sem erro de Suspense e com a navegação correta.
           </div>
           <div className="flex items-center gap-2 text-accent font-bold">
-            <ArrowRight className="w-4 h-4" /> Adicione um fallback de carregamento específico para a rota /admin para garantir que nunca apareça tela em branco durante o redirecionamento.
+            <ArrowRight className="w-4 h-4" /> Adicione um fallback de carregamento específico para a rota /admin para impedir que apareça tela em branco durante o redirecionamento e a renderização.
           </div>
         </div>
       </section>
