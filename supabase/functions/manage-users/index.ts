@@ -36,7 +36,7 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { action, email, password, role, userId, perms } = body;
+    const { action, email, password, role, userId, perms, siteId } = body;
 
     if (action === "update_perms") {
       if (!perms || !Array.isArray(perms)) {
@@ -51,9 +51,10 @@ serve(async (req) => {
           .upsert({
             role: row.role as any,
             permission: row.permission,
-            enabled: row.enabled
+            enabled: row.enabled,
+            site_id: siteId
           }, { 
-            onConflict: "role,permission" 
+            onConflict: "role,permission,site_id" 
           });
         if (error) {
           console.error("Erro no upsert:", error);
@@ -76,6 +77,7 @@ serve(async (req) => {
       const { error: roleError } = await supabaseAdmin.from("user_roles").insert({
         user_id: newUser.user.id,
         role: role || "corretor",
+        site_id: siteId
       });
       if (roleError) {
         return new Response(JSON.stringify({ error: roleError.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -90,7 +92,7 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const { data: roles } = await supabaseAdmin.from("user_roles").select("*");
+      const { data: roles } = await supabaseAdmin.from("user_roles").select("*").eq("site_id", siteId);
       const roleMap: Record<string, string> = {};
       (roles || []).forEach((r: any) => { roleMap[r.user_id] = r.role; });
 
@@ -106,7 +108,7 @@ serve(async (req) => {
 
     if (action === "update_role") {
       await supabaseAdmin.from("user_roles").delete().eq("user_id", userId);
-      const { error } = await supabaseAdmin.from("user_roles").insert({ user_id: userId, role });
+      const { error } = await supabaseAdmin.from("user_roles").insert({ user_id: userId, role, site_id: siteId });
       if (error) {
         return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }

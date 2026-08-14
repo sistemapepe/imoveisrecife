@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/lib/logger";
+import { useSite } from "@/contexts/SiteContext";
 
 function getVisitorId(): string {
   let id = localStorage.getItem("visitor_id");
@@ -97,7 +98,7 @@ function getUTMParams(): { campaign: string; term: string; content: string; sour
   return result;
 }
 
-export function trackEvent(eventType: string, propertyId?: string) {
+export function trackEvent(eventType: string, propertyId?: string, siteId?: string) {
   const ref = document.referrer;
   const parsed = parseReferrer(ref);
   const utm = getUTMParams();
@@ -136,6 +137,7 @@ export function trackEvent(eventType: string, propertyId?: string) {
     visitor_id: getVisitorId().slice(0, 255),
     event_type: eventType,
     property_id: propertyId || null,
+    site_id: siteId || null,
   };
 
   supabase.from("traffic_events").insert(event).then(({ error }) => {
@@ -147,6 +149,7 @@ export function trackEvent(eventType: string, propertyId?: string) {
 
 export function useTrafficTracker() {
   const tracked = useRef(false);
+  const { site } = useSite();
 
   useEffect(() => {
     // Store landing page on first visit
@@ -154,9 +157,9 @@ export function useTrafficTracker() {
       sessionStorage.setItem("landing_page", window.location.pathname);
     }
 
-    if (!tracked.current) {
+    if (!tracked.current && site) {
       tracked.current = true;
-      trackEvent("page_view");
+      trackEvent("page_view", undefined, site.id);
     }
-  }, []);
+  }, [site]);
 }

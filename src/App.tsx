@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PropertyProvider } from "@/contexts/PropertyContext";
+import { SiteProvider } from "@/contexts/SiteContext";
 import { lazy, Suspense } from "react";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppFab from "@/components/WhatsAppFab";
@@ -89,14 +90,16 @@ const App = () => {
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <PropertyProvider>
-          <Toaster />
-          <Sonner />
-          <DynamicTheme />
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
-        </PropertyProvider>
+        <SiteProvider>
+          <PropertyProvider>
+            <Toaster />
+            <Sonner />
+            <DynamicTheme />
+            <BrowserRouter>
+              <AppContent />
+            </BrowserRouter>
+          </PropertyProvider>
+        </SiteProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

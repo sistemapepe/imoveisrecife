@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useProperties } from "@/contexts/PropertyContext";
+import { useSite } from "@/contexts/SiteContext";
 import { Building2, MessageSquare, Calendar, Eye, TrendingDown, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -17,6 +18,7 @@ interface Stats {
 
 export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
   const { properties } = useProperties();
+  const { site } = useSite();
   const [stats, setStats] = useState<Stats>({
     totalProperties: 0,
     newContacts: 0,
@@ -34,17 +36,20 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
       const isoWeek = sevenDaysAgo.toISOString();
 
       const [contactsRes, visitsRes, viewsRes] = await Promise.all([
-        supabase
+        (supabase
           .from("contact_messages")
-          .select("id", { count: "exact", head: true })
+          .select("id", { count: "exact", head: true }) as any)
+          .eq("site_id", site?.id)
           .gte("created_at", isoWeek),
-        supabase
+        (supabase
           .from("visit_requests")
-          .select("id", { count: "exact", head: true })
+          .select("id", { count: "exact", head: true }) as any)
+          .eq("site_id", site?.id)
           .eq("status", "pending"),
-        supabase
+        (supabase
           .from("property_views")
-          .select("id", { count: "exact", head: true })
+          .select("id", { count: "exact", head: true }) as any)
+          .eq("site_id", site?.id)
           .gte("created_at", isoWeek),
       ]);
 
