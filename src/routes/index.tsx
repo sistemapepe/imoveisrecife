@@ -44,7 +44,7 @@ export default function Index() {
             <CardDescription className="text-muted-foreground/80">
               Crie e gerencie múltiplas instâncias da plataforma.
               
-              como posso editar os sites criados? ao tem acesso?
+              não na você não está entendendo preciso ter acesso aos sites novos criados para editar tudo igual o inicial original que foi copiado
               
               em sites preciso gerenciar editar duplicar
             </CardDescription>
