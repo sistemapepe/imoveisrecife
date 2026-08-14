@@ -117,8 +117,8 @@ export default function Index() {
             <div className="flex items-center gap-2 mt-2">
               <ArrowRight className="w-4 h-4" /> Implemente uma verificação/atualização automática das permissões do usuário após o login para evitar que AppRole fique desatualizado.
             </div>
-            <div className="flex items-center gap-2 mt-2 border-t border-white/5 pt-2">
-              <ArrowRight className="w-4 h-4" /> Crie uma tela no painel/admin para eu visualizar as roles/permissões do usuário logado e confirmar por que ele não acessa o sistema.
+            <div className="flex items-center gap-2 mt-2 border-t border-white/5 pt-2 text-green-500 font-bold">
+              <CheckCircle2 className="w-4 h-4" /> Tela de diagnóstico de segurança e permissões implementada no painel administrativo.
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function Index() {
             </div>
             <div className="flex flex-col gap-2 mt-4">
               <div className="p-3 bg-red-600/20 border border-red-500/40 rounded-lg text-red-200 text-xs italic font-bold animate-pulse">
-                "não consigo acessar com login e senha corrija urgentemente"
+                "ainda não consigo logar"
               </div>
               <CardDescription className="text-muted-foreground/80">
                 Crie e gerencie múltiplas instâncias da plataforma.

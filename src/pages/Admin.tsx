@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Globe2 } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Globe2, Shield } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
@@ -26,8 +26,9 @@ import BucketAccessTab from "@/components/admin/BucketAccessTab";
 import BulkImportTab from "@/components/admin/BulkImportTab";
 import PerformanceTab from "@/components/admin/PerformanceTab";
 import SitesTab from "@/components/admin/SitesTab";
+import SecurityDiagnosticTab from "@/components/admin/SecurityDiagnosticTab";
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites" | "security";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -199,6 +200,7 @@ export default function Admin() {
     { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
     { key: "sites", label: "Sites", icon: Globe2, show: isSuperAdmin },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
+    { key: "security", label: "Segurança", icon: Shield, show: true },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
 
@@ -702,6 +704,10 @@ export default function Admin() {
 
           {tab === "sites" && isSuperAdmin && (
             <SitesTab />
+          )}
+
+          {tab === "security" && (
+            <SecurityDiagnosticTab />
           )}
           </main>
         </div>
