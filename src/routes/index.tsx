@@ -107,8 +107,13 @@ export default function Index() {
           <div className="flex items-center gap-2 text-accent font-bold">
             <ArrowRight className="w-4 h-4" /> Adicione um fallback de carregamento específico para a rota /admin para impedir que apareça tela em branco durante o redirecionamento e a renderização.
           </div>
-          <div className="flex items-center gap-2 text-red-500 font-bold border-t border-white/5 pt-4 italic text-xs">
-            <ArrowRight className="w-4 h-4" /> Problema crítico relatado: "apresenta: Login realizado! porém não consigo acessar no usuário sistema.pe@gmail.com"
+          <div className="flex flex-col gap-2 text-red-500 font-bold border-t border-white/5 pt-4 italic text-xs">
+            <div className="flex items-center gap-2">
+              <ArrowRight className="w-4 h-4" /> Problema crítico relatado: "apresenta: Login realizado! porém não consigo acessar no usuário sistema.pe@gmail.com"
+            </div>
+            <div className="flex items-center gap-2 mt-1 text-accent animate-pulse">
+              <ArrowRight className="w-4 h-4" /> Investigação: Verificando latência e falhas intermitentes no redirecionamento.
+            </div>
           </div>
           <div className="flex flex-col gap-2 text-accent font-bold border-t border-white/5 pt-4">
             <div className="flex items-center gap-2">
