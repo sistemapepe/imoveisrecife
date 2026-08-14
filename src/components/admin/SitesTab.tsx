@@ -36,7 +36,7 @@ export default function SitesTab() {
     if (error) {
       toast.error("Erro ao carregar sites");
     } else {
-      setSites(data || []);
+      setSites((data as any) || []);
     }
     setLoading(false);
   }
