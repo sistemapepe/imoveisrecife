@@ -17,7 +17,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
 import { useWebVitals } from "@/hooks/useWebVitals";
 
-// Lazy loading rotas
+// Lazy loading rotas com prefetching inteligente
 const Index = lazy(() => import("./pages/Index"));
 const SearchResults = lazy(() => import("./pages/SearchResults").then(module => ({ default: module.default })));
 const PropertyDetail = lazy(() => import("./pages/PropertyDetail").then(module => ({ default: module.default })));
