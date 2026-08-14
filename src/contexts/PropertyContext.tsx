@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSite } from "@/contexts/SiteContext";
 import { toast } from "sonner";
 
 import property1 from "@/assets/property-1.jpg";
@@ -203,9 +204,16 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const { site } = useSite();
 
   const fetchProperties = useCallback(async () => {
-    const { data, error } = await supabase.from("properties").select("*").order("created_at", { ascending: false });
+    if (!site) return;
+    const { data, error } = await supabase
+      .from("properties")
+      .select("*")
+      .eq("site_id" as any, site.id)
+      .order("created_at", { ascending: false });
+      
     if (data && !error) {
       setProperties(data.map((p: any, i: number) => ({
         ...p,
@@ -214,10 +222,16 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       })));
     }
     setLoading(false);
-  }, []);
+  }, [site]);
 
   const fetchSettings = useCallback(async () => {
-    const { data } = await supabase.from("site_settings").select("*").limit(1).single();
+    if (!site) return;
+    const { data } = await supabase
+      .from("site_settings")
+      .select("*")
+      .eq("site_id" as any, site.id)
+      .limit(1)
+      .single();
     if (data) {
       setSettings((prev) => ({
         ...prev,
@@ -275,7 +289,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         priceFormat: { ...DEFAULT_PRICE_FORMAT, ...((data as any).price_format ?? {}) },
       }));
     }
-  }, []);
+  }, [site]);
 
   const fetchContactInfo = useCallback(async () => {
     try {
@@ -309,11 +323,13 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   }, [fetchFavorites]);
 
   const addProperty = async (p: Omit<Property, "id" | "code">) => {
+    if (!site) return;
     const { error } = await supabase.from("properties").insert({
       title: p.title, address: p.address, neighborhood: p.neighborhood, city: p.city,
       price: p.price, area: p.area, bedrooms: p.bedrooms, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
       type: p.type, description: p.description, amenities: p.amenities, images: p.images,
       exclusive: p.exclusive, featured: p.featured, category: p.category,
+      site_id: site.id
     } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
     await fetchProperties();
