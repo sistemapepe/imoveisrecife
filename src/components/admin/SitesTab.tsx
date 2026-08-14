@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy } from "lucide-react";
+import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy, ArrowRight } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -175,9 +175,21 @@ export default function SitesTab() {
                 <p className="text-sm text-muted-foreground font-mono">{site.domain}</p>
               </div>
 
-              <div className="pt-2 border-t border-border/50 text-[10px] text-muted-foreground flex justify-between">
-                <span>ID: {site.id.slice(0, 8)}...</span>
-                <span>{new Date(site.created_at).toLocaleDateString()}</span>
+              <div className="pt-2 border-t border-border/50 flex flex-col gap-2">
+                <div className="flex justify-between items-center text-[10px] text-muted-foreground">
+                  <span>ID: {site.id.slice(0, 8)}...</span>
+                  <span>{new Date(site.created_at).toLocaleDateString()}</span>
+                </div>
+                <Button 
+                  size="sm" 
+                  className="w-full h-8 text-xs font-bold bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all"
+                  onClick={() => {
+                    const url = site.domain.startsWith('http') ? site.domain : `http://${site.domain}:8080/admin`;
+                    window.open(url, '_blank');
+                  }}
+                >
+                  Editar Site <ArrowRight className="ml-2 h-3 w-3" />
+                </Button>
               </div>
             </div>
           ))}
