@@ -118,12 +118,29 @@ export default function SitesTab() {
           </h2>
           <p className="text-sm text-muted-foreground">Crie e gerencie múltiplas instâncias da plataforma.</p>
         </div>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider"
-        >
-          <Plus className="h-4 w-4" /> Novo Site
-        </button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {
+              const mainSite = sites.find(s => s.domain === 'localhost' || s.brand_name.toLowerCase().includes('imoveis recife'));
+              if (mainSite) {
+                setDuplicateId(mainSite.id);
+                setNewBrandName("");
+              } else {
+                toast.error("Site original não encontrado para duplicação rápida");
+              }
+            }}
+            variant="outline"
+            className="flex items-center gap-1.5 border-accent/30 text-accent hover:bg-accent/10 font-bold"
+          >
+            <Copy className="h-4 w-4" /> Duplicar Principal
+          </Button>
+          <button
+            onClick={() => setShowCreate(true)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider"
+          >
+            <Plus className="h-4 w-4" /> Novo Site (Vazio)
+          </button>
+        </div>
       </div>
 
       {loading ? (
