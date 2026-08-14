@@ -26,6 +26,7 @@ interface AuthContextType {
   isSuperAdmin: boolean;
   role: AppRole | null;
   loading: boolean;
+  isInitializing: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signUp: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
@@ -65,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     manage_bucket: false,
   });
   const [loading, setLoading] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   const isSuperAdmin = role === "super_admin";
   const isAdmin = isSuperAdmin || role === "admin";
@@ -146,15 +148,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (error) {
           logger.error("Error updating auth state", {}, error as Error);
         } finally {
-          if (mounted) setLoading(false);
+          if (mounted) {
+            setLoading(false);
+            setIsInitializing(false);
+          }
         }
       } else {
         setRole(null);
         setLoading(false);
+        setIsInitializing(false);
       }
     });
 
-    // Check initial session
     const initSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
@@ -169,7 +174,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         logger.error("Initial session check failed", {}, error as Error);
       } finally {
-        if (mounted) setLoading(false);
+        if (mounted) {
+          setLoading(false);
+          setIsInitializing(false);
+        }
       }
     };
 
@@ -203,7 +211,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, isSuperAdmin, role, loading, signIn, signUp, signOut, canManageProperties, canDeleteProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket }}>
+    <AuthContext.Provider value={{ user, isAdmin, isSuperAdmin, role, loading, isInitializing, signIn, signUp, signOut, canManageProperties, canDeleteProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket }}>
       {children}
     </AuthContext.Provider>
   );
