@@ -7,6 +7,8 @@ import { logger } from '@/lib/logger';
  * Hook to measure Web Vitals and log them to Supabase for analysis.
  */
 export function useWebVitals() {
+  const { site } = useSite();
+  
   useEffect(() => {
     // Check if the user is on a slow connection
     const connection = (navigator as any).connection;
@@ -20,6 +22,7 @@ export function useWebVitals() {
       supabase.from('performance_logs' as any).insert({
         metric_name: name,
         metric_value: value,
+        site_id: site?.id,
         page_url: window.location.pathname,
         visitor_id: localStorage.getItem('visitor_id') || 'anon',
         device_type: window.innerWidth < 768 ? 'mobile' : 'desktop',

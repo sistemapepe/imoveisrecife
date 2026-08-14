@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useProperties } from "@/contexts/PropertyContext";
+import { useSite } from "@/contexts/SiteContext";
 import { checkHoneypot, HONEYPOT_FIELD_NAME, honeypotInputStyle } from "@/lib/honeypot";
 
 interface LeadCaptureModalProps {
@@ -52,6 +53,7 @@ export default function LeadCaptureModal({
   source = "whatsapp_fab",
 }: LeadCaptureModalProps) {
   const { settings } = useProperties();
+  const { site } = useSite();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [honeypot, setHoneypot] = useState("");

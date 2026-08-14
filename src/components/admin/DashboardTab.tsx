@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useProperties } from "@/contexts/PropertyContext";
+import { useSite } from "@/contexts/SiteContext";
 import { Building2, MessageSquare, Calendar, Eye, TrendingDown, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
