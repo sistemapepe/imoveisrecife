@@ -133,7 +133,7 @@ export default function Index() {
             </div>
             <div className="flex flex-col gap-2 mt-4">
               <div className="p-3 bg-red-600/20 border border-red-500/40 rounded-lg text-red-200 text-xs italic font-bold animate-pulse">
-                "não consigo acessar com login e senha corrija urgentemente"
+                "ainda não consigo logar"
               </div>
               <CardDescription className="text-muted-foreground/80">
                 Crie e gerencie múltiplas instâncias da plataforma.
