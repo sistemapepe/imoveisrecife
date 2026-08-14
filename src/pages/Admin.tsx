@@ -26,8 +26,9 @@ import BucketAccessTab from "@/components/admin/BucketAccessTab";
 import BulkImportTab from "@/components/admin/BulkImportTab";
 import PerformanceTab from "@/components/admin/PerformanceTab";
 import SitesTab from "@/components/admin/SitesTab";
+import SecurityDiagnosticTab from "@/components/admin/SecurityDiagnosticTab";
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites" | "security";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
