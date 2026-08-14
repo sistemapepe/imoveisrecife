@@ -705,6 +705,10 @@ export default function Admin() {
           {tab === "sites" && isSuperAdmin && (
             <SitesTab />
           )}
+
+          {tab === "security" && (
+            <SecurityDiagnosticTab />
+          )}
           </main>
         </div>
 
