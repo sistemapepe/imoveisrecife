@@ -91,8 +91,8 @@ const App = () => {
   <HelmetProvider>
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AuthProvider>
-        <SiteProvider>
+      <SiteProvider>
+        <AuthProvider>
           <PropertyProvider>
             <Toaster />
             <Sonner />
@@ -101,8 +101,8 @@ const App = () => {
               <AppContent />
             </BrowserRouter>
           </PropertyProvider>
-        </SiteProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </SiteProvider>
     </TooltipProvider>
   </QueryClientProvider>
   </HelmetProvider>

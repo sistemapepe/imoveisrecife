@@ -1,6 +1,7 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/lib/logger";
+import { useSite } from "./SiteContext";
 import type { User } from "@supabase/supabase-js";
 
 type AppRole = "super_admin" | "admin" | "supervisor" | "corretor" | "user";
@@ -48,6 +49,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { site } = useSite();
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
   const [permissions, setPermissions] = useState<Record<PermissionKey, boolean>>({
@@ -106,31 +108,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const checkRole = async (userId: string) => {
+  const checkRole = useCallback(async (userId: string) => {
     try {
-      // Direct query to user_roles with cache-busting logic if needed
+      logger.info("Checking user role", { userId, siteId: site?.id });
+      
       const { data, error } = await supabase
         .from("user_roles")
-        .select("role")
-        .eq("user_id", userId)
-        .maybeSingle();
+        .select("role, site_id")
+        .eq("user_id", userId);
 
       if (error) throw error;
 
-      const userRole = (data?.role as AppRole) || "user";
-      logger.info("Role check result", { userId, role: userRole });
+      if (!data || data.length === 0) {
+        setRole("user");
+        setLoading(false);
+        return;
+      }
+
+      let selectedRole: AppRole = "user";
+
+      // 1. If we have a matching site_id, use that.
+      if (site?.id) {
+        const siteSpecific = data.find(r => r.site_id === site.id);
+        if (siteSpecific) {
+          selectedRole = siteSpecific.role as AppRole;
+        }
+      }
+
+      // 2. Fallback: if no site-specific role, or we want to allow cross-site super_admin access
+      // Check if user has a super_admin role anywhere.
+      const hasSuperAdmin = data.some(r => r.role === "super_admin");
+      if (hasSuperAdmin) {
+        selectedRole = "super_admin";
+      } else if (selectedRole === "user" && data.length > 0) {
+        // Just pick the first one if no match and no super_admin
+        selectedRole = data[0].role as AppRole;
+      }
+
+      logger.info("Role determined", { userId, role: selectedRole, siteId: site?.id });
       
-      setRole(userRole);
-      await loadPermissions(userRole);
-      
-      // Force loading false after role is established
+      setRole(selectedRole);
+      await loadPermissions(selectedRole);
       setLoading(false);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
       setLoading(false);
     }
-  };
+  }, [site?.id, loadPermissions]);
 
   useEffect(() => {
     let mounted = true;
@@ -142,14 +167,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(currentUser);
       
       if (currentUser) {
-        setLoading(true);
         try {
           await checkRole(currentUser.id);
         } catch (error) {
           logger.error("Error updating auth state", {}, error as Error);
         } finally {
           if (mounted) {
-            setLoading(false);
             setIsInitializing(false);
           }
         }
@@ -175,7 +198,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logger.error("Initial session check failed", {}, error as Error);
       } finally {
         if (mounted) {
-          setLoading(false);
           setIsInitializing(false);
         }
       }
@@ -187,7 +209,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [checkRole]);
 
   const signIn = async (email: string, password: string) => {
     const { error, data } = await supabase.auth.signInWithPassword({ email, password });
