@@ -27,7 +27,10 @@ export default function Login() {
       toast.error(error);
     } else {
       toast.success("Login realizado!");
-      startTransition(() => navigate("/admin", { replace: true }));
+      // Ensure auth state is updated before navigating
+      setTimeout(() => {
+        startTransition(() => navigate("/admin", { replace: true }));
+      }, 100);
     }
   };
 

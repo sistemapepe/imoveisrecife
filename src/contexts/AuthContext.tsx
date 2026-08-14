@@ -129,6 +129,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(true);
         try {
           await checkRole(currentUser.id);
+        } catch (error) {
+          logger.error("Error updating auth state", {}, error as Error);
         } finally {
           if (mounted) setLoading(false);
         }
@@ -138,17 +140,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!mounted) return;
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        checkRole(session.user.id).finally(() => {
-          if (mounted) setLoading(false);
-        });
-      } else {
-        setLoading(false);
+    // Check initial session
+    const initSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!mounted) return;
+        
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+        
+        if (currentUser) {
+          await checkRole(currentUser.id);
+        }
+      } catch (error) {
+        logger.error("Initial session check failed", {}, error as Error);
+      } finally {
+        if (mounted) setLoading(false);
       }
-    });
+    };
+
+    initSession();
 
     return () => {
       mounted = false;
