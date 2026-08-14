@@ -112,11 +112,11 @@ export default function Index() {
               <ArrowRight className="w-4 h-4" /> Problema crítico relatado: "apresenta: Login realizado! porém não consigo acessar no usuário sistema.pe@gmail.com"
             </div>
             <div className="flex flex-col gap-1 mt-1">
-              <div className="flex items-center gap-2 text-red-500 animate-bounce uppercase font-black bg-red-500/10 p-2 rounded border border-red-500/20">
-                <ArrowRight className="w-4 h-4" /> URGENTE: "Login realizado! Redirecionando... porem nao sai da tela de login"
+              <div className="flex items-center gap-2 text-green-500 font-black bg-green-500/10 p-2 rounded border border-green-500/20">
+                <CheckCircle2 className="w-4 h-4" /> CORRIGIDO: Loop de redirecionamento e estados de carregamento sincronizados.
               </div>
               <div className="text-[10px] text-accent/80 italic ml-6">
-                Status: Corrigindo loop de redirecionamento no ProtectedRoute e AuthContext.
+                Ajuste: Adicionado estado de inicialização no AuthContext e auto-redirecionamento no Login.tsx.
               </div>
             </div>
             <div className="flex items-center gap-2 mt-1 text-accent animate-pulse">
