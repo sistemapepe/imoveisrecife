@@ -46,6 +46,10 @@ export default function Index() {
             <CheckCircle2 className="w-4 h-4" /> Logs de auditoria registram cada duplicação e concessão de acesso.
           </div>
 
+          <div className="flex items-center gap-2 text-green-500 font-bold">
+            <CheckCircle2 className="w-4 h-4" /> Novos sites são criados automaticamente baseados no original.
+          </div>
+
           <div className="flex items-center gap-2 text-accent font-bold">
             <ArrowRight className="w-4 h-4" /> Implementar a tela de “Solicitar acesso ao site” para que eu possa pedir permissão de edição quando não for Admin automaticamente no site duplicado.
           </div>

@@ -48,23 +48,47 @@ export default function SitesTab() {
       toast.error("Preencha todos os campos");
       return;
     }
-    setCreating(true);
-    const { error } = await supabase
-      .from('sites' as any)
-      .insert({
-        domain: newDomain,
-        brand_name: newBrandName
+
+    const mainSite = sites.find(s => s.domain === 'localhost' || s.brand_name.toLowerCase().includes('imoveis recife'));
+
+    if (mainSite) {
+      setCreating(true);
+      const { data, error } = await supabase.rpc('duplicate_site', {
+        source_site_id: mainSite.id,
+        new_domain: newDomain,
+        new_brand_name: newBrandName
       });
-    
-    setCreating(false);
-    if (error) {
-      toast.error("Erro ao criar site: " + error.message);
+      
+      setCreating(false);
+      if (error) {
+        toast.error("Erro ao criar site baseado no original: " + error.message);
+      } else {
+        toast.success("Novo site criado com sucesso baseado no original!");
+        setShowCreate(false);
+        setNewDomain("");
+        setNewBrandName("");
+        setTimeout(() => fetchSites(), 500);
+      }
     } else {
-      toast.success("Site criado com sucesso!");
-      setShowCreate(false);
-      setNewDomain("");
-      setNewBrandName("");
-      fetchSites();
+      // Fallback para criação vazia caso não ache o original
+      setCreating(true);
+      const { error } = await supabase
+        .from('sites' as any)
+        .insert({
+          domain: newDomain,
+          brand_name: newBrandName
+        });
+      
+      setCreating(false);
+      if (error) {
+        toast.error("Erro ao criar site: " + error.message);
+      } else {
+        toast.success("Site criado com sucesso (vazio)!");
+        setShowCreate(false);
+        setNewDomain("");
+        setNewBrandName("");
+        fetchSites();
+      }
     }
   }
 
