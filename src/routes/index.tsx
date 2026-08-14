@@ -84,6 +84,9 @@ export default function Index() {
           <div className="flex items-center gap-2 text-accent font-bold">
             <ArrowRight className="w-4 h-4" /> Exiba mensagens mais detalhadas no status de duplicação (incluindo etapa atual e possível causa do erro) para eu entender o que aconteceu quando falhar.
           </div>
+          <div className="flex items-center gap-2 text-green-500 font-bold">
+            <CheckCircle2 className="w-4 h-4" /> Correção da página de Login e telemetria aplicada.
+          </div>
         </div>
       </section>
 

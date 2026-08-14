@@ -203,6 +203,7 @@ export type Database = {
       performance_logs: {
         Row: {
           connection_type: string | null
+          context: Json | null
           created_at: string
           device_type: string | null
           id: string
@@ -215,6 +216,7 @@ export type Database = {
         }
         Insert: {
           connection_type?: string | null
+          context?: Json | null
           created_at?: string
           device_type?: string | null
           id?: string
@@ -227,6 +229,7 @@ export type Database = {
         }
         Update: {
           connection_type?: string | null
+          context?: Json | null
           created_at?: string
           device_type?: string | null
           id?: string
