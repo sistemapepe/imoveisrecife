@@ -107,8 +107,8 @@ export default function Index() {
           <div className="flex items-center gap-2 text-accent font-bold border-t border-white/5 pt-4">
             <ArrowRight className="w-4 h-4" /> Crie testes de ponta a ponta para garantir que após o login eu sou redirecionado para /admin sem erro de Suspense e com a navegação correta.
           </div>
-          <div className="flex items-center gap-2 text-accent font-bold">
-            <ArrowRight className="w-4 h-4" /> Adicione um fallback de carregamento específico para a rota /admin para impedir que apareça tela em branco durante o redirecionamento e a renderização.
+          <div className="flex items-center gap-2 text-green-500 font-bold">
+            <CheckCircle2 className="w-4 h-4" /> Lógica de Auth/Site centralizada no ProtectedRoute para evitar divergências e loops multi-tenant.
           </div>
           <div className="flex flex-col gap-2 text-red-500 font-bold border-t border-white/5 pt-4 italic text-xs">
             <div className="flex items-center gap-2">
