@@ -22,13 +22,12 @@ export default function Index() {
           <ShieldCheck className="w-5 h-5" /> Próximas Etapas
         </h3>
         <div className="space-y-4 text-sm text-muted-foreground whitespace-pre-line">
-          Adicionar um botão de duplicar um site na tela de Super Admin em /admin e confirmar quais dados serão copiados (configs e permissões).
+          Garantir que a página dedicada de Super Admin fique protegida por checagem de permissões e exiba mensagens claras quando um usuário não autorizado tentar acessar.
 
-          Criar uma página dedicada para o gerenciamento de Sites do Super Admin, com URL direta, e garantir que ela fique disponível somente para superadmin.
+          Adicionar um log de auditoria no Super Admin registrando duplicações, alterações e provisionamentos automáticos com data, usuário e tenant afetado.
 
-          Implementar uma seção de status detalhado por domínio/tenant (última atualização, saúde da conexão e erros) na lista de sites do Super Admin.
-
-          Adicionar busca e filtros na listagem de sites (por domínio, owner_id e status) para facilitar encontrar e selecionar tenants no Super Admin.
+          Implementar atualização automática do status por domínio/tenant com polling e exibir indicadores de carregamento, tempo da última checagem e falhas de conexão.
+          Adicionar ações em lote na lista de Sites do Super Admin para que eu possa selecionar múltiplos tenants e executar operações como atualizar status, habilitar ou desabilitar.
         </div>
       </section>
 
