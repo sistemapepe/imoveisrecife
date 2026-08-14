@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Globe2, LayoutDashboard, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Globe2, LayoutDashboard, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
