@@ -3,6 +3,7 @@ import * as XLSX from "xlsx";
 import { Upload, FileSpreadsheet, CheckCircle2, AlertTriangle, Loader2, Download, RefreshCw, History } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useProperties, SiteSettings } from "@/contexts/PropertyContext";
+import { useSite } from "@/contexts/SiteContext";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
@@ -267,6 +268,7 @@ interface HistoryRow {
 
 export default function BulkImportTab() {
   const { updateSettings, refreshProperties } = useProperties() as any;
+  const { site } = useSite();
   const fileRef = useRef<HTMLInputElement>(null);
   const [parsed, setParsed] = useState<ParsedResult | null>(null);
   const [fileMeta, setFileMeta] = useState<{ name: string; size: number } | null>(null);
@@ -416,10 +418,10 @@ export default function BulkImportTab() {
         try {
           let existingId: string | null = null;
           if (upsertMode && Array.isArray(payload.images) && payload.images.length > 0) {
-            const { data: found } = await supabase
-              .from("properties")
-              .select("id")
+            const query = supabase.from("properties").select("id");
+            const { data: found } = await (query as any)
               .overlaps("images", payload.images)
+              .eq("site_id", site?.id)
               .limit(1)
               .maybeSingle();
             existingId = (found as any)?.id ?? null;
@@ -430,7 +432,7 @@ export default function BulkImportTab() {
             updated++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Atualizado", id: existingId });
           } else {
-            const { error } = await supabase.from("properties").insert(payload as any);
+            const { error } = await supabase.from("properties").insert({ ...payload, site_id: site?.id } as any);
             if (error) throw error;
             created++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Criado" });
