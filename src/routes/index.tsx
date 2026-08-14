@@ -26,11 +26,11 @@ export default function Index() {
             <CheckCircle2 className="w-4 h-4" /> Funcionalidade de duplicação implementada!
           </div>
           
-          Implemente uma mensagem no Super Admin explicando exatamente qual permissão/função está faltando quando eu não conseguir acessar para editar.
+          Implemente validações para o novo domínio (formato, unicidade e disponibilidade) ao duplicar uma instância na aba de Sites.
 
-          Adicione um botão para solicitar acesso ao Super Admin quando eu não conseguir acessar para editar, com formulário para enviar meu pedido.
+          Adicione uma etapa de confirmação ao duplicar um site, mostrando um resumo das configurações e permissões que serão copiadas antes de criar o novo registro.
 
-          Crie um botão de “Verificar minhas permissões” na Central do Super Admin para eu ver quais roles e tenants eu tenho acesso.
+          Inclua um log/auditoria das duplicações na área de administração, com data, usuário e instância original/novo domínio.
         </div>
       </section>
 
