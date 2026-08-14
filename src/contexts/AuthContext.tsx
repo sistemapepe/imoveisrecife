@@ -119,16 +119,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        setTimeout(async () => {
-          if (mounted) {
-            await checkRole(session.user.id);
-            setLoading(false);
-          }
-        }, 0);
+      
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+      
+      if (currentUser) {
+        setLoading(true);
+        try {
+          await checkRole(currentUser.id);
+        } finally {
+          if (mounted) setLoading(false);
+        }
       } else {
         setRole(null);
         setLoading(false);
