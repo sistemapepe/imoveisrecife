@@ -108,6 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
       const userRole = (data?.role as AppRole) || "user";
+      logger.info("Role check result", { userId, role: userRole });
       setRole(userRole);
       await loadPermissions(userRole);
     } catch (error) {
