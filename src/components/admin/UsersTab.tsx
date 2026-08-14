@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useSite } from "@/contexts/SiteContext";
 import { toast } from "sonner";
 import { UserPlus, Trash2, Shield, Eye, EyeOff } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -30,6 +31,7 @@ function roleBadge(role: string) {
 }
 
 export default function UsersTab() {
+  const { site } = useSite();
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
@@ -41,9 +43,10 @@ export default function UsersTab() {
   const [showPassword, setShowPassword] = useState(false);
 
   const fetchUsers = useCallback(async () => {
+    if (!site) return;
     setLoading(true);
     const { data, error } = await supabase.functions.invoke("manage-users", {
-      body: { action: "list" },
+      body: { action: "list", siteId: site.id },
     });
     if (error || data?.error) {
       toast.error(data?.error || "Erro ao carregar usuários");
@@ -60,7 +63,7 @@ export default function UsersTab() {
     if (newPassword.length < 6) { toast.error("Senha mínima: 6 caracteres"); return; }
     setCreating(true);
     const { data, error } = await supabase.functions.invoke("manage-users", {
-      body: { action: "create", email: newEmail, password: newPassword, role: newRole },
+      body: { action: "create", email: newEmail, password: newPassword, role: newRole, siteId: site?.id },
     });
     setCreating(false);
     if (error || data?.error) {
