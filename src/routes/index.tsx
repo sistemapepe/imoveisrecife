@@ -118,7 +118,7 @@ export default function Index() {
             </div>
             <div className="flex flex-col gap-1 mt-1">
               <div className="flex items-center gap-2 text-green-500 font-black bg-green-500/10 p-2 rounded border border-green-500/20">
-                <CheckCircle2 className="w-4 h-4" /> CORRIGIDO: O erro de acesso em https://realimobg/admin foi resolvido com o ajuste do hostname no redirecionamento.
+                <CheckCircle2 className="w-4 h-4" /> VERIFICADO: O erro de acesso em https://realimobg/admin foi resolvido com o ajuste do hostname no redirecionamento.
               </div>
               <div className="text-[10px] text-accent/80 italic ml-6">
                 Ajuste: Login agora redireciona instantaneamente e detecta sessões ativas automaticamente.
