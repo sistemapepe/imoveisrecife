@@ -129,7 +129,8 @@ export default function LeadCaptureModal({
       interest: interestText.slice(0, 100),
       message: messageText.slice(0, 5000),
       source: source.slice(0, 50),
-    });
+      site_id: site?.id
+    } as any);
     setSubmitting(false);
     if (error) {
       const msg = error.message?.includes("rate_limit_exceeded")

@@ -18,6 +18,7 @@ interface Stats {
 
 export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
   const { properties } = useProperties();
+  const { site } = useSite();
   const [stats, setStats] = useState<Stats>({
     totalProperties: 0,
     newContacts: 0,
@@ -38,14 +39,17 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
         supabase
           .from("contact_messages")
           .select("id", { count: "exact", head: true })
+          .eq("site_id", site?.id)
           .gte("created_at", isoWeek),
         supabase
           .from("visit_requests")
           .select("id", { count: "exact", head: true })
+          .eq("site_id", site?.id)
           .eq("status", "pending"),
         supabase
           .from("property_views")
           .select("id", { count: "exact", head: true })
+          .eq("site_id", site?.id)
           .gte("created_at", isoWeek),
       ]);
 

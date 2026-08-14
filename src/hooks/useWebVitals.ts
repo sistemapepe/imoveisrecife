@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { onLCP, onCLS, onINP, onFCP, onTTFB } from 'web-vitals';
 import { supabase } from '@/integrations/supabase/client';
 import { logger } from '@/lib/logger';
+import { useSite } from '@/contexts/SiteContext';
 
 /**
  * Hook to measure Web Vitals and log them to Supabase for analysis.
