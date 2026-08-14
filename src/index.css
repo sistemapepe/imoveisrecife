@@ -73,6 +73,11 @@
   }
   body {
     @apply bg-background text-foreground font-display antialiased;
+    /* Prevent horizontal scroll and improve touch feel */
+    overflow-x: hidden;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   /* WCAG 2.4.7 — Visible focus indicator (keyboard only) */
