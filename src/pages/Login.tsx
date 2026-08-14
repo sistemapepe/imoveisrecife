@@ -21,7 +21,9 @@ export default function Login() {
   // Auto-redirect if already logged in with valid role
   useEffect(() => {
     if (!isInitializing && !authLoading && user && role !== "user") {
-      navigate("/admin", { replace: true });
+      startTransition(() => {
+        navigate("/admin", { replace: true });
+      });
     }
   }, [user, role, isInitializing, authLoading, navigate]);
 
