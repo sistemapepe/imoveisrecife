@@ -290,7 +290,7 @@ export default function PropertyDetail() {
 
         {/* Thumbnails */}
         {totalImages > 1 && (
-          <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide max-w-screen-lg mx-auto">
+          <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide max-w-screen-lg mx-auto hide-scrollbar">
             {(resolvedImages.length ? resolvedImages : property.images).map((img, i) => (
               <button
                 key={i}

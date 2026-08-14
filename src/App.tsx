@@ -19,8 +19,8 @@ import { useWebVitals } from "@/hooks/useWebVitals";
 
 // Lazy loading rotas
 const Index = lazy(() => import("./pages/Index"));
-const SearchResults = lazy(() => import("./pages/SearchResults"));
-const PropertyDetail = lazy(() => import("./pages/PropertyDetail"));
+const SearchResults = lazy(() => import("./pages/SearchResults").then(module => ({ default: module.default })));
+const PropertyDetail = lazy(() => import("./pages/PropertyDetail").then(module => ({ default: module.default })));
 const Filters = lazy(() => import("./pages/Filters"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Favorites = lazy(() => import("./pages/Favorites"));
