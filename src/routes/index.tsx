@@ -116,7 +116,7 @@ export default function Index() {
                 <CheckCircle2 className="w-4 h-4" /> CORRIGIDO: Loop de redirecionamento e estados de carregamento sincronizados.
               </div>
               <div className="text-[10px] text-accent/80 italic ml-6">
-                Ajuste: Adicionado estado de inicialização no AuthContext e auto-redirecionamento no Login.tsx.
+                Ajuste: Login agora redireciona instantaneamente e detecta sessões ativas automaticamente.
               </div>
             </div>
             <div className="flex items-center gap-2 mt-1 text-accent animate-pulse">
