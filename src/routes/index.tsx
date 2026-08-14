@@ -39,7 +39,7 @@ export default function Index() {
           </div>
 
           <div className="flex items-center gap-2 text-green-500 font-bold">
-            <CheckCircle2 className="w-4 h-4" /> Correção de conflito de permissões duplicadas aplicada.
+            <CheckCircle2 className="w-4 h-4" /> Correção de restrições (ON CONFLICT) e permissões aplicada.
           </div>
 
           <div className="flex items-center gap-2 text-green-500 font-bold">
