@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Globe, Plus, Trash2, CheckCircle2, XCircle } from "lucide-react";
+import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -21,6 +21,8 @@ export default function SitesTab() {
   const [newBrandName, setNewBrandName] = useState("");
   const [creating, setCreating] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [duplicateId, setDuplicateId] = useState<string | null>(null);
+  const [duplicating, setDuplicating] = useState(false);
 
   useEffect(() => {
     fetchSites();
@@ -82,6 +84,30 @@ export default function SitesTab() {
     setDeleteId(null);
   }
 
+  async function handleDuplicate() {
+    if (!duplicateId || !newDomain || !newBrandName) {
+      toast.error("Preencha todos os campos");
+      return;
+    }
+    setDuplicating(true);
+    const { data, error } = await supabase.rpc('duplicate_site', {
+      source_site_id: duplicateId,
+      new_domain: newDomain,
+      new_brand_name: newBrandName
+    });
+
+    setDuplicating(false);
+    if (error) {
+      toast.error("Erro ao duplicar site: " + error.message);
+    } else {
+      toast.success("Site duplicado com sucesso!");
+      setDuplicateId(null);
+      setNewDomain("");
+      setNewBrandName("");
+      fetchSites();
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -111,12 +137,25 @@ export default function SitesTab() {
                 </div>
                 <div className="flex gap-1">
                   {site.domain !== 'localhost' && (
-                    <button
-                      onClick={() => setDeleteId(site.id)}
-                      className="p-2 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => {
+                          setDuplicateId(site.id);
+                          setNewBrandName(`${site.brand_name} (Cópia)`);
+                        }}
+                        className="p-2 rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors opacity-0 group-hover:opacity-100"
+                        title="Duplicar Site"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => setDeleteId(site.id)}
+                        className="p-2 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                        title="Excluir Site"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   )}
                   {site.is_active ? (
                     <span className="flex items-center gap-1 text-[10px] font-bold text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full uppercase">
@@ -190,6 +229,52 @@ export default function SitesTab() {
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={() => setDeleteId(null)}>Cancelar</Button>
             <Button variant="destructive" onClick={handleDelete}>Confirmar Exclusão</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!duplicateId} onOpenChange={(open) => {
+        if (!open) {
+          setDuplicateId(null);
+          setNewDomain("");
+          setNewBrandName("");
+        }
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Duplicar Site</DialogTitle>
+            <DialogDescription>
+              Crie uma nova instância baseada nas configurações deste site.
+              As configurações visuais e permissões serão copiadas.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Novo Domínio</label>
+              <input
+                type="text"
+                value={newDomain}
+                onChange={(e) => setNewDomain(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-border bg-background text-sm"
+                placeholder="ex: nova-imobiliaria.com"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Novo Nome da Marca</label>
+              <input
+                type="text"
+                value={newBrandName}
+                onChange={(e) => setNewBrandName(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-border bg-background text-sm"
+                placeholder="ex: Imobiliária Beta"
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setDuplicateId(null)}>Cancelar</Button>
+            <Button onClick={handleDuplicate} disabled={duplicating}>
+              {duplicating ? "Duplicando..." : "Duplicar Agora"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

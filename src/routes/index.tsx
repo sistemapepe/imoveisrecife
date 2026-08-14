@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Globe2, LayoutDashboard, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Globe2, LayoutDashboard, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -22,6 +22,10 @@ export default function Index() {
           <ShieldCheck className="w-5 h-5" /> Próximas Etapas
         </h3>
         <div className="space-y-4 text-sm text-muted-foreground whitespace-pre-line">
+          <div className="flex items-center gap-2 text-green-500 font-bold">
+            <CheckCircle2 className="w-4 h-4" /> Funcionalidade de duplicação implementada!
+          </div>
+          
           Implemente uma mensagem no Super Admin explicando exatamente qual permissão/função está faltando quando eu não conseguir acessar para editar.
 
           Adicione um botão para solicitar acesso ao Super Admin quando eu não conseguir acessar para editar, com formulário para enviar meu pedido.

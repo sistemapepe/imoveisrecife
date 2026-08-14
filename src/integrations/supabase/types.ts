@@ -776,6 +776,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      duplicate_site: {
+        Args: {
+          new_brand_name: string
+          new_domain: string
+          source_site_id: string
+        }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
