@@ -1,0 +1,77 @@
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { logger } from "@/lib/logger";
+
+interface Site {
+  id: string;
+  domain: string;
+  brand_name: string;
+}
+
+interface SiteContextType {
+  site: Site | null;
+  loading: boolean;
+  error: string | null;
+}
+
+const SiteContext = createContext<SiteContextType | null>(null);
+
+export function SiteProvider({ children }: { children: ReactNode }) {
+  const [site, setSite] = useState<Site | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const resolveSite = useCallback(async () => {
+    try {
+      const hostname = window.location.hostname;
+      // Em desenvolvimento no sandbox, usamos 'localhost' ou o domínio do preview como fallback
+      const domainToSearch = hostname.includes('lovable.app') ? 'localhost' : hostname;
+
+      const { data, error: siteError } = await supabase
+        .from('sites' as any)
+        .select('*')
+        .eq('domain', domainToSearch)
+        .maybeSingle();
+
+      if (siteError) throw siteError;
+
+      if (!data) {
+        // Fallback para o primeiro site se não encontrar o domínio exato (útil para desenvolvimento)
+        const { data: fallbackSite } = await supabase
+          .from('sites' as any)
+          .select('*')
+          .limit(1)
+          .maybeSingle();
+        
+        if (fallbackSite) {
+          setSite(fallbackSite as any);
+        } else {
+          setError("Nenhum site configurado.");
+        }
+      } else {
+        setSite(data as any);
+      }
+    } catch (err) {
+      logger.error("Failed to resolve site", { domain: window.location.hostname }, err as Error);
+      setError("Erro ao carregar configurações do site.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    resolveSite();
+  }, [resolveSite]);
+
+  return (
+    <SiteContext.Provider value={{ site, loading, error }}>
+      {children}
+    </SiteContext.Provider>
+  );
+}
+
+export function useSite() {
+  const ctx = useContext(SiteContext);
+  if (!ctx) throw new Error("useSite must be used within SiteProvider");
+  return ctx;
+}
