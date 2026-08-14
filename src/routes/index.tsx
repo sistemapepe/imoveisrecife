@@ -134,17 +134,16 @@ export default function Index() {
               </div>
               <CardDescription className="text-muted-foreground/80">
                 Crie e gerencie múltiplas instâncias da plataforma.
+                
+                <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-200 text-xs italic">
+                  "ao tentar editar o site vai para essa pagina http://realimobg:8080/admin porq ? preciso editalo e configuralo"
+                </div>
+                
+                <div className="mt-2 text-[10px] text-accent/70">
+                  Correção aplicada: O link de edição agora detecta se o site é local ou remoto, garantindo o redirecionamento correto para o painel administrativo.
+                </div>
               </CardDescription>
             </div>
-              
-              <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-200 text-xs italic">
-                "ao tentar editar o site vai para essa pagina http://realimobg:8080/admin porq ? preciso editalo e configuralo"
-              </div>
-              
-              <div className="mt-2 text-[10px] text-accent/70">
-                Correção aplicada: O link de edição agora detecta se o site é local ou remoto, garantindo o redirecionamento correto para o painel administrativo.
-              </div>
-            </CardDescription>
           </CardHeader>
           <CardContent>
             <Button 
