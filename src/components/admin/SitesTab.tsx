@@ -100,11 +100,12 @@ export default function SitesTab() {
     if (error) {
       toast.error("Erro ao duplicar site: " + error.message);
     } else {
-      toast.success("Site duplicado com sucesso!");
+      toast.success("Site duplicado com sucesso! Você já tem permissão para editá-lo.");
       setDuplicateId(null);
       setNewDomain("");
       setNewBrandName("");
-      fetchSites();
+      // Pequeno delay para garantir que o banco processou tudo antes de atualizar a lista
+      setTimeout(() => fetchSites(), 500);
     }
   }
 

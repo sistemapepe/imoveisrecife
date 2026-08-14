@@ -23,7 +23,7 @@ export default function Index() {
         </h3>
         <div className="space-y-4 text-sm text-muted-foreground whitespace-pre-line">
           <div className="flex items-center gap-2 text-green-500 font-bold">
-            <CheckCircle2 className="w-4 h-4" /> Funcionalidade de duplicação implementada!
+            <CheckCircle2 className="w-4 h-4" /> Duplicação com acesso automático implementada!
           </div>
           
           Implemente validações para o novo domínio (formato, unicidade e disponibilidade) ao duplicar uma instância na aba de Sites.
