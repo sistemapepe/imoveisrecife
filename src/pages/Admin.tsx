@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
@@ -24,8 +24,9 @@ import DashboardTab from "@/components/admin/DashboardTab";
 import SeoAuditTab from "@/components/admin/SeoAuditTab";
 import BucketAccessTab from "@/components/admin/BucketAccessTab";
 import BulkImportTab from "@/components/admin/BulkImportTab";
+import PerformanceTab from "@/components/admin/PerformanceTab";
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -194,6 +195,7 @@ export default function Admin() {
     { key: "users", label: "Equipe", icon: Users, show: !!canManageUsers },
     { key: "settings", label: "Configurações", icon: Settings, show: !!canManageSettings },
     { key: "bucket", label: "Imagens (Acesso)", icon: ImageIcon, show: !!canManageBucket },
+    { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
@@ -690,6 +692,10 @@ export default function Admin() {
 
           {tab === "import" && canBulkImport && (
             <BulkImportTab />
+          )}
+
+          {tab === "performance" && canViewAnalytics && (
+            <PerformanceTab />
           )}
           </main>
         </div>

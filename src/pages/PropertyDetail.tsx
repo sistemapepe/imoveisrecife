@@ -23,6 +23,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 import { useResolvedImages, getPublicUrl } from "@/lib/property-image-url";
+import { useMobileInteractions } from "@/hooks/useMobileInteractions";
 
 export default function PropertyDetail() {
   const { id } = useParams();
@@ -43,6 +44,7 @@ export default function PropertyDetail() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [leadModalOpen, setLeadModalOpen] = useState(false);
+  const { handleTap } = useMobileInteractions();
   const touchStartX = useRef(0);
   const touchDelta = useRef(0);
 
@@ -496,10 +498,10 @@ export default function PropertyDetail() {
               <Share2 className="h-5 w-5" />
               <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground">Enviar</span>
             </button>
-            <button onClick={handleWhatsApp} aria-label="Falar pelo WhatsApp" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-whatsapp text-card shadow-lg active:scale-95 transition-transform">
+            <button onClick={handleTap(handleWhatsApp)} aria-label="Falar pelo WhatsApp" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-whatsapp text-card shadow-lg active:scale-95 transition-transform">
               <MessageCircle className="h-6 w-6" />
             </button>
-            <button onClick={() => navigate("/contato")} className="flex-1 flex items-center justify-center gap-2 rounded-xl gold-gradient py-4 text-accent-foreground font-bold text-base shadow-lg active:scale-95 transition-transform uppercase tracking-widest">
+            <button onClick={handleTap(() => navigate("/contato"))} className="flex-1 flex items-center justify-center gap-2 rounded-xl gold-gradient py-4 text-accent-foreground font-bold text-base shadow-lg active:scale-95 transition-transform uppercase tracking-widest">
               <Calendar className="h-5 w-5" /> Agendar Visita
             </button>
           </div>
