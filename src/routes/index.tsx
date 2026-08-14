@@ -69,6 +69,21 @@ export default function Index() {
           <div className="flex items-center gap-2 text-accent font-bold">
             <ArrowRight className="w-4 h-4" /> Exiba o status do processo de duplicação (em fila, processando, concluído ou erro) para eu saber quando o site novo está pronto.
           </div>
+          <div className="flex items-center gap-2 text-accent font-bold border-t border-white/5 pt-4">
+            <ArrowRight className="w-4 h-4" /> Implemente uma validação prévia das permissões para evitar tentativas de inserir pares duplicados antes de iniciar a duplicação.
+          </div>
+
+          <div className="flex items-center gap-2 text-accent font-bold">
+            <ArrowRight className="w-4 h-4" /> Ative uma retentativa automática para falhas transitórias durante a duplicação, com limite de tentativas e atualização do status para mim.
+          </div>
+
+          <div className="flex items-center gap-2 text-accent font-bold">
+            <ArrowRight className="w-4 h-4" /> Adicione um log de auditoria no Super Admin registrando quem duplicou, qual foi o site base e o resultado (sucesso/erro) de cada tentativa.
+          </div>
+
+          <div className="flex items-center gap-2 text-accent font-bold">
+            <ArrowRight className="w-4 h-4" /> Exiba mensagens mais detalhadas no status de duplicação (incluindo etapa atual e possível causa do erro) para eu entender o que aconteceu quando falhar.
+          </div>
         </div>
       </section>
 
