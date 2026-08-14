@@ -36,19 +36,19 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
       const isoWeek = sevenDaysAgo.toISOString();
 
       const [contactsRes, visitsRes, viewsRes] = await Promise.all([
-        supabase
+        (supabase
           .from("contact_messages")
-          .select("id", { count: "exact", head: true })
+          .select("id", { count: "exact", head: true }) as any)
           .eq("site_id", site?.id)
           .gte("created_at", isoWeek),
-        supabase
+        (supabase
           .from("visit_requests")
-          .select("id", { count: "exact", head: true })
+          .select("id", { count: "exact", head: true }) as any)
           .eq("site_id", site?.id)
           .eq("status", "pending"),
-        supabase
+        (supabase
           .from("property_views")
-          .select("id", { count: "exact", head: true })
+          .select("id", { count: "exact", head: true }) as any)
           .eq("site_id", site?.id)
           .gte("created_at", isoWeek),
       ]);
