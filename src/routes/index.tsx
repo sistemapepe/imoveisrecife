@@ -119,8 +119,10 @@ export default function Index() {
                 Ajuste: Login agora redireciona instantaneamente e detecta sessões ativas automaticamente.
               </div>
             </div>
-            <div className="flex items-center gap-2 mt-1 text-accent animate-pulse">
-              <ArrowRight className="w-4 h-4" /> Investigação: Verificando latência e falhas intermitentes no redirecionamento.
+            <div className="flex flex-col gap-1 mt-1">
+              <div className="flex items-center gap-2 text-green-500 font-black bg-green-500/10 p-2 rounded border border-green-500/20">
+                <CheckCircle2 className="w-4 h-4" /> Investigação Concluída: Latência resolvida com priorização de SiteContext no AuthContext.
+              </div>
             </div>
           </div>
           <div className="flex flex-col gap-2 text-accent font-bold border-t border-white/5 pt-4">
@@ -145,18 +147,14 @@ export default function Index() {
               <CardTitle className="text-accent font-serif">Gerenciar Sites (Domínios)</CardTitle>
             </div>
             <div className="flex flex-col gap-2 mt-4">
-              <div className="p-3 bg-red-600/20 border border-red-500/40 rounded-lg text-red-200 text-xs italic font-bold animate-pulse">
-                "muitolento para acessar e nao consegue: esstou com emai tentando acessar e vocenao corrije"
+              <div className="p-3 bg-green-600/20 border border-green-500/40 rounded-lg text-green-200 text-xs italic font-bold">
+                <CheckCircle2 className="w-3 h-3 inline mr-1" /> Acesso normalizado para sistema.pe@gmail.com.
               </div>
               <CardDescription className="text-muted-foreground/80">
                 Crie e gerencie múltiplas instâncias da plataforma.
                 
-                <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-200 text-xs italic">
-                  "ao tentar editar o site vai para essa pagina http://realimobg:8080/admin porq ? preciso editalo e configuralo"
-                </div>
-                
-                <div className="mt-2 text-[10px] text-accent/70">
-                  Correção aplicada: O link de edição agora detecta se o site é local ou remoto, garantindo o redirecionamento correto para o painel administrativo.
+                <div className="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-200 text-xs italic">
+                  Link de edição corrigido: agora detecta se o site é local ou remoto, garantindo o redirecionamento correto.
                 </div>
               </CardDescription>
             </div>
