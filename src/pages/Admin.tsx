@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Globe2 } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Globe2, Shield } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
