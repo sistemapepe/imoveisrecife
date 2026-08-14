@@ -211,7 +211,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase
       .from("properties")
       .select("*")
-      .eq("site_id" as any, site.id)
+      .eq("site_id", site.id) as any
       .order("created_at", { ascending: false });
       
     if (data && !error) {
@@ -229,7 +229,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     const { data } = await supabase
       .from("site_settings")
       .select("*")
-      .eq("site_id" as any, site.id)
+      .eq("site_id", site.id) as any
       .limit(1)
       .single();
     if (data) {
