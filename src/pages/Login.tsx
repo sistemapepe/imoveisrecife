@@ -1,4 +1,4 @@
-import { useState, startTransition } from "react";
+import { useState, startTransition, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProperties } from "@/contexts/PropertyContext";
@@ -11,12 +11,19 @@ import SEOHead from "@/components/SEOHead";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { signIn, user, role, loading: authLoading, isInitializing } = useAuth();
   const { settings } = useProperties();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Auto-redirect if already logged in with valid role
+  useEffect(() => {
+    if (!isInitializing && !authLoading && user && role !== "user") {
+      navigate("/admin", { replace: true });
+    }
+  }, [user, role, isInitializing, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
