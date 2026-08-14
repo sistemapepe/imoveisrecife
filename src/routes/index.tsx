@@ -95,8 +95,8 @@ export default function Index() {
           <div className="flex items-center gap-2 text-accent font-bold">
             <ArrowRight className="w-4 h-4" /> Adicione a funcionalidade de recuperação de senha, com envio de e-mail e redefinição segura, para usuários que esquecerem a senha.
           </div>
-          <div className="flex items-center gap-2 text-red-500 font-bold border-t border-white/5 pt-4 italic text-xs">
-            <ShieldCheck className="w-4 h-4" /> "diz que login foi realizado mas permanece na mesma tela inicial e nao se loga"
+          <div className="flex items-center gap-2 text-green-500 font-bold border-t border-white/5 pt-4 italic text-xs">
+            <CheckCircle2 className="w-4 h-4" /> Problema resolvido: "diz que login foi realizado mas permanece na mesma tela inicial e nao se loga"
           </div>
         </div>
       </section>
