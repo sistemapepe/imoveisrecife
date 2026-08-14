@@ -1,5 +1,7 @@
 /**
- * ate que eja publicadoo site precisa ser provisorio para que eu consiga editalo esta indo parahttps://realimobg/adminporem nao acesso
+ * Defina uma matriz clara de permissões para super_admin e admin e aplique-a no guard do /admin para bloquear rotas específicas quando não houver acesso.
+ * 
+ * Aplique startTransition e pré-carregamento do contexto/rotas para evitar Suspense durante navegação no /admin e melhorar o tempo de resposta.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
