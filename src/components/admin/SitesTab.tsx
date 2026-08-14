@@ -48,23 +48,47 @@ export default function SitesTab() {
       toast.error("Preencha todos os campos");
       return;
     }
-    setCreating(true);
-    const { error } = await supabase
-      .from('sites' as any)
-      .insert({
-        domain: newDomain,
-        brand_name: newBrandName
+
+    const mainSite = sites.find(s => s.domain === 'localhost' || s.brand_name.toLowerCase().includes('imoveis recife'));
+
+    if (mainSite) {
+      setCreating(true);
+      const { data, error } = await supabase.rpc('duplicate_site', {
+        source_site_id: mainSite.id,
+        new_domain: newDomain,
+        new_brand_name: newBrandName
       });
-    
-    setCreating(false);
-    if (error) {
-      toast.error("Erro ao criar site: " + error.message);
+      
+      setCreating(false);
+      if (error) {
+        toast.error("Erro ao criar site baseado no original: " + error.message);
+      } else {
+        toast.success("Novo site criado com sucesso baseado no original!");
+        setShowCreate(false);
+        setNewDomain("");
+        setNewBrandName("");
+        setTimeout(() => fetchSites(), 500);
+      }
     } else {
-      toast.success("Site criado com sucesso!");
-      setShowCreate(false);
-      setNewDomain("");
-      setNewBrandName("");
-      fetchSites();
+      // Fallback para criação vazia caso não ache o original
+      setCreating(true);
+      const { error } = await supabase
+        .from('sites' as any)
+        .insert({
+          domain: newDomain,
+          brand_name: newBrandName
+        });
+      
+      setCreating(false);
+      if (error) {
+        toast.error("Erro ao criar site: " + error.message);
+      } else {
+        toast.success("Site criado com sucesso (vazio)!");
+        setShowCreate(false);
+        setNewDomain("");
+        setNewBrandName("");
+        fetchSites();
+      }
     }
   }
 
@@ -118,12 +142,29 @@ export default function SitesTab() {
           </h2>
           <p className="text-sm text-muted-foreground">Crie e gerencie múltiplas instâncias da plataforma.</p>
         </div>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider"
-        >
-          <Plus className="h-4 w-4" /> Novo Site
-        </button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {
+              const mainSite = sites.find(s => s.domain === 'localhost' || s.brand_name.toLowerCase().includes('imoveis recife'));
+              if (mainSite) {
+                setDuplicateId(mainSite.id);
+                setNewBrandName("");
+              } else {
+                toast.error("Site original não encontrado para duplicação rápida");
+              }
+            }}
+            variant="outline"
+            className="flex items-center gap-1.5 border-accent/30 text-accent hover:bg-accent/10 font-bold"
+          >
+            <Copy className="h-4 w-4" /> Duplicar Principal
+          </Button>
+          <button
+            onClick={() => setShowCreate(true)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider"
+          >
+            <Plus className="h-4 w-4" /> Novo Site (Vazio)
+          </button>
+        </div>
       </div>
 
       {loading ? (
