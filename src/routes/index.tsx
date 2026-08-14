@@ -128,8 +128,14 @@ export default function Index() {
               <Globe2 className="w-6 h-6 text-accent" />
               <CardTitle className="text-accent font-serif">Gerenciar Sites (Domínios)</CardTitle>
             </div>
-            <CardDescription className="text-muted-foreground/80">
-              Crie e gerencie múltiplas instâncias da plataforma.
+            <div className="flex flex-col gap-2 mt-4">
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-200 text-xs italic">
+                "não esta entrando o login e senha"
+              </div>
+              <CardDescription className="text-muted-foreground/80">
+                Crie e gerencie múltiplas instâncias da plataforma.
+              </CardDescription>
+            </div>
               
               <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-200 text-xs italic">
                 "ao tentar editar o site vai para essa pagina http://realimobg:8080/admin porq ? preciso editalo e configuralo"
