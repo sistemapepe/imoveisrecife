@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       contact_info: {
         Row: {
           email_contact: string
@@ -776,6 +806,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      assign_site_admin: {
+        Args: { p_site_id: string; p_user_id: string }
+        Returns: boolean
+      }
       duplicate_site: {
         Args: {
           new_brand_name: string
@@ -791,6 +825,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       save_role_perms: { Args: { p_rows: Json }; Returns: boolean }
     }
     Enums: {
