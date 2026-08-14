@@ -42,6 +42,8 @@ export default function Index() {
               Crie e gerencie múltiplas instâncias da plataforma.
               
               preciso acessalosparaeditar eadministrar
+              
+              nao consigo acessar para editar
             </CardDescription>
           </CardHeader>
           <CardContent>
