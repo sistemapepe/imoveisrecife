@@ -44,9 +44,7 @@ export default function Index() {
             <CardDescription className="text-muted-foreground/80">
               Crie e gerencie múltiplas instâncias da plataforma.
               
-              preciso acessalosparaeditar eadministrar
-              
-              nao consigo acessar para editar
+              como posso editar os sites criados? ao tem acesso?
               
               em sites preciso gerenciar editar duplicar
             </CardDescription>
