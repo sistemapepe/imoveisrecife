@@ -208,10 +208,9 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
 
   const fetchProperties = useCallback(async () => {
     if (!site) return;
-    const { data, error } = await (supabase
-      .from("properties")
-      .select("*")
-      .eq("site_id" as any, site.id) as any)
+    const query = supabase.from("properties").select("*");
+    const { data, error } = await (query as any)
+      .eq("site_id", site.id)
       .order("created_at", { ascending: false });
       
     if (data && !error) {
@@ -226,10 +225,9 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
 
   const fetchSettings = useCallback(async () => {
     if (!site) return;
-    const { data } = await (supabase
-      .from("site_settings")
-      .select("*")
-      .eq("site_id" as any, site.id) as any)
+    const query = supabase.from("site_settings").select("*");
+    const { data } = await (query as any)
+      .eq("site_id", site.id)
       .limit(1)
       .single();
     if (data) {
