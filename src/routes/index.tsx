@@ -1,7 +1,7 @@
 /**
- * Defina uma matriz clara de permissões para super_admin e admin e aplique-a no guard do /admin para bloquear rotas específicas quando não houver acesso.
+ * Aplique pré-carregamento e startTransition corretamente para componentes e dados do /admin, reduzindo Suspense e melhorando o tempo de resposta na navegação.
  * 
- * Aplique startTransition e pré-carregamento do contexto/rotas para evitar Suspense durante navegação no /admin e melhorar o tempo de resposta.
+ * Verifique e fortaleça o mapeamento de hostname para site_id no fluxo multi-tenant, garantindo que o guard use o site correto antes de autorizar rotas.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
