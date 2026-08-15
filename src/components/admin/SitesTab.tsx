@@ -134,7 +134,29 @@ export default function SitesTab() {
       setNewBrandName("");
       // Pequeno delay para garantir que o banco processou tudo antes de atualizar a lista
       setTimeout(() => fetchSites(), 500);
+  }
+
+  async function handlePublish() {
+    if (!publishId) return;
+    setPublishing(true);
+    
+    const { error } = await supabase
+      .from('sites' as any)
+      .update({ 
+        publish_status: 'published',
+        last_published_at: new Date().toISOString()
+      })
+      .eq('id', publishId);
+    
+    setPublishing(false);
+    if (error) {
+      toast.error("Erro ao publicar site: " + error.message);
+    } else {
+      toast.success("Site publicado com sucesso!");
+      setPublishId(null);
+      fetchSites();
     }
+  }
   }
 
   return (
