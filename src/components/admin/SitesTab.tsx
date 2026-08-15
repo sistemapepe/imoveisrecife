@@ -29,8 +29,7 @@ export default function SitesTab() {
   const [publishing, setPublishing] = useState(false);
 
   useEffect(() => {
-    // Carregamento otimizado: usa Promise.all para evitar sequenciamento
-    // e reduz o tempo de carregamento inicial percebido.
+    // Carregamento otimizado: busca somente os sites necessários
     const init = async () => {
       setLoading(true);
       await fetchSites();
@@ -43,7 +42,8 @@ export default function SitesTab() {
     const { data, error } = await supabase
       .from('sites' as any)
       .select('id, domain, brand_name, is_active, publish_status, last_published_at, created_at')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(50);
     
     if (error) {
       toast.error("Erro ao carregar sites");
