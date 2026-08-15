@@ -9,9 +9,20 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   if (isInitializing || (loading && !user)) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4 px-6 text-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-xs text-muted-foreground animate-pulse">Verificando credenciais...</p>
+          <div>
+            <p className="text-xs text-muted-foreground animate-pulse mb-1">Verificando credenciais...</p>
+            <p className="text-[10px] text-muted-foreground/60 max-w-[200px]">
+              Se você ficar preso aqui, verifique sua conexão ou tente recarregar a página.
+            </p>
+          </div>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-2 text-[10px] font-bold text-primary hover:underline"
+          >
+            Recarregar agora
+          </button>
         </div>
       </div>
     );
