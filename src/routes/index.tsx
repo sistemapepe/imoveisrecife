@@ -1,5 +1,7 @@
 /**
- * Implementado o fluxo de Publicar/Atualizar e Pré-visualização na aba Sites.
+ * Adicione uma tela em /admin para gerenciar domínios de cada cópia e salvar as configurações de forma editável.
+ * 
+ * Melhore a navegação do painel admin com breadcrumbs e atalhos rápidos para Sites, duplicar e editar, para eu encontrar tudo mais facilmente.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
