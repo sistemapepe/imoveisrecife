@@ -152,10 +152,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
     } finally {
-      if (mounted) {
-        setLoading(false);
-        setIsInitializing(false);
-      }
+      setLoading(false);
+      setIsInitializing(false);
+    }
     }
   }, [site?.id, siteLoading, loadPermissions]);
 
