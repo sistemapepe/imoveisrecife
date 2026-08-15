@@ -30,6 +30,16 @@ const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiag
 
 type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites" | "security";
 
+// Pre-load critical tabs
+const SitesTab = lazy(() => import("@/components/admin/SitesTab"));
+const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
+const AnalyticsTab = lazy(() => import("@/components/admin/AnalyticsTab"));
+const VisitsTab = lazy(() => import("@/components/admin/VisitsTab"));
+const TrafficTab = lazy(() => import("@/components/admin/TrafficTab"));
+const PerformanceTab = lazy(() => import("@/components/admin/PerformanceTab"));
+const BulkImportTab = lazy(() => import("@/components/admin/BulkImportTab"));
+const SeoAuditTab = lazy(() => import("@/components/admin/SeoAuditTab"));
+
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
 const maskCurrency = (value: number) => {
