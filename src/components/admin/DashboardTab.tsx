@@ -34,13 +34,12 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
     const load = async () => {
       if (!site?.id) return;
       
-      // Tentar recuperar cache do localStorage para carregamento instantâneo
       const cacheKey = `dashboard_stats_${site.id}`;
       const cached = localStorage.getItem(cacheKey);
       if (cached) {
         try {
           const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 60000) { // Cache de 1 min
+          if (Date.now() - timestamp < 60000) {
             setStats(data);
             setLoading(false);
           }
@@ -53,9 +52,9 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
 
       try {
         const [contactsRes, visitsRes, viewsRes] = await Promise.all([
-          supabase.from("contact_messages").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek),
-          supabase.from("visit_requests").select("id", { count: "exact", head: true }).eq("site_id", site.id).eq("status", "pending"),
-          supabase.from("property_views").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek),
+          supabase.from("contact_messages").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek).then(r => r),
+          supabase.from("visit_requests").select("id", { count: "exact", head: true }).eq("site_id", site.id).eq("status", "pending").then(r => r),
+          supabase.from("property_views").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek).then(r => r),
         ]);
 
         if (!mounted) return;
