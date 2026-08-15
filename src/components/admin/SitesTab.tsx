@@ -134,6 +134,7 @@ export default function SitesTab() {
       setNewBrandName("");
       // Pequeno delay para garantir que o banco processou tudo antes de atualizar a lista
       setTimeout(() => fetchSites(), 500);
+    }
   }
 
   async function handlePublish() {
@@ -156,7 +157,6 @@ export default function SitesTab() {
       setPublishId(null);
       fetchSites();
     }
-  }
   }
 
   return (
