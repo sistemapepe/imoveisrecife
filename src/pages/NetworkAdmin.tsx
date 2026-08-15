@@ -23,8 +23,9 @@ const SitesTab = lazy(() => import("@/components/admin/SitesTab"));
 const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
 const UsersTab = lazy(() => import("@/components/admin/UsersTab"));
 const AnalyticsTab = lazy(() => import("@/components/admin/AnalyticsTab"));
+const BulkImportTab = lazy(() => import("@/components/admin/BulkImportTab"));
 
-type NetworkTab = "dashboard" | "sites" | "users" | "analytics" | "security" | "settings";
+type NetworkTab = "dashboard" | "sites" | "users" | "analytics" | "security" | "settings" | "import";
 
 export default function NetworkAdmin() {
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ export default function NetworkAdmin() {
     { key: "sites", label: "Gerenciar Sites", icon: Globe2 },
     { key: "users", label: "Usuários Globais", icon: Users },
     { key: "analytics", label: "Analytics Global", icon: BarChart3 },
+    { key: "import", label: "Importação Massa", icon: Globe2 },
     { key: "security", label: "Segurança", icon: Shield },
     { key: "settings", label: "Configurações", icon: Settings },
   ];
@@ -218,7 +220,8 @@ export default function NetworkAdmin() {
             
             {tab === "sites" && <SitesTab />}
             {tab === "users" && <UsersTab />}
-            {tab === "analytics" && <AnalyticsTab />}
+            {tab === "analytics" && <AnalyticsTab isNetwork={true} />}
+            {tab === "import" && <BulkImportTab />}
             {tab === "security" && <SecurityDiagnosticTab />}
             {tab === "settings" && (
               <div className="p-12 text-center border-2 border-dashed border-white/10 rounded-3xl">

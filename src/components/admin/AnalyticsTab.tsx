@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
 import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp, Download } from "lucide-react";
+import { useSite } from "@/contexts/SiteContext";
 import { DateRangePicker } from "./DateRangePicker";
 import { downloadCSV } from "@/lib/csv-export";
 
@@ -16,7 +17,8 @@ interface LeadsByPeriod {
   count: number;
 }
 
-export default function AnalyticsTab() {
+export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolean }) {
+  const { site } = useSite();
   const [totalViews, setTotalViews] = useState(0);
   const [totalLeads, setTotalLeads] = useState(0);
   const [totalVisits, setTotalVisits] = useState(0);
@@ -56,15 +58,23 @@ export default function AnalyticsTab() {
     const { from, to } = getDateRange();
 
     const applyRange = <T,>(q: T): T => {
-      const qq = (q as unknown as { lte: (col: string, v: string) => T });
-      return to ? qq.lte("created_at", to) : q;
+      let qq = q as any;
+      if (to) qq = qq.lte("created_at", to);
+      if (!isNetwork && site?.id) qq = qq.eq("site_id", site.id);
+      return qq;
+    };
+
+    const applySiteFilter = <T,>(q: T): T => {
+      let qq = q as any;
+      if (!isNetwork && site?.id) qq = qq.eq("site_id", site.id);
+      return qq;
     };
 
     const [viewsRes, leadsRes, visitsRes, propertiesRes] = await Promise.all([
       applyRange(supabase.from("property_views").select("id, property_id, created_at").gte("created_at", from)),
       applyRange(supabase.from("contact_messages").select("id, created_at").gte("created_at", from)),
       applyRange(supabase.from("visit_requests").select("id, created_at").gte("created_at", from)),
-      supabase.from("properties").select("id, title"),
+      applySiteFilter(supabase.from("properties").select("id, title")),
     ]);
 
     const views = viewsRes.data || [];
