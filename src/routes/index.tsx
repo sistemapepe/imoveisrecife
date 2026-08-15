@@ -1,7 +1,7 @@
 /**
  * execute isso abaixo
  * 
- * Implemente a tela de Gerenciar Sites (Domínios) para criar, editar e remover múltiplas instâncias da plataforma com persistência no banco.
+ * Implemente a tela de Gerenciar Sites para criar, editar e remover instâncias com persistência no banco.
  * 
  * Adicione um fluxo para eu editar a configuração de cada instância existente sem precisar criar novas cópias.
  * 
