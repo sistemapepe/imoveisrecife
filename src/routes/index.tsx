@@ -1,5 +1,5 @@
 /**
- * OTIMIZADO: O carregamento da aba Sites foi acelerado com Lazy Loading, useTransition para navegação suave e redução de payload no banco.
+ * OTIMIZADO: O carregamento da aba Sites foi acelerado com Lazy Loading e redução de payload.
  * ADICIONADO: Skeletons e indicadores de carregamento na aba Sites para melhor feedback visual.
  * CORREÇÃO: Domínio provisório da Lovable é agora preenchido automaticamente ao duplicar sites para facilitar a edição antes da publicação.
  */

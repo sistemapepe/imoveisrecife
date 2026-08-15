@@ -29,8 +29,7 @@ export default function SitesTab() {
   const [publishing, setPublishing] = useState(false);
 
   useEffect(() => {
-    // Carregamento otimizado: usa Promise.all para evitar sequenciamento
-    // e reduz o tempo de carregamento inicial percebido.
+    // Carregamento otimizado: busca somente os sites necessários
     const init = async () => {
       setLoading(true);
       await fetchSites();
