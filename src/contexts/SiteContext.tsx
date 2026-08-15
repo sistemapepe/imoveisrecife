@@ -30,10 +30,24 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       let query = supabase.from('sites' as any).select('*');
       
       if (siteIdParam) {
+        // Se temos um ID específico, verificamos o cache por ID
+        const cacheKey = `site_resolved_${siteIdParam}`;
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+          setSite(JSON.parse(cached));
+          setLoading(false);
+          return;
+        }
         query = query.eq('id', siteIdParam);
       } else {
-        // Em desenvolvimento no sandbox, usamos 'localhost' ou o domínio do preview como fallback
         const domainToSearch = hostname.includes('lovable.app') ? 'localhost' : hostname;
+        const cacheKey = `site_resolved_${domainToSearch}`;
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+          setSite(JSON.parse(cached));
+          setLoading(false);
+          return;
+        }
         query = query.eq('domain', domainToSearch);
       }
 
@@ -42,7 +56,6 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       if (siteError) throw siteError;
 
       if (!data) {
-        // Fallback para o primeiro site se não encontrar o domínio exato (útil para desenvolvimento)
         const { data: fallbackSite } = await supabase
           .from('sites' as any)
           .select('*')
@@ -56,6 +69,9 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         }
       } else {
         setSite(data as any);
+        // Salva no cache da sessão para navegação rápida
+        const key = siteIdParam || (hostname.includes('lovable.app') ? 'localhost' : hostname);
+        sessionStorage.setItem(`site_resolved_${key}`, JSON.stringify(data));
       }
     } catch (err) {
       logger.error("Failed to resolve site", { domain: window.location.hostname }, err as Error);
