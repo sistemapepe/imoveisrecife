@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy, ArrowRight } from "lucide-react";
+import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy, ArrowRight, Rocket, Eye, AlertCircle, Clock } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -10,6 +10,8 @@ interface Site {
   domain: string;
   brand_name: string;
   is_active: boolean;
+  publish_status?: 'draft' | 'published' | 'scheduled';
+  last_published_at?: string;
   created_at: string;
 }
 
@@ -23,6 +25,8 @@ export default function SitesTab() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [duplicateId, setDuplicateId] = useState<string | null>(null);
   const [duplicating, setDuplicating] = useState(false);
+  const [publishId, setPublishId] = useState<string | null>(null);
+  const [publishing, setPublishing] = useState(false);
 
   useEffect(() => {
     fetchSites();
@@ -133,6 +137,28 @@ export default function SitesTab() {
     }
   }
 
+  async function handlePublish() {
+    if (!publishId) return;
+    setPublishing(true);
+    
+    const { error } = await supabase
+      .from('sites' as any)
+      .update({ 
+        publish_status: 'published',
+        last_published_at: new Date().toISOString()
+      })
+      .eq('id', publishId);
+    
+    setPublishing(false);
+    if (error) {
+      toast.error("Erro ao publicar site: " + error.message);
+    } else {
+      toast.success("Site publicado com sucesso!");
+      setPublishId(null);
+      fetchSites();
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -199,31 +225,73 @@ export default function SitesTab() {
                       </button>
                     </div>
                   )}
-                  {site.is_active ? (
-                    <span className="flex items-center gap-1 text-[10px] font-bold text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full uppercase">
-                      <CheckCircle2 className="h-3 w-3" /> Ativo
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-full uppercase">
-                      <XCircle className="h-3 w-3" /> Inativo
-                    </span>
-                  )}
+                  <div className="flex flex-col items-end gap-1">
+                    {site.is_active ? (
+                      <span className="flex items-center gap-1 text-[9px] font-bold text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full uppercase">
+                        <CheckCircle2 className="h-3 w-3" /> Ativo
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1 text-[9px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-full uppercase">
+                        <XCircle className="h-3 w-3" /> Inativo
+                      </span>
+                    )}
+                    
+                    {site.publish_status === 'published' ? (
+                      <span className="flex items-center gap-1 text-[9px] font-bold text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded-full uppercase">
+                        <Rocket className="h-3 w-3" /> Publicado
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1 text-[9px] font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full uppercase">
+                        <Clock className="h-3 w-3" /> Rascunho
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
               
               <div>
-                <h3 className="font-bold text-lg">{site.brand_name}</h3>
-                <p className="text-sm text-muted-foreground font-mono">{site.domain}</p>
+                <h3 className="font-bold text-lg leading-tight">{site.brand_name}</h3>
+                <p className="text-xs text-muted-foreground font-mono truncate">{site.domain}</p>
               </div>
+
+              {site.last_published_at && (
+                <div className="text-[10px] text-muted-foreground/60 flex items-center gap-1">
+                  <CheckCircle2 className="h-2.5 w-2.5 text-green-500" />
+                  Última publicação: {new Date(site.last_published_at).toLocaleString()}
+                </div>
+              )}
 
               <div className="pt-2 border-t border-border/50 flex flex-col gap-2">
                 <div className="flex justify-between items-center text-[10px] text-muted-foreground">
                   <span>ID: {site.id.slice(0, 8)}...</span>
                   <span>{new Date(site.created_at).toLocaleDateString()}</span>
                 </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="h-8 text-[10px] font-bold border-accent/20 text-accent hover:bg-accent/10"
+                    onClick={() => {
+                      const isLocal = site.domain === 'localhost' || site.domain.includes('8080');
+                      const url = isLocal ? window.location.origin : (site.domain.startsWith('http') ? site.domain : `https://${site.domain}`);
+                      window.open(url, '_blank');
+                    }}
+                  >
+                    <Eye className="mr-1.5 h-3 w-3" /> Preview
+                  </Button>
+                  
+                  <Button 
+                    size="sm" 
+                    className="h-8 text-[10px] font-bold bg-blue-600/10 text-blue-500 border border-blue-500/20 hover:bg-blue-600 hover:text-white transition-all"
+                    onClick={() => setPublishId(site.id)}
+                  >
+                    <Rocket className="mr-1.5 h-3 w-3" /> Publicar
+                  </Button>
+                </div>
+
                 <Button 
                   size="sm" 
-                  className="w-full h-8 text-xs font-bold bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all"
+                  className="w-full h-8 text-[10px] font-bold bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all"
                   onClick={() => {
                     const isLocal = site.domain === 'localhost' || site.domain.includes('8080');
                     let url = '';
@@ -231,17 +299,15 @@ export default function SitesTab() {
                     if (isLocal) {
                       url = `${window.location.origin}/admin`;
                     } else {
-                      // Para domínios externos, assume HTTPS e porta padrão, 
-                      // a menos que o domínio já contenha um protocolo
                       url = site.domain.startsWith('http') 
-                        ? site.domain 
+                        ? `${site.domain}/admin` 
                         : `https://${site.domain}/admin`;
                     }
                     
                     window.open(url, '_blank');
                   }}
                 >
-                  Editar Site <ArrowRight className="ml-2 h-3 w-3" />
+                  <ArrowRight className="mr-1.5 h-3 w-3" /> Editar Site
                 </Button>
               </div>
             </div>
@@ -340,6 +406,42 @@ export default function SitesTab() {
             <Button variant="outline" onClick={() => setDuplicateId(null)}>Cancelar</Button>
             <Button onClick={handleDuplicate} disabled={duplicating}>
               {duplicating ? "Duplicando..." : "Duplicar Agora"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={!!publishId} onOpenChange={(open) => !open && setPublishId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Rocket className="h-5 w-5 text-blue-500" /> Publicar Site
+            </DialogTitle>
+            <DialogDescription>
+              Isso tornará todas as alterações visíveis no domínio público. Deseja continuar?
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4 flex gap-3">
+            <AlertCircle className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
+            <div className="text-xs text-blue-200/80 space-y-1">
+              <p className="font-bold">O que acontece ao publicar?</p>
+              <ul className="list-disc list-inside ml-1">
+                <li>O status do site mudará para "Publicado"</li>
+                <li>A data da última publicação será atualizada</li>
+                <li>As configurações e imóveis ficarão acessíveis via domínio</li>
+              </ul>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 pt-2">
+            <Button variant="outline" onClick={() => setPublishId(null)}>Agora não</Button>
+            <Button 
+              onClick={handlePublish} 
+              disabled={publishing}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold"
+            >
+              {publishing ? "Publicando..." : "Sim, Publicar Agora"}
             </Button>
           </DialogFooter>
         </DialogContent>

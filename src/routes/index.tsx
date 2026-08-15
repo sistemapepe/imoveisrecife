@@ -1,5 +1,5 @@
 /**
- * quero entender onde consigo gerenciar o site atual e copia dele me explique para que o projeto fique completo
+ * Implementado o fluxo de Publicar/Atualizar e Pré-visualização na aba Sites.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
