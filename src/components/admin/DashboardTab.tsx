@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useProperties } from "@/contexts/PropertyContext";
 import { useSite } from "@/contexts/SiteContext";
@@ -118,6 +118,8 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
     },
   ];
 
+  const memoCards = useMemo(() => cards, [stats, loading, onNavigate]);
+
   return (
     <div className="space-y-6">
       <div>
@@ -126,7 +128,7 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-        {cards.map((card, i) => {
+        {memoCards.map((card, i) => {
           const Icon = card.icon;
           return (
             <motion.button
