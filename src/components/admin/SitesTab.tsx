@@ -29,16 +29,45 @@ export default function SitesTab() {
   const [publishing, setPublishing] = useState(false);
 
   useEffect(() => {
-    // Carregamento otimizado: busca somente os sites necessários
+    let mounted = true;
     const init = async () => {
       setLoading(true);
-      await fetchSites();
+      
+      // Tenta recuperar do cache local primeiro
+      const cached = localStorage.getItem("admin_sites_list");
+      if (cached) {
+        try {
+          const { data, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < 30000) { // 30 segundos de cache
+            setSites(data);
+            setLoading(false);
+          }
+        } catch (e) {}
+      }
+
+      const { data, error } = await supabase
+        .from('sites' as any)
+        .select('id, domain, brand_name, is_active, publish_status, last_published_at, created_at')
+        .order('created_at', { ascending: false })
+        .limit(20); // Reduzido de 50 para 20 para carregamento inicial mais leve
+      
+      if (!mounted) return;
+
+      if (error) {
+        toast.error("Erro ao carregar sites");
+      } else {
+        const sitesList = (data as any) || [];
+        setSites(sitesList);
+        localStorage.setItem("admin_sites_list", JSON.stringify({ data: sitesList, timestamp: Date.now() }));
+      }
       setLoading(false);
     };
     init();
+    return () => { mounted = false; };
   }, []);
 
   async function fetchSites() {
+    // Busca forçada (bypass cache) para atualizações manuais
     const { data, error } = await supabase
       .from('sites' as any)
       .select('id, domain, brand_name, is_active, publish_status, last_published_at, created_at')
@@ -48,7 +77,9 @@ export default function SitesTab() {
     if (error) {
       toast.error("Erro ao carregar sites");
     } else {
-      setSites((data as any) || []);
+      const sitesList = (data as any) || [];
+      setSites(sitesList);
+      localStorage.setItem("admin_sites_list", JSON.stringify({ data: sitesList, timestamp: Date.now() }));
     }
   }
 
