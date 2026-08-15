@@ -112,6 +112,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
       
+      if (!site?.id && !siteLoading) {
+        // Se o site ainda não carregou ou não foi encontrado, esperamos um pouco ou falhamos graciosamente
+        logger.warn("Site not resolved yet in checkRole");
+      }
+      
       const { data, error } = await supabase
         .from("user_roles")
         .select("role, site_id")
@@ -147,15 +152,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
     } finally {
-      setLoading(false);
-      setIsInitializing(false);
+      if (mounted) {
+        setLoading(false);
+        setIsInitializing(false);
+      }
     }
-  }, [site?.id, loadPermissions]);
+  }, [site?.id, siteLoading, loadPermissions]);
 
   useEffect(() => {
     let mounted = true;
+    let authSubscription: any = null;
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      authSubscription = subscription;
       if (!mounted) return;
       
       const currentUser = session?.user ?? null;
@@ -200,7 +209,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       mounted = false;
-      subscription.unsubscribe();
+      if (authSubscription) {
+        authSubscription.unsubscribe();
+      }
     };
   }, [checkRole, siteLoading]);
 
