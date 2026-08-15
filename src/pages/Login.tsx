@@ -20,9 +20,13 @@ export default function Login() {
 
   // Auto-redirect if already logged in with valid role
   useEffect(() => {
-    if (!isInitializing && !authLoading && user && role !== "user") {
+    if (!isInitializing && !authLoading && user && role && role !== "user") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const siteId = urlParams.get('site_id');
+      const target = siteId ? `/admin?site_id=${siteId}` : "/admin";
+      
       startTransition(() => {
-        navigate("/admin", { replace: true });
+        navigate(target, { replace: true });
       });
     }
   }, [user, role, isInitializing, authLoading, navigate]);

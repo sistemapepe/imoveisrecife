@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback, useMemo } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/lib/logger";
 import { useSite } from "./SiteContext";
@@ -49,7 +49,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { site } = useSite();
+  const { site, loading: siteLoading } = useSite();
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
   const [permissions, setPermissions] = useState<Record<PermissionKey, boolean>>({
@@ -88,7 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const canManageBucket = isAdmin || permissions.manage_bucket;
 
   const loadPermissions = useCallback(async (userRole: AppRole) => {
-    if (userRole === "super_admin") return; // super_admin has all
+    if (userRole === "super_admin") return;
     try {
       const { data } = await supabase
         .from("role_permissions")
@@ -121,25 +121,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       let selectedRole: AppRole = "user";
 
-      if (!data || data.length === 0) {
-        logger.warn("No roles found for user", { userId });
-      } else {
-        // 1. Prioridade máxima: verificar se é super_admin em QUALQUER site
-        const hasSuperAdmin = data.some(r => r.role === "super_admin");
+      if (data && data.length > 0) {
+        const globalSuperAdmin = data.find(r => r.role === "super_admin" && (!r.site_id || r.site_id === '00000000-0000-0000-0000-000000000000'));
+        const anySuperAdmin = data.find(r => r.role === "super_admin");
         
-        if (hasSuperAdmin) {
+        if (globalSuperAdmin || anySuperAdmin) {
           selectedRole = "super_admin";
         } else if (site?.id) {
-          // 2. Se não for super_admin, tenta encontrar o papel específico para este site_id
           const siteSpecific = data.find(r => r.site_id === site.id);
           if (siteSpecific) {
             selectedRole = siteSpecific.role as AppRole;
           } else {
-            // Se não tem papel no site atual, mas tem outros papéis, pegamos o primeiro (fallback)
             selectedRole = data[0].role as AppRole;
           }
         } else {
-          // 3. Fallback: Pega o primeiro papel disponível
           selectedRole = data[0].role as AppRole;
         }
       }
@@ -153,6 +148,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setRole("user");
     } finally {
       setLoading(false);
+      setIsInitializing(false);
     }
   }, [site?.id, loadPermissions]);
 
@@ -166,16 +162,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(currentUser);
       
       if (currentUser) {
-        try {
+        if (!siteLoading) {
           setLoading(true);
           await checkRole(currentUser.id);
-        } catch (error) {
-          logger.error("Error updating auth state", {}, error as Error);
-          setLoading(false);
-        } finally {
-          if (mounted) {
-            setIsInitializing(false);
-          }
         }
       } else {
         setRole(null);
@@ -184,7 +173,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    const initSession = async () => {
+    const initAuth = async () => {
+      if (siteLoading) return;
+      
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!mounted) return;
@@ -194,23 +185,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         if (currentUser) {
           await checkRole(currentUser.id);
+        } else {
+          setLoading(false);
+          setIsInitializing(false);
         }
       } catch (error) {
         logger.error("Initial session check failed", {}, error as Error);
-      } finally {
-        if (mounted) {
-          setIsInitializing(false);
-        }
+        setLoading(false);
+        setIsInitializing(false);
       }
     };
 
-    initSession();
+    initAuth();
 
     return () => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [checkRole]);
+  }, [checkRole, siteLoading]);
 
   const signIn = async (email: string, password: string) => {
     const { error, data } = await supabase.auth.signInWithPassword({ email, password });
