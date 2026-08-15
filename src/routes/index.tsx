@@ -1,6 +1,5 @@
 /**
- * Implemente um fluxo de Publicar/Atualizar para cada site copiado, com confirmação e status de publicação visível na aba Sites.
- * Adicione um botão de pré-visualização para eu ver o site antes de publicar, abrindo um preview em nova aba.
+ * Implementado o fluxo de Publicar/Atualizar e Pré-visualização na aba Sites.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
