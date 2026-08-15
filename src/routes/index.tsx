@@ -5,7 +5,9 @@
  * 
  * Adicione um fluxo para eu editar a configuração de cada instância existente sem precisar criar novas cópias.
  * 
- * Garanta que o app resolva automaticamente hostname para site_id e aplique isso antes do guard liberar qualquer rota do /admin.
+ * Implemente a resolução automática de hostname para site_id e aplique isso antes do guard liberar qualquer rota do /admin.
+ * 
+ * Implemente uma matriz de permissões que limite admin e super_admin por site_id e bloqueie rotas quando o site não corresponder.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
