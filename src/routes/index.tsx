@@ -1,8 +1,9 @@
 /**
- * revisetudo Gerenciar Sites (Domínios)
- * Crie e gerencie múltiplas instâncias da plataforma.
+ * Implemente a tela de Gerenciar Sites (Domínios) para criar, editar e remover múltiplas instâncias da plataforma com persistência no banco.
  * 
- * pois nao estou gerenciando editando novas copias
+ * Adicione um fluxo para eu editar a configuração de cada instância existente sem precisar criar novas cópias.
+ * 
+ * Garanta que o app resolva automaticamente hostname para site_id e aplique isso antes do guard liberar qualquer rota do /admin.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
