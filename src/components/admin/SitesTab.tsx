@@ -266,9 +266,32 @@ export default function SitesTab() {
                   <span>ID: {site.id.slice(0, 8)}...</span>
                   <span>{new Date(site.created_at).toLocaleDateString()}</span>
                 </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="h-8 text-[10px] font-bold border-accent/20 text-accent hover:bg-accent/10"
+                    onClick={() => {
+                      const isLocal = site.domain === 'localhost' || site.domain.includes('8080');
+                      const url = isLocal ? window.location.origin : (site.domain.startsWith('http') ? site.domain : `https://${site.domain}`);
+                      window.open(url, '_blank');
+                    }}
+                  >
+                    <Eye className="mr-1.5 h-3 w-3" /> Preview
+                  </Button>
+                  
+                  <Button 
+                    size="sm" 
+                    className="h-8 text-[10px] font-bold bg-blue-600/10 text-blue-500 border border-blue-500/20 hover:bg-blue-600 hover:text-white transition-all"
+                    onClick={() => setPublishId(site.id)}
+                  >
+                    <Rocket className="mr-1.5 h-3 w-3" /> Publicar
+                  </Button>
+                </div>
+
                 <Button 
                   size="sm" 
-                  className="w-full h-8 text-xs font-bold bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all"
+                  className="w-full h-8 text-[10px] font-bold bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all"
                   onClick={() => {
                     const isLocal = site.domain === 'localhost' || site.domain.includes('8080');
                     let url = '';
@@ -276,17 +299,15 @@ export default function SitesTab() {
                     if (isLocal) {
                       url = `${window.location.origin}/admin`;
                     } else {
-                      // Para domínios externos, assume HTTPS e porta padrão, 
-                      // a menos que o domínio já contenha um protocolo
                       url = site.domain.startsWith('http') 
-                        ? site.domain 
+                        ? `${site.domain}/admin` 
                         : `https://${site.domain}/admin`;
                     }
                     
                     window.open(url, '_blank');
                   }}
                 >
-                  Editar Site <ArrowRight className="ml-2 h-3 w-3" />
+                  <ArrowRight className="mr-1.5 h-3 w-3" /> Editar Site
                 </Button>
               </div>
             </div>
