@@ -1,7 +1,8 @@
 /**
- * Aplique pré-carregamento e startTransition corretamente para componentes e dados do /admin, reduzindo Suspense e melhorando o tempo de resposta na navegação.
+ * revisetudo Gerenciar Sites (Domínios)
+ * Crie e gerencie múltiplas instâncias da plataforma.
  * 
- * Verifique e fortaleça o mapeamento de hostname para site_id no fluxo multi-tenant, garantindo que o guard use o site correto antes de autorizar rotas.
+ * pois nao estou gerenciando editando novas copias
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
