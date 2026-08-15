@@ -23,15 +23,21 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
   const resolveSite = useCallback(async () => {
     try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const siteIdParam = urlParams.get('site_id');
       const hostname = window.location.hostname;
-      // Em desenvolvimento no sandbox, usamos 'localhost' ou o domínio do preview como fallback
-      const domainToSearch = hostname.includes('lovable.app') ? 'localhost' : hostname;
+      
+      let query = supabase.from('sites' as any).select('*');
+      
+      if (siteIdParam) {
+        query = query.eq('id', siteIdParam);
+      } else {
+        // Em desenvolvimento no sandbox, usamos 'localhost' ou o domínio do preview como fallback
+        const domainToSearch = hostname.includes('lovable.app') ? 'localhost' : hostname;
+        query = query.eq('domain', domainToSearch);
+      }
 
-      const { data, error: siteError } = await supabase
-        .from('sites' as any)
-        .select('*')
-        .eq('domain', domainToSearch)
-        .maybeSingle();
+      const { data, error: siteError } = await query.maybeSingle();
 
       if (siteError) throw siteError;
 

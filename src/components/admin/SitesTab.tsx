@@ -326,17 +326,9 @@ export default function SitesTab() {
                   size="sm" 
                   className="w-full h-8 text-[10px] font-bold bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all"
                   onClick={() => {
-                    const isLocal = site.domain === 'localhost' || site.domain.includes('8080');
-                    let url = '';
-                    
-                    if (isLocal) {
-                      url = `${window.location.origin}/admin`;
-                    } else {
-                      url = site.domain.startsWith('http') 
-                        ? `${site.domain}/admin` 
-                        : `https://${site.domain}/admin`;
-                    }
-                    
+                    // Para Super Admin, a forma mais segura de editar é manter o domínio atual e usar o site_id
+                    // Isso evita problemas com domínios ainda não configurados ou DNS não propagado
+                    const url = `${window.location.origin}/admin?site_id=${site.id}`;
                     window.open(url, '_blank');
                   }}
                 >
