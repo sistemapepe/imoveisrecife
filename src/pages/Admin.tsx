@@ -17,20 +17,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
-import AnalyticsTab from "@/components/admin/AnalyticsTab";
-import VisitsTab from "@/components/admin/VisitsTab";
-import TrafficTab from "@/components/admin/TrafficTab";
 import DashboardTab from "@/components/admin/DashboardTab";
-import SeoAuditTab from "@/components/admin/SeoAuditTab";
 import BucketAccessTab from "@/components/admin/BucketAccessTab";
-import BulkImportTab from "@/components/admin/BulkImportTab";
-import PerformanceTab from "@/components/admin/PerformanceTab";
-const SitesTab = lazy(() => import("@/components/admin/SitesTab"));
-const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
 
 type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites" | "security";
 
-// Pre-load critical tabs
+// Lazy loaded for performance optimization
 const SitesTab = lazy(() => import("@/components/admin/SitesTab"));
 const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
 const AnalyticsTab = lazy(() => import("@/components/admin/AnalyticsTab"));
