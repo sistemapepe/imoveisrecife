@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy, ArrowRight } from "lucide-react";
+import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy, ArrowRight, Rocket, Eye, AlertCircle, Clock } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -10,6 +10,8 @@ interface Site {
   domain: string;
   brand_name: string;
   is_active: boolean;
+  publish_status?: 'draft' | 'published' | 'scheduled';
+  last_published_at?: string;
   created_at: string;
 }
 
@@ -23,6 +25,8 @@ export default function SitesTab() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [duplicateId, setDuplicateId] = useState<string | null>(null);
   const [duplicating, setDuplicating] = useState(false);
+  const [publishId, setPublishId] = useState<string | null>(null);
+  const [publishing, setPublishing] = useState(false);
 
   useEffect(() => {
     fetchSites();
