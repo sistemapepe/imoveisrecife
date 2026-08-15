@@ -410,6 +410,42 @@ export default function SitesTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      <Dialog open={!!publishId} onOpenChange={(open) => !open && setPublishId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Rocket className="h-5 w-5 text-blue-500" /> Publicar Site
+            </DialogTitle>
+            <DialogDescription>
+              Isso tornará todas as alterações visíveis no domínio público. Deseja continuar?
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4 flex gap-3">
+            <AlertCircle className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
+            <div className="text-xs text-blue-200/80 space-y-1">
+              <p className="font-bold">O que acontece ao publicar?</p>
+              <ul className="list-disc list-inside ml-1">
+                <li>O status do site mudará para "Publicado"</li>
+                <li>A data da última publicação será atualizada</li>
+                <li>As configurações e imóveis ficarão acessíveis via domínio</li>
+              </ul>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 pt-2">
+            <Button variant="outline" onClick={() => setPublishId(null)}>Agora não</Button>
+            <Button 
+              onClick={handlePublish} 
+              disabled={publishing}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold"
+            >
+              {publishing ? "Publicando..." : "Sim, Publicar Agora"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
