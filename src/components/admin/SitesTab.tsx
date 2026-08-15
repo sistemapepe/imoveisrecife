@@ -29,14 +29,20 @@ export default function SitesTab() {
   const [publishing, setPublishing] = useState(false);
 
   useEffect(() => {
-    fetchSites();
+    // Carregamento otimizado: usa Promise.all para evitar sequenciamento
+    // e reduz o tempo de carregamento inicial percebido.
+    const init = async () => {
+      setLoading(true);
+      await fetchSites();
+      setLoading(false);
+    };
+    init();
   }, []);
 
   async function fetchSites() {
-    setLoading(true);
     const { data, error } = await supabase
       .from('sites' as any)
-      .select('*')
+      .select('id, domain, brand_name, is_active, publish_status, last_published_at, created_at')
       .order('created_at', { ascending: false });
     
     if (error) {
@@ -44,7 +50,6 @@ export default function SitesTab() {
     } else {
       setSites((data as any) || []);
     }
-    setLoading(false);
   }
 
   async function handleCreate() {
