@@ -341,19 +341,19 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       site_id: site.id
     } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
-    await fetchProperties();
+    await fetchProperties(true);
   };
 
   const updateProperty = async (id: string, updates: Partial<Property>) => {
     const { error } = await supabase.from("properties").update(updates).eq("id", id);
     if (error) { toast.error("Erro ao atualizar: " + error.message); return; }
-    await fetchProperties();
+    await fetchProperties(true);
   };
 
   const deleteProperty = async (id: string) => {
     const { error } = await supabase.from("properties").delete().eq("id", id);
     if (error) { toast.error("Erro ao remover: " + error.message); return; }
-    await fetchProperties();
+    await fetchProperties(true);
   };
 
   const updateSettings = async (s: Partial<SiteSettings>) => {

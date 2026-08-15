@@ -30,41 +30,56 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
     const load = async () => {
+      if (!site?.id) return;
+      
+      // Tentar recuperar cache do localStorage para carregamento instantâneo
+      const cacheKey = `dashboard_stats_${site.id}`;
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const { data, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < 60000) { // Cache de 1 min
+            setStats(data);
+            setLoading(false);
+          }
+        } catch (e) {}
+      }
+
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
       const isoWeek = sevenDaysAgo.toISOString();
 
-      const [contactsRes, visitsRes, viewsRes] = await Promise.all([
-        (supabase
-          .from("contact_messages")
-          .select("id", { count: "exact", head: true }) as any)
-          .eq("site_id", site?.id)
-          .gte("created_at", isoWeek),
-        (supabase
-          .from("visit_requests")
-          .select("id", { count: "exact", head: true }) as any)
-          .eq("site_id", site?.id)
-          .eq("status", "pending"),
-        (supabase
-          .from("property_views")
-          .select("id", { count: "exact", head: true }) as any)
-          .eq("site_id", site?.id)
-          .gte("created_at", isoWeek),
-      ]);
+      try {
+        const [contactsRes, visitsRes, viewsRes] = await Promise.all([
+          supabase.from("contact_messages").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek),
+          supabase.from("visit_requests").select("id", { count: "exact", head: true }).eq("site_id", site.id).eq("status", "pending"),
+          supabase.from("property_views").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek),
+        ]);
 
-      setStats({
-        totalProperties: properties.length,
-        newContacts: contactsRes.count ?? 0,
-        pendingVisits: visitsRes.count ?? 0,
-        weekViews: viewsRes.count ?? 0,
-        priceDrops: properties.filter((p) => !!p.previous_price && p.previous_price > p.price).length,
-        exclusives: properties.filter((p) => p.exclusive).length,
-      });
-      setLoading(false);
+        if (!mounted) return;
+
+        const newStats = {
+          totalProperties: properties.length,
+          newContacts: contactsRes.count ?? 0,
+          pendingVisits: visitsRes.count ?? 0,
+          weekViews: viewsRes.count ?? 0,
+          priceDrops: properties.filter((p) => !!p.previous_price && p.previous_price > p.price).length,
+          exclusives: properties.filter((p) => p.exclusive).length,
+        };
+
+        setStats(newStats);
+        localStorage.setItem(cacheKey, JSON.stringify({ data: newStats, timestamp: Date.now() }));
+      } catch (e) {
+        console.error("Dashboard stats error", e);
+      } finally {
+        if (mounted) setLoading(false);
+      }
     };
     load();
-  }, [properties]);
+    return () => { mounted = false; };
+  }, [properties, site?.id]);
 
   const cards = [
     {
