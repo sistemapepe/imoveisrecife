@@ -36,9 +36,13 @@ export default function Login() {
       toast.error(error);
     } else {
       toast.success("Login realizado! Redirecionando...");
-      // Reduced delay and ensuring immediate transition
+      // Forçar redirecionamento com site_id se presente na URL original
+      const urlParams = new URLSearchParams(window.location.search);
+      const siteId = urlParams.get('site_id');
+      const target = siteId ? `/admin?site_id=${siteId}` : "/admin";
+      
       startTransition(() => {
-        navigate("/admin", { replace: true });
+        navigate(target, { replace: true });
       });
     }
   };
