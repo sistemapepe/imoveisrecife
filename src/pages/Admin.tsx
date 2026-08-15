@@ -261,7 +261,7 @@ export default function Admin() {
 
         <div className="md:flex md:items-start">
           {/* Vertical sidebar (desktop) */}
-          <aside className="hidden md:flex md:flex-col sticky top-14 self-start h-[calc(100vh-3.5rem)] w-56 shrink-0 border-r border-border bg-card/40 overflow-y-auto py-3">
+          <aside className="hidden md:flex md:flex-col sticky top-14 self-start h-[calc(100vh-3.5rem)] w-56 shrink-0 border-r border-border bg-card/40 overflow-y-auto py-3 transform transition-transform duration-300">
             <nav className="flex flex-col gap-1 px-2">
               {visibleTabs.map((t) => {
                 const Icon = t.icon;
@@ -669,45 +669,51 @@ export default function Admin() {
             <SettingsTab settings={settings} updateSettings={updateSettings} />
           )}
 
-          {tab === "privacy" && canManagePrivacy && (
-            <PrivacyTab settings={settings} updateSettings={updateSettings} />
-          )}
+          <Suspense fallback={<div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+            {tab === "privacy" && canManagePrivacy && (
+              <PrivacyTab settings={settings} updateSettings={updateSettings} />
+            )}
 
-          {tab === "bucket" && canManageBucket && (
-            <BucketAccessTab settings={settings} updateSettings={updateSettings} />
-          )}
+            {tab === "bucket" && canManageBucket && (
+              <BucketAccessTab settings={settings} updateSettings={updateSettings} />
+            )}
 
-          {tab === "users" && canManageUsers && (
-            <UsersTab />
-          )}
+            {tab === "users" && canManageUsers && (
+              <UsersTab />
+            )}
 
-          {tab === "messages" && canViewContacts && (
-            <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
-          )}
+            {tab === "settings" && canManageSettings && (
+              <SettingsTab settings={settings} updateSettings={updateSettings} />
+            )}
 
-          {tab === "analytics" && canViewAnalytics && (
-            <AnalyticsTab />
-          )}
+            {tab === "messages" && canViewContacts && (
+              <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
+            )}
 
-          {tab === "visits" && canViewVisits && (
-            <VisitsTab />
-          )}
+            {tab === "analytics" && canViewAnalytics && (
+              <AnalyticsTab />
+            )}
 
-          {tab === "traffic" && canViewTraffic && (
-            <TrafficTab />
-          )}
+            {tab === "visits" && canViewVisits && (
+              <VisitsTab />
+            )}
 
-          {tab === "seo" && canManageSeo && (
-            <SeoAuditTab />
-          )}
+            {tab === "traffic" && canViewTraffic && (
+              <TrafficTab />
+            )}
 
-          {tab === "import" && canBulkImport && (
-            <BulkImportTab />
-          )}
+            {tab === "seo" && canManageSeo && (
+              <SeoAuditTab />
+            )}
 
-          {tab === "performance" && canViewAnalytics && (
-            <PerformanceTab />
-          )}
+            {tab === "import" && canBulkImport && (
+              <BulkImportTab />
+            )}
+
+            {tab === "performance" && canViewAnalytics && (
+              <PerformanceTab />
+            )}
+          </Suspense>
 
           {tab === "sites" && isSuperAdmin && (
             <Suspense fallback={
