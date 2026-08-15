@@ -180,6 +180,8 @@ export default function SitesTab() {
               if (mainSite) {
                 setDuplicateId(mainSite.id);
                 setNewBrandName("");
+                setNewDomain(window.location.origin);
+
               } else {
                 toast.error("Site original não encontrado para duplicação rápida");
               }
@@ -239,6 +241,8 @@ export default function SitesTab() {
                         onClick={() => {
                           setDuplicateId(site.id);
                           setNewBrandName(`${site.brand_name} (Cópia)`);
+                          setNewDomain(window.location.origin);
+
                         }}
                         className="p-2 rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors opacity-0 group-hover:opacity-100"
                         title="Duplicar Site"
