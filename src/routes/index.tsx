@@ -1,5 +1,5 @@
 /**
- * Preciso que me instrua e responda ok?
+ * quero entender onde consigo gerenciar o site atual e copia dele me explique para que o projeto fique completo
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
