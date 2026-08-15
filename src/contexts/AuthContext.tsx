@@ -167,9 +167,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       if (currentUser) {
         try {
+          setLoading(true);
           await checkRole(currentUser.id);
         } catch (error) {
           logger.error("Error updating auth state", {}, error as Error);
+          setLoading(false);
         } finally {
           if (mounted) {
             setIsInitializing(false);
