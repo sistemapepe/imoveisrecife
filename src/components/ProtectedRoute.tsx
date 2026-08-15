@@ -14,15 +14,23 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
           <div>
             <p className="text-xs text-muted-foreground animate-pulse mb-1">Verificando credenciais...</p>
             <p className="text-[10px] text-muted-foreground/60 max-w-[200px]">
-              Se você ficar preso aqui, verifique sua conexão ou tente recarregar a página.
+              Se você ficar preso aqui por mais de 10 segundos, tente recarregar ou fazer login novamente.
             </p>
           </div>
-          <button 
-            onClick={() => window.location.reload()}
-            className="mt-2 text-[10px] font-bold text-primary hover:underline"
-          >
-            Recarregar agora
-          </button>
+          <div className="flex flex-col gap-2">
+            <button 
+              onClick={() => window.location.reload()}
+              className="text-[10px] font-bold text-primary hover:underline"
+            >
+              Recarregar página
+            </button>
+            <button 
+              onClick={() => window.location.href = "/login"}
+              className="text-[10px] font-bold text-muted-foreground hover:text-foreground hover:underline"
+            >
+              Ir para login
+            </button>
+          </div>
         </div>
       </div>
     );
