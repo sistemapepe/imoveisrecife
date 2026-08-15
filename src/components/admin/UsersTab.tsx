@@ -30,7 +30,7 @@ function roleBadge(role: string) {
   );
 }
 
-export default function UsersTab() {
+export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean }) {
   const { site } = useSite();
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,10 +43,10 @@ export default function UsersTab() {
   const [showPassword, setShowPassword] = useState(false);
 
   const fetchUsers = useCallback(async () => {
-    if (!site) return;
+    if (!site && !isNetwork) return;
     setLoading(true);
     const { data, error } = await supabase.functions.invoke("manage-users", {
-      body: { action: "list", siteId: site.id },
+      body: { action: "list", siteId: isNetwork ? null : site?.id },
     });
     if (error || data?.error) {
       toast.error(data?.error || "Erro ao carregar usuários");
@@ -63,7 +63,7 @@ export default function UsersTab() {
     if (newPassword.length < 6) { toast.error("Senha mínima: 6 caracteres"); return; }
     setCreating(true);
     const { data, error } = await supabase.functions.invoke("manage-users", {
-      body: { action: "create", email: newEmail, password: newPassword, role: newRole, siteId: site?.id },
+      body: { action: "create", email: newEmail, password: newPassword, role: newRole, siteId: isNetwork ? null : site?.id },
     });
     setCreating(false);
     if (error || data?.error) {
@@ -229,10 +229,12 @@ export default function UsersTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {/* Permissions Config */}
-      <div className="mt-8 pt-6 border-t border-border">
-        <PermissionsConfig />
-      </div>
+      {/* Permissions Config - Hidden in Network Admin as it is site-specific */}
+      {!isNetwork && (
+        <div className="mt-8 pt-6 border-t border-border">
+          <PermissionsConfig />
+        </div>
+      )}
     </div>
   );
 }

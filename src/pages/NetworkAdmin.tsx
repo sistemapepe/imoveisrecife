@@ -219,7 +219,7 @@ export default function NetworkAdmin() {
             )}
             
             {tab === "sites" && <SitesTab />}
-            {tab === "users" && <UsersTab />}
+            {tab === "users" && <UsersTab isNetwork={true} />}
             {tab === "analytics" && <AnalyticsTab isNetwork={true} />}
             {tab === "import" && <BulkImportTab />}
             {tab === "security" && <SecurityDiagnosticTab />}
