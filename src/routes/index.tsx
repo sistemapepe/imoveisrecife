@@ -1,7 +1,7 @@
 /**
- * Adicione uma tela em /admin para gerenciar domínios de cada cópia e salvar as configurações de forma editável.
+ * Add a /admin screen to manage domains for each copied site and make it fully editable.
  * 
- * Melhore a navegação do painel admin com breadcrumbs e atalhos rápidos para Sites, duplicar e editar, para eu encontrar tudo mais facilmente.
+ * Implement saving and loading of domain configuration per site copy so changes persist across sessions.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
