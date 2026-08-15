@@ -119,41 +119,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) throw error;
 
-      if (!data || data.length === 0) {
-        setRole("user");
-        setLoading(false);
-        return;
-      }
-
       let selectedRole: AppRole = "user";
 
-      // 1. Prioridade máxima: verificar se é super_admin em QUALQUER site
-      // Isso garante que o dono do sistema nunca fique preso por site_id
-      const hasSuperAdmin = data.some(r => r.role === "super_admin");
-      
-      if (hasSuperAdmin) {
-        selectedRole = "super_admin";
-      } else if (site?.id) {
-        // 2. Se não for super_admin, tenta encontrar o papel específico para este site_id
-        const siteSpecific = data.find(r => r.site_id === site.id);
-        if (siteSpecific) {
-          selectedRole = siteSpecific.role as AppRole;
+      if (!data || data.length === 0) {
+        logger.warn("No roles found for user", { userId });
+      } else {
+        // 1. Prioridade máxima: verificar se é super_admin em QUALQUER site
+        const hasSuperAdmin = data.some(r => r.role === "super_admin");
+        
+        if (hasSuperAdmin) {
+          selectedRole = "super_admin";
+        } else if (site?.id) {
+          // 2. Se não for super_admin, tenta encontrar o papel específico para este site_id
+          const siteSpecific = data.find(r => r.site_id === site.id);
+          if (siteSpecific) {
+            selectedRole = siteSpecific.role as AppRole;
+          } else {
+            // Se não tem papel no site atual, mas tem outros papéis, pegamos o primeiro (fallback)
+            selectedRole = data[0].role as AppRole;
+          }
+        } else {
+          // 3. Fallback: Pega o primeiro papel disponível
+          selectedRole = data[0].role as AppRole;
         }
-      }
-
-      // 3. Fallback: Se não encontrou nada no site atual e não é super_admin, pega o primeiro papel
-      if (selectedRole === "user" && data.length > 0 && !hasSuperAdmin) {
-        selectedRole = data[0].role as AppRole;
       }
 
       logger.info("Role determined", { userId, role: selectedRole, siteId: site?.id });
       
       setRole(selectedRole);
       await loadPermissions(selectedRole);
-      setLoading(false);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
+    } finally {
       setLoading(false);
     }
   }, [site?.id, loadPermissions]);
