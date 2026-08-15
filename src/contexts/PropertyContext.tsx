@@ -203,11 +203,20 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lastFetched, setLastFetched] = useState<number>(0);
   const { user } = useAuth();
   const { site } = useSite();
 
-  const fetchProperties = useCallback(async () => {
+  const CACHE_TTL = 30000; // 30 segundos de cache para listagens
+
+  const fetchProperties = useCallback(async (force = false) => {
     if (!site) return;
+    
+    const now = Date.now();
+    if (!force && properties.length > 0 && now - lastFetched < CACHE_TTL) {
+      return;
+    }
+
     // Limit fetching to 100 most recent properties for general overview performance
     const query = supabase.from("properties").select("*").limit(100);
     const { data, error } = await (query as any)
@@ -220,9 +229,10 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         status: (p.status || "disponivel") as PropertyStatus,
         images: p.images.length > 0 ? p.images : [localImages[i % localImages.length]],
       })));
+      setLastFetched(now);
     }
     setLoading(false);
-  }, [site]);
+  }, [site, properties.length, lastFetched]);
 
   const fetchSettings = useCallback(async () => {
     if (!site) return;
@@ -331,19 +341,19 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       site_id: site.id
     } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
-    await fetchProperties();
+    await fetchProperties(true);
   };
 
   const updateProperty = async (id: string, updates: Partial<Property>) => {
     const { error } = await supabase.from("properties").update(updates).eq("id", id);
     if (error) { toast.error("Erro ao atualizar: " + error.message); return; }
-    await fetchProperties();
+    await fetchProperties(true);
   };
 
   const deleteProperty = async (id: string) => {
     const { error } = await supabase.from("properties").delete().eq("id", id);
     if (error) { toast.error("Erro ao remover: " + error.message); return; }
-    await fetchProperties();
+    await fetchProperties(true);
   };
 
   const updateSettings = async (s: Partial<SiteSettings>) => {
