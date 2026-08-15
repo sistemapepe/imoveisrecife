@@ -180,7 +180,8 @@ export default function Index() {
         description={`${settings.brandName} — Imóveis de alto padrão em Recife e região. Encontre casas, apartamentos, coberturas e terrenos exclusivos com atendimento personalizado.`}
         jsonLd={homeJsonLd}
       />
-      <AnimatePresence mode="wait">
+      <div className="contents">
+        <AnimatePresence mode="wait">
         {loading ? (
           <motion.div
             key="skeleton"
@@ -192,21 +193,21 @@ export default function Index() {
           >
             {/* Skeleton Nav */}
             <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-2 border-b border-card/10 max-w-screen-lg mx-auto bg-luxury-dark h-16">
-              <div className="w-10 h-10 rounded-full bg-card/10 animate-pulse" />
-              <div className="h-10 w-40 rounded bg-card/10 animate-pulse" />
+              <div className="w-10 h-10 rounded-full bg-card/10 " />
+              <div className="h-10 w-40 rounded bg-card/10 " />
               <div className="w-10" />
             </nav>
 
             {/* Skeleton Hero - Fixed Aspect Ratio to prevent layout shift */}
-            <section className="relative h-[calc(100svh-220px)] md:h-[85vh] w-full shrink-0 overflow-hidden bg-card/5 animate-pulse">
+            <section className="relative h-[calc(100svh-220px)] md:h-[85vh] w-full shrink-0 overflow-hidden bg-card/5 ">
               <div className="absolute inset-0 bg-gradient-to-t from-luxury-dark via-transparent to-transparent" />
               <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 px-8 gap-4">
-                <div className="h-10 w-64 rounded bg-card/10 animate-pulse" />
-                <div className="h-8 w-48 rounded bg-card/10 animate-pulse" />
-                <div className="h-12 w-40 rounded-full border-2 border-card/10 animate-pulse mt-2" />
+                <div className="h-10 w-64 rounded bg-card/10 " />
+                <div className="h-8 w-48 rounded bg-card/10 " />
+                <div className="h-12 w-40 rounded-full border-2 border-card/10  mt-2" />
                 <div className="flex gap-2 mt-4">
                   {[0, 1, 2].map((i) => (
-                    <div key={i} className={`h-1 rounded-full bg-card/10 animate-pulse ${i === 0 ? "w-8" : "w-2"}`} />
+                    <div key={i} className={`h-1 rounded-full bg-card/10  ${i === 0 ? "w-8" : "w-2"}`} />
                   ))}
                 </div>
               </div>
@@ -216,22 +217,22 @@ export default function Index() {
             <section className="relative -mt-12 z-10 bg-luxury-dark rounded-t-xl pb-8">
               <div className="px-6 pt-8 pb-4 flex justify-between items-end">
                 <div>
-                  <div className="h-3 w-20 rounded bg-card/10 animate-pulse mb-2" />
-                  <div className="h-7 w-32 rounded bg-card/10 animate-pulse" />
+                  <div className="h-3 w-20 rounded bg-card/10  mb-2" />
+                  <div className="h-7 w-32 rounded bg-card/10 " />
                 </div>
-                <div className="h-4 w-20 rounded bg-card/10 animate-pulse" />
+                <div className="h-4 w-20 rounded bg-card/10 " />
               </div>
               <div className="flex overflow-x-auto hide-scrollbar gap-5 px-6 pb-6">
                 {[0, 1].map((i) => (
                   <div key={i} className="flex flex-col min-w-[280px] bg-luxury-dark-lighter/40 rounded-xl overflow-hidden border border-card/5">
-                    <div className="w-full aspect-[4/3] bg-card/10 animate-pulse" />
+                    <div className="w-full aspect-[4/3] bg-card/10 " />
                     <div className="p-5 space-y-3">
-                      <div className="h-5 w-28 rounded bg-card/10 animate-pulse" />
-                      {settings.showLocationOnCard && <div className="h-4 w-40 rounded bg-card/10 animate-pulse" />}
+                      <div className="h-5 w-28 rounded bg-card/10 " />
+                      {settings.showLocationOnCard && <div className="h-4 w-40 rounded bg-card/10 " />}
                       <div className="flex gap-4">
-                        <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
-                        <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
-                        <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
+                        <div className="h-3 w-14 rounded bg-card/10 " />
+                        <div className="h-3 w-14 rounded bg-card/10 " />
+                        <div className="h-3 w-14 rounded bg-card/10 " />
                       </div>
                     </div>
                   </div>
@@ -625,7 +626,8 @@ export default function Index() {
             </section>
           </motion.div>
         )}
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </PageTransition>
   );
 }

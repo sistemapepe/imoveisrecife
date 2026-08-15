@@ -207,7 +207,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const { site } = useSite();
 
-  const CACHE_TTL = 30000; // 30 segundos de cache para listagens
+  const CACHE_TTL = 60000; // 60 segundos de cache para listagens
 
   const fetchProperties = useCallback(async (force = false) => {
     if (!site) return;
@@ -218,9 +218,10 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     }
 
     // Limit fetching to 100 most recent properties for general overview performance
-    const query = supabase.from("properties").select("*").limit(100);
+    const query = supabase.from("properties").select("*").limit(50);
     const { data, error } = await (query as any)
       .eq("site_id", site.id)
+      .eq("status", "disponivel")
       .order("created_at", { ascending: false });
       
     if (data && !error) {

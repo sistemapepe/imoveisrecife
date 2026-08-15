@@ -666,6 +666,7 @@ export type Database = {
           referrer_domain: string
           referrer_url: string
           session_id: string
+          site_id: string | null
           social_network: string
           source: string
           term: string
@@ -691,6 +692,7 @@ export type Database = {
           referrer_domain?: string
           referrer_url?: string
           session_id?: string
+          site_id?: string | null
           social_network?: string
           source?: string
           term?: string
@@ -716,6 +718,7 @@ export type Database = {
           referrer_domain?: string
           referrer_url?: string
           session_id?: string
+          site_id?: string | null
           social_network?: string
           source?: string
           term?: string
@@ -727,6 +730,13 @@ export type Database = {
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "traffic_events_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
             referencedColumns: ["id"]
           },
         ]
