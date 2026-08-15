@@ -1,24 +1,24 @@
 import { useState, useEffect, useCallback, useTransition, Suspense, lazy } from "react";
-import SettingsTab from "@/components/admin/SettingsTab";
-import UsersTab from "@/components/admin/UsersTab";
-import MessagesTab from "@/components/admin/MessagesTab";
-import PrivacyTab from "@/components/admin/PrivacyTab";
+import { supabase } from "@/integrations/supabase/client";
+import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Globe2, Shield } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
-import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
 import PageTransition from "@/components/PageTransition";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
-import DashboardTab from "@/components/admin/DashboardTab";
-import BucketAccessTab from "@/components/admin/BucketAccessTab";
+const DashboardTab = lazy(() => import("@/components/admin/DashboardTab"));
+const BucketAccessTab = lazy(() => import("@/components/admin/BucketAccessTab"));
+const SettingsTab = lazy(() => import("@/components/admin/SettingsTab"));
+const UsersTab = lazy(() => import("@/components/admin/UsersTab"));
+const MessagesTab = lazy(() => import("@/components/admin/MessagesTab"));
+const PrivacyTab = lazy(() => import("@/components/admin/PrivacyTab"));
 
 type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites" | "security";
 
@@ -261,7 +261,7 @@ export default function Admin() {
 
         <div className="md:flex md:items-start">
           {/* Vertical sidebar (desktop) */}
-          <aside className="hidden md:flex md:flex-col sticky top-14 self-start h-[calc(100vh-3.5rem)] w-56 shrink-0 border-r border-border bg-card/40 overflow-y-auto py-3">
+          <aside className="hidden md:flex md:flex-col sticky top-14 self-start h-[calc(100vh-3.5rem)] w-56 shrink-0 border-r border-border bg-card/40 overflow-y-auto py-3 transform transition-transform duration-300">
             <nav className="flex flex-col gap-1 px-2">
               {visibleTabs.map((t) => {
                 const Icon = t.icon;
@@ -291,9 +291,11 @@ export default function Admin() {
 
           <main className="flex-1 min-w-0 p-4">
 
-          {tab === "dashboard" && (
-            <DashboardTab onNavigate={(t) => switchTab(t)} />
-          )}
+          <Suspense fallback={<div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+            {tab === "dashboard" && (
+              <DashboardTab onNavigate={(t) => switchTab(t)} />
+            )}
+          </Suspense>
 
           {tab === "properties" && !editing && !creating && (
             <div className="space-y-4">
@@ -667,45 +669,51 @@ export default function Admin() {
             <SettingsTab settings={settings} updateSettings={updateSettings} />
           )}
 
-          {tab === "privacy" && canManagePrivacy && (
-            <PrivacyTab settings={settings} updateSettings={updateSettings} />
-          )}
+          <Suspense fallback={<div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+            {tab === "privacy" && canManagePrivacy && (
+              <PrivacyTab settings={settings} updateSettings={updateSettings} />
+            )}
 
-          {tab === "bucket" && canManageBucket && (
-            <BucketAccessTab settings={settings} updateSettings={updateSettings} />
-          )}
+            {tab === "bucket" && canManageBucket && (
+              <BucketAccessTab settings={settings} updateSettings={updateSettings} />
+            )}
 
-          {tab === "users" && canManageUsers && (
-            <UsersTab />
-          )}
+            {tab === "users" && canManageUsers && (
+              <UsersTab />
+            )}
 
-          {tab === "messages" && canViewContacts && (
-            <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
-          )}
+            {tab === "settings" && canManageSettings && (
+              <SettingsTab settings={settings} updateSettings={updateSettings} />
+            )}
 
-          {tab === "analytics" && canViewAnalytics && (
-            <AnalyticsTab />
-          )}
+            {tab === "messages" && canViewContacts && (
+              <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
+            )}
 
-          {tab === "visits" && canViewVisits && (
-            <VisitsTab />
-          )}
+            {tab === "analytics" && canViewAnalytics && (
+              <AnalyticsTab />
+            )}
 
-          {tab === "traffic" && canViewTraffic && (
-            <TrafficTab />
-          )}
+            {tab === "visits" && canViewVisits && (
+              <VisitsTab />
+            )}
 
-          {tab === "seo" && canManageSeo && (
-            <SeoAuditTab />
-          )}
+            {tab === "traffic" && canViewTraffic && (
+              <TrafficTab />
+            )}
 
-          {tab === "import" && canBulkImport && (
-            <BulkImportTab />
-          )}
+            {tab === "seo" && canManageSeo && (
+              <SeoAuditTab />
+            )}
 
-          {tab === "performance" && canViewAnalytics && (
-            <PerformanceTab />
-          )}
+            {tab === "import" && canBulkImport && (
+              <BulkImportTab />
+            )}
+
+            {tab === "performance" && canViewAnalytics && (
+              <PerformanceTab />
+            )}
+          </Suspense>
 
           {tab === "sites" && isSuperAdmin && (
             <Suspense fallback={

@@ -208,7 +208,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
 
   const fetchProperties = useCallback(async () => {
     if (!site) return;
-    const query = supabase.from("properties").select("*");
+    // Limit fetching to 100 most recent properties for general overview performance
+    const query = supabase.from("properties").select("*").limit(100);
     const { data, error } = await (query as any)
       .eq("site_id", site.id)
       .order("created_at", { ascending: false });

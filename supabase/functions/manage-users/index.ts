@@ -52,9 +52,9 @@ serve(async (req) => {
             role: row.role as any,
             permission: row.permission,
             enabled: row.enabled,
-            site_id: siteId
+            site_id: siteId || null
           }, { 
-            onConflict: "role,permission,site_id" 
+            onConflict: siteId ? "role,permission,site_id" : "role,permission" 
           });
         if (error) {
           console.error("Erro no upsert:", error);
