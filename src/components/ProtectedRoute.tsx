@@ -6,7 +6,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   const { user, loading, isInitializing, role } = useAuth();
   const location = useLocation();
 
-  if (isInitializing || (loading && !user)) {
+  if (isInitializing || loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4 px-6 text-center">
@@ -14,7 +14,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
           <div>
             <p className="text-xs text-muted-foreground animate-pulse mb-1">Verificando credenciais...</p>
             <p className="text-[10px] text-muted-foreground/60 max-w-[200px]">
-              Se você ficar preso aqui por mais de 10 segundos, tente recarregar ou fazer login novamente.
+              Se você ficar preso aqui por mais de 5 segundos, tente recarregar ou fazer login novamente.
             </p>
           </div>
           <div className="flex flex-col gap-2">
