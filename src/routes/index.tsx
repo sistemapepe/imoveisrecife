@@ -1,5 +1,6 @@
 /**
- * quero entender onde consigo gerenciar o site atual e copia dele me explique para que o projeto fique completo
+ * Implemente um fluxo de Publicar/Atualizar para cada site copiado, com confirmação e status de publicação visível na aba Sites.
+ * Adicione um botão de pré-visualização para eu ver o site antes de publicar, abrindo um preview em nova aba.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
