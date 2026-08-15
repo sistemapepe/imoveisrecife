@@ -52,15 +52,18 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
 
       try {
         const fetchC = async () => {
-          const { count } = await supabase.from("contact_messages").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek);
+          const { count, error } = await (supabase.from("contact_messages").select("id", { count: "exact", head: true }) as any).eq("site_id", site.id).gte("created_at", isoWeek);
+          if (error) throw error;
           return count ?? 0;
         };
         const fetchV = async () => {
-          const { count } = await supabase.from("visit_requests").select("id", { count: "exact", head: true }).eq("site_id", site.id).eq("status", "pending");
+          const { count, error } = await (supabase.from("visit_requests").select("id", { count: "exact", head: true }) as any).eq("site_id", site.id).eq("status", "pending");
+          if (error) throw error;
           return count ?? 0;
         };
         const fetchW = async () => {
-          const { count } = await supabase.from("property_views").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek);
+          const { count, error } = await (supabase.from("property_views").select("id", { count: "exact", head: true }) as any).eq("site_id", site.id).gte("created_at", isoWeek);
+          if (error) throw error;
           return count ?? 0;
         };
 
