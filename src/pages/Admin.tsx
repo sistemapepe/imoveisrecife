@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useTransition, Suspense, lazy } from "react";
-import SettingsTab from "@/components/admin/SettingsTab";
-import UsersTab from "@/components/admin/UsersTab";
-import MessagesTab from "@/components/admin/MessagesTab";
-import PrivacyTab from "@/components/admin/PrivacyTab";
+import { supabase } from "@/integrations/supabase/client";
+import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Globe2, Shield } from "lucide-react";
 import BackButton from "@/components/BackButton";
@@ -17,8 +17,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
-import DashboardTab from "@/components/admin/DashboardTab";
-import BucketAccessTab from "@/components/admin/BucketAccessTab";
+const DashboardTab = lazy(() => import("@/components/admin/DashboardTab"));
+const BucketAccessTab = lazy(() => import("@/components/admin/BucketAccessTab"));
+const SettingsTab = lazy(() => import("@/components/admin/SettingsTab"));
+const UsersTab = lazy(() => import("@/components/admin/UsersTab"));
+const MessagesTab = lazy(() => import("@/components/admin/MessagesTab"));
+const PrivacyTab = lazy(() => import("@/components/admin/PrivacyTab"));
 
 type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites" | "security";
 
@@ -291,9 +295,11 @@ export default function Admin() {
 
           <main className="flex-1 min-w-0 p-4">
 
-          {tab === "dashboard" && (
-            <DashboardTab onNavigate={(t) => switchTab(t)} />
-          )}
+          <Suspense fallback={<div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+            {tab === "dashboard" && (
+              <DashboardTab onNavigate={(t) => switchTab(t)} />
+            )}
+          </Suspense>
 
           {tab === "properties" && !editing && !creating && (
             <div className="space-y-4">

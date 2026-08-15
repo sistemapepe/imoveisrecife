@@ -76,7 +76,6 @@ export default function PermissionsConfig() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Incluir super_admin para garantir que ele tenha tudo habilitado no banco
       const rolesToSave = [
         { value: "super_admin", label: "Super Admin" },
         ...CONFIGURABLE_ROLES
@@ -84,22 +83,27 @@ export default function PermissionsConfig() {
 
       const rows = rolesToSave.flatMap((role) =>
         PERMISSIONS.map((perm) => ({
-          role: role.value as "admin" | "corretor" | "super_admin" | "supervisor" | "user",
+          role: role.value,
           permission: perm.key,
           enabled: role.value === "super_admin" ? true : getEnabled(role.value, perm.key),
         }))
       );
 
-      const { error } = await supabase.rpc("save_role_perms", {
-        p_rows: rows
+      // Usando a Edge Function manage-users para salvar permissões (bypass RLS/Direct RPC issues)
+      const { data, error } = await supabase.functions.invoke("manage-users", {
+        body: { 
+          action: "update_perms", 
+          perms: rows,
+          siteId: null // Global permissions or specific site if needed
+        },
       });
       
-      if (error) throw error;
+      if (error || data?.error) throw new Error(data?.error || error?.message || "Erro desconhecido ao salvar");
       
-      toast.success("Permissões salvas!");
-    } catch (err) {
+      toast.success("Permissões salvas com sucesso!");
+    } catch (err: any) {
       console.error("Erro ao salvar permissões:", err);
-      toast.error("Erro ao salvar permissões persiste\n\nna consigo salvar alteracao em equipe> painel super admim");
+      toast.error(`Falha ao salvar permissões: ${err.message || "Tente novamente mais tarde."}`);
     }
     setSaving(false);
   };
