@@ -127,21 +127,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       let selectedRole: AppRole = "user";
 
-      // 1. If we have a matching site_id, use that.
-      if (site?.id) {
+      // 1. Prioridade máxima: verificar se é super_admin em QUALQUER site
+      // Isso garante que o dono do sistema nunca fique preso por site_id
+      const hasSuperAdmin = data.some(r => r.role === "super_admin");
+      
+      if (hasSuperAdmin) {
+        selectedRole = "super_admin";
+      } else if (site?.id) {
+        // 2. Se não for super_admin, tenta encontrar o papel específico para este site_id
         const siteSpecific = data.find(r => r.site_id === site.id);
         if (siteSpecific) {
           selectedRole = siteSpecific.role as AppRole;
         }
       }
 
-      // 2. Fallback: if no site-specific role, or we want to allow cross-site super_admin access
-      // Check if user has a super_admin role anywhere.
-      const hasSuperAdmin = data.some(r => r.role === "super_admin");
-      if (hasSuperAdmin) {
-        selectedRole = "super_admin";
-      } else if (selectedRole === "user" && data.length > 0) {
-        // Just pick the first one if no match and no super_admin
+      // 3. Fallback: Se não encontrou nada no site atual e não é super_admin, pega o primeiro papel
+      if (selectedRole === "user" && data.length > 0 && !hasSuperAdmin) {
         selectedRole = data[0].role as AppRole;
       }
 
