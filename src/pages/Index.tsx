@@ -180,7 +180,8 @@ export default function Index() {
         description={`${settings.brandName} — Imóveis de alto padrão em Recife e região. Encontre casas, apartamentos, coberturas e terrenos exclusivos com atendimento personalizado.`}
         jsonLd={homeJsonLd}
       />
-      <AnimatePresence mode="wait">
+      <div className="contents">
+        <AnimatePresence mode="wait">
         {loading ? (
           <motion.div
             key="skeleton"
@@ -625,7 +626,8 @@ export default function Index() {
             </section>
           </motion.div>
         )}
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </PageTransition>
   );
 }
