@@ -1,5 +1,5 @@
 /**
- * apresenta ese dominio porem ainda nao configurei correto precis abrir o site editavel e depois que publicar finalizar sim subir o dominio correto esseaqui que aparece com erro e nao consigo editar o novo site ou seja a copia https://realimobg/admin
+ * como editar o novo site copiado?
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
