@@ -155,7 +155,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       setIsInitializing(false);
     }
-    }
   }, [site?.id, siteLoading, loadPermissions]);
 
   useEffect(() => {
