@@ -1,5 +1,5 @@
 /**
- * como editar o novo site copiado?
+ * Preciso que me instrua e responda ok?
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
