@@ -225,22 +225,41 @@ export default function SitesTab() {
                       </button>
                     </div>
                   )}
-                  {site.is_active ? (
-                    <span className="flex items-center gap-1 text-[10px] font-bold text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full uppercase">
-                      <CheckCircle2 className="h-3 w-3" /> Ativo
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-full uppercase">
-                      <XCircle className="h-3 w-3" /> Inativo
-                    </span>
-                  )}
+                  <div className="flex flex-col items-end gap-1">
+                    {site.is_active ? (
+                      <span className="flex items-center gap-1 text-[9px] font-bold text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full uppercase">
+                        <CheckCircle2 className="h-3 w-3" /> Ativo
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1 text-[9px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-full uppercase">
+                        <XCircle className="h-3 w-3" /> Inativo
+                      </span>
+                    )}
+                    
+                    {site.publish_status === 'published' ? (
+                      <span className="flex items-center gap-1 text-[9px] font-bold text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded-full uppercase">
+                        <Rocket className="h-3 w-3" /> Publicado
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1 text-[9px] font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full uppercase">
+                        <Clock className="h-3 w-3" /> Rascunho
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
               
               <div>
-                <h3 className="font-bold text-lg">{site.brand_name}</h3>
-                <p className="text-sm text-muted-foreground font-mono">{site.domain}</p>
+                <h3 className="font-bold text-lg leading-tight">{site.brand_name}</h3>
+                <p className="text-xs text-muted-foreground font-mono truncate">{site.domain}</p>
               </div>
+
+              {site.last_published_at && (
+                <div className="text-[10px] text-muted-foreground/60 flex items-center gap-1">
+                  <CheckCircle2 className="h-2.5 w-2.5 text-green-500" />
+                  Última publicação: {new Date(site.last_published_at).toLocaleString()}
+                </div>
+              )}
 
               <div className="pt-2 border-t border-border/50 flex flex-col gap-2">
                 <div className="flex justify-between items-center text-[10px] text-muted-foreground">
