@@ -290,17 +290,22 @@ export default function Admin() {
                     onMouseEnter={() => {
                       // Prefetch the component on hover
                       const loader = componentMap[t.key] as any;
-                      if (loader?._result === undefined && typeof loader === 'function') {
-                        try { loader(); } catch(e) {}
+                      if (loader && typeof loader === 'function') {
+                        try { 
+                          // React lazy components have a _payload or similar if we want to be deep, 
+                          // but just calling the factory function triggers the dynamic import.
+                          const factory = (loader as any)._payload?._result || loader;
+                          if (typeof factory === 'function') factory(); 
+                        } catch(e) {}
                       }
                     }}
-                    className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+                    className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
                       active
-                        ? "bg-primary/15 text-primary border-l-2 border-primary"
+                        ? "bg-primary/15 text-primary border-l-2 border-primary translate-x-1"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/60 border-l-2 border-transparent"
                     }`}
                   >
-                    <Icon className="h-4 w-4 shrink-0" />
+                    <Icon className={`h-4 w-4 shrink-0 transition-transform ${active ? "scale-110" : "group-hover:scale-110"}`} />
                     <span className="truncate flex-1 text-left">{t.label}</span>
                     {!!t.badge && t.badge > 0 && (
                       <span className="h-4 min-w-[16px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
