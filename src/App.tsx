@@ -30,6 +30,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const Login = lazy(() => import("./pages/Login"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const NetworkAdmin = lazy(() => import("./pages/NetworkAdmin"));
 const CookieConsent = lazy(() => import("./components/CookieConsent"));
 
 // Loading fallback component
@@ -69,6 +70,7 @@ function AppContent() {
             <Route path="/contato" element={<Contact />} />
             <Route path="/favoritos" element={<Favorites />} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+            <Route path="/network-admin" element={<ProtectedRoute><NetworkAdmin /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/privacidade" element={<PrivacyPolicy />} />
             <Route path="/plano" element={<ProjectPlan />} />

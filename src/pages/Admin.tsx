@@ -20,10 +20,9 @@ const UsersTab = lazy(() => import("@/components/admin/UsersTab"));
 const MessagesTab = lazy(() => import("@/components/admin/MessagesTab"));
 const PrivacyTab = lazy(() => import("@/components/admin/PrivacyTab"));
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites" | "security";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security";
 
 // Lazy loaded for performance optimization
-const SitesTab = lazy(() => import("@/components/admin/SitesTab"));
 const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
 const AnalyticsTab = lazy(() => import("@/components/admin/AnalyticsTab"));
 const VisitsTab = lazy(() => import("@/components/admin/VisitsTab"));
@@ -201,7 +200,6 @@ export default function Admin() {
     { key: "settings", label: "Configurações", icon: Settings, show: !!canManageSettings },
     { key: "bucket", label: "Imagens (Acesso)", icon: ImageIcon, show: !!canManageBucket },
     { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
-    { key: "sites", label: "Sites", icon: Globe2, show: isSuperAdmin },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
     { key: "security", label: "Segurança", icon: Shield, show: true },
   ];
@@ -273,7 +271,6 @@ export default function Admin() {
                   users: UsersTab,
                   messages: MessagesTab,
                   privacy: PrivacyTab,
-                  sites: SitesTab,
                   security: SecurityDiagnosticTab,
                   analytics: AnalyticsTab,
                   visits: VisitsTab,
