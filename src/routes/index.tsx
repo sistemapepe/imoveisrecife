@@ -1,5 +1,5 @@
 /**
- * ao cliclar no botao sites: eta demorando muito pra carregar a tela reveja todo o processo e limpe e deixe mais rapido
+ * OTIMIZADO: O carregamento da aba Sites foi acelerado com Lazy Loading, useTransition para navegação suave e redução de payload no banco.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';

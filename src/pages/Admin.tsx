@@ -25,8 +25,8 @@ import SeoAuditTab from "@/components/admin/SeoAuditTab";
 import BucketAccessTab from "@/components/admin/BucketAccessTab";
 import BulkImportTab from "@/components/admin/BulkImportTab";
 import PerformanceTab from "@/components/admin/PerformanceTab";
-import SitesTab from "@/components/admin/SitesTab";
-import SecurityDiagnosticTab from "@/components/admin/SecurityDiagnosticTab";
+const SitesTab = lazy(() => import("@/components/admin/SitesTab"));
+const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
 
 type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites" | "security";
 
@@ -66,6 +66,7 @@ export default function Admin() {
   const [generatingSeo, setGeneratingSeo] = useState(false);
   const [cepLoading, setCepLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const DEFAULT_CATEGORIES = ["Venda", "Locação", "Temporada", "Repasse"];
   const [categories, setCategories] = useState<string[]>(() => {
@@ -205,11 +206,13 @@ export default function Admin() {
   const visibleTabs = allTabs.filter((t) => t.show);
 
   const switchTab = (newTab: Tab) => {
-    setTab(newTab);
-    setEditing(null);
-    setCreating(false);
-    if (newTab === "messages") setNewMsgCount(0);
-    setMobileMenuOpen(false);
+    startTransition(() => {
+      setTab(newTab);
+      setEditing(null);
+      setCreating(null);
+      if (newTab === "messages") setNewMsgCount(0);
+      setMobileMenuOpen(false);
+    });
   };
 
   const currentTabLabel = visibleTabs.find((t) => t.key === tab)?.label ?? "Painel";
