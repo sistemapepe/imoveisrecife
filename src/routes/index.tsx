@@ -1,9 +1,7 @@
 /**
- * Implemente a tela de Gerenciar Sites (Domínios) para criar, editar e remover múltiplas instâncias da plataforma com persistência no banco.
+ * Adicione um histórico/auditoria na área admin mostrando quem alterou dados de sites (domínios e configurações) e quando.
  * 
- * Adicione um fluxo para eu editar a configuração de cada instância existente sem precisar criar novas cópias.
- * 
- * Garanta que o app resolva automaticamente hostname para site_id e aplique isso antes do guard liberar qualquer rota do /admin.
+ * Implemente uma matriz de permissões que limite o acesso de admin e super_admin por site_id, bloqueando rotas quando o site não corresponder.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
