@@ -112,9 +112,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
       
-      if (!site?.id && !siteLoading) {
-        // Se o site ainda não carregou ou não foi encontrado, esperamos um pouco ou falhamos graciosamente
-        logger.warn("Site not resolved yet in checkRole");
+      if (!site?.id && siteLoading) {
+        logger.warn("Site not resolved yet in checkRole, awaiting site data...");
+        return; // Don't finalize loading until site is ready
       }
       
       const { data, error } = await supabase
@@ -169,10 +169,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(currentUser);
       
       if (currentUser) {
-        if (!siteLoading) {
-          setLoading(true);
-          await checkRole(currentUser.id);
-        }
+        setLoading(true);
+        await checkRole(currentUser.id);
       } else {
         setRole(null);
         setLoading(false);
@@ -181,8 +179,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     const initAuth = async () => {
-      if (siteLoading) return;
-      
+      // Always try to load user even if site is loading
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!mounted) return;
