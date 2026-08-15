@@ -4,7 +4,7 @@ import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyCon
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Globe2, Shield } from "lucide-react";
+import { ArrowLeft, ArrowRight, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Globe2, Shield } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
 import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
@@ -20,10 +20,9 @@ const UsersTab = lazy(() => import("@/components/admin/UsersTab"));
 const MessagesTab = lazy(() => import("@/components/admin/MessagesTab"));
 const PrivacyTab = lazy(() => import("@/components/admin/PrivacyTab"));
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites" | "security";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security";
 
 // Lazy loaded for performance optimization
-const SitesTab = lazy(() => import("@/components/admin/SitesTab"));
 const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
 const AnalyticsTab = lazy(() => import("@/components/admin/AnalyticsTab"));
 const VisitsTab = lazy(() => import("@/components/admin/VisitsTab"));
@@ -201,13 +200,20 @@ export default function Admin() {
     { key: "settings", label: "Configurações", icon: Settings, show: !!canManageSettings },
     { key: "bucket", label: "Imagens (Acesso)", icon: ImageIcon, show: !!canManageBucket },
     { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
-    { key: "sites", label: "Sites", icon: Globe2, show: isSuperAdmin },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
     { key: "security", label: "Segurança", icon: Shield, show: true },
   ];
-  const visibleTabs = allTabs.filter((t) => t.show);
+  const networkTabs: { key: string; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = isSuperAdmin ? [
+    { key: "sites", label: "Sites", icon: Globe2, show: true }
+  ] : [];
+  
+  const visibleTabs = [...allTabs.filter((t) => t.show), ...networkTabs];
 
-  const switchTab = (newTab: Tab) => {
+  const switchTab = (newTab: any) => {
+    if (newTab === 'sites') {
+      navigate("/network-admin");
+      return;
+    }
     startTransition(() => {
       setTab(newTab);
       setEditing(null);
@@ -273,7 +279,6 @@ export default function Admin() {
                   users: UsersTab,
                   messages: MessagesTab,
                   privacy: PrivacyTab,
-                  sites: SitesTab,
                   security: SecurityDiagnosticTab,
                   analytics: AnalyticsTab,
                   visits: VisitsTab,
@@ -282,6 +287,20 @@ export default function Admin() {
                   import: BulkImportTab,
                   seo: SeoAuditTab,
                 };
+
+                if (t.key === 'sites' && isSuperAdmin) {
+                  return (
+                    <button
+                      key={t.key}
+                      onClick={() => navigate("/network-admin")}
+                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-accent hover:bg-accent/10 border-l-2 border-transparent transition-all"
+                    >
+                      <Icon className="h-4 w-4 shrink-0" />
+                      <span className="truncate flex-1 text-left">{t.label} (Rede)</span>
+                      <ArrowRight className="h-3 w-3 opacity-50" />
+                    </button>
+                  );
+                }
 
                 return (
                   <button
@@ -744,25 +763,6 @@ export default function Admin() {
             )}
           </Suspense>
 
-          {tab === "sites" && isSuperAdmin && (
-            <Suspense fallback={
-              <div className="space-y-6">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="space-y-2">
-                    <div className="h-8 w-64 bg-muted animate-pulse rounded-lg"></div>
-                    <div className="h-4 w-48 bg-muted animate-pulse rounded"></div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="h-48 bg-muted animate-pulse rounded-xl border border-border"></div>
-                  ))}
-                </div>
-              </div>
-            }>
-              <SitesTab />
-            </Suspense>
-          )}
 
           {tab === "security" && (
             <Suspense fallback={<div className="p-8 text-center animate-pulse text-muted-foreground italic">Carregando diagnóstico...</div>}>

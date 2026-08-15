@@ -21,6 +21,7 @@ import { useWebVitals } from "@/hooks/useWebVitals";
 // Lazy loading rotas com prefetching inteligente
 const Index = lazy(() => import("./pages/Index"));
 const ProjectPlan = lazy(() => import("./routes/index"));
+const NetworkAdmin = lazy(() => import("./pages/NetworkAdmin"));
 const SearchResults = lazy(() => import("./pages/SearchResults").then(module => ({ default: module.default })));
 const PropertyDetail = lazy(() => import("./pages/PropertyDetail").then(module => ({ default: module.default })));
 const Filters = lazy(() => import("./pages/Filters"));
@@ -69,6 +70,7 @@ function AppContent() {
             <Route path="/contato" element={<Contact />} />
             <Route path="/favoritos" element={<Favorites />} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+            <Route path="/network-admin" element={<ProtectedRoute><NetworkAdmin /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/privacidade" element={<PrivacyPolicy />} />
             <Route path="/plano" element={<ProjectPlan />} />

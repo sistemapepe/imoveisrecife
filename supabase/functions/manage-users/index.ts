@@ -92,9 +92,19 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const { data: roles } = await supabaseAdmin.from("user_roles").select("*").eq("site_id", siteId);
+      const query = supabaseAdmin.from("user_roles").select("*");
+      if (siteId) {
+        query.eq("site_id", siteId);
+      } else {
+        query.or("site_id.is.null,site_id.eq.00000000-0000-0000-0000-000000000000");
+      }
+      
+      const { data: roles } = await query;
       const roleMap: Record<string, string> = {};
-      (roles || []).forEach((r: any) => { roleMap[r.user_id] = r.role; });
+      (roles || []).forEach((r: any) => { 
+        // Prioritize site-specific roles if multiple found, though usually it's filtered
+        roleMap[r.user_id] = r.role; 
+      });
 
       const result = users.users.map((u: any) => ({
         id: u.id,
