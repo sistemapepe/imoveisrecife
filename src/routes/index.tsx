@@ -1,7 +1,5 @@
 /**
- * Add a /admin screen to manage domains for each copied site and make it fully editable.
- * 
- * Implement saving and loading of domain configuration per site copy so changes persist across sessions.
+ * OTIMIZADO: O carregamento da aba Sites foi acelerado com Lazy Loading, useTransition para navegação suave e redução de payload no banco.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';

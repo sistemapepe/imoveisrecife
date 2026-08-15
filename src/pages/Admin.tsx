@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useTransition, Suspense, lazy } from "react";
 import SettingsTab from "@/components/admin/SettingsTab";
 import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
@@ -17,18 +17,20 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
-import AnalyticsTab from "@/components/admin/AnalyticsTab";
-import VisitsTab from "@/components/admin/VisitsTab";
-import TrafficTab from "@/components/admin/TrafficTab";
 import DashboardTab from "@/components/admin/DashboardTab";
-import SeoAuditTab from "@/components/admin/SeoAuditTab";
 import BucketAccessTab from "@/components/admin/BucketAccessTab";
-import BulkImportTab from "@/components/admin/BulkImportTab";
-import PerformanceTab from "@/components/admin/PerformanceTab";
-import SitesTab from "@/components/admin/SitesTab";
-import SecurityDiagnosticTab from "@/components/admin/SecurityDiagnosticTab";
 
 type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "sites" | "security";
+
+// Lazy loaded for performance optimization
+const SitesTab = lazy(() => import("@/components/admin/SitesTab"));
+const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
+const AnalyticsTab = lazy(() => import("@/components/admin/AnalyticsTab"));
+const VisitsTab = lazy(() => import("@/components/admin/VisitsTab"));
+const TrafficTab = lazy(() => import("@/components/admin/TrafficTab"));
+const PerformanceTab = lazy(() => import("@/components/admin/PerformanceTab"));
+const BulkImportTab = lazy(() => import("@/components/admin/BulkImportTab"));
+const SeoAuditTab = lazy(() => import("@/components/admin/SeoAuditTab"));
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -66,6 +68,7 @@ export default function Admin() {
   const [generatingSeo, setGeneratingSeo] = useState(false);
   const [cepLoading, setCepLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const DEFAULT_CATEGORIES = ["Venda", "Locação", "Temporada", "Repasse"];
   const [categories, setCategories] = useState<string[]>(() => {
@@ -205,11 +208,13 @@ export default function Admin() {
   const visibleTabs = allTabs.filter((t) => t.show);
 
   const switchTab = (newTab: Tab) => {
-    setTab(newTab);
-    setEditing(null);
-    setCreating(false);
-    if (newTab === "messages") setNewMsgCount(0);
-    setMobileMenuOpen(false);
+    startTransition(() => {
+      setTab(newTab);
+      setEditing(null);
+      setCreating(null);
+      if (newTab === "messages") setNewMsgCount(0);
+      setMobileMenuOpen(false);
+    });
   };
 
   const currentTabLabel = visibleTabs.find((t) => t.key === tab)?.label ?? "Painel";
@@ -703,11 +708,15 @@ export default function Admin() {
           )}
 
           {tab === "sites" && isSuperAdmin && (
-            <SitesTab />
+            <Suspense fallback={<div className="p-8 text-center animate-pulse text-muted-foreground italic">Carregando painel de sites...</div>}>
+              <SitesTab />
+            </Suspense>
           )}
 
           {tab === "security" && (
-            <SecurityDiagnosticTab />
+            <Suspense fallback={<div className="p-8 text-center animate-pulse text-muted-foreground italic">Carregando diagnóstico...</div>}>
+              <SecurityDiagnosticTab />
+            </Suspense>
           )}
           </main>
         </div>
