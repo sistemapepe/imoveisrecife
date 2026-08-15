@@ -616,7 +616,9 @@ export type Database = {
           domain: string
           id: string
           is_active: boolean | null
+          last_published_at: string | null
           owner_id: string | null
+          publish_status: string | null
           updated_at: string
         }
         Insert: {
@@ -625,7 +627,9 @@ export type Database = {
           domain: string
           id?: string
           is_active?: boolean | null
+          last_published_at?: string | null
           owner_id?: string | null
+          publish_status?: string | null
           updated_at?: string
         }
         Update: {
@@ -634,7 +638,9 @@ export type Database = {
           domain?: string
           id?: string
           is_active?: boolean | null
+          last_published_at?: string | null
           owner_id?: string | null
+          publish_status?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -833,6 +839,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user" | "supervisor" | "corretor" | "super_admin"
+      publish_status_type: "draft" | "published" | "scheduled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -961,6 +968,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user", "supervisor", "corretor", "super_admin"],
+      publish_status_type: ["draft", "published", "scheduled"],
     },
   },
 } as const
