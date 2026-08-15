@@ -199,7 +199,31 @@ export default function SitesTab() {
       </div>
 
       {loading ? (
-        <div className="p-8 text-center animate-pulse">Carregando sites...</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-card rounded-xl border border-border p-5 space-y-4 animate-pulse">
+              <div className="flex items-start justify-between">
+                <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center"></div>
+                <div className="h-4 w-16 bg-muted rounded-full"></div>
+              </div>
+              <div className="space-y-2">
+                <div className="h-6 w-3/4 bg-muted rounded"></div>
+                <div className="h-4 w-1/2 bg-muted rounded"></div>
+              </div>
+              <div className="pt-2 border-t border-border/50 space-y-2">
+                <div className="flex justify-between">
+                  <div className="h-3 w-16 bg-muted rounded"></div>
+                  <div className="h-3 w-16 bg-muted rounded"></div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="h-8 bg-muted rounded-lg"></div>
+                  <div className="h-8 bg-muted rounded-lg"></div>
+                </div>
+                <div className="h-8 bg-muted rounded-lg"></div>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sites.map(site => (

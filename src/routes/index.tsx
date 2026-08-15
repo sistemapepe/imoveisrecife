@@ -1,5 +1,6 @@
 /**
  * OTIMIZADO: O carregamento da aba Sites foi acelerado com Lazy Loading, useTransition para navegação suave e redução de payload no banco.
+ * ADICIONADO: Skeletons e indicadores de carregamento na aba Sites para melhor feedback visual.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
