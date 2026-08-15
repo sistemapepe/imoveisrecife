@@ -1,4 +1,5 @@
 import { useState, useTransition, Suspense, lazy } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { 

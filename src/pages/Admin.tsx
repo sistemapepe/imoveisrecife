@@ -203,9 +203,17 @@ export default function Admin() {
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
     { key: "security", label: "Segurança", icon: Shield, show: true },
   ];
-  const visibleTabs = allTabs.filter((t) => t.show);
+  const networkTabs = isSuperAdmin ? [
+    { key: "sites", label: "Sites", icon: Globe2, show: true }
+  ] : [];
+  
+  const visibleTabs = [...allTabs.filter((t) => t.show), ...networkTabs];
 
-  const switchTab = (newTab: Tab) => {
+  const switchTab = (newTab: any) => {
+    if (newTab === 'sites') {
+      navigate("/network-admin");
+      return;
+    }
     startTransition(() => {
       setTab(newTab);
       setEditing(null);
@@ -741,25 +749,6 @@ export default function Admin() {
             )}
           </Suspense>
 
-          {tab === "sites" && isSuperAdmin && (
-            <Suspense fallback={
-              <div className="space-y-6">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="space-y-2">
-                    <div className="h-8 w-64 bg-muted animate-pulse rounded-lg"></div>
-                    <div className="h-4 w-48 bg-muted animate-pulse rounded"></div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="h-48 bg-muted animate-pulse rounded-xl border border-border"></div>
-                  ))}
-                </div>
-              </div>
-            }>
-              <SitesTab />
-            </Suspense>
-          )}
 
           {tab === "security" && (
             <Suspense fallback={<div className="p-8 text-center animate-pulse text-muted-foreground italic">Carregando diagnóstico...</div>}>
