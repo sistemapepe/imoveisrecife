@@ -706,11 +706,15 @@ export default function Admin() {
           )}
 
           {tab === "sites" && isSuperAdmin && (
-            <SitesTab />
+            <Suspense fallback={<div className="p-8 text-center animate-pulse text-muted-foreground italic">Carregando painel de sites...</div>}>
+              <SitesTab />
+            </Suspense>
           )}
 
           {tab === "security" && (
-            <SecurityDiagnosticTab />
+            <Suspense fallback={<div className="p-8 text-center animate-pulse text-muted-foreground italic">Carregando diagnóstico...</div>}>
+              <SecurityDiagnosticTab />
+            </Suspense>
           )}
           </main>
         </div>
