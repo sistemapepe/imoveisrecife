@@ -266,10 +266,34 @@ export default function Admin() {
               {visibleTabs.map((t) => {
                 const Icon = t.icon;
                 const active = tab === t.key;
+                const componentMap: Record<string, any> = {
+                  dashboard: DashboardTab,
+                  bucket: BucketAccessTab,
+                  settings: SettingsTab,
+                  users: UsersTab,
+                  messages: MessagesTab,
+                  privacy: PrivacyTab,
+                  sites: SitesTab,
+                  security: SecurityDiagnosticTab,
+                  analytics: AnalyticsTab,
+                  visits: VisitsTab,
+                  traffic: TrafficTab,
+                  performance: PerformanceTab,
+                  import: BulkImportTab,
+                  seo: SeoAuditTab,
+                };
+
                 return (
                   <button
                     key={t.key}
                     onClick={() => switchTab(t.key)}
+                    onMouseEnter={() => {
+                      // Prefetch the component on hover
+                      const loader = componentMap[t.key] as any;
+                      if (loader?._result === undefined && typeof loader === 'function') {
+                        try { loader(); } catch(e) {}
+                      }
+                    }}
                     className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
                       active
                         ? "bg-primary/15 text-primary border-l-2 border-primary"
