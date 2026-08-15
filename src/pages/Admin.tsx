@@ -203,7 +203,7 @@ export default function Admin() {
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
     { key: "security", label: "Segurança", icon: Shield, show: true },
   ];
-  const networkTabs = isSuperAdmin ? [
+  const networkTabs: { key: string; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = isSuperAdmin ? [
     { key: "sites", label: "Sites", icon: Globe2, show: true }
   ] : [];
   
@@ -287,6 +287,20 @@ export default function Admin() {
                   import: BulkImportTab,
                   seo: SeoAuditTab,
                 };
+
+                if (t.key === 'sites' && isSuperAdmin) {
+                  return (
+                    <button
+                      key={t.key}
+                      onClick={() => navigate("/network-admin")}
+                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-accent hover:bg-accent/10 border-l-2 border-transparent transition-all"
+                    >
+                      <Icon className="h-4 w-4 shrink-0" />
+                      <span className="truncate flex-1 text-left">{t.label} (Rede)</span>
+                      <ArrowRight className="h-3 w-3 opacity-50" />
+                    </button>
+                  );
+                }
 
                 return (
                   <button
