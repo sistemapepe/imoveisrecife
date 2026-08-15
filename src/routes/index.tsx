@@ -1,13 +1,5 @@
 /**
- * execute isso abaixo
- * 
- * Implemente a tela de Gerenciar Sites para criar, editar e remover instâncias com persistência no banco.
- * 
- * Adicione um fluxo para eu editar a configuração de cada instância existente sem precisar criar novas cópias.
- * 
- * Implemente a resolução automática de hostname para site_id e aplique isso antes do guard liberar qualquer rota do /admin.
- * 
- * Implemente uma matriz de permissões que limite admin e super_admin por site_id e bloqueie rotas quando o site não corresponder.
+ * apresenta ese dominio porem ainda nao configurei correto precis abrir o site editavel e depois que publicar finalizar sim subir o dominio correto esseaqui que aparece com erro e nao consigo editar o novo site ou seja a copia https://realimobg/admin
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
