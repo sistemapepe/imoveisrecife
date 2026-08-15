@@ -51,19 +51,28 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
       const isoWeek = sevenDaysAgo.toISOString();
 
       try {
-        const [contactsRes, visitsRes, viewsRes] = await Promise.all([
-          supabase.from("contact_messages").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek).then(r => r),
-          supabase.from("visit_requests").select("id", { count: "exact", head: true }).eq("site_id", site.id).eq("status", "pending").then(r => r),
-          supabase.from("property_views").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek).then(r => r),
-        ]);
+        const fetchC = async () => {
+          const { count } = await supabase.from("contact_messages").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek);
+          return count ?? 0;
+        };
+        const fetchV = async () => {
+          const { count } = await supabase.from("visit_requests").select("id", { count: "exact", head: true }).eq("site_id", site.id).eq("status", "pending");
+          return count ?? 0;
+        };
+        const fetchW = async () => {
+          const { count } = await supabase.from("property_views").select("id", { count: "exact", head: true }).eq("site_id", site.id).gte("created_at", isoWeek);
+          return count ?? 0;
+        };
+
+        const [cCount, vCount, wCount] = await Promise.all([fetchC(), fetchV(), fetchW()]);
 
         if (!mounted) return;
 
         const newStats = {
           totalProperties: properties.length,
-          newContacts: contactsRes.count ?? 0,
-          pendingVisits: visitsRes.count ?? 0,
-          weekViews: viewsRes.count ?? 0,
+          newContacts: cCount,
+          pendingVisits: vCount,
+          weekViews: wCount,
           priceDrops: properties.filter((p) => !!p.previous_price && p.previous_price > p.price).length,
           exclusives: properties.filter((p) => p.exclusive).length,
         };
