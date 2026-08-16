@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { Globe2, Users, Building2, TrendingUp, ShieldCheck, Activity } from "lucide-react";
+import { Globe2, Users, Building2, TrendingUp, ShieldCheck, Activity, Rocket, Clock, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function NetworkDashboard() {
@@ -12,6 +12,7 @@ export default function NetworkDashboard() {
     leads: 0,
     loading: true
   });
+  const [recentSites, setRecentSites] = useState<any[]>([]);
 
   useEffect(() => {
     const cached = sessionStorage.getItem("network_global_stats");
@@ -24,13 +25,27 @@ export default function NetworkDashboard() {
       } catch (e) {}
     }
     fetchStats(false);
+    fetchRecentSites();
   }, []);
+
+  const fetchRecentSites = async () => {
+    try {
+      const { data } = await supabase
+        .from("sites")
+        .select("id, brand_name, domain, publish_status, last_published_at")
+        .order("last_published_at", { ascending: false, nullsFirst: false })
+        .limit(5);
+      
+      if (data) setRecentSites(data);
+    } catch (error) {
+      console.error("Erro ao buscar sites recentes:", error);
+    }
+  };
 
   const fetchStats = async (forceLoading = false) => {
     try {
       if (forceLoading) setStats(prev => ({ ...prev, loading: true }));
       
-      // Consultas otimizadas com select head:true para contar registros sem transferir dados
       const [sitesRes, propertiesRes, usersRes, leadsRes] = await Promise.all([
         supabase.from("sites").select("id", { count: 'exact', head: true }),
         supabase.from("properties").select("id", { count: 'exact', head: true }),
@@ -46,7 +61,6 @@ export default function NetworkDashboard() {
       };
 
       setStats({ ...newStats, loading: false });
-      // Cache mais longo para o dashboard (5 minutos)
       sessionStorage.setItem("network_global_stats", JSON.stringify({ data: newStats, timestamp: Date.now() }));
     } catch (error) {
       console.error("Erro ao buscar estatísticas de rede:", error);
@@ -96,7 +110,6 @@ export default function NetworkDashboard() {
                 </div>
                 <h3 className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-accent/60">{stat.label}</h3>
                 
-                {/* Background Accent */}
                 <div className={`absolute -right-4 -bottom-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity`}>
                    <stat.icon className="w-24 h-24" />
                 </div>
@@ -106,13 +119,65 @@ export default function NetworkDashboard() {
         ))}
       </div>
 
-      {/* Atalhos Rápidos e Status */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <h3 className="text-xl font-serif font-bold text-accent flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5" /> Integridade do Sistema
+            <Rocket className="w-5 h-5" /> Status de Publicação Recente
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-[#0d1419] border border-white/10 rounded-[2.5rem] overflow-hidden premium-shadow">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-white/5 text-[9px] uppercase tracking-[0.2em] font-extrabold text-accent/40">
+                    <th className="px-6 py-4">Site</th>
+                    <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4">Última Publicação</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {recentSites.length > 0 ? (
+                    recentSites.map((site) => (
+                      <tr key={site.id} className="group hover:bg-white/[0.02] transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="font-bold text-white group-hover:text-accent transition-colors">{site.brand_name}</div>
+                          <div className="text-[9px] text-white/20 font-mono tracking-wider">{site.domain}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          {site.publish_status === 'published' ? (
+                            <span className="flex items-center gap-1.5 text-[9px] font-bold text-blue-500 bg-blue-500/10 px-2.5 py-1 rounded-full uppercase border border-blue-500/10">
+                              <Rocket className="h-3 w-3" /> Publicado
+                            </span>
+                          ) : (
+                            <span className="flex items-center gap-1.5 text-[9px] font-bold text-amber-500 bg-amber-500/10 px-2.5 py-1 rounded-full uppercase border border-amber-500/10">
+                              <Clock className="h-3 w-3" /> Rascunho
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-[10px] text-white/40 font-bold uppercase tracking-widest">
+                          {site.last_published_at ? (
+                            <div className="flex items-center gap-2">
+                              <CheckCircle2 className="h-3 w-3 text-green-500" />
+                              {new Date(site.last_published_at).toLocaleString()}
+                            </div>
+                          ) : (
+                            <span className="text-white/10 italic">Nunca publicado</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={3} className="px-6 py-8 text-center text-white/20 text-xs font-bold uppercase tracking-widest">
+                        Nenhum site encontrado
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
              <div className="bg-white/5 border border-white/10 rounded-[1.5rem] p-6 flex items-center gap-4">
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <div>
