@@ -113,10 +113,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
       
-      const isNetworkPath = window.location.pathname.startsWith('/network-admin');
-      const isLoginPath = window.location.pathname === '/login';
+      const pathname = window.location.pathname;
+      const isNetworkPath = pathname.startsWith('/network-admin');
+      const isLoginPath = pathname === '/login';
+      const isAdminPath = pathname.startsWith('/admin');
 
-      if ((!site?.id || siteLoading) && (isNetworkPath || isLoginPath)) {
+      // Se for um super_admin global já cacheado, libera o carregamento instantaneamente
+      const cachedSuperAdmin = sessionStorage.getItem(`is_global_super_admin_${userId}`);
+      if (cachedSuperAdmin === 'true') {
+        if (mounted) {
+          setRole("super_admin");
+          setLoading(false);
+          setIsInitializing(false);
+        }
+        // Continua para carregar permissões ou validar sessão, mas já destrava a UI
+      }
+
+      // Se estiver no admin com site_id, ou no network-admin, e o site ainda não resolveu,
+      // tenta um check rápido de super_admin para não travar a tela
+      if ((!site?.id || siteLoading) && (isNetworkPath || isLoginPath || isAdminPath)) {
         try {
           const { data: superAdminCheck } = await supabase
             .from("user_roles")
@@ -140,15 +155,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       }
 
-      const cachedSuperAdmin = sessionStorage.getItem(`is_global_super_admin_${userId}`);
-      if (cachedSuperAdmin === 'true') {
-        if (mounted) {
-          setRole("super_admin");
-          setLoading(false);
-          setIsInitializing(false);
-        }
-        return;
-      }
 
       const { data, error } = await supabase
         .from("user_roles")

@@ -8,7 +8,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const isNetworkPath = location.pathname.startsWith('/network-admin');
 
-  const isBypassLoading = isNetworkPath && role === "super_admin";
+  const isAdminPath = location.pathname.startsWith('/admin');
+  const isBypassLoading = (isNetworkPath || isAdminPath) && role === "super_admin";
 
   if ((isInitializing || loading) && !isBypassLoading) {
     return (

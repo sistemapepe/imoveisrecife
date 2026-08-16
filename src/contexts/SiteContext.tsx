@@ -31,6 +31,21 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
       const cleanHostname = hostname.replace(/^www\./, "");
       const domainToSearch = cleanHostname.includes('lovable.app') ? 'localhost' : cleanHostname;
       
+      // Cache local para resultados de resolução de domínio (1 hora)
+      const cacheKey = `site_resolution_${siteIdParam || domainToSearch}`;
+      const cachedResult = sessionStorage.getItem(cacheKey);
+      
+      if (cachedResult && !siteIdParam) {
+        try {
+          const { data, timestamp } = JSON.parse(cachedResult);
+          if (Date.now() - timestamp < 3600000) { // 1 hora
+            setSite(data);
+            setLoading(false);
+            return;
+          }
+        } catch (e) {}
+      }
+
       let query = supabase.from('sites' as any).select('*');
       
       if (siteIdParam) {
@@ -62,6 +77,7 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
         setSite(null);
       } else {
         setSite(data as any);
+        sessionStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
       }
     } catch (err) {
       logger.error("Failed to resolve site", { domain: window.location.hostname }, err as Error);

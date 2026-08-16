@@ -377,7 +377,7 @@ export default function SitesTab() {
                   onClick={() => {
                     // Para Super Admin, a forma mais segura de editar é manter o domínio atual e usar o site_id
                     // Isso evita problemas com domínios ainda não configurados ou DNS não propagado
-                    const url = `${window.location.origin}/admin?site_id=${site.id}`;
+                    const url = `${window.location.origin}/login?site_id=${site.id}`;
                     window.open(url, '_blank');
                   }}
                 >

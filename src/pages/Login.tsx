@@ -24,7 +24,7 @@ const Login = () => {
       const target = siteId ? `/admin?site_id=${siteId}` : "/admin";
       
       startTransition(() => {
-        navigate(target, { replace: true });
+        window.location.href = target;
       });
     }
   }, [user, role, isInitializing, authLoading, navigate]);
@@ -44,7 +44,7 @@ const Login = () => {
       const target = siteId ? `/admin?site_id=${siteId}` : "/admin";
       
       startTransition(() => {
-        navigate(target, { replace: true });
+        window.location.href = target;
       });
     }
   };
