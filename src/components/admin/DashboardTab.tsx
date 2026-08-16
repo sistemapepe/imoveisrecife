@@ -149,8 +149,8 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Resumo</h2>
-        <p className="text-sm text-muted-foreground">Panorama geral do seu portfólio.</p>
+        <h2 className="font-serif font-bold text-3xl text-accent tracking-[0.2em] uppercase">Resumo</h2>
+        <p className="text-[10px] text-white/40 font-extrabold uppercase tracking-widest mt-2">Panorama geral do seu portfólio.</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
@@ -166,46 +166,46 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
               transition={{ duration: 0.3, delay: i * 0.05 }}
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className={`text-left p-4 md:p-5 rounded-2xl bg-card border ${
-                card.highlight ? "border-destructive/40 ring-2 ring-destructive/20" : "border-border"
-              } shadow-sm hover:shadow-md transition-shadow`}
+               className={`text-left p-6 md:p-8 rounded-[2rem] bg-[#0d1419] border ${
+                card.highlight ? "border-red-500/40" : "border-white/5"
+              } premium-shadow hover:border-accent/30 transition-all duration-500`}
             >
-              <div className={`w-10 h-10 rounded-xl ${card.bg} flex items-center justify-center mb-3`}>
-                <Icon className={`h-5 w-5 ${card.accent}`} />
+              <div className={`w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-5 border border-white/5 group-hover:border-accent/20 transition-colors`}>
+                <Icon className={`h-5 w-5 ${card.accent.replace('text-primary', 'text-white/70')}`} />
               </div>
-              <div className="text-2xl md:text-3xl font-extrabold tracking-tight">
+              <div className="text-3xl md:text-4xl font-serif font-bold text-white leading-none">
                 {loading ? "—" : card.value.toLocaleString("pt-BR")}
               </div>
-              <div className="text-xs text-muted-foreground mt-1 font-medium">{card.label}</div>
+              <div className="text-[9px] text-white/30 mt-3 font-extrabold uppercase tracking-[0.2em]">{card.label}</div>
             </motion.button>
           );
         })}
       </div>
 
-      <div className="rounded-2xl bg-card border border-border p-4 md:p-5">
-        <h3 className="font-bold text-sm mb-3">Atalhos rápidos</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div className="rounded-[2.5rem] bg-[#0d1419] border border-white/5 p-8 premium-shadow">
+        <h3 className="font-serif font-bold text-xl mb-6 text-accent">Atalhos rápidos</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <button
             onClick={() => onNavigate("properties")}
-            className="text-sm font-semibold py-2.5 px-3 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+            className="text-[10px] font-extrabold uppercase tracking-widest py-4 px-3 rounded-2xl bg-accent text-luxury-dark hover:bg-accent/80 transition-all shadow-lg shadow-accent/20"
           >
             + Novo imóvel
           </button>
           <button
             onClick={() => onNavigate("visits")}
-            className="text-sm font-semibold py-2.5 px-3 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
+            className="text-[10px] font-extrabold uppercase tracking-widest py-4 px-3 rounded-2xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-all"
           >
             Ver visitas
           </button>
           <button
             onClick={() => onNavigate("messages")}
-            className="text-sm font-semibold py-2.5 px-3 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
+            className="text-[10px] font-extrabold uppercase tracking-widest py-4 px-3 rounded-2xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-all"
           >
             Ver contatos
           </button>
           <button
             onClick={() => onNavigate("analytics")}
-            className="text-sm font-semibold py-2.5 px-3 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
+            className="text-[10px] font-extrabold uppercase tracking-widest py-4 px-3 rounded-2xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-all"
           >
             Analytics
           </button>
