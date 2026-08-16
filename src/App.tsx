@@ -20,7 +20,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
 import { useWebVitals } from "@/hooks/useWebVitals";
 
-// Lazy loading rotas com prefetching inteligente
+// Lazy loading rotas
 const Index = lazy(() => import("./pages/Index"));
 const ProjectPlan = lazy(() => import("./routes/index"));
 const NetworkAdmin = lazy(() => import("./pages/NetworkAdmin"));
@@ -108,26 +108,24 @@ function AppContent() {
 
 const App = () => {
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <QueryClientProvider client={queryClient}>
-          <TooltipProvider>
-            <SiteProvider>
-              <AuthProvider>
-                <PropertyProvider>
-                  <Toaster />
-                  <Sonner />
-                  <DynamicTheme />
-                  <BrowserRouter>
-                    <AppContent />
-                  </BrowserRouter>
-                </PropertyProvider>
-              </AuthProvider>
-            </SiteProvider>
-          </TooltipProvider>
-        </QueryClientProvider>
+        <TooltipProvider>
+          <SiteProvider>
+            <AuthProvider>
+              <PropertyProvider>
+                <Toaster />
+                <Sonner />
+                <DynamicTheme />
+                <BrowserRouter>
+                  <AppContent />
+                </BrowserRouter>
+              </PropertyProvider>
+            </AuthProvider>
+          </SiteProvider>
+        </TooltipProvider>
       </HelmetProvider>
-    </div>
+    </QueryClientProvider>
   );
 };
 
