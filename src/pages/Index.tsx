@@ -295,7 +295,7 @@ export default function Index() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.5 }}
-                    className="font-serif text-4xl text-card leading-tight mb-6"
+                    className="font-serif text-5xl md:text-6xl text-card leading-[1.1] mb-8 drop-shadow-2xl"
                   >
                     {heroSlides[currentSlide].title}
                   </motion.h2>
