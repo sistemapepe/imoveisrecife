@@ -64,7 +64,7 @@ function AppContent() {
 
   if (siteLoading) return <PageLoader />;
 
-  if (siteError || (!site && !location.pathname.includes('/admin') && !location.pathname.includes('/login'))) {
+  if (siteError || (!site && !location.pathname.includes('/admin') && !location.pathname.includes('/login') && !location.pathname.includes('/network-admin'))) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-luxury-dark text-card p-6 text-center">
         <Globe2 className="h-16 w-16 text-accent mb-4 animate-pulse" />
@@ -81,24 +81,22 @@ function AppContent() {
   
   return (
     <div className="max-w-screen-lg mx-auto relative min-h-screen">
-      <AnimatePresence mode="wait">
-        <Suspense fallback={<PageLoader />}>
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<PageTransition><Index /></PageTransition>} />
-            <Route path="/busca" element={<PageTransition><SearchResults /></PageTransition>} />
-            <Route path="/imovel/:id" element={<PageTransition><PropertyDetail /></PageTransition>} />
-            <Route path="/filtros" element={<PageTransition><Filters /></PageTransition>} />
-            <Route path="/contato" element={<PageTransition><Contact /></PageTransition>} />
-            <Route path="/favoritos" element={<PageTransition><Favorites /></PageTransition>} />
-            <Route path="/admin" element={<ProtectedRoute><PageTransition><Admin /></PageTransition></ProtectedRoute>} />
-            <Route path="/network-admin" element={<ProtectedRoute><PageTransition><NetworkAdmin /></PageTransition></ProtectedRoute>} />
-            <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
-            <Route path="/privacidade" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
-            <Route path="/plano" element={<PageTransition><ProjectPlan /></PageTransition>} />
-            <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
-          </Routes>
-        </Suspense>
-      </AnimatePresence>
+      <Suspense fallback={<PageLoader />}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+          <Route path="/busca" element={<PageTransition><SearchResults /></PageTransition>} />
+          <Route path="/imovel/:id" element={<PageTransition><PropertyDetail /></PageTransition>} />
+          <Route path="/filtros" element={<PageTransition><Filters /></PageTransition>} />
+          <Route path="/contato" element={<PageTransition><Contact /></PageTransition>} />
+          <Route path="/favoritos" element={<PageTransition><Favorites /></PageTransition>} />
+          <Route path="/admin" element={<ProtectedRoute><PageTransition><Admin /></PageTransition></ProtectedRoute>} />
+          <Route path="/network-admin" element={<ProtectedRoute><PageTransition><NetworkAdmin /></PageTransition></ProtectedRoute>} />
+          <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+          <Route path="/privacidade" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+          <Route path="/plano" element={<PageTransition><ProjectPlan /></PageTransition>} />
+          <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+        </Routes>
+      </Suspense>
       
       <BackButton />
       {!isPropertyDetail && <WhatsAppFab />}

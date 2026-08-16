@@ -115,18 +115,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       const isNetworkPath = window.location.pathname.startsWith('/network-admin');
 
-      // 1. Check global super_admin cache for instant response
-      const cachedSuperAdmin = sessionStorage.getItem(`is_global_super_admin_${userId}`);
-      if (cachedSuperAdmin === 'true') {
-        if (mounted) {
-          setRole("super_admin");
-          setLoading(false);
-          setIsInitializing(false);
-        }
-      }
-
-      // 2. Resolve global super_admin early if site is pending
-      if (!site?.id && siteLoading && !isNetworkPath) {
+      // 1. Resolve global super_admin early if site is pending
+      if ((!site?.id || siteLoading) && isNetworkPath) {
         const { data: superAdminCheck } = await supabase
           .from("user_roles")
           .select("role")
@@ -136,7 +126,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .maybeSingle();
 
         if (superAdminCheck) {
-          sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
           if (mounted) {
             setRole("super_admin");
             setLoading(false);
@@ -145,6 +134,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
       }
+
+      // 2. Check global super_admin cache for faster response
+      const cachedSuperAdmin = sessionStorage.getItem(`is_global_super_admin_${userId}`);
+      if (cachedSuperAdmin === 'true') {
+        if (mounted) {
+          setRole("super_admin");
+          setLoading(false);
+          setIsInitializing(false);
+        }
+        return;
+      }
+
 
       // 3. Main role resolution
       const { data, error } = await supabase
