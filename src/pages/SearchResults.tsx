@@ -164,7 +164,7 @@ export default function SearchResults() {
           {filtered.length === 0 && (
             <div className="text-center py-20">
               <p className="text-muted-foreground mb-2">Nenhum imóvel encontrado para esses filtros.</p>
-              <button onClick={() => navigate("/filtros")} className="text-primary font-semibold text-sm">Ajustar filtros</button>
+              <button onClick={() => navigate("/filtros")} className="text-accent font-extrabold text-[10px] uppercase tracking-widest border border-accent/30 px-6 py-2.5 rounded-full hover:bg-accent/10 transition-colors mt-4">Ajustar filtros</button>
             </div>
           )}
           <PropertyGrid properties={filtered} />
