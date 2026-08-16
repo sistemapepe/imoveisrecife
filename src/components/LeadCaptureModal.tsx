@@ -213,7 +213,7 @@ export default function LeadCaptureModal({
                     maxLength={100}
                     required
                     autoComplete="name"
-                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-accent md:text-sm"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-accent"
                     placeholder={settings.leadModalNamePlaceholder}
                   />
                 </div>
@@ -231,7 +231,7 @@ export default function LeadCaptureModal({
                     maxLength={16}
                     required
                     autoComplete="tel-national"
-                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-accent md:text-sm"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-accent"
                     placeholder="(81) 99999-9999"
                   />
                 </div>
