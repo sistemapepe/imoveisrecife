@@ -94,6 +94,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       logger.error("Failed to resolve site", { domain: window.location.hostname }, err as Error);
       setError("Erro ao carregar configurações do site.");
+      setSite(null); // Ensure we don't hang if resolution fails
     } finally {
       logger.endTimer("resolveSite", { domain: window.location.hostname });
       setLoading(false);
