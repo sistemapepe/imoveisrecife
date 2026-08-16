@@ -571,7 +571,7 @@ export default function Index() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="relative h-56 md:h-64 rounded-2xl overflow-hidden cursor-pointer group"
+                    className="relative h-56 md:h-64 rounded-[2rem] overflow-hidden cursor-pointer group premium-shadow"
                     onClick={() => navigate(`/imovel/${properties[0].id}`)}
                   >
                     <img
