@@ -36,36 +36,43 @@ export default function SitesTab() {
       if (cached) {
         try {
           const { data, timestamp } = JSON.parse(cached);
-          setSites(data);
-          // If cache is fresh (< 5 min), don't show loading spinner
-          if (Date.now() - timestamp < 300000) {
-            setLoading(false);
-          } else {
-            setLoading(true);
+          if (mounted) {
+            setSites(data);
+            // If cache is fresh (< 5 min), don't show loading spinner
+            if (Date.now() - timestamp < 300000) {
+              setLoading(false);
+            } else {
+              setLoading(true);
+            }
           }
         } catch (e) {
-          setLoading(true);
+          if (mounted) setLoading(true);
         }
       } else {
-        setLoading(true);
+        if (mounted) setLoading(true);
       }
 
-      const { data, error } = await supabase
-        .from('sites' as any)
-        .select('id, domain, brand_name, is_active, publish_status, last_published_at, created_at')
-        .order('brand_name', { ascending: true })
-        .limit(100);
-      
-      if (!mounted) return;
+      try {
+        const { data, error } = await supabase
+          .from('sites' as any)
+          .select('id, domain, brand_name, is_active, publish_status, last_published_at, created_at')
+          .order('brand_name', { ascending: true })
+          .limit(100);
+        
+        if (!mounted) return;
 
-      if (error) {
-        toast.error("Erro ao carregar sites");
-      } else {
-        const sitesList = (data as any) || [];
-        setSites(sitesList);
-        sessionStorage.setItem("admin_sites_list", JSON.stringify({ data: sitesList, timestamp: Date.now() }));
+        if (error) {
+          toast.error("Erro ao carregar sites");
+        } else {
+          const sitesList = (data as any) || [];
+          setSites(sitesList);
+          sessionStorage.setItem("admin_sites_list", JSON.stringify({ data: sitesList, timestamp: Date.now() }));
+        }
+      } catch (err) {
+        console.error("Sites fetch error:", err);
+      } finally {
+        if (mounted) setLoading(false);
       }
-      setLoading(false);
     };
     init();
     return () => { mounted = false; };
