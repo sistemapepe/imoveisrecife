@@ -6,7 +6,7 @@ import { trackEvent } from "@/hooks/useTrafficTracker";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
 import React from "react";
 
-const WhatsAppFab = React.forwardRef<HTMLDivElement>((_, ref) => {
+const WhatsAppFab = () => {
   const { settings, properties } = useProperties();
   const location = useLocation();
   const params = useParams();
@@ -33,7 +33,7 @@ const WhatsAppFab = React.forwardRef<HTMLDivElement>((_, ref) => {
   };
 
   return (
-    <div ref={ref} className="contents">
+    <div className="contents">
       <button
         onClick={() => setOpen(true)}
         aria-label="Fale conosco pelo WhatsApp"
@@ -56,7 +56,5 @@ const WhatsAppFab = React.forwardRef<HTMLDivElement>((_, ref) => {
       />
     </div>
   );
-});
-
-WhatsAppFab.displayName = "WhatsAppFab";
+};
 export default WhatsAppFab;
