@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { X, Search, ChevronRight, ArrowRight, MapPin, ArrowLeft } from "lucide-react";
 import BackButton from "@/components/BackButton";
-import PageTransition from "@/components/PageTransition";
+
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -55,7 +55,7 @@ export default function Filters() {
   };
 
   return (
-    <PageTransition>
+    <>
       <SEOHead title="Filtros" description="Filtre imóveis por tipo, quartos, localização e mais." noIndex />
       <div className="relative flex min-h-screen w-full flex-col max-w-screen-lg mx-auto bg-background">
         <Navbar />
@@ -166,6 +166,6 @@ export default function Filters() {
           </button>
         </div>
       </div>
-    </PageTransition>
+    </>
   );
 }
