@@ -4,7 +4,7 @@
  * CORREÇÃO: Domínio provisório da Lovable é agora preenchido automaticamente ao duplicar sites para facilitar a edição antes da publicação.
  * PERFORMANCE: Implementado cache de dados para propriedades e dashboard (TTL 30s-60s) e prefetch inteligente das abas do admin.
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheck, Globe2, LayoutDashboard, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -12,6 +12,15 @@ import { Button } from "@/components/ui/button";
 
 export default function Index() {
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    console.log("[Performance] Rendered: ProjectPlan", { timestamp: Date.now() });
+    const startTime = performance.now();
+    return () => {
+      const duration = performance.now() - startTime;
+      console.log(`[Performance] Unmounted: ProjectPlan (view time: ${duration.toFixed(2)}ms)`);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-luxury-dark text-card p-8 font-sans space-y-12 max-w-4xl mx-auto">
