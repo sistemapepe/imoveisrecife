@@ -366,7 +366,7 @@ export default function SitesTab() {
                   
                   <Button 
                     size="sm" 
-                    className="h-8 text-[10px] font-bold bg-blue-600/10 text-blue-500 border border-blue-500/20 hover:bg-blue-600 hover:text-white transition-all"
+                    className="h-9 text-[9px] font-extrabold uppercase tracking-widest bg-blue-600/5 text-blue-400 border border-blue-500/10 hover:bg-blue-600 hover:text-white transition-all rounded-xl"
                     onClick={() => setPublishId(site.id)}
                   >
                     <Rocket className="mr-1.5 h-3 w-3" /> Publicar
