@@ -87,7 +87,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
           className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-black/20 backdrop-blur-md rounded-2xl border border-white/10"
           onClick={(e) => { e.stopPropagation(); toggleFavorite(property.id); }}
         >
-          <Heart className={`h-5 w-5 ${isFav ? "fill-accent text-accent" : "text-card"}`} />
+          <Heart className={`h-5 w-5 ${isFav ? "fill-accent text-accent" : "text-white/70"}`} />
         </button>
         <button
           aria-label={`Falar no WhatsApp sobre ${property.title}`}
