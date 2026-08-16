@@ -5,9 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { HelmetProvider } from "react-helmet-async";
+import { Globe2 } from "lucide-react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PropertyProvider } from "@/contexts/PropertyContext";
-import { SiteProvider } from "@/contexts/SiteContext";
+import { SiteProvider, useSite } from "@/contexts/SiteContext";
 import { lazy, Suspense } from "react";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppFab from "@/components/WhatsAppFab";
@@ -53,10 +54,28 @@ const queryClient = new QueryClient({
 
 function AppContent() {
   const location = useLocation();
+  const { site, loading: siteLoading, error: siteError } = useSite();
   useTrafficTracker();
   useWebVitals();
   
   const isPropertyDetail = location.pathname.startsWith('/imovel/');
+
+  if (siteLoading) return <PageLoader />;
+
+  if (siteError || (!site && !location.pathname.includes('/admin') && !location.pathname.includes('/login'))) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-luxury-dark text-card p-6 text-center">
+        <Globe2 className="h-16 w-16 text-accent mb-4 animate-pulse" />
+        <h1 className="text-2xl font-bold mb-2 text-accent">Site em Configuração</h1>
+        <p className="text-accent/70 max-w-md">
+          {siteError || "Este domínio ainda não foi configurado em nossa plataforma."}
+        </p>
+        <div className="mt-8 pt-8 border-t border-white/5 w-full max-w-xs">
+          <p className="text-[10px] text-accent/40 uppercase tracking-widest">Powered by Real Imob Network</p>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="max-w-screen-lg mx-auto relative min-h-screen">

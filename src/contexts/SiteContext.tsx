@@ -27,10 +27,15 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       const siteIdParam = urlParams.get('site_id');
       const hostname = window.location.hostname;
       
+      // Normalização: remove www. e trata lovable.app como localhost para desenvolvimento
+      const cleanHostname = hostname.replace(/^www\./, "");
+      const domainToSearch = cleanHostname.includes('lovable.app') ? 'localhost' : cleanHostname;
+      
       let query = supabase.from('sites' as any).select('*');
       
       if (siteIdParam) {
         // Se temos um ID específico, verificamos o cache por ID
+        // Nota: O SiteProvider não valida permissões aqui, isso é feito pelo AuthContext e ProtectedRoute
         const cacheKey = `site_resolved_${siteIdParam}`;
         const cached = sessionStorage.getItem(cacheKey);
         if (cached) {
@@ -43,7 +48,6 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         }
         query = query.eq('id', siteIdParam);
       } else {
-        const domainToSearch = hostname.includes('lovable.app') ? 'localhost' : hostname;
         const cacheKey = `site_resolved_${domainToSearch}`;
         const cached = sessionStorage.getItem(cacheKey);
         if (cached) {
@@ -54,7 +58,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
             return;
           }
         }
-        query = query.eq('domain', domainToSearch);
+        // Busca tanto o domínio limpo quanto com www (caso o usuário tenha cadastrado com www)
+        query = query.or(`domain.eq.${domainToSearch},domain.eq.www.${domainToSearch}`);
       }
 
       const { data, error: siteError } = await query.maybeSingle();
@@ -62,21 +67,25 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       if (siteError) throw siteError;
 
       if (!data) {
-        const { data: fallbackSite } = await supabase
-          .from('sites' as any)
-          .select('*')
-          .limit(1)
-          .maybeSingle();
-        
-        if (fallbackSite) {
-          setSite(fallbackSite as any);
-        } else {
-          setError("Nenhum site configurado.");
+        // Se estivermos em um domínio lovable.app e não achamos por ID, tentamos o fallback 'localhost'
+        if (hostname.includes('lovable.app') && !siteIdParam) {
+          const { data: localhostSite } = await supabase
+            .from('sites' as any)
+            .select('*')
+            .eq('domain', 'localhost')
+            .maybeSingle();
+          
+          if (localhostSite) {
+            setSite(localhostSite as any);
+            return;
+          }
         }
+        
+        setError("Domínio não configurado na plataforma.");
+        setSite(null);
       } else {
         setSite(data as any);
-        // Salva no cache da sessão para navegação rápida
-        const key = siteIdParam || (hostname.includes('lovable.app') ? 'localhost' : hostname);
+        const key = siteIdParam || domainToSearch;
         sessionStorage.setItem(`site_resolved_${key}`, JSON.stringify(data));
       }
     } catch (err) {
