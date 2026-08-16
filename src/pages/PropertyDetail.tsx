@@ -331,7 +331,7 @@ export default function PropertyDetail() {
                 </div>
               )}
               <div className="flex items-center gap-2 flex-wrap mb-2">
-                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground leading-tight">{property.title}</h1>
+                <h1 className="text-3xl md:text-5xl font-serif font-bold tracking-tight text-foreground leading-tight">{property.title}</h1>
                 {(property as any).status && (property as any).status !== "disponivel" && (
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
                     (property as any).status === "reservado"
