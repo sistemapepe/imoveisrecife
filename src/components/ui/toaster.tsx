@@ -9,12 +9,12 @@ import {
   ToastViewport,
 } from "@/components/ui/toast";
 
-export const Toaster = React.forwardRef<HTMLDivElement, any>((props, ref) => {
+export const Toaster = () => {
   const { toasts } = useToast();
 
   return (
     <ToastProvider>
-      <div ref={ref}>
+      <div>
         {toasts.map(function ({ id, title, description, action, ...props }) {
           return (
             <Toast key={id} {...props}>
@@ -31,5 +31,4 @@ export const Toaster = React.forwardRef<HTMLDivElement, any>((props, ref) => {
       <ToastViewport />
     </ToastProvider>
   );
-});
-Toaster.displayName = "Toaster";
+};

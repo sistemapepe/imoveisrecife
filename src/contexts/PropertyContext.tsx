@@ -198,7 +198,7 @@ const localImages = [property1, property2, property3, property4];
 
 export const PropertyContext = createContext<PropertyContextType | null>(null);
 
-export const PropertyProvider = React.forwardRef<HTMLDivElement, { children: ReactNode }>(({ children }, ref) => {
+export function PropertyProvider({ children }: { children: ReactNode }) {
   const [properties, setProperties] = useState<Property[]>([]);
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -450,13 +450,10 @@ export const PropertyProvider = React.forwardRef<HTMLDivElement, { children: Rea
 
   return (
     <PropertyContext.Provider value={{ properties, settings, loading, addProperty, updateProperty, deleteProperty, updateSettings, favorites, toggleFavorite, refreshProperties: fetchProperties }}>
-      <div ref={ref} className="contents">
-        {children}
-      </div>
+      {children}
     </PropertyContext.Provider>
   );
-});
-PropertyProvider.displayName = "PropertyProvider";
+}
 
 export function useProperties() {
   const ctx = useContext(PropertyContext);

@@ -107,9 +107,9 @@ function AppContent() {
   );
 }
 
-const App = React.forwardRef<HTMLDivElement, any>((props, ref) => {
+const App = () => {
   return (
-    <div ref={ref}>
+    <div>
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
@@ -130,8 +130,6 @@ const App = React.forwardRef<HTMLDivElement, any>((props, ref) => {
       </HelmetProvider>
     </div>
   );
-});
-
-App.displayName = "App";
+};
 
 export default App;
