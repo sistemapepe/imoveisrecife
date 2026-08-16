@@ -346,7 +346,7 @@ export default function SitesTab() {
               )}
 
               <div className="pt-2 border-t border-border/50 flex flex-col gap-2">
-                <div className="flex justify-between items-center text-[10px] text-accent/60">
+                <div className="flex justify-between items-center text-[9px] font-extrabold uppercase tracking-[0.2em] text-white/20">
                   <span>ID: {site.id.slice(0, 8)}...</span>
                   <span>{new Date(site.created_at).toLocaleDateString()}</span>
                 </div>
