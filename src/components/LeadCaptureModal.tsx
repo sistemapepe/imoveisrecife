@@ -158,7 +158,7 @@ export default function LeadCaptureModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] bg-foreground/60 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] bg-luxury-dark/80 backdrop-blur-xl"
           onClick={onClose}
         >
           <div className="fixed inset-0 flex items-center justify-center overflow-y-auto px-4 py-[max(1rem,env(safe-area-inset-top))] pb-[max(5rem,env(safe-area-inset-bottom))] pointer-events-none">
