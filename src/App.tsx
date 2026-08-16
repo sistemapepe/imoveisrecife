@@ -63,7 +63,7 @@ function AppContent() {
 
   if (siteLoading) return <PageLoader />;
 
-  if (siteError || (!site && !location.pathname.includes('/admin') && !location.pathname.includes('/login') && !location.pathname.includes('/network-admin'))) {
+  if (siteError && !location.pathname.includes('/admin') && !location.pathname.includes('/login') && !location.pathname.includes('/network-admin')) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-luxury-dark text-card p-6 text-center">
         <Globe2 className="h-16 w-16 text-accent mb-4 animate-pulse" />
