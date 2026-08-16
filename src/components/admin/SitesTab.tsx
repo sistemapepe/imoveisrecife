@@ -334,8 +334,8 @@ export default function SitesTab() {
               </div>
               
               <div>
-                <h3 className="font-bold text-lg leading-tight text-accent">{site.brand_name}</h3>
-                <p className="text-xs text-accent/60 font-mono truncate">{site.domain}</p>
+                <h3 className="font-serif font-bold text-xl leading-tight text-white group-hover:text-accent transition-colors">{site.brand_name}</h3>
+                <p className="text-[10px] text-white/40 font-mono truncate mt-1 tracking-wider uppercase font-extrabold">{site.domain}</p>
               </div>
 
               {site.last_published_at && (
