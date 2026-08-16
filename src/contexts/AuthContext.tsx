@@ -108,6 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
       const userRole = (data?.role as AppRole) || "user";
+      console.log("AuthContext: userRole detected:", userRole, "for user:", userId);
       setRole(userRole);
       await loadPermissions(userRole);
     } catch (error) {
@@ -123,12 +124,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
       setUser(session?.user ?? null);
       if (session?.user) {
-        setTimeout(async () => {
-          if (mounted) {
-            await checkRole(session.user.id);
-            setLoading(false);
-          }
-        }, 0);
+        // Run immediately instead of setTimeout to avoid race conditions with ProtectedRoute
+        await checkRole(session.user.id);
+        if (mounted) setLoading(false);
       } else {
         setRole(null);
         setLoading(false);

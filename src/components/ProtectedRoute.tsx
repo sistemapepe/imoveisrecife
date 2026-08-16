@@ -15,7 +15,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   }
 
   // Se não houver usuário ou o papel for 'user' (sem permissões administrativas), redireciona para login
-  if (!user || role === "user") {
+  if (!user || role === "user" || !role) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
