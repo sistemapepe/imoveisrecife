@@ -500,7 +500,7 @@ export default function Index() {
                   <span className="text-accent text-xs font-bold uppercase tracking-widest">Exclusividade {settings.brandName}</span>
                   <h3 className="text-2xl font-serif text-card mt-1">Destaques</h3>
                 </div>
-                <button onClick={() => navigate("/busca")} className="text-primary text-sm font-semibold flex items-center gap-1">
+                <button onClick={() => navigate("/busca")} className="text-accent text-[10px] uppercase tracking-[0.2em] font-bold flex items-center gap-2 hover:opacity-80 transition-opacity">
                   Ver todos <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
