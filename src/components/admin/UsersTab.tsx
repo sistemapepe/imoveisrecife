@@ -24,7 +24,7 @@ const ROLES = [
 function roleBadge(role: string) {
   const r = ROLES.find((x) => x.value === role);
   return (
-    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${r?.color || "bg-muted text-muted-foreground"}`}>
+    <span className={`px-2.5 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-[0.2em] border border-white/5 ${r?.color || "bg-muted text-muted-foreground"}`}>
       {r?.label || role}
     </span>
   );
