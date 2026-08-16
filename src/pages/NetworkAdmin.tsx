@@ -182,7 +182,7 @@ export default function NetworkAdmin() {
         </header>
 
         {/* Sidebar Desktop */}
-        <aside className="hidden md:flex flex-col w-72 bg-luxury-dark-lighter border-r border-white/5 h-screen sticky top-0">
+        <aside className="hidden md:flex flex-col w-72 bg-[#0d1419] border-r border-white/5 h-screen sticky top-0">
           <div className="p-8 mb-8">
             <div className="flex items-center gap-4 mb-2">
               <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20 shadow-lg shadow-accent/5">
