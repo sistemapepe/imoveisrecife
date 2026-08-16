@@ -667,8 +667,6 @@ export default function BulkImportTab() {
                           size="sm"
                           onClick={() => {
                             setReprocessOf(h);
-                            reset();
-                            setReprocessOf(h);
                             fileRef.current?.click();
                           }}
                         >
