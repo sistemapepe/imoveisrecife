@@ -107,7 +107,7 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <SiteContext.Provider value={{ site, loading, error }}>
-      <div className="contents">{children}</div>
+      {children}
     </SiteContext.Provider>
   );
 };

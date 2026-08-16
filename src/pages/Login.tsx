@@ -50,7 +50,7 @@ const Login = () => {
   };
 
   return (
-    <div className="contents">
+    <>
       <SEOHead title="Login" description="Acesse o painel administrativo de gestão de imóveis." noIndex />
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -149,7 +149,7 @@ const Login = () => {
           </div>
         </motion.div>
       </div>
-    </div>
+    </>
   );
 };
 
