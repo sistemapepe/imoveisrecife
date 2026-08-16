@@ -46,14 +46,14 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement, any>((props, ref) =
             .eq("key", "theme_defaults")
             .maybeSingle();
           
-          if (data?.value) {
-            const defaults = data.value;
-            if (!primary && defaults.primary) {
+          if (data?.value && typeof data.value === 'object' && !Array.isArray(data.value)) {
+            const defaults = data.value as Record<string, any>;
+            if (!primary && defaults.primary && typeof defaults.primary === 'string') {
               const globalPrimary = clampHslLightness(defaults.primary);
               root.style.setProperty("--primary", globalPrimary);
               root.style.setProperty("--ring", globalPrimary);
             }
-            if (!accent && defaults.accent) {
+            if (!accent && defaults.accent && typeof defaults.accent === 'string') {
               const globalAccent = clampHslLightness(defaults.accent);
               root.style.setProperty("--accent", globalAccent);
               root.style.setProperty("--gold", globalAccent);
