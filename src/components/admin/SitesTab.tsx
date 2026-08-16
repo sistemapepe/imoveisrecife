@@ -31,18 +31,23 @@ export default function SitesTab() {
   useEffect(() => {
     let mounted = true;
     const init = async () => {
-      setLoading(true);
-      
+      // Hydrate from cache immediately
       const cached = sessionStorage.getItem("admin_sites_list");
       if (cached) {
         try {
           const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 300000) { // Aumentado para 5 minutos
-            setSites(data);
+          setSites(data);
+          // If cache is fresh (< 5 min), don't show loading spinner
+          if (Date.now() - timestamp < 300000) {
             setLoading(false);
-            return;
+          } else {
+            setLoading(true);
           }
-        } catch (e) {}
+        } catch (e) {
+          setLoading(true);
+        }
+      } else {
+        setLoading(true);
       }
 
       const { data, error } = await supabase
