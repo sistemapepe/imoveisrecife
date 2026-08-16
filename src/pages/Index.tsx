@@ -378,7 +378,7 @@ export default function Index() {
                     />
                   </div>
                   {showQuickSuggestions && quickSearch.trim() && quickSuggestions.length > 0 && (
-                    <div className="absolute left-0 right-0 top-full mt-3 max-h-56 overflow-y-auto rounded-2xl bg-foreground/25 backdrop-blur-2xl border border-card/15 shadow-[0_16px_48px_rgba(0,0,0,0.5)] z-50">
+                    <div className="absolute left-0 right-0 top-full mt-3 max-h-56 overflow-y-auto rounded-2xl bg-[#0d1419]/90 backdrop-blur-3xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] z-50">
                       {quickSuggestions.map((s, i) => (
                         <button
                           key={`${s.city}-${s.neighborhood || ""}-${i}`}
