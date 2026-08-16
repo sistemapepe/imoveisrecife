@@ -35,11 +35,19 @@ const ProtectedRoute = React.forwardRef<HTMLDivElement, { children: React.ReactN
   }
 
   if (!user || role === "user") {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return (
+      <div ref={ref} className="contents">
+        <Navigate to="/login" state={{ from: location }} replace />
+      </div>
+    );
   }
 
   if (isNetworkPath && role !== "super_admin") {
-    return <Navigate to="/admin" replace />;
+    return (
+      <div ref={ref} className="contents">
+        <Navigate to="/admin" replace />
+      </div>
+    );
   }
 
   return <div ref={ref} className="contents">{children}</div>;
