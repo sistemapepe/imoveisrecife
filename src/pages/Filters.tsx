@@ -85,7 +85,7 @@ export default function Filters() {
             {showSuggestions && suggestions.length > 0 && (
               <div
                 ref={suggestionsRef}
-                className="absolute left-4 right-4 top-full mt-1 max-h-64 overflow-y-auto rounded-xl bg-card border border-border shadow-xl z-50"
+                className="absolute left-4 right-4 top-full mt-2 max-h-64 overflow-y-auto rounded-2xl bg-[#0d1419] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 backdrop-blur-2xl"
               >
                 {suggestions.map((s, i) => (
                   <button
