@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ChevronUp } from "lucide-react";
 import React from "react";
 
-const ScrollToTop = React.forwardRef<HTMLButtonElement>((_, ref) => {
+const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -29,7 +29,6 @@ const ScrollToTop = React.forwardRef<HTMLButtonElement>((_, ref) => {
 
   return (
     <button
-      ref={ref}
       onClick={scrollToTop}
       className="fixed left-6 bottom-24 z-40 bg-black/20 hover:bg-black/40 backdrop-blur-sm text-white/70 p-2 rounded-lg transition-all"
       aria-label="Voltar ao topo"
@@ -37,7 +36,5 @@ const ScrollToTop = React.forwardRef<HTMLButtonElement>((_, ref) => {
       <ChevronUp className="h-5 w-5" />
     </button>
   );
-});
-
-ScrollToTop.displayName = "ScrollToTop";
+};
 export default ScrollToTop;

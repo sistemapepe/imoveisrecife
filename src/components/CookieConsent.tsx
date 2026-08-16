@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Shield } from "lucide-react";
 import React from "react";
 
-const CookieConsent = React.forwardRef<HTMLDivElement>((_, ref) => {
+const CookieConsent = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const CookieConsent = React.forwardRef<HTMLDivElement>((_, ref) => {
   if (!visible) return null;
 
   return (
-    <div ref={ref} className="fixed bottom-20 left-0 right-0 z-50 px-4 animate-in slide-in-from-bottom-4 duration-500">
+    <div className="fixed bottom-20 left-0 right-0 z-50 px-4 animate-in slide-in-from-bottom-4 duration-500">
       <div className="max-w-screen-lg mx-auto bg-card/95 backdrop-blur-xl border border-border rounded-2xl p-4 shadow-2xl">
         <div className="flex items-start gap-3">
           <Shield className="h-5 w-5 text-primary mt-0.5 shrink-0" />
@@ -59,7 +59,5 @@ const CookieConsent = React.forwardRef<HTMLDivElement>((_, ref) => {
       </div>
     </div>
   );
-});
-
-CookieConsent.displayName = "CookieConsent";
+};
 export default CookieConsent;
