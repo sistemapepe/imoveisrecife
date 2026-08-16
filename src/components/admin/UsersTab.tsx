@@ -134,7 +134,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-accent">Usuários</h2>
+        <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Usuários</h2>
         <button
           onClick={() => setShowCreate(true)}
           className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider"
