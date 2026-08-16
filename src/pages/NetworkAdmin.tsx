@@ -1,6 +1,7 @@
 import { useState, useTransition, Suspense, lazy, useCallback, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { logger } from "@/lib/logger";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { 
   Globe2, 
@@ -47,12 +48,16 @@ export default function NetworkAdmin() {
 
   // Persistence and synchronization
   useEffect(() => {
+    logger.startTimer("NetworkAdmin_Mount");
     sessionStorage.setItem("network_active_tab", tab);
     // Evita loop de renderização verificando se a URL já está correta
     const currentUrlTab = new URLSearchParams(window.location.search).get("tab");
     if (currentUrlTab !== tab) {
       setSearchParams({ tab }, { replace: true });
     }
+    
+    // Pequeno timeout para garantir que a renderização inicial terminou
+    setTimeout(() => logger.endTimer("NetworkAdmin_Mount"), 100);
   }, [tab, setSearchParams]);
 
 
