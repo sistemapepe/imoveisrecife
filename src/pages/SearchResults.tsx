@@ -110,11 +110,11 @@ export default function SearchResults() {
 
           {/* Active location badge */}
           {locationFilter && (
-            <div className="px-4 pb-2 pt-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+            <div className="px-4 pb-3 pt-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/5 border border-accent/20 text-accent text-[10px] font-extrabold uppercase tracking-wider">
                 <MapPin className="h-3 w-3" aria-hidden="true" />
                 {locationFilter}
-                <button onClick={() => navigate("/busca")} aria-label="Remover filtro de localização" className="ml-1 hover:text-primary/70"><X className="h-3 w-3" aria-hidden="true" /></button>
+                <button onClick={() => navigate("/busca")} aria-label="Remover filtro de localização" className="ml-1 hover:text-white transition-colors"><X className="h-3 w-3" aria-hidden="true" /></button>
               </span>
             </div>
           )}
