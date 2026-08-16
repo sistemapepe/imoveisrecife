@@ -151,9 +151,9 @@ export default function TrafficTab() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-bold flex items-center gap-2">
-        <Globe className="h-5 w-5 text-accent" /> Módulo de Tráfego
-      </h2>
+      <div className="flex items-center justify-between">
+        <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Tráfego</h2>
+      </div>
 
       {/* Period filter */}
       <div className="flex flex-wrap gap-2 items-center">

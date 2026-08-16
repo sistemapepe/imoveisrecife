@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Calendar, CheckCircle, Clock, XCircle, Phone, Mail } from "lucide-react";
+import { Calendar, CheckCircle, Clock, XCircle, Phone, Mail, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 interface VisitRequest {
@@ -89,8 +89,16 @@ export default function VisitsTab() {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Filters */}
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Visitas</h2>
+        <button
+          onClick={fetchVisits}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-accent text-luxury-dark text-[10px] font-extrabold uppercase tracking-widest hover:bg-accent/80 transition-all shadow-lg shadow-accent/20"
+        >
+          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} /> Atualizar
+        </button>
+      </div>
       <div className="flex gap-2 flex-wrap">
         {(["all", "pending", "confirmed", "cancelled"] as const).map((f) => (
           <button

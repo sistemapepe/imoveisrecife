@@ -504,7 +504,10 @@ export default function BulkImportTab() {
       <div className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-8 premium-shadow">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <h3 className="font-serif font-bold text-2xl flex items-center gap-3 text-accent"><FileSpreadsheet className="h-6 w-6" /> Importação em Massa</h3>
+            <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Importação em Massa</h2>
+            <p className="text-[10px] text-white/40 mt-2 font-extrabold uppercase tracking-widest mt-2">Empresa e Imóveis via Excel (.xlsx)</p>
+          </div>
+          <div className="max-w-md">
             <p className="text-xs text-white/40 mt-2 font-extrabold uppercase tracking-widest leading-relaxed">
               Envie o formulário Excel preenchido. O sistema valida, mostra uma prévia e só importa após sua confirmação.
             </p>
@@ -538,7 +541,7 @@ export default function BulkImportTab() {
       {reprocessOf && (
         <div className="bg-accent/10 border border-accent/40 rounded-xl p-4 text-xs flex items-center justify-between gap-3 flex-wrap">
           <span>
-            🔁 <strong>Modo reprocesso</strong>: importando apenas linhas com erro da importação <span className="font-mono">{reprocessOf.file_name}</span> ({(reprocessOf.errors as any[] ?? []).filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis").length} linha(s) alvo).
+            🔁 <strong>Modo reprocesso</strong>: importando apenas linhas com erro da importação <span className="font-mono">{reprocessOf.file_name}</span> ({(reprocessOf.errors as any[] | null ?? []).filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis").length} linha(s) alvo).
           </span>
           <Button size="sm" variant="ghost" onClick={() => setReprocessOf(null)}>Cancelar reprocesso</Button>
         </div>
@@ -663,8 +666,6 @@ export default function BulkImportTab() {
                           variant="outline"
                           size="sm"
                           onClick={() => {
-                            setReprocessOf(h);
-                            reset();
                             setReprocessOf(h);
                             fileRef.current?.click();
                           }}
