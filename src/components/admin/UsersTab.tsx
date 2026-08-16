@@ -137,7 +137,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
         <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Usuários</h2>
         <button
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider"
+          className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-accent text-luxury-dark text-[10px] font-extrabold uppercase tracking-widest hover:bg-accent/80 transition-all shadow-lg shadow-accent/20"
         >
           <UserPlus className="h-4 w-4" /> Novo
         </button>
