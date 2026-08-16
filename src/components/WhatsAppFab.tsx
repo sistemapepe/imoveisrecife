@@ -4,8 +4,9 @@ import { useProperties } from "@/contexts/PropertyContext";
 import { useLocation, useParams } from "react-router-dom";
 import { trackEvent } from "@/hooks/useTrafficTracker";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
+import React from "react";
 
-export default function WhatsAppFab() {
+const WhatsAppFab = React.forwardRef<HTMLDivElement>((_, ref) => {
   const { settings, properties } = useProperties();
   const location = useLocation();
   const params = useParams();
@@ -17,8 +18,7 @@ export default function WhatsAppFab() {
     return properties.find((p) => p.id === id) || null;
   }, [location.pathname, params.id, properties]);
 
-  // Hide on admin/login pages
-  if (location.pathname.startsWith("/admin") || location.pathname.startsWith("/login")) return null;
+  if (location.pathname.startsWith("/admin") || location.pathname.startsWith("/login") || location.pathname === "/network-admin") return null;
 
   const source = currentProperty ? "whatsapp_fab_property" : "whatsapp_fab_global";
 
@@ -33,7 +33,7 @@ export default function WhatsAppFab() {
   };
 
   return (
-    <>
+    <div ref={ref} className="contents">
       <button
         onClick={() => setOpen(true)}
         aria-label="Fale conosco pelo WhatsApp"
@@ -54,6 +54,9 @@ export default function WhatsAppFab() {
         propertyTitle={currentProperty?.title}
         source={source}
       />
-    </>
+    </div>
   );
-}
+});
+
+WhatsAppFab.displayName = "WhatsAppFab";
+export default WhatsAppFab;
