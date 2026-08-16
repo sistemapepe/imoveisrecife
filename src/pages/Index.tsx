@@ -599,21 +599,21 @@ export default function Index() {
               )}
 
               {/* Dynamic Collections */}
-              <div className="px-6 py-6">
-                <h4 className="text-card font-serif text-lg mb-4">Coleções</h4>
+              <div className="px-6 py-10">
+                <h4 className="text-white font-serif text-2xl mb-6">Coleções</h4>
                 {collections.length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {collections.map((col) => (
                       <button
                         key={col.type}
                         onClick={() => { setActiveType(col.type); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                        className="relative h-28 rounded-lg overflow-hidden border border-card/5"
+                        className="relative h-32 rounded-[1.5rem] overflow-hidden border border-white/5 premium-shadow-hover transition-all duration-300"
                       >
                         <img src={col.image} alt={col.type} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
-                        <div className="absolute inset-0 bg-foreground/50" />
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
                         <div className="relative z-10 flex flex-col justify-center items-center h-full">
-                          <span className="text-card font-bold tracking-widest text-xs uppercase">{col.type}</span>
-                          <span className="text-card/60 text-[10px] mt-1">{col.count} {col.count === 1 ? "imóvel" : "imóveis"}</span>
+                          <span className="text-white font-bold tracking-[0.2em] text-[10px] uppercase">{col.type}</span>
+                          <span className="text-white/60 text-[9px] mt-1 font-bold uppercase tracking-widest">{col.count} {col.count === 1 ? "imóvel" : "imóveis"}</span>
                         </div>
                       </button>
                     ))}
