@@ -540,7 +540,7 @@ export default function BulkImportTab() {
       {reprocessOf && (
         <div className="bg-accent/10 border border-accent/40 rounded-xl p-4 text-xs flex items-center justify-between gap-3 flex-wrap">
           <span>
-            🔁 <strong>Modo reprocesso</strong>: importando apenas linhas com erro da importação <span className="font-mono">{reprocessOf.file_name}</span> ({(reprocessOf.errors as any[] ?? []).filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis").length} linha(s) alvo).
+            🔁 <strong>Modo reprocesso</strong>: importando apenas linhas com erro da importação <span className="font-mono">{reprocessOf.file_name}</span> ({(reprocessOf.errors as any[] | null ?? []).filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis").length} linha(s) alvo).
           </span>
           <Button size="sm" variant="ghost" onClick={() => setReprocessOf(null)}>Cancelar reprocesso</Button>
         </div>
