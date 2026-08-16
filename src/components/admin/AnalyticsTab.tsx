@@ -32,7 +32,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
   useEffect(() => {
     fetchAnalytics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString()]);
+  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString(), site?.id]);
 
   const getDateRange = (): { from: string; to?: string } => {
     if (period === "custom" && customRange?.from) {
