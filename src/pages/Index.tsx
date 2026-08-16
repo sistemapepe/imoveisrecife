@@ -583,7 +583,7 @@ export default function Index() {
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/50 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-luxury-dark/95 via-luxury-dark/40 to-transparent" />
                     <div className="relative z-10 flex flex-col justify-center h-full px-8 max-w-sm">
                       <span className="text-accent text-[9px] font-extrabold uppercase tracking-[0.4em] mb-2 px-1">Em destaque</span>
                       <h3 className="font-serif text-3xl md:text-4xl text-white leading-tight mb-2 tracking-tight">{properties[0].title}</h3>
