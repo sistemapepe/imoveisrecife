@@ -67,8 +67,8 @@ export default function Contact() {
         <section className="px-6 mb-10">
           <div className="flex flex-col items-center">
             <div className="relative mb-4">
-              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-accent p-1 bg-secondary flex items-center justify-center">
-                <span className="text-3xl">👤</span>
+              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-accent p-1 bg-white/5 flex items-center justify-center backdrop-blur-md">
+                <span className="text-3xl grayscale opacity-80">👤</span>
               </div>
               <div className="absolute bottom-0 right-0 bg-accent w-6 h-6 rounded-full flex items-center justify-center border-2 border-card">
                 <Verified className="h-3 w-3 text-accent-foreground" />
