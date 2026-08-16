@@ -339,7 +339,7 @@ export default function SitesTab() {
               </div>
 
               {site.last_published_at && (
-                <div className="text-[10px] text-accent/60 flex items-center gap-1">
+                <div className="text-[9px] font-extrabold uppercase tracking-[0.1em] text-white/30 flex items-center gap-2">
                   <CheckCircle2 className="h-2.5 w-2.5 text-green-500" />
                   Última publicação: {new Date(site.last_published_at).toLocaleString()}
                 </div>
