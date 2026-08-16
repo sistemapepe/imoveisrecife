@@ -180,8 +180,8 @@ export default function LeadCaptureModal({
                   </div>
                   <h2 id="lead-modal-title" className="font-serif font-bold text-lg tracking-tight outline-none" tabIndex={-1}>{settings.leadModalTitle}</h2>
                 </div>
-                <button onClick={onClose} aria-label="Fechar" className="p-1 rounded-full hover:bg-muted transition-colors">
-                  <X className="h-5 w-5 text-muted-foreground" />
+                <button onClick={onClose} aria-label="Fechar" className="p-2 rounded-full hover:bg-white/5 transition-colors">
+                  <X className="h-5 w-5 text-white/40" />
                 </button>
               </div>
 
