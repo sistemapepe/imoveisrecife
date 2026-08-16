@@ -185,40 +185,7 @@ export default function NetworkAdmin() {
         {/* Main Content */}
         <main className="flex-1 p-6 md:p-12 overflow-y-auto max-w-7xl mx-auto w-full">
           <Suspense fallback={<div className="flex items-center justify-center py-24"><Loader2 className="h-10 w-10 animate-spin text-accent" /></div>}>
-            {tab === "dashboard" && (
-              <div className="space-y-12">
-                <header>
-                  <h2 className="text-4xl md:text-5xl font-serif font-bold text-accent mb-4">Gestão de Rede</h2>
-                  <p className="text-muted-foreground text-lg max-w-2xl">Bem-vindo à Central do Super Admin. Aqui você gerencia a infraestrutura global da plataforma e todos os sites tenants.</p>
-                </header>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <div className="bg-luxury-dark-lighter/40 border border-white/5 rounded-3xl p-8 hover:border-accent/30 transition-all cursor-pointer group" onClick={() => switchTab("sites")}>
-                    <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                      <Globe2 className="h-7 w-7 text-accent" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">Sites & Domínios</h3>
-                    <p className="text-sm text-muted-foreground">Gerencie instâncias, duplique sites e configure domínios personalizados.</p>
-                  </div>
-                  
-                  <div className="bg-luxury-dark-lighter/40 border border-white/5 rounded-3xl p-8 hover:border-accent/30 transition-all cursor-pointer group" onClick={() => switchTab("users")}>
-                    <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                      <Users className="h-7 w-7 text-accent" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">Usuários Globais</h3>
-                    <p className="text-sm text-muted-foreground">Gestão centralizada de administradores e supervisores de rede.</p>
-                  </div>
-
-                  <div className="bg-luxury-dark-lighter/40 border border-white/5 rounded-3xl p-8 hover:border-accent/30 transition-all cursor-pointer group" onClick={() => switchTab("security")}>
-                    <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                      <Shield className="h-7 w-7 text-accent" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">Segurança</h3>
-                    <p className="text-sm text-muted-foreground">Diagnósticos de permissão RLS e integridade de dados global.</p>
-                  </div>
-                </div>
-              </div>
-            )}
+            {tab === "dashboard" && <NetworkDashboard />}
             
             {tab === "sites" && <SitesTab />}
             {tab === "users" && <UsersTab isNetwork={true} />}
