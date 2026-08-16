@@ -17,19 +17,18 @@ export default function NetworkDashboard() {
     const cached = sessionStorage.getItem("network_global_stats");
     if (cached) {
       try {
-        const { data, timestamp } = JSON.parse(cached);
-        if (Date.now() - timestamp < 300000) { // Aumentado para 5 minutos
+        const { data } = JSON.parse(cached);
+        if (data) {
           setStats({ ...data, loading: false });
-          return;
         }
       } catch (e) {}
     }
-    fetchStats(true);
+    fetchStats(false);
   }, []);
 
-  const fetchStats = async (showLoading = true) => {
+  const fetchStats = async (forceLoading = false) => {
     try {
-      if (showLoading) setStats(prev => ({ ...prev, loading: true }));
+      if (forceLoading) setStats(prev => ({ ...prev, loading: true }));
       
       const [sitesRes, propertiesRes, usersRes, leadsRes] = await Promise.all([
         supabase.from("sites").select("id", { count: 'exact', head: true }),

@@ -15,35 +15,35 @@ export default function NetworkSettingsTab() {
   const [settings, setSettings] = useState<any[]>([]);
 
   useEffect(() => {
-    fetchSettings();
+    // Tenta carregar do cache imediatamente para evitar tela de loading
+    const cached = sessionStorage.getItem("network_settings_data");
+    if (cached) {
+      try {
+        const { data } = JSON.parse(cached);
+        if (data) {
+          setSettings(data);
+          setLoading(false);
+        }
+      } catch (e) {}
+    }
+    fetchSettings(false); // Background fetch
   }, []);
 
-  const fetchSettings = async (showLoading = true) => {
+  const fetchSettings = async (forceLoading = false) => {
     try {
-      if (showLoading) {
-        const cached = sessionStorage.getItem("network_settings_data");
-        if (cached) {
-          try {
-            const { data, timestamp } = JSON.parse(cached);
-            if (Date.now() - timestamp < 300000) { // 5 min cache for settings
-              setSettings(data);
-              setLoading(false);
-              // Still fetch in background
-              fetchSettings(false);
-              return;
-            }
-          } catch (e) {}
-        }
-        setLoading(true);
-      }
-
+      if (forceLoading) setLoading(true);
+      
       const { data, error } = await supabase
         .from("network_settings")
         .select("*");
       
       if (error) throw error;
+      
       setSettings(data || []);
-      sessionStorage.setItem("network_settings_data", JSON.stringify({ data: data || [], timestamp: Date.now() }));
+      sessionStorage.setItem("network_settings_data", JSON.stringify({ 
+        data: data || [], 
+        timestamp: Date.now() 
+      }));
     } catch (error: any) {
       toast({
         variant: "destructive",

@@ -199,17 +199,37 @@ export default function NetworkAdmin() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 md:p-12 overflow-y-auto max-w-7xl mx-auto w-full">
-          <Suspense fallback={<div className="flex items-center justify-center py-24"><Loader2 className="h-10 w-10 animate-spin text-accent" /></div>}>
-            {tab === "dashboard" && <NetworkDashboard />}
-            
-            {tab === "sites" && <SitesTab />}
-            {tab === "users" && <UsersTab isNetwork={true} />}
-            {tab === "analytics" && <AnalyticsTab isNetwork={true} />}
-            {tab === "import" && <BulkImportTab />}
-            {tab === "security" && <SecurityDiagnosticTab />}
-            {tab === "settings" && <NetworkSettingsTab />}
-          </Suspense>
+        <main className="flex-1 p-6 md:p-12 overflow-y-auto max-w-7xl mx-auto w-full relative">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={tab}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Suspense fallback={
+                <div className="flex flex-col items-center justify-center py-32 space-y-4">
+                  <Loader2 className="h-10 w-10 animate-spin text-accent" />
+                  <p className="text-accent/60 font-serif italic animate-pulse">Preparando interface...</p>
+                </div>
+              }>
+                {tab === "dashboard" && <NetworkDashboard />}
+                {tab === "sites" && <SitesTab />}
+                {tab === "users" && <UsersTab isNetwork={true} />}
+                {tab === "analytics" && <AnalyticsTab isNetwork={true} />}
+                {tab === "import" && <BulkImportTab />}
+                {tab === "security" && <SecurityDiagnosticTab />}
+                {tab === "settings" && <NetworkSettingsTab />}
+              </Suspense>
+            </motion.div>
+          </AnimatePresence>
+          
+          {isPending && (
+            <div className="absolute top-4 right-4">
+              <Loader2 className="h-5 w-5 animate-spin text-accent opacity-50" />
+            </div>
+          )}
         </main>
       </div>
     </PageTransition>
