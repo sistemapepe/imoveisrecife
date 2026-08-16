@@ -551,10 +551,10 @@ export default function Index() {
                           {p.neighborhood}
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 text-card/50 text-xs uppercase tracking-tighter">
-                        {!!p.area && <div className="flex items-center gap-1"><Ruler className="h-3 w-3 text-primary" />{p.area}m²</div>}
-                        {!!p.suites && <div className="flex items-center gap-1"><BedDouble className="h-3 w-3 text-primary" />{p.suites} Suítes</div>}
-                        {!!p.parking && <div className="flex items-center gap-1"><Car className="h-3 w-3 text-primary" />{p.parking} Vagas</div>}
+                      <div className="flex items-center gap-4 text-white/50 text-[10px] uppercase tracking-widest font-bold border-t border-white/5 pt-4">
+                        {!!p.area && <div className="flex items-center gap-1.5"><Ruler className="h-3 w-3 text-accent" />{p.area}m²</div>}
+                        {!!p.suites && <div className="flex items-center gap-1.5"><BedDouble className="h-3 w-3 text-accent" />{p.suites} Suítes</div>}
+                        {!!p.parking && <div className="flex items-center gap-1.5"><Car className="h-3 w-3 text-accent" />{p.parking} Vagas</div>}
                       </div>
                     </div>
                   </motion.div>
