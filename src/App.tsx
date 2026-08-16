@@ -58,7 +58,37 @@ function AppContent() {
   const isPropertyDetail = location.pathname.startsWith('/imovel/');
   const isNetworkPath = location.pathname.startsWith('/network-admin');
 
-  if (siteLoading && !isNetworkPath && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/login')) return <PageLoader />;
+  if (siteLoading && !isNetworkPath && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/login') && location.pathname !== '/auth/callback') return <PageLoader />;
+  
+  if (siteError && !isNetworkPath && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/login') && location.pathname !== '/auth/callback') {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0d1419] p-6 text-center">
+        <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mb-6">
+          <Globe2 className="h-10 w-10 text-accent animate-pulse" />
+        </div>
+        <h1 className="text-2xl font-serif font-bold text-accent mb-2 uppercase tracking-widest">
+          Site em Configuração
+        </h1>
+        <p className="text-white/60 max-w-md mb-8 leading-relaxed">
+          O domínio <span className="text-white font-mono">{window.location.hostname}</span> ainda não foi associado a um site ativo ou está aguardando propagação de DNS.
+        </p>
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <a 
+            href="/login" 
+            className="py-3 px-6 rounded-xl gold-gradient text-accent-foreground font-bold uppercase tracking-widest text-xs transition-all hover:scale-[1.02]"
+          >
+            Acessar Painel
+          </a>
+          <button 
+            onClick={() => window.location.reload()}
+            className="py-3 px-6 rounded-xl bg-white/5 border border-white/10 text-white/70 font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-all"
+          >
+            Tentar Novamente
+          </button>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="max-w-screen-lg mx-auto relative min-h-screen">
