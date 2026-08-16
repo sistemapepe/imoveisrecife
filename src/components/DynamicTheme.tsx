@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { parseHsl, formatHsl, pickBestContrast, adjustForContrast } from "@/lib/color-contrast";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +13,7 @@ function clampHslLightness(hsl: string, min = 25, max = 65): string {
 const LIGHT_CARD = { h: 0, s: 0, l: 100 };
 const DARK_CARD = { h: 195, s: 25, l: 13 };
 
-export const DynamicTheme = React.forwardRef<HTMLDivElement>((_, ref) => {
+export const DynamicTheme = () => {
   const { settings } = useProperties();
 
   useEffect(() => {
@@ -147,9 +147,7 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement>((_, ref) => {
     settings.brandName,
   ]);
 
-  return <div ref={ref} style={{ display: 'none' }} />;
-});
-
-DynamicTheme.displayName = "DynamicTheme";
+  return null;
+};
 
 export default DynamicTheme;

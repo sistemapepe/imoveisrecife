@@ -1,14 +1,13 @@
-import { useState, startTransition, useEffect, forwardRef } from "react";
+import { useState, startTransition, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProperties } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
 import { Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
-import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
 import SEOHead from "@/components/SEOHead";
 
-const Login = forwardRef<HTMLDivElement>((props, ref) => {
+const Login = () => {
   const navigate = useNavigate();
   const { signIn, user, role, loading: authLoading, isInitializing } = useAuth();
   const { settings } = useProperties();
@@ -51,7 +50,7 @@ const Login = forwardRef<HTMLDivElement>((props, ref) => {
   };
 
   return (
-    <div ref={ref} className="contents">
+    <div className="contents">
       <SEOHead title="Login" description="Acesse o painel administrativo de gestão de imóveis." noIndex />
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -152,7 +151,6 @@ const Login = forwardRef<HTMLDivElement>((props, ref) => {
       </div>
     </div>
   );
-});
+};
 
-Login.displayName = "Login";
 export default Login;
