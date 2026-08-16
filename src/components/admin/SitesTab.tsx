@@ -509,13 +509,18 @@ export default function SitesTab() {
           </div>
 
           <DialogFooter className="gap-2 pt-2">
-            <Button variant="outline" onClick={() => setPublishId(null)}>Agora não</Button>
+            <Button variant="outline" onClick={() => setPublishId(null)} className="rounded-xl border-white/10 text-white/70 hover:bg-white/5">Agora não</Button>
             <Button 
               onClick={handlePublish} 
               disabled={publishing}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl min-w-[140px]"
             >
-              {publishing ? "Publicando..." : "Sim, Publicar Agora"}
+              {publishing ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Publicando...
+                </>
+              ) : "Sim, Publicar Agora"}
             </Button>
           </DialogFooter>
         </DialogContent>
