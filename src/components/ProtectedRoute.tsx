@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -10,15 +9,6 @@ interface ProtectedRouteProps {
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading, role } = useAuth();
   const location = useLocation();
-  const [shouldRedirect, setShouldRedirect] = useState(false);
-
-  useEffect(() => {
-    if (!loading) {
-      if (!user || role === "user" || !role) {
-        setShouldRedirect(true);
-      }
-    }
-  }, [loading, user, role]);
 
   if (loading) {
     return (
@@ -28,12 +18,10 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
 
-  if (shouldRedirect) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
+  // Se não houver usuário ou o papel for 'user' (sem permissões administrativas), redireciona para login
   if (!user || role === "user" || !role) {
-     return null; // Evita renderizar enquanto o useEffect processa o redirecionamento
+    // Usamos replace: false temporariamente para depurar se o redirecionamento é o problema
+    return <Navigate to="/login" state={{ from: location }} replace={false} />;
   }
 
   return <>{children}</>;

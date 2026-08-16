@@ -138,7 +138,10 @@ export default function Admin() {
   }, [isAdmin, role, tab]);
 
   if (authLoading) return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
-  if (!user) return null;
+  if (!user || role === "user") {
+    navigate("/login");
+    return null;
+  }
 
   const startEdit = (p: Property) => {
     setEditing(p.id);
