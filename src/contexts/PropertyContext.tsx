@@ -448,6 +448,8 @@ export const PropertyProvider = React.forwardRef<HTMLDivElement, { children: Rea
     }
   };
 
+  const refreshProperties = useCallback(() => fetchProperties(true), [fetchProperties]);
+  
   return (
     <PropertyContext.Provider value={{ properties, settings, loading, addProperty, updateProperty, deleteProperty, updateSettings, favorites, toggleFavorite, refreshProperties }}>
       <div ref={ref} className="contents">
@@ -456,11 +458,6 @@ export const PropertyProvider = React.forwardRef<HTMLDivElement, { children: Rea
     </PropertyContext.Provider>
   );
 });
-    <PropertyContext.Provider value={{ properties, settings, loading, addProperty, updateProperty, deleteProperty, updateSettings, favorites, toggleFavorite, refreshProperties: fetchProperties }}>
-      {children}
-    </PropertyContext.Provider>
-  );
-}
 
 export function useProperties() {
   const ctx = useContext(PropertyContext);
