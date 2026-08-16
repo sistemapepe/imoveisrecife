@@ -40,29 +40,35 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
 
       try {
         const fetchC = async () => {
-          const { count, error } = await (supabase.from("contact_messages").select("id", { count: "exact", head: true }) as any)
+          const { count, error } = await supabase.from("contact_messages").select("id", { count: "exact", head: true })
             .eq("site_id", site.id)
             .gte("created_at", isoWeek);
           if (error) throw error;
           return count ?? 0;
         };
         const fetchV = async () => {
-          const { count, error } = await (supabase.from("visit_requests").select("id", { count: "exact", head: true }) as any)
-            .eq("site_id", site.id)
+          // Join with properties to filter by site_id since visit_requests might not have it
+          const { count, error } = await supabase
+            .from("visit_requests")
+            .select("id, properties!inner(site_id)", { count: "exact", head: true })
+            .eq("properties.site_id", site.id)
             .eq("status", "pending");
           if (error) throw error;
           return count ?? 0;
         };
         const fetchW = async () => {
-          const { count, error } = await (supabase.from("property_views").select("id", { count: "exact", head: true }) as any)
-            .eq("site_id", site.id)
+          // Join with properties to filter by site_id
+          const { count, error } = await supabase
+            .from("property_views")
+            .select("id, properties!inner(site_id)", { count: "exact", head: true })
+            .eq("properties.site_id", site.id)
             .gte("created_at", isoWeek);
           if (error) throw error;
           return count ?? 0;
         };
 
         const fetchP = async () => {
-          const { count, error } = await (supabase.from("properties").select("id", { count: "exact", head: true }) as any)
+          const { count, error } = await supabase.from("properties").select("id", { count: "exact", head: true })
             .eq("site_id", site.id);
           if (error) throw error;
           return count ?? 0;
