@@ -449,7 +449,7 @@ export const PropertyProvider = React.forwardRef<HTMLDivElement, { children: Rea
   };
 
   return (
-    <PropertyContext.Provider value={{ properties, settings, loading, addProperty, updateProperty, deleteProperty, updateSettings, favorites, toggleFavorite, refreshProperties }}>
+    <PropertyContext.Provider value={{ properties, settings, loading, addProperty, updateProperty, deleteProperty, updateSettings, favorites, toggleFavorite, refreshProperties: fetchProperties }}>
       <div ref={ref} className="contents">
         {children}
       </div>
