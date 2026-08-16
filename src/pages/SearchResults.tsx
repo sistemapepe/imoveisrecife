@@ -119,15 +119,17 @@ export default function SearchResults() {
             </div>
           )}
 
-          <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-3 border-t border-border/50">
+          <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-3 border-t border-white/5">
             {propertyTypes.map((type) => {
               const active = activeFilters.includes(type);
               return (
                 <button
                   key={type}
                   onClick={() => toggleFilter(type)}
-                  className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${
-                    active ? "bg-luxury-dark text-card" : "bg-card border border-border text-muted-foreground"
+                  className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-[0.15em] transition-all border ${
+                    active 
+                      ? "gold-gradient text-white border-transparent shadow-lg shadow-accent/20" 
+                      : "bg-white/5 border-white/10 text-white/40 hover:border-accent/40"
                   }`}
                 >
                   {type === "Apartamento" ? "Apt" : type}
