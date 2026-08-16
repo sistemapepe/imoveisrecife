@@ -392,8 +392,8 @@ export default function Index() {
                           <div className="min-w-0">
                             {s.neighborhood ? (
                               <>
-                                <span className="text-sm font-semibold text-card">{s.neighborhood}</span>
-                                <span className="text-xs text-card/50 ml-1.5">{s.city}, PE</span>
+                                <span className="text-sm font-semibold text-white">{s.neighborhood}</span>
+                                <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest ml-2">{s.city}, PE</span>
                               </>
                             ) : (
                               <span className="text-sm font-semibold text-card">{s.city}, PE</span>
