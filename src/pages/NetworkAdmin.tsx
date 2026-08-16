@@ -1,7 +1,7 @@
-import { useState, useTransition, Suspense, lazy, useCallback } from "react";
+import { useState, useTransition, Suspense, lazy, useCallback, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { 
   Globe2, 
   LayoutDashboard, 
@@ -19,6 +19,7 @@ import PageTransition from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
+// Lazy loading components with custom names to avoid conflicts
 const SitesTab = lazy(() => import("@/components/admin/SitesTab"));
 const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
 const UsersTab = lazy(() => import("@/components/admin/UsersTab"));
@@ -31,33 +32,62 @@ type NetworkTab = "dashboard" | "sites" | "users" | "analytics" | "security" | "
 
 export default function NetworkAdmin() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user, isSuperAdmin, loading: authLoading, signOut } = useAuth();
-  const [tab, setTab] = useState<NetworkTab>("dashboard");
+  
+  // Initialize tab from URL or sessionStorage for persistence and instant hydration
+  const [tab, setTab] = useState<NetworkTab>(() => {
+    const urlTab = searchParams.get("tab") as NetworkTab;
+    if (urlTab) return urlTab;
+    return (sessionStorage.getItem("network_active_tab") as NetworkTab) || "dashboard";
+  });
+  
   const [isPending, startTransition] = useTransition();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Memoize prefetch to avoid re-renders
-  const prefetchTab = useCallback((targetTab: NetworkTab) => {
-    switch (targetTab) {
-      case "dashboard": import("@/components/admin/NetworkDashboard"); break;
-      case "sites": import("@/components/admin/SitesTab"); break;
-      case "users": import("@/components/admin/UsersTab"); break;
-      case "analytics": import("@/components/admin/AnalyticsTab"); break;
-      case "import": import("@/components/admin/BulkImportTab"); break;
-      case "security": import("@/components/admin/SecurityDiagnosticTab"); break;
-      case "settings": import("@/components/admin/NetworkSettingsTab"); break;
+  // Persistence and synchronization
+  useEffect(() => {
+    sessionStorage.setItem("network_active_tab", tab);
+    if (searchParams.get("tab") !== tab) {
+      setSearchParams({ tab }, { replace: true });
     }
-  }, []);
+  }, [tab, searchParams, setSearchParams]);
+
+  // Components map for prefetching
+  const componentsMap = useMemo(() => ({
+    dashboard: () => import("@/components/admin/NetworkDashboard"),
+    sites: () => import("@/components/admin/SitesTab"),
+    users: () => import("@/components/admin/UsersTab"),
+    analytics: () => import("@/components/admin/AnalyticsTab"),
+    import: () => import("@/components/admin/BulkImportTab"),
+    security: () => import("@/components/admin/SecurityDiagnosticTab"),
+    settings: () => import("@/components/admin/NetworkSettingsTab"),
+  }), []);
+
+  const prefetchTab = useCallback((targetTab: NetworkTab) => {
+    const importer = componentsMap[targetTab];
+    if (importer) importer();
+  }, [componentsMap]);
 
   const switchTab = useCallback((newTab: NetworkTab) => {
     if (tab === newTab) return;
+    
+    // Prefetch immediately on click before transition
+    prefetchTab(newTab);
+    
     startTransition(() => {
       setTab(newTab);
       setMobileMenuOpen(false);
     });
-  }, [tab]);
+  }, [tab, prefetchTab]);
 
-  if (authLoading) return <div className="min-h-screen flex items-center justify-center bg-luxury-dark text-accent">Carregando...</div>;
+  if (authLoading) return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-luxury-dark text-accent space-y-4">
+      <Loader2 className="h-10 w-10 animate-spin" />
+      <span className="text-xs uppercase tracking-widest opacity-50">Autenticando na Rede...</span>
+    </div>
+  );
+  
   if (!user || !isSuperAdmin) {
     navigate("/login");
     return null;

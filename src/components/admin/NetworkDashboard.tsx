@@ -30,6 +30,7 @@ export default function NetworkDashboard() {
     try {
       if (forceLoading) setStats(prev => ({ ...prev, loading: true }));
       
+      // Consultas otimizadas com select head:true para contar registros sem transferir dados
       const [sitesRes, propertiesRes, usersRes, leadsRes] = await Promise.all([
         supabase.from("sites").select("id", { count: 'exact', head: true }),
         supabase.from("properties").select("id", { count: 'exact', head: true }),
@@ -45,6 +46,7 @@ export default function NetworkDashboard() {
       };
 
       setStats({ ...newStats, loading: false });
+      // Cache mais longo para o dashboard (5 minutos)
       sessionStorage.setItem("network_global_stats", JSON.stringify({ data: newStats, timestamp: Date.now() }));
     } catch (error) {
       console.error("Erro ao buscar estatísticas de rede:", error);
