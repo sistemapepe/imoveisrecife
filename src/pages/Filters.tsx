@@ -159,7 +159,7 @@ export default function Filters() {
           <Footer />
         </main>
 
-        <div className="fixed bottom-20 left-0 right-0 p-4 bg-card/90 backdrop-blur-lg border-t border-border z-50 max-w-md mx-auto">
+        <div className="fixed bottom-20 left-0 right-0 p-6 glass-nav border-t border-white/10 z-50 max-w-lg mx-auto rounded-t-[2.5rem] shadow-[0_-20px_50px_rgba(0,0,0,0.3)]">
           <button
             onClick={() => {
               const params = new URLSearchParams();
