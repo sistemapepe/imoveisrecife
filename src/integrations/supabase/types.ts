@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       contact_info: {
         Row: {
           email_contact: string
@@ -44,6 +74,7 @@ export type Database = {
           message: string
           name: string
           phone: string
+          site_id: string | null
           source: string
         }
         Insert: {
@@ -54,6 +85,7 @@ export type Database = {
           message?: string
           name: string
           phone?: string
+          site_id?: string | null
           source?: string
         }
         Update: {
@@ -64,9 +96,18 @@ export type Database = {
           message?: string
           name?: string
           phone?: string
+          site_id?: string | null
           source?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "contact_messages_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       favorites: {
         Row: {
@@ -159,9 +200,37 @@ export type Database = {
           },
         ]
       }
+      network_settings: {
+        Row: {
+          description: string | null
+          id: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
       performance_logs: {
         Row: {
           connection_type: string | null
+          context: Json | null
           created_at: string
           device_type: string | null
           id: string
@@ -169,10 +238,12 @@ export type Database = {
           metric_name: string
           metric_value: number
           page_url: string
+          site_id: string | null
           visitor_id: string | null
         }
         Insert: {
           connection_type?: string | null
+          context?: Json | null
           created_at?: string
           device_type?: string | null
           id?: string
@@ -180,10 +251,12 @@ export type Database = {
           metric_name: string
           metric_value: number
           page_url: string
+          site_id?: string | null
           visitor_id?: string | null
         }
         Update: {
           connection_type?: string | null
+          context?: Json | null
           created_at?: string
           device_type?: string | null
           id?: string
@@ -191,9 +264,18 @@ export type Database = {
           metric_name?: string
           metric_value?: number
           page_url?: string
+          site_id?: string | null
           visitor_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "performance_logs_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       properties: {
         Row: {
@@ -215,6 +297,7 @@ export type Database = {
           parking: number
           previous_price: number
           price: number
+          site_id: string | null
           status: string
           status_aluguel: string
           suites: number
@@ -242,6 +325,7 @@ export type Database = {
           parking?: number
           previous_price?: number
           price?: number
+          site_id?: string | null
           status?: string
           status_aluguel?: string
           suites?: number
@@ -269,6 +353,7 @@ export type Database = {
           parking?: number
           previous_price?: number
           price?: number
+          site_id?: string | null
           status?: string
           status_aluguel?: string
           suites?: number
@@ -277,7 +362,15 @@ export type Database = {
           updated_at?: string
           video_tour_url?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "properties_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       property_views: {
         Row: {
@@ -338,20 +431,31 @@ export type Database = {
           id: string
           permission: string
           role: Database["public"]["Enums"]["app_role"]
+          site_id: string | null
         }
         Insert: {
           enabled?: boolean
           id?: string
           permission: string
           role: Database["public"]["Enums"]["app_role"]
+          site_id?: string | null
         }
         Update: {
           enabled?: boolean
           id?: string
           permission?: string
           role?: Database["public"]["Enums"]["app_role"]
+          site_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       site_settings: {
         Row: {
@@ -400,6 +504,7 @@ export type Database = {
           privacy_policy: string
           show_location_on_card: boolean
           show_visit_schedule: boolean
+          site_id: string | null
           updated_at: string
           watermark_enabled: boolean
           watermark_opacity: number
@@ -455,6 +560,7 @@ export type Database = {
           privacy_policy?: string
           show_location_on_card?: boolean
           show_visit_schedule?: boolean
+          site_id?: string | null
           updated_at?: string
           watermark_enabled?: boolean
           watermark_opacity?: number
@@ -510,6 +616,7 @@ export type Database = {
           privacy_policy?: string
           show_location_on_card?: boolean
           show_visit_schedule?: boolean
+          site_id?: string | null
           updated_at?: string
           watermark_enabled?: boolean
           watermark_opacity?: number
@@ -518,6 +625,50 @@ export type Database = {
           website_url?: string
           whatsapp_message?: string
           youtube_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_settings_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: true
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sites: {
+        Row: {
+          brand_name: string
+          created_at: string
+          domain: string
+          id: string
+          is_active: boolean | null
+          last_published_at: string | null
+          owner_id: string | null
+          publish_status: string | null
+          updated_at: string
+        }
+        Insert: {
+          brand_name: string
+          created_at?: string
+          domain: string
+          id?: string
+          is_active?: boolean | null
+          last_published_at?: string | null
+          owner_id?: string | null
+          publish_status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          brand_name?: string
+          created_at?: string
+          domain?: string
+          id?: string
+          is_active?: boolean | null
+          last_published_at?: string | null
+          owner_id?: string | null
+          publish_status?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -542,6 +693,7 @@ export type Database = {
           referrer_domain: string
           referrer_url: string
           session_id: string
+          site_id: string | null
           social_network: string
           source: string
           term: string
@@ -567,6 +719,7 @@ export type Database = {
           referrer_domain?: string
           referrer_url?: string
           session_id?: string
+          site_id?: string | null
           social_network?: string
           source?: string
           term?: string
@@ -592,6 +745,7 @@ export type Database = {
           referrer_domain?: string
           referrer_url?: string
           session_id?: string
+          site_id?: string | null
           social_network?: string
           source?: string
           term?: string
@@ -605,25 +759,43 @@ export type Database = {
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "traffic_events_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_roles: {
         Row: {
           id: string
           role: Database["public"]["Enums"]["app_role"]
+          site_id: string | null
           user_id: string
         }
         Insert: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          site_id?: string | null
           user_id: string
         }
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          site_id?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       visit_requests: {
         Row: {
@@ -680,6 +852,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      assign_site_admin: {
+        Args: { p_site_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      duplicate_site: {
+        Args: {
+          new_brand_name: string
+          new_domain: string
+          source_site_id: string
+        }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -687,10 +871,12 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       save_role_perms: { Args: { p_rows: Json }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user" | "supervisor" | "corretor" | "super_admin"
+      publish_status_type: "draft" | "published" | "scheduled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -819,6 +1005,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user", "supervisor", "corretor", "super_admin"],
+      publish_status_type: ["draft", "published", "scheduled"],
     },
   },
 } as const
