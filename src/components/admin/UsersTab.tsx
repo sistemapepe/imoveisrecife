@@ -158,7 +158,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
                 <p className="text-sm font-semibold truncate text-accent">{u.email}</p>
                 <div className="flex items-center gap-2 mt-1">
                   {roleBadge(u.role)}
-                  <span className="text-[10px] text-card/60">
+                  <span className="text-[10px] text-accent/60">
                     {new Date(u.created_at).toLocaleDateString("pt-BR")}
                   </span>
                 </div>

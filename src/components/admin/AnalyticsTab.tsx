@@ -232,7 +232,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
           <div key={label} className="p-4 rounded-xl bg-black/40 border border-white/5">
             <Icon className={`h-5 w-5 ${color} mb-2`} />
             <div className="text-2xl font-extrabold text-accent">{value}</div>
-            <div className="text-xs text-muted-foreground">{label}</div>
+            <div className="text-xs text-accent/70">{label}</div>
           </div>
         ))}
       </div>
@@ -243,7 +243,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
           <BarChart3 className="h-5 w-5 text-accent" /> Top Imóveis Visualizados
         </h3>
         {viewsByProperty.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Nenhuma visualização registrada no período.</p>
+          <p className="text-sm text-accent/70">Nenhuma visualização registrada no período.</p>
         ) : (
           <div className="space-y-3">
             {viewsByProperty.map((item) => (
@@ -280,7 +280,7 @@ function TimelineChart({ title, data, color }: { title: string; data: LeadsByPer
     <div className="p-5 rounded-xl bg-black/40 border border-white/5">
       <h3 className="font-bold mb-4 text-sm">{title}</h3>
       {data.length === 0 ? (
-        <p className="text-xs text-muted-foreground">Sem dados no período.</p>
+        <p className="text-xs text-accent/70">Sem dados no período.</p>
       ) : (
         <div className="flex items-end gap-1 h-32">
           {data.slice(-30).map((d) => (
