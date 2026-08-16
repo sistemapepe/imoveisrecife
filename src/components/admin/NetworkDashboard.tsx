@@ -89,7 +89,7 @@ export default function NetworkDashboard() {
                   {stats.loading ? (
                     <div className="h-8 w-16 bg-white/5 animate-pulse rounded" />
                   ) : (
-                    <span className="text-3xl font-serif font-bold text-card">{stat.value}</span>
+                    <span className="text-3xl font-serif font-bold text-accent">{stat.value}</span>
                   )}
                 </div>
                 <h3 className="text-xs uppercase tracking-[0.2em] font-black text-card/40">{stat.label}</h3>
@@ -114,14 +114,14 @@ export default function NetworkDashboard() {
              <div className="bg-green-500/5 border border-green-500/10 rounded-2xl p-6 flex items-center gap-4">
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <div>
-                  <h4 className="font-bold text-card">Banco de Dados</h4>
+                  <h4 className="font-bold text-accent">Banco de Dados</h4>
                   <p className="text-xs text-card/60">Conexão estável e latência otimizada.</p>
                 </div>
              </div>
              <div className="bg-green-500/5 border border-green-500/10 rounded-2xl p-6 flex items-center gap-4">
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <div>
-                  <h4 className="font-bold text-card">Serviços de Auth</h4>
+                  <h4 className="font-bold text-accent">Serviços de Auth</h4>
                   <p className="text-xs text-card/60">Provedores de identidade operacionais.</p>
                 </div>
              </div>

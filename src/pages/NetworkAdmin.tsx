@@ -80,7 +80,7 @@ export default function NetworkAdmin() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-luxury-dark text-card flex flex-col md:flex-row dark">
+      <div className="min-h-screen bg-luxury-dark text-card flex flex-col md:flex-row dark overflow-x-hidden">
         {/* Mobile Header */}
         <header className="md:hidden sticky top-0 z-50 bg-luxury-dark-lighter/80 backdrop-blur-md border-b border-white/5 px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">

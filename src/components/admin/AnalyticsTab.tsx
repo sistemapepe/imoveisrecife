@@ -229,7 +229,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
           { icon: Calendar, label: "Agendamentos", value: totalVisits, color: "text-accent" },
           { icon: TrendingUp, label: "Conversão", value: totalViews > 0 ? `${((totalLeads + totalVisits) / totalViews * 100).toFixed(1)}%` : "0%", color: "text-primary" },
         ].map(({ icon: Icon, label, value, color }) => (
-          <div key={label} className="p-4 rounded-xl bg-card border border-border">
+          <div key={label} className="p-4 rounded-xl bg-black/40 border border-white/5">
             <Icon className={`h-5 w-5 ${color} mb-2`} />
             <div className="text-2xl font-extrabold">{value}</div>
             <div className="text-xs text-muted-foreground">{label}</div>
@@ -238,7 +238,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
       </div>
 
       {/* Views by Property */}
-      <div className="p-5 rounded-xl bg-card border border-border">
+      <div className="p-5 rounded-xl bg-black/40 border border-white/5">
         <h3 className="font-bold mb-4 flex items-center gap-2">
           <BarChart3 className="h-5 w-5 text-accent" /> Top Imóveis Visualizados
         </h3>
@@ -277,7 +277,7 @@ function TimelineChart({ title, data, color }: { title: string; data: LeadsByPer
   const maxVal = Math.max(...data.map((d) => d.count), 1);
 
   return (
-    <div className="p-5 rounded-xl bg-card border border-border">
+    <div className="p-5 rounded-xl bg-black/40 border border-white/5">
       <h3 className="font-bold mb-4 text-sm">{title}</h3>
       {data.length === 0 ? (
         <p className="text-xs text-muted-foreground">Sem dados no período.</p>
