@@ -33,14 +33,15 @@ export default function SitesTab() {
     const init = async () => {
       setLoading(true);
       
-      // Tenta recuperar do cache local primeiro
-      const cached = localStorage.getItem("admin_sites_list");
+      const cached = sessionStorage.getItem("admin_sites_list");
       if (cached) {
         try {
           const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 30000) { // 30 segundos de cache
+          if (Date.now() - timestamp < 30000) {
             setSites(data);
             setLoading(false);
+            fetchSites(false);
+            return;
           }
         } catch (e) {}
       }
@@ -49,7 +50,7 @@ export default function SitesTab() {
         .from('sites' as any)
         .select('id, domain, brand_name, is_active, publish_status, last_published_at, created_at')
         .order('created_at', { ascending: false })
-        .limit(20); // Reduzido de 50 para 20 para carregamento inicial mais leve
+        .limit(20);
       
       if (!mounted) return;
 
@@ -58,7 +59,7 @@ export default function SitesTab() {
       } else {
         const sitesList = (data as any) || [];
         setSites(sitesList);
-        localStorage.setItem("admin_sites_list", JSON.stringify({ data: sitesList, timestamp: Date.now() }));
+        sessionStorage.setItem("admin_sites_list", JSON.stringify({ data: sitesList, timestamp: Date.now() }));
       }
       setLoading(false);
     };
@@ -66,8 +67,7 @@ export default function SitesTab() {
     return () => { mounted = false; };
   }, []);
 
-  async function fetchSites() {
-    // Busca forçada (bypass cache) para atualizações manuais
+  async function fetchSites(showToast = true) {
     const { data, error } = await supabase
       .from('sites' as any)
       .select('id, domain, brand_name, is_active, publish_status, last_published_at, created_at')
@@ -75,11 +75,11 @@ export default function SitesTab() {
       .limit(50);
     
     if (error) {
-      toast.error("Erro ao carregar sites");
+      if (showToast) toast.error("Erro ao carregar sites");
     } else {
       const sitesList = (data as any) || [];
       setSites(sitesList);
-      localStorage.setItem("admin_sites_list", JSON.stringify({ data: sitesList, timestamp: Date.now() }));
+      sessionStorage.setItem("admin_sites_list", JSON.stringify({ data: sitesList, timestamp: Date.now() }));
     }
   }
 
