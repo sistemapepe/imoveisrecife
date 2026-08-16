@@ -224,13 +224,7 @@ export default function NetworkAdmin() {
             {tab === "analytics" && <AnalyticsTab isNetwork={true} />}
             {tab === "import" && <BulkImportTab />}
             {tab === "security" && <SecurityDiagnosticTab />}
-            {tab === "settings" && (
-              <div className="p-12 text-center border-2 border-dashed border-white/10 rounded-3xl">
-                <Settings className="h-12 w-12 text-accent/20 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">Configurações de Rede</h3>
-                <p className="text-muted-foreground">Módulo em desenvolvimento. Aqui você poderá gerenciar temas globais e limites de recursos.</p>
-              </div>
-            )}
+            {tab === "settings" && <NetworkSettingsTab />}
           </Suspense>
         </main>
       </div>
