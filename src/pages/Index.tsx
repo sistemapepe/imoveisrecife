@@ -355,7 +355,7 @@ export default function Index() {
                     <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-accent/40 via-primary/20 to-accent/40 opacity-60 blur-sm group-focus-within:opacity-100 transition-opacity duration-500" />
                     <Search className="absolute left-5 h-5 w-5 text-accent/80 z-10" />
                     <input
-                      className="relative w-full h-14 pl-13 pr-5 bg-foreground/20 backdrop-blur-2xl rounded-full text-sm font-medium text-card shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)] border border-card/15 focus:border-accent/40 focus:shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_20px_hsl(var(--accent)/0.15)] focus:outline-none transition-all duration-300 placeholder:text-card/50"
+                      className="relative w-full h-14 pl-13 pr-5 bg-foreground/20 backdrop-blur-3xl rounded-[1.25rem] text-sm font-medium text-white shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.1)] border border-white/10 focus:border-accent/60 focus:shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_25px_rgba(212,175,55,0.15)] focus:outline-none transition-all duration-300 placeholder:text-white/40"
                       style={{ paddingLeft: '3.25rem' }}
                       value={quickSearch}
                       onChange={(e) => { 
