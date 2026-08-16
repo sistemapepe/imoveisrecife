@@ -42,19 +42,40 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  const fetchUsers = useCallback(async () => {
+  const fetchUsers = useCallback(async (showLoading = true) => {
     if (!site && !isNetwork) return;
-    setLoading(true);
+    
+    const cacheKey = `users_list_${isNetwork ? 'global' : site?.id}`;
+    if (showLoading) {
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const { data, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < 60000) { // 1 min cache
+            setUsers(data);
+            setLoading(false);
+            // Refresh in background
+            fetchUsers(false);
+            return;
+          }
+        } catch (e) {}
+      }
+      setLoading(true);
+    }
+
     const { data, error } = await supabase.functions.invoke("manage-users", {
       body: { action: "list", siteId: isNetwork ? null : site?.id },
     });
+
     if (error || data?.error) {
       toast.error(data?.error || "Erro ao carregar usuários");
     } else {
-      setUsers(data.users || []);
+      const usersList = data.users || [];
+      setUsers(usersList);
+      sessionStorage.setItem(cacheKey, JSON.stringify({ data: usersList, timestamp: Date.now() }));
     }
     setLoading(false);
-  }, []);
+  }, [site?.id, isNetwork]);
 
   useEffect(() => { fetchUsers(); }, [fetchUsers]);
 

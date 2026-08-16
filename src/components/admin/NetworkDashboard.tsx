@@ -14,14 +14,25 @@ export default function NetworkDashboard() {
   });
 
   useEffect(() => {
-    fetchStats();
+    const cached = sessionStorage.getItem("network_global_stats");
+    if (cached) {
+      try {
+        const { data, timestamp } = JSON.parse(cached);
+        if (Date.now() - timestamp < 60000) { // 60 segundos de cache
+          setStats({ ...data, loading: false });
+          // Ainda busca em background para atualizar se necessário
+          fetchStats(false);
+          return;
+        }
+      } catch (e) {}
+    }
+    fetchStats(true);
   }, []);
 
-  const fetchStats = async () => {
+  const fetchStats = async (showLoading = true) => {
     try {
-      // Usando Promise.all para buscas paralelas
-      // Nota: As tabelas 'user_roles' e 'contact_messages' são usadas como proxies 
-      // para usuários e leads no contexto de contagem global.
+      if (showLoading) setStats(prev => ({ ...prev, loading: true }));
+      
       const [sitesRes, propertiesRes, usersRes, leadsRes] = await Promise.all([
         supabase.from("sites").select("id", { count: 'exact', head: true }),
         supabase.from("properties").select("id", { count: 'exact', head: true }),
@@ -29,13 +40,15 @@ export default function NetworkDashboard() {
         supabase.from("contact_messages").select("id", { count: 'exact', head: true })
       ]);
 
-      setStats({
+      const newStats = {
         sites: sitesRes.count || 0,
         properties: propertiesRes.count || 0,
         users: usersRes.count || 0,
         leads: leadsRes.count || 0,
-        loading: false
-      });
+      };
+
+      setStats({ ...newStats, loading: false });
+      sessionStorage.setItem("network_global_stats", JSON.stringify({ data: newStats, timestamp: Date.now() }));
     } catch (error) {
       console.error("Erro ao buscar estatísticas de rede:", error);
       setStats(prev => ({ ...prev, loading: false }));

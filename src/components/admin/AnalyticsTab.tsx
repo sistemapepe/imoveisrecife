@@ -30,9 +30,28 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
   const [customRange, setCustomRange] = useState<DateRange | undefined>();
 
   useEffect(() => {
-    fetchAnalytics();
+    const cacheKey = `analytics_${isNetwork ? 'global' : site?.id}_${period}_${customRange?.from?.toISOString()}_${customRange?.to?.toISOString()}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    
+    if (cached) {
+      try {
+        const { data, timestamp } = JSON.parse(cached);
+        if (Date.now() - timestamp < 30000) { // 30s cache
+          setTotalViews(data.totalViews);
+          setTotalLeads(data.totalLeads);
+          setTotalVisits(data.totalVisits);
+          setViewsByProperty(data.viewsByProperty);
+          setViewsByDay(data.viewsByDay);
+          setLeadsByDay(data.leadsByDay);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {}
+    }
+
+    fetchAnalytics(cacheKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString(), site?.id]);
+  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString(), site?.id, isNetwork]);
 
   const getDateRange = (): { from: string; to?: string } => {
     if (period === "custom" && customRange?.from) {
@@ -53,7 +72,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
     return { from: d.toISOString() };
   };
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = async (cacheKey?: string) => {
     setLoading(true);
     const { from, to } = getDateRange();
 
@@ -114,6 +133,18 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
     setViewsByDay(groupByDay(views));
     setLeadsByDay(groupByDay(leads));
     setLoading(false);
+
+    if (cacheKey) {
+      const cacheData = {
+        totalViews: views.length,
+        totalLeads: leads.length,
+        totalVisits: visits.length,
+        viewsByProperty: viewsByProp,
+        viewsByDay: groupByDay(views),
+        leadsByDay: groupByDay(leads)
+      };
+      sessionStorage.setItem(cacheKey, JSON.stringify({ data: cacheData, timestamp: Date.now() }));
+    }
   };
 
   const maxBarValue = Math.max(...viewsByProperty.map((v) => v.count), 1);
