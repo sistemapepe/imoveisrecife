@@ -91,7 +91,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         </button>
         <button
           aria-label={`Falar no WhatsApp sobre ${property.title}`}
-          className="absolute bottom-4 right-4 w-11 h-11 flex items-center justify-center bg-whatsapp text-white rounded-full shadow-lg hover:scale-110 transition-transform"
+          className="absolute bottom-4 right-4 w-12 h-12 flex items-center justify-center bg-whatsapp text-white rounded-2xl shadow-xl hover:scale-110 active:scale-90 transition-all border border-white/20"
           onClick={(e) => { e.stopPropagation(); setLeadOpen(true); }}
         >
           <MessageCircle className="h-5 w-5" />
