@@ -127,7 +127,7 @@ export default function Contact() {
               rows={4}
               className="w-full border border-white/10 rounded-2xl bg-white/5 p-4 mt-4 text-sm focus:outline-none focus:border-accent transition-all placeholder:text-white/30 placeholder:uppercase placeholder:text-[10px] placeholder:tracking-[0.2em] resize-none min-h-[120px]"
             />
-            <button type="submit" disabled={sending} className="w-full gold-gradient text-accent-foreground font-bold py-4 rounded-sm uppercase tracking-[0.2em] text-xs shadow-lg mt-8 disabled:opacity-50">
+            <button type="submit" disabled={sending} className="w-full gold-gradient text-white font-extrabold py-5 rounded-2xl uppercase tracking-[0.25em] text-[10px] shadow-2xl shadow-accent/20 mt-10 disabled:opacity-50 active:scale-[0.98] transition-all">
               {sending ? "Enviando..." : "Solicitar Contato"}
             </button>
           </form>
