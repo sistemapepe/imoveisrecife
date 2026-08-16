@@ -38,9 +38,13 @@ export default function NetworkAdmin() {
   
   // Initialize tab from URL or sessionStorage for persistence and instant hydration
   const [tab, setTab] = useState<NetworkTab>(() => {
-    const urlTab = searchParams.get("tab") as NetworkTab;
-    if (urlTab) return urlTab;
-    return (sessionStorage.getItem("network_active_tab") as NetworkTab) || "dashboard";
+    try {
+      const urlTab = new URLSearchParams(window.location.search).get("tab") as NetworkTab;
+      if (urlTab) return urlTab;
+      return (sessionStorage.getItem("network_active_tab") as NetworkTab) || "dashboard";
+    } catch (e) {
+      return "dashboard";
+    }
   });
   
   const [isPending, startTransition] = useTransition();
@@ -48,17 +52,20 @@ export default function NetworkAdmin() {
 
   // Persistence and synchronization
   useEffect(() => {
+    if (!user || !isSuperAdmin) return;
+
     logger.startTimer("NetworkAdmin_Mount");
     sessionStorage.setItem("network_active_tab", tab);
-    // Evita loop de renderização verificando se a URL já está correta
-    const currentUrlTab = new URLSearchParams(window.location.search).get("tab");
+    
+    // Sincroniza URL sem causar loops
+    const currentUrlTab = searchParams.get("tab");
     if (currentUrlTab !== tab) {
       setSearchParams({ tab }, { replace: true });
     }
     
-    // Pequeno timeout para garantir que a renderização inicial terminou
-    setTimeout(() => logger.endTimer("NetworkAdmin_Mount"), 100);
-  }, [tab, setSearchParams]);
+    logger.endTimer("NetworkAdmin_Mount");
+  }, [tab, setSearchParams, searchParams, user, isSuperAdmin]);
+
 
 
   // Components map for prefetching
