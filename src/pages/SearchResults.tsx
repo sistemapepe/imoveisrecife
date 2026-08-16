@@ -100,11 +100,11 @@ export default function SearchResults() {
           <div className="flex items-center justify-between px-4 h-14">
             <BackButton variant="ghost" />
             <div className="text-center absolute left-1/2 -translate-x-1/2 pointer-events-none">
-              <h1 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground leading-none mb-0.5">Resultados</h1>
-              <p className="text-sm font-bold text-foreground italic">{filtered.length} Imóveis</p>
+               <h1 className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-accent/60 leading-none mb-1">Resultados</h1>
+              <p className="text-sm font-serif font-bold text-white italic">{filtered.length} Imóveis</p>
             </div>
-            <button onClick={() => navigate("/filtros")} aria-label="Abrir filtros" className="flex items-center justify-center w-10 h-10 hover:bg-black/5 rounded-full transition-colors -mr-1">
-              <SlidersHorizontal className="h-6 w-6 text-foreground" aria-hidden="true" />
+            <button onClick={() => navigate("/filtros")} aria-label="Abrir filtros" className="flex items-center justify-center w-10 h-10 hover:bg-white/5 rounded-full transition-colors -mr-1">
+              <SlidersHorizontal className="h-6 w-6 text-white" aria-hidden="true" />
             </button>
           </div>
 
