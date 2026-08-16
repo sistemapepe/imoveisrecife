@@ -112,9 +112,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
       
+      // Verifica cache de super_admin global para resposta instantânea
+      const cachedSuperAdmin = sessionStorage.getItem(`is_global_super_admin_${userId}`);
+      if (cachedSuperAdmin === 'true') {
+        if (mounted) {
+          setRole("super_admin");
+          setLoading(false);
+          setIsInitializing(false);
+        }
+        // Background check to verify if still super_admin
+      }
+
       if (!site?.id && siteLoading) {
         logger.warn("Site not resolved yet in checkRole, checking global super_admin first...");
-        // Tentamos verificar se o usuário é super_admin global antes mesmo do site carregar
+        
         const { data: superAdminCheck } = await supabase
           .from("user_roles")
           .select("role")
@@ -125,6 +136,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (superAdminCheck) {
           logger.info("Global super_admin detected early", { userId });
+          sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
           if (mounted) {
             setRole("super_admin");
             setLoading(false);
@@ -133,12 +145,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        logger.warn("Not a global super_admin or check failed, will retry checkRole when site is ready.");
-        // Se não for super admin global, aguardamos o site carregar e tentamos novamente via timeout
-        setTimeout(() => {
-          if (mounted) checkRole(userId, mounted);
-        }, 800);
-        return;
+        if (cachedSuperAdmin !== 'true') {
+          logger.warn("Not a global super_admin or check failed, will retry checkRole when site is ready.");
+          setTimeout(() => {
+            if (mounted) checkRole(userId, mounted);
+          }, 800);
+          return;
+        }
       }
       
       const { data, error } = await supabase
@@ -156,6 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         if (globalSuperAdmin || anySuperAdmin) {
           selectedRole = "super_admin";
+          sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
         } else if (site?.id) {
           const siteSpecific = data.find(r => r.site_id === site.id);
           if (siteSpecific) {
