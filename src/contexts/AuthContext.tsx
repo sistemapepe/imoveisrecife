@@ -108,7 +108,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
       const userRole = (data?.role as AppRole) || "user";
-      console.log("AuthContext: userRole detected:", userRole, "for user:", userId);
       setRole(userRole);
       await loadPermissions(userRole);
     } catch (error) {
@@ -122,10 +121,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!mounted) return;
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        // Run immediately instead of setTimeout to avoid race conditions with ProtectedRoute
-        await checkRole(session.user.id);
+      
+      const newUser = session?.user ?? null;
+      setUser(newUser);
+      
+      if (newUser) {
+        await checkRole(newUser.id);
         if (mounted) setLoading(false);
       } else {
         setRole(null);
