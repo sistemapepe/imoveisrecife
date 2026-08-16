@@ -331,7 +331,7 @@ export default function PropertyDetail() {
                 </div>
               )}
               <div className="flex items-center gap-2 flex-wrap mb-2">
-                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground leading-tight">{property.title}</h1>
+                <h1 className="text-3xl md:text-5xl font-serif font-bold tracking-tight text-foreground leading-tight">{property.title}</h1>
                 {(property as any).status && (property as any).status !== "disponivel" && (
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
                     (property as any).status === "reservado"
@@ -364,13 +364,12 @@ export default function PropertyDetail() {
                 return (
                   <div className="mb-8">
                     <div className="flex items-baseline gap-3 flex-wrap">
-                      <div className="relative inline-block">
-                        <div className="absolute inset-0 bg-white/40 backdrop-blur-xl -rotate-1 rounded-xl scale-110 shadow-md border border-white/30" />
+                      <div className="relative inline-block px-4 py-2 bg-accent/10 rounded-2xl border border-accent/20 backdrop-blur-md">
                         <PriceDisplay
                           as="div"
                           section="detail"
                           value={property.price}
-                          className="relative tracking-tighter py-2 px-3"
+                          className="relative tracking-tighter text-accent font-bold"
                         />
                       </div>
                       {hasPriceDrop && (
@@ -457,32 +456,34 @@ export default function PropertyDetail() {
 
             {/* Desktop sidebar CTA */}
             <div className="hidden md:block">
-              <div className="sticky top-24 space-y-4 p-6 rounded-2xl bg-card border border-border shadow-sm">
+              <div className="sticky top-24 space-y-5 p-8 rounded-[2rem] bg-card border border-white/5 premium-shadow">
                 <div>
-                  <PriceDisplay as="p" section="detail" value={property.price} />
+                  <PriceDisplay as="p" section="detail" value={property.price} className="text-accent font-bold text-2xl" />
                   {!!property.previous_price && property.previous_price > property.price && (
                     <PriceDisplay
                       as="p"
                       section="detail"
                       value={property.previous_price}
-                      className="line-through"
-                      styleOverride={{ fontSize: "0.45em", color: "hsl(var(--muted-foreground))" }}
+                      className="line-through opacity-40 mt-1"
+                      styleOverride={{ fontSize: "0.5em" }}
                     />
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground">{property.title}</p>
-                <button
-                  onClick={handleWhatsApp}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-whatsapp text-white py-3.5 font-bold text-sm active:scale-95 transition-transform"
-                >
-                  <MessageCircle className="h-5 w-5" /> WhatsApp
-                </button>
-                <button
-                  onClick={() => navigate("/contato")}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl gold-gradient py-3.5 text-accent-foreground font-bold text-sm active:scale-95 transition-transform uppercase tracking-widest"
-                >
-                  <Calendar className="h-5 w-5" /> Agendar Visita
-                </button>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/60">{property.title}</p>
+                <div className="space-y-3">
+                  <button
+                    onClick={handleWhatsApp}
+                    className="w-full flex items-center justify-center gap-2 rounded-2xl bg-whatsapp text-white py-4 font-bold text-sm active:scale-[0.98] transition-all premium-shadow"
+                  >
+                    <MessageCircle className="h-5 w-5" /> WhatsApp
+                  </button>
+                  <button
+                    onClick={() => navigate("/contato")}
+                    className="w-full flex items-center justify-center gap-2 rounded-2xl gold-gradient text-white py-4 font-bold text-sm active:scale-[0.98] transition-all uppercase tracking-[0.15em] premium-shadow"
+                  >
+                    <Calendar className="h-5 w-5" /> Agendar Visita
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -492,16 +493,16 @@ export default function PropertyDetail() {
         </motion.div>
 
         {/* Mobile bottom CTA */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-card/80 backdrop-blur-xl border-t border-border z-50 max-w-screen-lg mx-auto md:hidden">
+        <div className="fixed bottom-0 left-0 right-0 p-4 pb-[calc(1.2rem+env(safe-area-inset-bottom))] glass-nav border-t border-white/10 z-[70] max-w-screen-lg mx-auto md:hidden rounded-t-[2.5rem] shadow-[0_-20px_50px_rgba(0,0,0,0.3)]">
           <div className="flex gap-3">
-            <button onClick={handleShare} aria-label="Compartilhar imóvel" className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-secondary text-foreground shadow-lg active:scale-95 transition-transform border border-border gap-0.5">
+            <button onClick={handleShare} aria-label="Compartilhar imóvel" className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-white/5 text-white shadow-lg active:scale-90 transition-all border border-white/10 gap-0.5">
               <Share2 className="h-5 w-5" />
-              <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground">Enviar</span>
+              <span className="text-[8px] font-bold uppercase tracking-widest opacity-60">Enviar</span>
             </button>
-            <button onClick={handleTap(handleWhatsApp)} aria-label="Falar pelo WhatsApp" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-whatsapp text-card shadow-lg active:scale-95 transition-transform">
+            <button onClick={handleTap(handleWhatsApp)} aria-label="Falar pelo WhatsApp" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-whatsapp text-white shadow-lg active:scale-90 transition-all">
               <MessageCircle className="h-6 w-6" />
             </button>
-            <button onClick={handleTap(() => navigate("/contato"))} className="flex-1 flex items-center justify-center gap-2 rounded-xl gold-gradient py-4 text-accent-foreground font-bold text-base shadow-lg active:scale-95 transition-transform uppercase tracking-widest">
+            <button onClick={handleTap(() => navigate("/contato"))} className="flex-1 flex items-center justify-center gap-2 rounded-2xl gold-gradient py-4 text-white font-bold text-sm shadow-lg active:scale-[0.98] transition-all uppercase tracking-[0.15em]">
               <Calendar className="h-5 w-5" /> Agendar Visita
             </button>
           </div>

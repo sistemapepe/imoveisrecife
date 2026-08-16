@@ -29,7 +29,7 @@ export default function RecentViewsBadge({ propertyId }: RecentViewsBadgeProps) 
   if (!count || count < 3) return null;
 
   return (
-    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] font-semibold">
+    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/5 border border-accent/20 text-accent text-[10px] font-extrabold uppercase tracking-wider">
       <Eye className="h-3 w-3" />
       <span>{count} pessoas viram nas últimas 24h</span>
     </div>

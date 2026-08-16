@@ -48,7 +48,7 @@ export default function Navbar() {
   return (
     <nav
       style={{ height: `var(--navbar-h, 100px)`, paddingTop: 'env(safe-area-inset-top)' }}
-      className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 glass-nav max-w-screen-lg mx-auto transition-all duration-300 w-full py-0 h-[calc(var(--navbar-h,100px)+env(safe-area-inset-top))]"
+      className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 glass-nav max-w-screen-lg mx-auto transition-all duration-300 w-full py-0 h-[calc(var(--navbar-h,100px)+env(safe-area-inset-top))] border-b border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
     >
       <div className="w-10 h-10 -ml-1" />
 

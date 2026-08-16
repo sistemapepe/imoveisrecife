@@ -15,16 +15,16 @@ interface ManagedUser {
 }
 
 const ROLES = [
-  { value: "super_admin", label: "Super Admin", color: "bg-red-500/10 text-red-600" },
-  { value: "admin", label: "Administrador", color: "bg-destructive/10 text-destructive" },
-  { value: "supervisor", label: "Supervisor", color: "bg-primary/10 text-primary" },
-  { value: "corretor", label: "Corretor", color: "bg-accent/20 text-accent-foreground" },
+  { value: "super_admin", label: "Super Admin", color: "bg-red-500/10 text-red-500" },
+  { value: "admin", label: "Administrador", color: "bg-orange-500/10 text-orange-500" },
+  { value: "supervisor", label: "Supervisor", color: "bg-blue-500/10 text-blue-500" },
+  { value: "corretor", label: "Corretor", color: "bg-accent/10 text-accent" },
 ];
 
 function roleBadge(role: string) {
   const r = ROLES.find((x) => x.value === role);
   return (
-    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${r?.color || "bg-muted text-muted-foreground"}`}>
+    <span className={`px-2.5 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-[0.2em] border border-white/5 ${r?.color || "bg-muted text-muted-foreground"}`}>
       {r?.label || role}
     </span>
   );
@@ -134,10 +134,10 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-accent">Usuários</h2>
+        <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Usuários</h2>
         <button
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider"
+          className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-accent text-luxury-dark text-[10px] font-extrabold uppercase tracking-widest hover:bg-accent/80 transition-all shadow-lg shadow-accent/20"
         >
           <UserPlus className="h-4 w-4" /> Novo
         </button>
@@ -150,15 +150,15 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
       ) : (
         <div className="space-y-2">
           {users.map((u) => (
-            <div key={u.id} className="bg-black/40 rounded-xl border border-white/5 p-4 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <Shield className="h-4 w-4 text-primary" />
+            <div key={u.id} className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-6 flex items-center gap-4 hover:border-accent/30 transition-all duration-500 premium-shadow group">
+              <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center shrink-0 border border-white/5 group-hover:border-accent/20 transition-colors">
+                <Shield className="h-5 w-5 text-accent/60" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate text-accent">{u.email}</p>
+                <p className="text-sm font-bold text-white tracking-wide truncate group-hover:text-accent transition-colors">{u.email}</p>
                 <div className="flex items-center gap-2 mt-1">
                   {roleBadge(u.role)}
-                  <span className="text-[10px] text-accent/60">
+                  <span className="text-[9px] font-extrabold uppercase tracking-[0.2em] text-white/20">
                     {new Date(u.created_at).toLocaleDateString("pt-BR")}
                   </span>
                 </div>
@@ -166,7 +166,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
               <select
                 value={u.role}
                 onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                className="text-xs px-2 py-1.5 rounded-lg border border-white/10 bg-black/60 text-accent"
+                className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-2 rounded-xl border border-white/5 bg-white/5 text-white/70 focus:outline-none focus:border-accent/40"
               >
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>{r.label}</option>
@@ -174,7 +174,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
               </select>
               <button
                 onClick={() => setDeleteId(u.id)}
-                className="p-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
+                className="p-3 rounded-xl bg-red-500/5 text-red-500/50 hover:bg-red-500 hover:text-white transition-all duration-300 border border-red-500/10"
               >
                 <Trash2 className="h-4 w-4" />
               </button>

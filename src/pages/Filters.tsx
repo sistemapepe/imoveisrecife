@@ -57,14 +57,14 @@ export default function Filters() {
   return (
     <>
       <SEOHead title="Filtros" description="Filtre imóveis por tipo, quartos, localização e mais." noIndex />
-      <div className="relative flex min-h-screen w-full flex-col max-w-screen-lg mx-auto bg-background">
+      <div className="relative flex min-h-screen w-full flex-col max-w-screen-lg mx-auto bg-luxury-dark text-white">
         <Navbar />
-        <header className="sticky top-[var(--navbar-height)] z-30 glass-header border-b border-border transition-all duration-300">
+        <header className="sticky top-[var(--navbar-height)] z-30 glass-nav border-b border-white/5 transition-all duration-300">
           <div className="flex items-center justify-between px-4 h-14">
             <BackButton variant="ghost" label="Fechar filtros" />
-            <h1 className="text-base font-bold absolute left-1/2 -translate-x-1/2 pointer-events-none">Refinar Busca</h1>
+            <h1 className="text-base font-serif font-bold tracking-widest uppercase absolute left-1/2 -translate-x-1/2 pointer-events-none text-white">Refinar Busca</h1>
             <button 
-              className="text-primary text-sm font-bold h-10 px-2 flex items-center justify-center hover:bg-primary/5 rounded-lg transition-colors -mr-1" 
+              className="text-accent text-[10px] font-bold uppercase tracking-widest h-10 px-2 flex items-center justify-center hover:bg-white/5 rounded-lg transition-colors -mr-1" 
               onClick={() => { setSearch(""); setSelectedTypes([]); setSelectedBedrooms(""); setSelectedParking(""); }}
             >
               Limpar
@@ -72,10 +72,10 @@ export default function Filters() {
           </div>
           <div className="px-4 pb-4 relative">
             <div className="relative flex items-center">
-              <Search className="absolute left-3 h-5 w-5 text-muted-foreground" />
+              <Search className="absolute left-4 h-5 w-5 text-accent/60" />
               <input
                 ref={inputRef}
-                className="w-full h-12 pl-10 pr-4 bg-secondary border-none rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground"
+                className="w-full h-14 pl-12 pr-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-accent/20 focus:border-accent/40 focus:outline-none transition-all placeholder:text-white/30"
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setShowSuggestions(true); }}
                 onFocus={() => setShowSuggestions(true)}
@@ -85,7 +85,7 @@ export default function Filters() {
             {showSuggestions && suggestions.length > 0 && (
               <div
                 ref={suggestionsRef}
-                className="absolute left-4 right-4 top-full mt-1 max-h-64 overflow-y-auto rounded-xl bg-card border border-border shadow-xl z-50"
+                className="absolute left-4 right-4 top-full mt-2 max-h-64 overflow-y-auto rounded-2xl bg-[#0d1419] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 backdrop-blur-2xl"
               >
                 {suggestions.map((s, i) => (
                   <button
@@ -113,28 +113,38 @@ export default function Filters() {
 
         <main className="flex-1 overflow-y-auto hide-scrollbar pb-32">
           <section className="mt-4 px-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3">Tipo de Imóvel</h3>
+            <h3 className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-accent/70 mb-4 px-1">Tipo de Imóvel</h3>
             <div className="flex flex-wrap gap-2">
               {types.map((t) => (
-                <button key={t} onClick={() => toggleType(t)} className={`px-4 py-2 rounded-lg border text-sm font-semibold transition-all ${selectedTypes.includes(t) ? "border-primary bg-primary/10 text-primary" : "border-border bg-card text-muted-foreground hover:border-primary"}`}>{t}</button>
+                <button 
+                  key={t} 
+                  onClick={() => toggleType(t)} 
+                  className={`px-5 py-2.5 rounded-full border text-xs font-bold transition-all ${
+                    selectedTypes.includes(t) 
+                      ? "gold-gradient border-transparent text-white shadow-lg shadow-accent/20" 
+                      : "border-white/10 bg-white/5 text-white/60 hover:border-accent/40 hover:text-white"
+                  }`}
+                >
+                  {t}
+                </button>
               ))}
             </div>
           </section>
-          <div className="h-px bg-border mx-4 my-6" />
+          <div className="h-px bg-white/5 mx-4 my-8" />
           <section className="px-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-4">Quartos</h3>
+            <h3 className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-accent/70 mb-5 px-1">Quartos</h3>
             <div className="grid grid-cols-5 gap-2">
               {bedroomOptions.map((b) => (
-                <button key={b} onClick={() => setSelectedBedrooms(b)} className={`aspect-square flex items-center justify-center rounded-lg border text-sm font-bold ${selectedBedrooms === b ? "border-primary bg-primary/10 text-primary" : "border-border bg-card"}`}>{b}</button>
+                <button key={b} onClick={() => setSelectedBedrooms(b)} className={`aspect-square flex items-center justify-center rounded-2xl border text-sm font-bold transition-all ${selectedBedrooms === b ? "gold-gradient border-transparent text-white shadow-lg shadow-accent/20" : "border-white/10 bg-white/5 text-white/40 hover:border-accent/40"}`}>{b}</button>
               ))}
             </div>
           </section>
-          <div className="h-px bg-border mx-4 my-6" />
+          <div className="h-px bg-white/5 mx-4 my-8" />
           <section className="px-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-4">Vagas de Garagem</h3>
+            <h3 className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-accent/70 mb-5 px-1">Vagas de Garagem</h3>
             <div className="grid grid-cols-5 gap-2">
               {parkingOptions.map((p) => (
-                <button key={p} onClick={() => setSelectedParking(p)} className={`aspect-square flex items-center justify-center rounded-lg border text-sm font-bold ${selectedParking === p ? "border-primary bg-primary/10 text-primary" : "border-border bg-card"}`}>{p}</button>
+                <button key={p} onClick={() => setSelectedParking(p)} className={`aspect-square flex items-center justify-center rounded-2xl border text-sm font-bold transition-all ${selectedParking === p ? "gold-gradient border-transparent text-white shadow-lg shadow-accent/20" : "border-white/10 bg-white/5 text-white/40 hover:border-accent/40"}`}>{p}</button>
               ))}
             </div>
           </section>
@@ -149,7 +159,7 @@ export default function Filters() {
           <Footer />
         </main>
 
-        <div className="fixed bottom-20 left-0 right-0 p-4 bg-card/90 backdrop-blur-lg border-t border-border z-50 max-w-md mx-auto">
+        <div className="fixed bottom-20 left-0 right-0 p-6 glass-nav border-t border-white/10 z-50 max-w-lg mx-auto rounded-t-[2.5rem] shadow-[0_-20px_50px_rgba(0,0,0,0.3)]">
           <button
             onClick={() => {
               const params = new URLSearchParams();
@@ -159,10 +169,10 @@ export default function Filters() {
               if (selectedParking) params.set("parking", selectedParking);
               navigate(`/busca?${params.toString()}`);
             }}
-            className="w-full h-14 gold-gradient rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+            className="w-full h-14 gold-gradient rounded-2xl shadow-xl flex items-center justify-center gap-3 active:scale-[0.98] transition-all"
           >
-            <span className="text-accent-foreground font-extrabold tracking-wide uppercase">Ver Imóveis</span>
-            <ArrowRight className="h-5 w-5 text-accent-foreground" />
+            <span className="text-white font-extrabold tracking-[0.2em] uppercase text-sm">Ver Imóveis</span>
+            <ArrowRight className="h-5 w-5 text-white" />
           </button>
         </div>
       </div>

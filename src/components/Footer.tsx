@@ -45,7 +45,7 @@ export default function Footer() {
   const navigate = useNavigate();
 
   return (
-    <footer className="px-6 py-10 mt-6 border-t border-card/10 flex flex-col items-center gap-6 mb-20">
+    <footer className="px-6 py-20 mt-20 border-t border-white/5 flex flex-col items-center gap-10 mb-24 bg-[#0d1419]">
       <div className="flex gap-6 flex-wrap justify-center">
         {settings.instagramUrl && (
           <a href={normalizeSocialUrl(settings.instagramUrl, "instagram")} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-accent hover:scale-110 transition-transform">
@@ -80,20 +80,20 @@ export default function Footer() {
       </div>
 
       {settings.footerText && (
-        <p className="text-[10px] text-muted-foreground uppercase tracking-widest text-center whitespace-pre-line max-w-sm">
+        <p className="text-[10px] text-white/50 font-extrabold uppercase tracking-[0.25em] text-center whitespace-pre-line max-w-sm leading-relaxed">
           {settings.footerText}
         </p>
       )}
 
       {(settings.creci || settings.creciUf) && (
-        <p className="text-xs font-semibold text-accent uppercase tracking-[0.2em] text-center border border-accent/40 rounded-full px-4 py-1.5 bg-accent/5">
+        <p className="text-[10px] font-extrabold text-accent uppercase tracking-[0.3em] text-center border border-accent/20 rounded-full px-6 py-2 bg-accent/5 premium-shadow">
           CRECI{settings.creciUf ? ` - ${settings.creciUf}` : ""}{settings.creci ? ` ${settings.creci}` : ""}
         </p>
       )}
 
       <div className="flex flex-col items-center gap-2">
         {settings.developerName && (
-          <p className="text-[9px] text-muted-foreground/50 tracking-wider text-center flex items-center gap-1.5">
+          <p className="text-[9px] text-white/20 font-extrabold uppercase tracking-[0.2em] text-center flex items-center gap-2">
             Desenvolvido por{" "}
             {settings.developerUrl ? (
               <a href={settings.developerUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-accent transition-colors">

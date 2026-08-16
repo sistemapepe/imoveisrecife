@@ -280,7 +280,7 @@ export default function SitesTab() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sites.map(site => (
-            <div key={site.id} className="bg-black/40 rounded-xl border border-white/5 p-5 space-y-4 hover:border-accent/30 transition-colors group">
+            <div key={site.id} className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-6 space-y-5 hover:border-accent/30 transition-all duration-500 group premium-shadow">
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
                   <Globe className="h-5 w-5 text-accent" />
@@ -334,19 +334,19 @@ export default function SitesTab() {
               </div>
               
               <div>
-                <h3 className="font-bold text-lg leading-tight text-accent">{site.brand_name}</h3>
-                <p className="text-xs text-accent/60 font-mono truncate">{site.domain}</p>
+                <h3 className="font-serif font-bold text-xl leading-tight text-white group-hover:text-accent transition-colors">{site.brand_name}</h3>
+                <p className="text-[10px] text-white/40 font-mono truncate mt-1 tracking-wider uppercase font-extrabold">{site.domain}</p>
               </div>
 
               {site.last_published_at && (
-                <div className="text-[10px] text-accent/60 flex items-center gap-1">
+                <div className="text-[9px] font-extrabold uppercase tracking-[0.1em] text-white/30 flex items-center gap-2">
                   <CheckCircle2 className="h-2.5 w-2.5 text-green-500" />
                   Última publicação: {new Date(site.last_published_at).toLocaleString()}
                 </div>
               )}
 
               <div className="pt-2 border-t border-border/50 flex flex-col gap-2">
-                <div className="flex justify-between items-center text-[10px] text-accent/60">
+                <div className="flex justify-between items-center text-[9px] font-extrabold uppercase tracking-[0.2em] text-white/20">
                   <span>ID: {site.id.slice(0, 8)}...</span>
                   <span>{new Date(site.created_at).toLocaleDateString()}</span>
                 </div>
@@ -354,7 +354,7 @@ export default function SitesTab() {
                   <Button 
                     size="sm" 
                     variant="outline"
-                    className="h-8 text-[10px] font-bold border-accent/20 text-accent hover:bg-accent/10"
+                    className="h-9 text-[9px] font-extrabold uppercase tracking-widest border-white/10 text-white/70 hover:bg-white/5 rounded-xl"
                     onClick={() => {
                       const isLocal = site.domain === 'localhost' || site.domain.includes('8080');
                       const url = isLocal ? window.location.origin : (site.domain.startsWith('http') ? site.domain : `https://${site.domain}`);
@@ -366,7 +366,7 @@ export default function SitesTab() {
                   
                   <Button 
                     size="sm" 
-                    className="h-8 text-[10px] font-bold bg-blue-600/10 text-blue-500 border border-blue-500/20 hover:bg-blue-600 hover:text-white transition-all"
+                    className="h-9 text-[9px] font-extrabold uppercase tracking-widest bg-blue-600/5 text-blue-400 border border-blue-500/10 hover:bg-blue-600 hover:text-white transition-all rounded-xl"
                     onClick={() => setPublishId(site.id)}
                   >
                     <Rocket className="mr-1.5 h-3 w-3" /> Publicar
@@ -375,7 +375,7 @@ export default function SitesTab() {
 
                 <Button 
                   size="sm" 
-                  className="w-full h-8 text-[10px] font-bold bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all"
+                  className="w-full h-10 text-[9px] font-extrabold uppercase tracking-[0.2em] bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all rounded-xl"
                   onClick={() => {
                     // Para Super Admin, a forma mais segura de editar é manter o domínio atual e usar o site_id
                     // Isso evita problemas com domínios ainda não configurados ou DNS não propagado

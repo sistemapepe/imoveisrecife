@@ -223,14 +223,14 @@ export default function Admin() {
   const currentTabLabel = visibleTabs.find((t) => t.key === tab)?.label ?? "Painel";
 
   return (
-    <div className="min-h-screen bg-background pb-8">
-        <header className="sticky top-0 z-50 glass-header border-b border-border">
+    <div className="min-h-screen bg-[#0d1419] pb-8">
+        <header className="sticky top-0 z-50 bg-[#0d1419]/90 backdrop-blur-3xl border-b border-white/5 shadow-xl">
           <div className="flex items-center justify-between px-4 h-14">
             <div className="flex items-center">
               <BackButton variant="ghost" onClick={() => navigate("/")} />
               {/* Removido botão de menu mobile lateral conforme solicitado */}
             </div>
-            <h1 className="text-base md:text-lg font-bold truncate px-2">
+            <h1 className="text-sm md:text-base font-serif font-bold tracking-[0.2em] uppercase text-accent px-2">
               <span className="md:hidden">{currentTabLabel}</span>
               <span className="hidden md:inline">Painel {role === "super_admin" ? "Super Admin" : role === "admin" ? "Admin" : role === "supervisor" ? "Supervisor" : "Corretor"}</span>
             </h1>
@@ -263,7 +263,7 @@ export default function Admin() {
 
         <div className="md:flex md:items-start">
           {/* Vertical sidebar (desktop) */}
-          <aside className="hidden md:flex md:flex-col sticky top-14 self-start h-[calc(100vh-3.5rem)] w-56 shrink-0 border-r border-border bg-card/40 overflow-y-auto py-3 transform transition-transform duration-300">
+          <aside className="hidden md:flex md:flex-col sticky top-14 self-start h-[calc(100vh-3.5rem)] w-60 shrink-0 border-r border-white/5 bg-[#0d1419] overflow-y-auto py-6 transform transition-transform duration-300">
             <nav className="flex flex-col gap-1 px-2">
               {visibleTabs.map((t) => {
                 const Icon = t.icon;
@@ -314,10 +314,10 @@ export default function Admin() {
                         } catch(e) {}
                       }
                     }}
-                    className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-[10px] font-extrabold uppercase tracking-widest transition-all duration-300 ${
                       active
-                        ? "bg-primary/15 text-primary border-l-2 border-primary translate-x-1"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/60 border-l-2 border-transparent"
+                        ? "bg-accent text-luxury-dark shadow-xl shadow-accent/20 translate-x-1"
+                        : "text-accent/60 hover:text-accent hover:bg-white/5"
                     }`}
                   >
                     <Icon className={`h-4 w-4 shrink-0 transition-transform ${active ? "scale-110" : "group-hover:scale-110"}`} />

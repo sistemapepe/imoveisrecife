@@ -500,30 +500,30 @@ export default function BulkImportTab() {
     : 0;
 
   return (
-    <div className="space-y-5">
-      <div className="bg-black/40 rounded-xl border border-white/5 p-5">
-        <div className="flex items-start justify-between gap-3 flex-wrap">
+    <div className="space-y-6">
+      <div className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-8 premium-shadow">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <h3 className="font-bold text-base flex items-center gap-2"><FileSpreadsheet className="h-5 w-5 text-accent" /> Importação em Massa</h3>
-            <p className="text-xs text-accent/70 mt-1">
+            <h3 className="font-serif font-bold text-2xl flex items-center gap-3 text-accent"><FileSpreadsheet className="h-6 w-6" /> Importação em Massa</h3>
+            <p className="text-xs text-white/40 mt-2 font-extrabold uppercase tracking-widest leading-relaxed">
               Envie o formulário Excel preenchido. O sistema valida, mostra uma prévia e só importa após sua confirmação.
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Button variant="default" size="sm" asChild>
+            <Button variant="default" className="bg-accent text-luxury-dark hover:bg-accent/80 font-extrabold uppercase tracking-widest text-[10px] h-10 px-6 rounded-2xl shadow-lg shadow-accent/20" asChild>
               <a href="/modelo-importacao-imoveis.xlsx" download>
-                <Download className="h-4 w-4 mr-1" /> Baixar modelo (.xlsx)
+                <Download className="h-4 w-4 mr-2" /> Baixar modelo (.xlsx)
               </a>
             </Button>
-            <Button variant="outline" size="sm" onClick={loadHistory}><RefreshCw className="h-4 w-4 mr-1" /> Atualizar histórico</Button>
+            <Button variant="outline" className="border-white/10 text-white/70 hover:bg-white/5 font-extrabold uppercase tracking-widest text-[10px] h-10 px-6 rounded-2xl" onClick={loadHistory}><RefreshCw className="h-4 w-4 mr-2" /> Atualizar histórico</Button>
           </div>
         </div>
 
         <label className="mt-4 block">
-          <div className="border-2 border-dashed border-white/10 rounded-xl px-4 py-8 text-center cursor-pointer hover:border-accent transition-colors">
-            <Upload className="h-8 w-8 mx-auto text-accent/50" />
-            <p className="text-sm mt-2 font-semibold">{fileMeta ? fileMeta.name : "Selecionar arquivo .xlsx"}</p>
-            <p className="text-[11px] text-accent/60">Abas esperadas: Empresa, Imóveis</p>
+          <div className="border-2 border-dashed border-white/5 rounded-[2rem] px-4 py-12 text-center cursor-pointer hover:border-accent/40 transition-all duration-500 bg-white/5 group">
+            <Upload className="h-10 w-10 mx-auto text-accent/30 group-hover:text-accent transition-colors" />
+            <p className="text-sm mt-4 font-extrabold uppercase tracking-widest text-white">{fileMeta ? fileMeta.name : "Selecionar arquivo .xlsx"}</p>
+            <p className="text-[10px] text-white/30 font-extrabold uppercase tracking-widest mt-2">Abas esperadas: Empresa, Imóveis</p>
             <input
               ref={fileRef}
               type="file"
@@ -620,8 +620,8 @@ export default function BulkImportTab() {
         </div>
       )}
 
-      <div className="bg-black/40 rounded-xl border border-white/5 p-5">
-        <h4 className="font-bold text-sm flex items-center gap-2 mb-3 text-accent"><History className="h-4 w-4" /> Histórico de importações</h4>
+      <div className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-8 premium-shadow">
+        <h4 className="font-serif font-bold text-xl flex items-center gap-3 mb-6 text-accent"><History className="h-5 w-5" /> Histórico de importações</h4>
         {loadingHistory ? (
           <p className="text-xs text-muted-foreground">Carregando...</p>
         ) : history.length === 0 ? (
@@ -630,7 +630,7 @@ export default function BulkImportTab() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-left text-accent/50 border-b border-white/5">
+                <tr className="text-left text-white/30 border-b border-white/5 font-extrabold uppercase tracking-[0.2em] text-[9px]">
                   <th className="py-2 pr-2">Data</th>
                   <th className="py-2 pr-2">Arquivo</th>
                   <th className="py-2 pr-2">Status</th>
@@ -641,7 +641,7 @@ export default function BulkImportTab() {
               </thead>
               <tbody>
                 {history.map((h) => (
-                  <tr key={h.id} className="border-b border-white/5 text-accent/80">
+                  <tr key={h.id} className="border-b border-white/5 text-white/70 hover:bg-white/5 transition-colors group">
                     <td className="py-2 pr-2 whitespace-nowrap">{new Date(h.created_at).toLocaleString("pt-BR")}</td>
                     <td className="py-2 pr-2">{h.file_name}</td>
                     <td className="py-2 pr-2">
@@ -686,9 +686,9 @@ export default function BulkImportTab() {
 
 function Stat({ label, value, ok, warn }: { label: string; value: string; ok?: boolean; warn?: boolean }) {
   return (
-    <div className={`rounded-lg border p-3 ${warn ? "border-yellow-500/40 bg-yellow-500/5" : ok ? "border-accent/40 bg-accent/5" : "border-white/5 bg-black/40"}`}>
-      <p className="text-[10px] uppercase tracking-wider text-accent/60">{label}</p>
-      <p className="text-lg font-bold mt-0.5 text-accent">{value}</p>
+    <div className={`rounded-[1.25rem] border p-4 transition-all duration-300 ${warn ? "border-yellow-500/20 bg-yellow-500/5" : ok ? "border-accent/20 bg-accent/5" : "border-white/5 bg-white/5"}`}>
+      <p className="text-[9px] uppercase tracking-[0.2em] font-extrabold text-white/30">{label}</p>
+      <p className="text-2xl font-serif font-bold mt-1 text-accent">{value}</p>
     </div>
   );
 }

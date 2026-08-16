@@ -94,40 +94,42 @@ export default function SearchResults() {
   return (
     <>
       <SEOHead title="Resultados da Busca" description="Encontre imóveis em Recife e região com filtros avançados." />
-      <div className="min-h-screen bg-background pb-24 max-w-screen-lg mx-auto">
+      <div className="min-h-screen bg-luxury-dark pb-24 max-w-screen-lg mx-auto">
         <Navbar />
-        <header className="sticky top-[var(--navbar-height)] z-50 glass-header border-b border-border transition-all duration-300">
+        <header className="sticky top-[var(--navbar-height)] z-50 glass-nav border-b border-white/5 transition-all duration-300">
           <div className="flex items-center justify-between px-4 h-14">
             <BackButton variant="ghost" />
             <div className="text-center absolute left-1/2 -translate-x-1/2 pointer-events-none">
-              <h1 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground leading-none mb-0.5">Resultados</h1>
-              <p className="text-sm font-bold text-foreground italic">{filtered.length} Imóveis</p>
+               <h1 className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-accent/60 leading-none mb-1">Resultados</h1>
+              <p className="text-sm font-serif font-bold text-white italic">{filtered.length} Imóveis</p>
             </div>
-            <button onClick={() => navigate("/filtros")} aria-label="Abrir filtros" className="flex items-center justify-center w-10 h-10 hover:bg-black/5 rounded-full transition-colors -mr-1">
-              <SlidersHorizontal className="h-6 w-6 text-foreground" aria-hidden="true" />
+            <button onClick={() => navigate("/filtros")} aria-label="Abrir filtros" className="flex items-center justify-center w-10 h-10 hover:bg-white/5 rounded-full transition-colors -mr-1">
+              <SlidersHorizontal className="h-6 w-6 text-white" aria-hidden="true" />
             </button>
           </div>
 
           {/* Active location badge */}
           {locationFilter && (
-            <div className="px-4 pb-2 pt-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+            <div className="px-4 pb-3 pt-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/5 border border-accent/20 text-accent text-[10px] font-extrabold uppercase tracking-wider">
                 <MapPin className="h-3 w-3" aria-hidden="true" />
                 {locationFilter}
-                <button onClick={() => navigate("/busca")} aria-label="Remover filtro de localização" className="ml-1 hover:text-primary/70"><X className="h-3 w-3" aria-hidden="true" /></button>
+                <button onClick={() => navigate("/busca")} aria-label="Remover filtro de localização" className="ml-1 hover:text-white transition-colors"><X className="h-3 w-3" aria-hidden="true" /></button>
               </span>
             </div>
           )}
 
-          <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-3 border-t border-border/50">
+          <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-3 border-t border-white/5">
             {propertyTypes.map((type) => {
               const active = activeFilters.includes(type);
               return (
                 <button
                   key={type}
                   onClick={() => toggleFilter(type)}
-                  className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${
-                    active ? "bg-luxury-dark text-card" : "bg-card border border-border text-muted-foreground"
+                  className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-[0.15em] transition-all border ${
+                    active 
+                      ? "gold-gradient text-white border-transparent shadow-lg shadow-accent/20" 
+                      : "bg-white/5 border-white/10 text-white/40 hover:border-accent/40"
                   }`}
                 >
                   {type === "Apartamento" ? "Apt" : type}
@@ -137,18 +139,18 @@ export default function SearchResults() {
             })}
           </div>
 
-          <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-2 border-t border-border/50">
-            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground self-center mr-1">Status:</span>
+          <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-2.5 border-t border-white/5">
+            <span className="shrink-0 text-[9px] font-extrabold uppercase tracking-[0.2em] text-accent/50 self-center mr-2">Status:</span>
             {statusOptions.map(({ value, label }) => {
               const active = activeStatus.includes(value);
               return (
                 <button
                   key={value}
                   onClick={() => toggleStatus(value)}
-                  className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${
+                  className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-[0.15em] transition-all border ${
                     active
-                      ? value === "vendido" ? "bg-red-500 text-white" : value === "reservado" ? "bg-yellow-500 text-white" : "bg-green-600 text-white"
-                      : "bg-card border border-border text-muted-foreground"
+                      ? value === "vendido" ? "bg-red-500/80 border-transparent text-white" : value === "reservado" ? "bg-amber-500/80 border-transparent text-white" : "bg-emerald-600/80 border-transparent text-white"
+                      : "bg-white/5 border-white/10 text-white/40 hover:border-accent/40"
                   }`}
                 >
                   {label}
@@ -162,7 +164,7 @@ export default function SearchResults() {
           {filtered.length === 0 && (
             <div className="text-center py-20">
               <p className="text-muted-foreground mb-2">Nenhum imóvel encontrado para esses filtros.</p>
-              <button onClick={() => navigate("/filtros")} className="text-primary font-semibold text-sm">Ajustar filtros</button>
+              <button onClick={() => navigate("/filtros")} className="text-accent font-extrabold text-[10px] uppercase tracking-widest border border-accent/30 px-6 py-2.5 rounded-full hover:bg-accent/10 transition-colors mt-4">Ajustar filtros</button>
             </div>
           )}
           <PropertyGrid properties={filtered} />
