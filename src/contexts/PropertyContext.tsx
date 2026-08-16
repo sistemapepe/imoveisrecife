@@ -457,11 +457,6 @@ export const PropertyProvider = React.forwardRef<HTMLDivElement, { children: Rea
   );
 });
 PropertyProvider.displayName = "PropertyProvider";
-    <PropertyContext.Provider value={{ properties, settings, loading, addProperty, updateProperty, deleteProperty, updateSettings, favorites, toggleFavorite, refreshProperties: fetchProperties }}>
-      {children}
-    </PropertyContext.Provider>
-  );
-}
 
 export function useProperties() {
   const ctx = useContext(PropertyContext);
