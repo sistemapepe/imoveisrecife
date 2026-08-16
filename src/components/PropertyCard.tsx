@@ -111,7 +111,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         )}
       </div>
       <div className="p-5">
-        <h2 className="font-serif font-bold text-2xl text-foreground line-clamp-2 leading-tight mb-3">{property.title}</h2>
+        <h2 className="font-serif font-bold text-2xl text-white line-clamp-2 leading-tight mb-4 group-hover:text-accent transition-colors">{property.title}</h2>
         <div className="flex items-center gap-3 mb-5 flex-wrap">
           <div className="px-3 py-1.5 bg-accent/5 rounded-full border border-accent/10">
             <PriceDisplay
