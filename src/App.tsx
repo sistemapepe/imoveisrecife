@@ -107,7 +107,37 @@ function AppContent() {
   );
 }
 
-export default function App() {
+const App = React.forwardRef<HTMLDivElement, any>((props, ref) => {
+  return (
+    <div ref={ref}>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <SiteProvider>
+              <AuthProvider>
+                <PropertyProvider>
+                  <Toaster />
+                  <Sonner />
+                  <DynamicTheme />
+                  <BrowserRouter>
+                    <AppContent />
+                  </BrowserRouter>
+                </PropertyProvider>
+              </AuthProvider>
+            </SiteProvider>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </HelmetProvider>
+    </div>
+  );
+});
+
+App.displayName = "App";
+
+export default App;
+
+// Remove the old export default function App() { ... } block below if it exists
+const _oldApp = () => {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
@@ -127,5 +157,4 @@ export default function App() {
         </TooltipProvider>
       </QueryClientProvider>
     </HelmetProvider>
-  );
 }
