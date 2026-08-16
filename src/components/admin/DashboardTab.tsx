@@ -83,8 +83,12 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
           newContacts: cCount,
           pendingVisits: vCount,
           weekViews: wCount,
-          priceDrops: properties.filter((p) => !!p.previous_price && Number(p.previous_price) > Number(p.price)).length,
-          exclusives: properties.filter((p) => p.exclusive).length,
+          priceDrops: properties.filter((p) => {
+            const price = Number(p.price);
+            const prev = Number(p.previous_price);
+            return prev > 0 && prev > price;
+          }).length,
+          exclusives: properties.filter((p) => !!p.exclusive).length,
         };
 
         setStats(newStats);

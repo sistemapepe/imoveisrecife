@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy, ArrowRight, Rocket, Eye, AlertCircle, Clock } from "lucide-react";
+import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy, ArrowRight, Rocket, Eye, AlertCircle, Clock, RefreshCw } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -197,21 +197,25 @@ export default function SitesTab() {
     if (!publishId) return;
     setPublishing(true);
     
-    const { error } = await supabase
-      .from('sites' as any)
-      .update({ 
-        publish_status: 'published',
-        last_published_at: new Date().toISOString()
-      })
-      .eq('id', publishId);
-    
-    setPublishing(false);
-    if (error) {
-      toast.error("Erro ao publicar site: " + error.message);
-    } else {
+    try {
+      const { error } = await supabase
+        .from('sites' as any)
+        .update({ 
+          publish_status: 'published',
+          last_published_at: new Date().toISOString()
+        })
+        .eq('id', publishId);
+      
+      if (error) throw error;
+      
       toast.success("Site publicado com sucesso!");
       setPublishId(null);
-      fetchSites();
+      await fetchSites();
+    } catch (error: any) {
+      console.error("Erro ao publicar:", error);
+      toast.error("Erro ao publicar site: " + error.message);
+    } finally {
+      setPublishing(false);
     }
   }
 
@@ -509,13 +513,18 @@ export default function SitesTab() {
           </div>
 
           <DialogFooter className="gap-2 pt-2">
-            <Button variant="outline" onClick={() => setPublishId(null)}>Agora não</Button>
+            <Button variant="outline" onClick={() => setPublishId(null)} className="rounded-xl border-white/10 text-white/70 hover:bg-white/5">Agora não</Button>
             <Button 
               onClick={handlePublish} 
               disabled={publishing}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl min-w-[140px]"
             >
-              {publishing ? "Publicando..." : "Sim, Publicar Agora"}
+              {publishing ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Publicando...
+                </>
+              ) : "Sim, Publicar Agora"}
             </Button>
           </DialogFooter>
         </DialogContent>
