@@ -585,8 +585,8 @@ export default function Index() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/50 to-transparent" />
                     <div className="relative z-10 flex flex-col justify-center h-full px-8 max-w-sm">
-                      <span className="text-accent text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Em destaque</span>
-                      <h3 className="font-serif text-2xl md:text-3xl text-card leading-tight mb-2">{properties[0].title}</h3>
+                      <span className="text-accent text-[9px] font-extrabold uppercase tracking-[0.4em] mb-2 px-1">Em destaque</span>
+                      <h3 className="font-serif text-3xl md:text-4xl text-white leading-tight mb-2 tracking-tight">{properties[0].title}</h3>
                       {settings.showLocationOnCard && (
                         <p className="text-card/70 text-sm mb-4">{properties[0].neighborhood} · {properties[0].city}</p>
                       )}
