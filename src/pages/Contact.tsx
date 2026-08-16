@@ -111,7 +111,7 @@ export default function Contact() {
             <select
               value={form.interest}
               onChange={(e) => setForm({ ...form, interest: e.target.value })}
-              className="w-full border-0 border-b border-border bg-transparent pb-2 pt-4 text-sm focus:outline-none focus:border-accent text-muted-foreground uppercase text-xs tracking-wider"
+              className="w-full border-0 border-b border-white/10 bg-transparent pb-3 pt-5 text-sm focus:outline-none focus:border-accent text-white/40 uppercase text-[10px] tracking-[0.2em] appearance-none"
             >
               <option value="">Interesse</option>
               <option value="Comprar Imóvel">Comprar Imóvel</option>
