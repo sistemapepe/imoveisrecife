@@ -507,6 +507,7 @@ export default function BulkImportTab() {
             <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Importação em Massa</h2>
             <p className="text-[10px] text-white/40 mt-2 font-extrabold uppercase tracking-widest mt-2">Empresa e Imóveis via Excel (.xlsx)</p>
           </div>
+          <div className="max-w-md">
             <p className="text-xs text-white/40 mt-2 font-extrabold uppercase tracking-widest leading-relaxed">
               Envie o formulário Excel preenchido. O sistema valida, mostra uma prévia e só importa após sua confirmação.
             </p>
