@@ -213,7 +213,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (currentUser) {
         setLoading(true);
+        // Garantir que a UI não trave em white screen mesmo em caso de erro na checagem de role
+        const roleTimeout = setTimeout(() => {
+          if (mounted && loading) {
+            logger.warn("checkRole taking too long, forcing load end");
+            setLoading(false);
+            setIsInitializing(false);
+          }
+        }, 5000);
+
         await checkRole(currentUser.id, mounted);
+        clearTimeout(roleTimeout);
       } else {
         setRole(null);
         setLoading(false);
