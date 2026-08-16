@@ -612,8 +612,8 @@ export default function Index() {
                         <img src={col.image} alt={col.type} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
                         <div className="relative z-10 flex flex-col justify-center items-center h-full">
-                          <span className="text-white font-bold tracking-[0.2em] text-[10px] uppercase">{col.type}</span>
-                          <span className="text-white/60 text-[9px] mt-1 font-bold uppercase tracking-widest">{col.count} {col.count === 1 ? "imóvel" : "imóveis"}</span>
+                          <span className="text-white font-extrabold tracking-[0.3em] text-[10px] uppercase">{col.type}</span>
+                          <span className="text-white/40 text-[9px] mt-2 font-extrabold uppercase tracking-widest">{col.count} {col.count === 1 ? "imóvel" : "imóveis"}</span>
                         </div>
                       </button>
                     ))}
