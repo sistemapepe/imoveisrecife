@@ -169,10 +169,10 @@ export default function Filters() {
               if (selectedParking) params.set("parking", selectedParking);
               navigate(`/busca?${params.toString()}`);
             }}
-            className="w-full h-14 gold-gradient rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+            className="w-full h-14 gold-gradient rounded-2xl shadow-xl flex items-center justify-center gap-3 active:scale-[0.98] transition-all"
           >
-            <span className="text-accent-foreground font-extrabold tracking-wide uppercase">Ver Imóveis</span>
-            <ArrowRight className="h-5 w-5 text-accent-foreground" />
+            <span className="text-white font-extrabold tracking-[0.2em] uppercase text-sm">Ver Imóveis</span>
+            <ArrowRight className="h-5 w-5 text-white" />
           </button>
         </div>
       </div>
