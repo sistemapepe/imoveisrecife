@@ -21,6 +21,8 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement, any>((props, ref) =
 
   useEffect(() => {
     const root = document.documentElement;
+    
+    // 1. Cores Individuais do Site (Prioridade)
     const primary = settings.primaryColor ? clampHslLightness(settings.primaryColor) : null;
     const accent = settings.accentColor ? clampHslLightness(settings.accentColor) : null;
 
@@ -32,6 +34,37 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement, any>((props, ref) =
       root.style.setProperty("--accent", accent);
       root.style.setProperty("--gold", accent);
     }
+
+    // 2. Fallback para Cores Globais da Rede (Network Settings) se as do site não existirem
+    const applyGlobalFallbacks = async () => {
+      if (!primary || !accent) {
+        try {
+          const { data } = await supabase
+            .from("network_settings")
+            .select("key, value")
+            .eq("key", "theme_defaults")
+            .maybeSingle();
+          
+          if (data?.value) {
+            const defaults = data.value;
+            if (!primary && defaults.primary) {
+              const globalPrimary = clampHslLightness(defaults.primary);
+              root.style.setProperty("--primary", globalPrimary);
+              root.style.setProperty("--ring", globalPrimary);
+            }
+            if (!accent && defaults.accent) {
+              const globalAccent = clampHslLightness(defaults.accent);
+              root.style.setProperty("--accent", globalAccent);
+              root.style.setProperty("--gold", globalAccent);
+            }
+          }
+        } catch (e) {
+          console.error("Failed to fetch global theme fallbacks", e);
+        }
+      }
+    };
+
+    applyGlobalFallbacks();
 
     // Calcula --price-color: melhor contraste entre primary/accent contra fundos claro e escuro.
     const pc = parseHsl(primary ?? "195 85% 45%");

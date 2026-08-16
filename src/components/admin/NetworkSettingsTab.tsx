@@ -166,18 +166,18 @@ export default function NetworkSettingsTab() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs uppercase tracking-widest text-accent/60">Cor de Fundo</Label>
+                <Label className="text-xs uppercase tracking-widest text-accent/60">Cor de Destaque (Accent/Gold)</Label>
                 <div className="flex gap-2">
                   <Input 
                     type="color" 
-                    value={themeDefaults.background} 
-                    onChange={(e) => handleUpdateSetting('theme_defaults', { ...themeDefaults, background: e.target.value })}
+                    value={themeDefaults.accent || "#b89b5e"} 
+                    onChange={(e) => handleUpdateSetting('theme_defaults', { ...themeDefaults, accent: e.target.value })}
                     className="w-12 h-10 p-1 bg-transparent border-white/10"
                   />
                   <Input 
                     type="text" 
-                    value={themeDefaults.background} 
-                    onChange={(e) => handleUpdateSetting('theme_defaults', { ...themeDefaults, background: e.target.value })}
+                    value={themeDefaults.accent || "#b89b5e"} 
+                    onChange={(e) => handleUpdateSetting('theme_defaults', { ...themeDefaults, accent: e.target.value })}
                     className="bg-black/20 border-white/10 font-mono"
                   />
                 </div>
