@@ -512,7 +512,7 @@ export default function Index() {
                     initial={{ opacity: 0, x: 40 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: 0.1 * i }}
-                    className="flex flex-col min-w-[280px] bg-luxury-dark-lighter/40 rounded-xl overflow-hidden border border-card/5 cursor-pointer"
+                    className="flex flex-col min-w-[300px] bg-white/[0.03] rounded-[2rem] overflow-hidden border border-white/5 cursor-pointer premium-shadow-hover transition-all duration-500"
                     onClick={() => navigate(`/imovel/${p.id}`)}
                   >
                     <div className="relative w-full aspect-[4/3] overflow-hidden">
