@@ -72,10 +72,10 @@ export default function Filters() {
           </div>
           <div className="px-4 pb-4 relative">
             <div className="relative flex items-center">
-              <Search className="absolute left-3 h-5 w-5 text-muted-foreground" />
+              <Search className="absolute left-4 h-5 w-5 text-accent/60" />
               <input
                 ref={inputRef}
-                className="w-full h-12 pl-10 pr-4 bg-secondary border-none rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground"
+                className="w-full h-14 pl-12 pr-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-accent/20 focus:border-accent/40 focus:outline-none transition-all placeholder:text-white/30"
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setShowSuggestions(true); }}
                 onFocus={() => setShowSuggestions(true)}
