@@ -68,7 +68,7 @@ export default function NetworkDashboard() {
           </div>
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-accent">Gestão de Rede</h2>
         </div>
-        <p className="text-card/60 text-lg max-w-2xl">Visualização consolidada de toda a infraestrutura multi-tenant e performance global.</p>
+        <p className="text-accent/70 text-lg max-w-2xl">Visualização consolidada de toda a infraestrutura multi-tenant e performance global.</p>
       </header>
 
       {/* Stats Grid */}
@@ -92,7 +92,7 @@ export default function NetworkDashboard() {
                     <span className="text-3xl font-serif font-bold text-accent">{stat.value}</span>
                   )}
                 </div>
-                <h3 className="text-xs uppercase tracking-[0.2em] font-black text-card/40">{stat.label}</h3>
+                <h3 className="text-xs uppercase tracking-[0.2em] font-black text-accent/60">{stat.label}</h3>
                 
                 {/* Background Accent */}
                 <div className={`absolute -right-4 -bottom-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity`}>
@@ -115,14 +115,14 @@ export default function NetworkDashboard() {
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <div>
                   <h4 className="font-bold text-accent">Banco de Dados</h4>
-                  <p className="text-xs text-card/60">Conexão estável e latência otimizada.</p>
+                  <p className="text-xs text-accent/70">Conexão estável e latência otimizada.</p>
                 </div>
              </div>
              <div className="bg-green-500/5 border border-green-500/10 rounded-2xl p-6 flex items-center gap-4">
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <div>
                   <h4 className="font-bold text-accent">Serviços de Auth</h4>
-                  <p className="text-xs text-card/60">Provedores de identidade operacionais.</p>
+                  <p className="text-xs text-accent/70">Provedores de identidade operacionais.</p>
                 </div>
              </div>
           </div>
@@ -131,16 +131,16 @@ export default function NetworkDashboard() {
         <div className="bg-accent/5 border border-accent/20 rounded-3xl p-8 space-y-6">
           <h3 className="text-xl font-serif font-bold text-accent">Configurações Rápidas</h3>
           <div className="space-y-4">
-            <p className="text-sm text-card/60 leading-relaxed">
+            <p className="text-sm text-accent/70 leading-relaxed">
               Você está operando como Administrador Global. Todas as alterações nesta área impactam múltiplos sites simultaneamente.
             </p>
             <div className="pt-4 space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-card/60">Versão da Rede</span>
+                <span className="text-accent/70">Versão da Rede</span>
                 <span className="text-accent font-bold">v2.4.0-gold</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-card/60">Último Backup</span>
+                <span className="text-accent/70">Último Backup</span>
                 <span className="text-accent font-bold">Há 12 min</span>
               </div>
             </div>

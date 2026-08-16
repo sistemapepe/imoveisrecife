@@ -57,7 +57,7 @@ export default function NetworkAdmin() {
     });
   }, [tab]);
 
-  if (authLoading) return <div className="min-h-screen flex items-center justify-center bg-luxury-dark text-card">Carregando...</div>;
+  if (authLoading) return <div className="min-h-screen flex items-center justify-center bg-luxury-dark text-accent">Carregando...</div>;
   if (!user || !isSuperAdmin) {
     navigate("/login");
     return null;
@@ -93,7 +93,7 @@ export default function NetworkAdmin() {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="bg-luxury-dark border-white/5 text-card p-0">
+            <SheetContent side="left" className="bg-luxury-dark border-white/5 text-accent p-0">
               <div className="p-6 border-b border-white/5 mb-4">
                 <div className="flex items-center gap-3">
                   <Globe2 className="h-8 w-8 text-accent" />
@@ -109,7 +109,7 @@ export default function NetworkAdmin() {
                       onClick={() => switchTab(item.key as NetworkTab)}
                       onMouseEnter={() => prefetchTab(item.key as NetworkTab)}
                       className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold transition-all ${
-                        tab === item.key ? "bg-accent text-luxury-dark shadow-lg shadow-accent/20" : "text-card/60 hover:text-card hover:bg-white/5"
+                        tab === item.key ? "bg-accent text-luxury-dark shadow-lg shadow-accent/20" : "text-accent/60 hover:text-accent hover:bg-white/5"
                       }`}
                     >
                       <Icon className="h-5 w-5" />
@@ -164,7 +164,7 @@ export default function NetworkAdmin() {
                   className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl font-bold transition-all duration-300 relative group ${
                     active 
                       ? "bg-accent text-luxury-dark shadow-xl shadow-accent/20" 
-                      : "text-card/50 hover:text-card hover:bg-white/5"
+                      : "text-accent/50 hover:text-accent hover:bg-white/5"
                   }`}
                 >
                   <Icon className={`h-5 w-5 transition-transform group-hover:scale-110 ${active ? "scale-110" : ""}`} />
