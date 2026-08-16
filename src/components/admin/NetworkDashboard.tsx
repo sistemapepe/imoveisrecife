@@ -94,7 +94,7 @@ export default function NetworkDashboard() {
                     <span className="text-3xl font-serif font-bold text-accent">{stat.value}</span>
                   )}
                 </div>
-                <h3 className="text-xs uppercase tracking-[0.2em] font-black text-accent/60">{stat.label}</h3>
+                <h3 className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-accent/60">{stat.label}</h3>
                 
                 {/* Background Accent */}
                 <div className={`absolute -right-4 -bottom-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity`}>
