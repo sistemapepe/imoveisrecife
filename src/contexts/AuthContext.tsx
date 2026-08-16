@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const checkRole = useCallback(async (userId: string, mounted = true, retryCount = 0) => {
+  const checkRole = useCallback(async (userId: string, mounted = true) => {
     logger.startTimer("checkRole");
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
@@ -148,12 +148,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        if (cachedSuperAdmin !== 'true' && retryCount < 5) {
-          logger.warn("Site not resolved, retrying role check...", { retryCount });
-          setTimeout(() => {
-            if (mounted) checkRole(userId, mounted, retryCount + 1);
-          }, 1000);
-          return;
+        if (cachedSuperAdmin !== 'true' && !isNetworkPath) {
+          logger.warn("Site not resolved yet in checkRole, checking global super_admin first...");
+          
+          const { data: superAdminCheck } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", userId)
+            .eq("role", "super_admin")
+            .or("site_id.is.null,site_id.eq.00000000-0000-0000-0000-000000000000")
+            .maybeSingle();
+
+          if (superAdminCheck) {
+            logger.info("Global super_admin detected early", { userId });
+            sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
+            if (mounted) {
+              setRole("super_admin");
+              setLoading(false);
+              setIsInitializing(false);
+            }
+            return;
+          }
         }
       }
 
