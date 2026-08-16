@@ -38,7 +38,7 @@ export default function BottomNav() {
             }}
             aria-label={tab.label}
             aria-current={active ? "page" : undefined}
-            className={`flex flex-col items-center gap-1 transition-all active:scale-95 touch-manipulation ${active ? "text-accent" : "text-muted-foreground/60"}`}
+            className={`flex flex-col items-center gap-1.5 transition-all active:scale-90 touch-manipulation ${active ? "text-accent" : "text-white/30 hover:text-white/60"}`}
           >
             <Icon className="h-6 w-6" strokeWidth={active ? 2.5 : 2} fill={active ? "currentColor" : "none"} fillOpacity={0.1} aria-hidden="true" />
             <span className={`text-[9px] font-extrabold uppercase tracking-[0.1em] ${active ? "opacity-100" : "opacity-60"}`}>{tab.label}</span>
