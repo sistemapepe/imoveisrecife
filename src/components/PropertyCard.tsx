@@ -84,7 +84,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         <button
           aria-label={isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
           aria-pressed={isFav}
-          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-foreground/20 backdrop-blur-md rounded-full border border-card/30"
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-black/20 backdrop-blur-md rounded-2xl border border-white/10"
           onClick={(e) => { e.stopPropagation(); toggleFavorite(property.id); }}
         >
           <Heart className={`h-5 w-5 ${isFav ? "fill-accent text-accent" : "text-card"}`} />
