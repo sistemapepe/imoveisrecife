@@ -456,32 +456,34 @@ export default function PropertyDetail() {
 
             {/* Desktop sidebar CTA */}
             <div className="hidden md:block">
-              <div className="sticky top-24 space-y-4 p-6 rounded-2xl bg-card border border-border shadow-sm">
+              <div className="sticky top-24 space-y-5 p-8 rounded-[2rem] bg-card border border-white/5 premium-shadow">
                 <div>
-                  <PriceDisplay as="p" section="detail" value={property.price} />
+                  <PriceDisplay as="p" section="detail" value={property.price} className="text-accent font-bold text-2xl" />
                   {!!property.previous_price && property.previous_price > property.price && (
                     <PriceDisplay
                       as="p"
                       section="detail"
                       value={property.previous_price}
-                      className="line-through"
-                      styleOverride={{ fontSize: "0.45em", color: "hsl(var(--muted-foreground))" }}
+                      className="line-through opacity-40 mt-1"
+                      styleOverride={{ fontSize: "0.5em" }}
                     />
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground">{property.title}</p>
-                <button
-                  onClick={handleWhatsApp}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-whatsapp text-white py-3.5 font-bold text-sm active:scale-95 transition-transform"
-                >
-                  <MessageCircle className="h-5 w-5" /> WhatsApp
-                </button>
-                <button
-                  onClick={() => navigate("/contato")}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl gold-gradient py-3.5 text-accent-foreground font-bold text-sm active:scale-95 transition-transform uppercase tracking-widest"
-                >
-                  <Calendar className="h-5 w-5" /> Agendar Visita
-                </button>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/60">{property.title}</p>
+                <div className="space-y-3">
+                  <button
+                    onClick={handleWhatsApp}
+                    className="w-full flex items-center justify-center gap-2 rounded-2xl bg-whatsapp text-white py-4 font-bold text-sm active:scale-[0.98] transition-all premium-shadow"
+                  >
+                    <MessageCircle className="h-5 w-5" /> WhatsApp
+                  </button>
+                  <button
+                    onClick={() => navigate("/contato")}
+                    className="w-full flex items-center justify-center gap-2 rounded-2xl gold-gradient text-white py-4 font-bold text-sm active:scale-[0.98] transition-all uppercase tracking-[0.15em] premium-shadow"
+                  >
+                    <Calendar className="h-5 w-5" /> Agendar Visita
+                  </button>
+                </div>
               </div>
             </div>
           </div>
