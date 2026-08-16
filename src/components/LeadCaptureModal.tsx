@@ -231,7 +231,7 @@ export default function LeadCaptureModal({
                     maxLength={16}
                     required
                     autoComplete="tel-national"
-                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-accent"
+                    className="w-full rounded-2xl border border-border bg-background px-4 py-3.5 text-base focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all placeholder:text-muted-foreground/40"
                     placeholder="(81) 99999-9999"
                   />
                 </div>
