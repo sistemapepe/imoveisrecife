@@ -510,12 +510,12 @@ export default function BulkImportTab() {
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Button variant="default" size="sm" asChild>
+            <Button variant="default" className="bg-accent text-luxury-dark hover:bg-accent/80 font-extrabold uppercase tracking-widest text-[10px] h-10 px-6 rounded-2xl shadow-lg shadow-accent/20" asChild>
               <a href="/modelo-importacao-imoveis.xlsx" download>
-                <Download className="h-4 w-4 mr-1" /> Baixar modelo (.xlsx)
+                <Download className="h-4 w-4 mr-2" /> Baixar modelo (.xlsx)
               </a>
             </Button>
-            <Button variant="outline" size="sm" onClick={loadHistory}><RefreshCw className="h-4 w-4 mr-1" /> Atualizar histórico</Button>
+            <Button variant="outline" className="border-white/10 text-white/70 hover:bg-white/5 font-extrabold uppercase tracking-widest text-[10px] h-10 px-6 rounded-2xl" onClick={loadHistory}><RefreshCw className="h-4 w-4 mr-2" /> Atualizar histórico</Button>
           </div>
         </div>
 
