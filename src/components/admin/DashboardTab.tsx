@@ -61,12 +61,19 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
           return count ?? 0;
         };
 
-        const [cCount, vCount, wCount] = await Promise.all([fetchC(), fetchV(), fetchW()]);
+        const fetchP = async () => {
+          const { count, error } = await (supabase.from("properties").select("id", { count: "exact", head: true }) as any)
+            .eq("site_id", site.id);
+          if (error) throw error;
+          return count ?? 0;
+        };
+
+        const [cCount, vCount, wCount, pCount] = await Promise.all([fetchC(), fetchV(), fetchW(), fetchP()]);
 
         if (!mounted) return;
 
         const newStats = {
-          totalProperties: properties.length,
+          totalProperties: pCount,
           newContacts: cCount,
           pendingVisits: vCount,
           weekViews: wCount,
