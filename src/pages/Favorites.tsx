@@ -27,9 +27,9 @@ export default function Favorites() {
         </header>
         <main className="p-4 space-y-6">
           {favProperties.length === 0 ? (
-            <div className="text-center py-20 text-muted-foreground">
-              <p className="text-lg font-semibold">Sua seleção está vazia</p>
-              <p className="text-sm mt-2">Toque no ♥ para guardar os imóveis que mais despertam seu interesse</p>
+            <div className="text-center py-20 text-white/40">
+              <p className="text-xl font-serif font-bold text-white mb-2">Sua seleção está vazia</p>
+              <p className="text-xs uppercase tracking-widest leading-relaxed max-w-[250px] mx-auto">Toque no ♥ para guardar os imóveis que mais despertam seu interesse</p>
             </div>
           ) : (
             favProperties.map((p, i) => <PropertyCard key={p.id} property={p} index={i} />)
