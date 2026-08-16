@@ -249,7 +249,7 @@ export default function LeadCaptureModal({
                   <button
                     type="button"
                     onClick={handleSkip}
-                    className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
+                    className="w-full text-[10px] font-extrabold uppercase tracking-[0.2em] text-white/30 hover:text-white transition-colors py-2"
                   >
                     {settings.leadModalSkipText}
                   </button>
