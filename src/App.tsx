@@ -17,6 +17,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import BackButton from "@/components/BackButton";
 import DynamicTheme from "@/components/DynamicTheme";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import PageTransition from "@/components/PageTransition";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
 import { useWebVitals } from "@/hooks/useWebVitals";
 
