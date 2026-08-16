@@ -239,7 +239,7 @@ export default function LeadCaptureModal({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full rounded-xl bg-whatsapp text-white py-3.5 font-bold text-sm active:scale-95 transition-transform flex items-center justify-center gap-2 disabled:opacity-60"
+                  className="w-full rounded-2xl bg-whatsapp text-white py-4 font-bold text-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60 premium-shadow"
                 >
                   <MessageCircle className="h-5 w-5" />
                   {submitting ? settings.leadModalSubmittingText : settings.leadModalSubmitText}
