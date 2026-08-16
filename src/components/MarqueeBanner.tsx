@@ -46,7 +46,7 @@ export default function MarqueeBanner() {
             <button
               key={`${item}-${index}`}
               onClick={() => isLink ? navigate(`/imovel/${property.id}`) : null}
-              className={`text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-accent-foreground hover:text-primary focus-visible:text-primary transition-all flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded px-2 py-1 ${!isLink ? 'cursor-default pointer-events-none' : ''}`}
+              className={`text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-accent/80 hover:text-accent focus-visible:text-accent transition-all flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded px-2 py-1 ${!isLink ? 'cursor-default pointer-events-none' : ''}`}
               aria-label={isLink ? `Ver detalhes de ${item}` : item}
             >
               <span className="w-2 h-2 rounded-full bg-primary/60" />
