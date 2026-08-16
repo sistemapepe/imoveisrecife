@@ -171,7 +171,7 @@ export default function LeadCaptureModal({
               exit={{ opacity: 0, y: 30, scale: 0.96 }}
               transition={{ duration: 0.25 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-md my-auto bg-card rounded-2xl shadow-2xl border border-border overflow-hidden pointer-events-auto"
+              className="relative w-full max-w-md my-auto bg-card rounded-[2rem] shadow-2xl border border-border overflow-hidden pointer-events-auto"
             >
               <div className="flex items-center justify-between p-5 border-b border-border">
                 <div className="flex items-center gap-2">
