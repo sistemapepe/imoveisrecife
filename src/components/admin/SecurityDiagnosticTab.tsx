@@ -28,7 +28,7 @@ export default function SecurityDiagnosticTab() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-serif font-bold text-accent">Diagnóstico de Segurança</h2>
-          <p className="text-muted-foreground">Verifique suas permissões e contexto atual de acesso.</p>
+          <p className="text-accent/70">Verifique suas permissões e contexto atual de acesso.</p>
         </div>
       </div>
 
@@ -41,15 +41,15 @@ export default function SecurityDiagnosticTab() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-[10px] text-muted-foreground uppercase font-bold">E-mail Logado</label>
+              <label className="text-[10px] text-accent/60 uppercase font-bold">E-mail Logado</label>
               <p className="text-sm font-medium text-accent">{user?.email || "Não identificado"}</p>
             </div>
             <div>
-              <label className="text-[10px] text-muted-foreground uppercase font-bold">ID do Usuário</label>
-              <p className="text-[10px] font-mono break-all">{user?.id}</p>
+              <label className="text-[10px] text-accent/60 uppercase font-bold">ID do Usuário</label>
+              <p className="text-[10px] font-mono break-all text-accent/80">{user?.id}</p>
             </div>
             <div>
-              <label className="text-[10px] text-muted-foreground uppercase font-bold">Função (Role)</label>
+              <label className="text-[10px] text-accent/60 uppercase font-bold">Função (Role)</label>
               <div className="mt-1">
                 <span className="px-2 py-1 rounded-md bg-accent/20 text-accent text-xs font-bold uppercase">
                   {role || "Nenhuma"}
@@ -77,11 +77,11 @@ export default function SecurityDiagnosticTab() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-[10px] text-muted-foreground uppercase font-bold">Domínio Atual</label>
+              <label className="text-[10px] text-accent/60 uppercase font-bold">Domínio Atual</label>
               <p className="text-sm font-medium text-accent">{window.location.hostname}</p>
             </div>
             <div>
-              <label className="text-[10px] text-muted-foreground uppercase font-bold">ID da Instância (site_id)</label>
+              <label className="text-[10px] text-accent/60 uppercase font-bold">ID da Instância (site_id)</label>
               <p className="text-[10px] font-mono break-all text-accent">{site?.id || "Global/Desconhecido"}</p>
             </div>
             <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
@@ -95,8 +95,8 @@ export default function SecurityDiagnosticTab() {
 
       <Card className="bg-black/40 border-white/5">
         <CardHeader>
-          <CardTitle className="text-sm font-bold uppercase tracking-wider">Mapa de Permissões Granulares</CardTitle>
-          <CardDescription>Status atual de cada capacidade no sistema para sua conta.</CardDescription>
+          <CardTitle className="text-sm font-bold uppercase tracking-wider text-accent">Mapa de Permissões Granulares</CardTitle>
+          <CardDescription className="text-accent/60">Status atual de cada capacidade no sistema para sua conta.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">

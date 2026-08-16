@@ -505,7 +505,7 @@ export default function BulkImportTab() {
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
             <h3 className="font-bold text-base flex items-center gap-2"><FileSpreadsheet className="h-5 w-5 text-accent" /> Importação em Massa</h3>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-accent/70 mt-1">
               Envie o formulário Excel preenchido. O sistema valida, mostra uma prévia e só importa após sua confirmação.
             </p>
           </div>
@@ -521,9 +521,9 @@ export default function BulkImportTab() {
 
         <label className="mt-4 block">
           <div className="border-2 border-dashed border-white/10 rounded-xl px-4 py-8 text-center cursor-pointer hover:border-accent transition-colors">
-            <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
+            <Upload className="h-8 w-8 mx-auto text-accent/50" />
             <p className="text-sm mt-2 font-semibold">{fileMeta ? fileMeta.name : "Selecionar arquivo .xlsx"}</p>
-            <p className="text-[11px] text-muted-foreground">Abas esperadas: Empresa, Imóveis</p>
+            <p className="text-[11px] text-accent/60">Abas esperadas: Empresa, Imóveis</p>
             <input
               ref={fileRef}
               type="file"
@@ -596,8 +596,8 @@ export default function BulkImportTab() {
               disabled={importing}
             />
             <span>
-              <span className="font-semibold">Atualizar registros existentes (upsert)</span>
-              <span className="block text-muted-foreground text-[11px] mt-0.5">
+              <span className="font-semibold text-accent">Atualizar registros existentes (upsert)</span>
+              <span className="block text-accent/60 text-[11px] mt-0.5">
                 Empresa: sempre atualizada (CRECI + UF). Imóveis: se alguma URL de imagem já existir no banco, o registro é atualizado em vez de criar duplicado.
               </span>
             </span>
@@ -621,7 +621,7 @@ export default function BulkImportTab() {
       )}
 
       <div className="bg-black/40 rounded-xl border border-white/5 p-5">
-        <h4 className="font-bold text-sm flex items-center gap-2 mb-3"><History className="h-4 w-4" /> Histórico de importações</h4>
+        <h4 className="font-bold text-sm flex items-center gap-2 mb-3 text-accent"><History className="h-4 w-4" /> Histórico de importações</h4>
         {loadingHistory ? (
           <p className="text-xs text-muted-foreground">Carregando...</p>
         ) : history.length === 0 ? (
@@ -630,7 +630,7 @@ export default function BulkImportTab() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-left text-muted-foreground border-b border-border">
+                <tr className="text-left text-accent/50 border-b border-white/5">
                   <th className="py-2 pr-2">Data</th>
                   <th className="py-2 pr-2">Arquivo</th>
                   <th className="py-2 pr-2">Status</th>
@@ -641,7 +641,7 @@ export default function BulkImportTab() {
               </thead>
               <tbody>
                 {history.map((h) => (
-                  <tr key={h.id} className="border-b border-border/40">
+                  <tr key={h.id} className="border-b border-white/5 text-accent/80">
                     <td className="py-2 pr-2 whitespace-nowrap">{new Date(h.created_at).toLocaleString("pt-BR")}</td>
                     <td className="py-2 pr-2">{h.file_name}</td>
                     <td className="py-2 pr-2">
@@ -652,7 +652,7 @@ export default function BulkImportTab() {
                       <span className="text-green-600 font-semibold">{h.properties_created}</span>
                       {" / "}
                       <span className="text-destructive font-semibold">{h.properties_failed}</span>
-                      <span className="text-muted-foreground"> de {h.properties_total}</span>
+                      <span className="text-accent/50"> de {h.properties_total}</span>
                     </td>
                     <td className="py-2 space-x-1 whitespace-nowrap">
                       <Button variant="ghost" size="sm" onClick={() => downloadLog(h)}>
@@ -687,7 +687,7 @@ export default function BulkImportTab() {
 function Stat({ label, value, ok, warn }: { label: string; value: string; ok?: boolean; warn?: boolean }) {
   return (
     <div className={`rounded-lg border p-3 ${warn ? "border-yellow-500/40 bg-yellow-500/5" : ok ? "border-accent/40 bg-accent/5" : "border-white/5 bg-black/40"}`}>
-      <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="text-[10px] uppercase tracking-wider text-accent/60">{label}</p>
       <p className="text-lg font-bold mt-0.5 text-accent">{value}</p>
     </div>
   );

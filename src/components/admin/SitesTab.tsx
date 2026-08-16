@@ -203,10 +203,10 @@ export default function SitesTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
+          <h2 className="text-2xl font-bold flex items-center gap-2 text-accent">
             <Globe className="h-6 w-6 text-accent" /> Gerenciar Sites (Domínios)
           </h2>
-          <p className="text-sm text-muted-foreground">Crie e gerencie múltiplas instâncias da plataforma.</p>
+          <p className="text-sm text-accent/70">Crie e gerencie múltiplas instâncias da plataforma.</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -319,18 +319,18 @@ export default function SitesTab() {
               
               <div>
                 <h3 className="font-bold text-lg leading-tight text-accent">{site.brand_name}</h3>
-                <p className="text-xs text-muted-foreground font-mono truncate">{site.domain}</p>
+                <p className="text-xs text-accent/60 font-mono truncate">{site.domain}</p>
               </div>
 
               {site.last_published_at && (
-                <div className="text-[10px] text-muted-foreground/60 flex items-center gap-1">
+                <div className="text-[10px] text-accent/60 flex items-center gap-1">
                   <CheckCircle2 className="h-2.5 w-2.5 text-green-500" />
                   Última publicação: {new Date(site.last_published_at).toLocaleString()}
                 </div>
               )}
 
               <div className="pt-2 border-t border-border/50 flex flex-col gap-2">
-                <div className="flex justify-between items-center text-[10px] text-muted-foreground">
+                <div className="flex justify-between items-center text-[10px] text-accent/60">
                   <span>ID: {site.id.slice(0, 8)}...</span>
                   <span>{new Date(site.created_at).toLocaleDateString()}</span>
                 </div>
