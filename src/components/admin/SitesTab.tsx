@@ -197,21 +197,25 @@ export default function SitesTab() {
     if (!publishId) return;
     setPublishing(true);
     
-    const { error } = await supabase
-      .from('sites' as any)
-      .update({ 
-        publish_status: 'published',
-        last_published_at: new Date().toISOString()
-      })
-      .eq('id', publishId);
-    
-    setPublishing(false);
-    if (error) {
-      toast.error("Erro ao publicar site: " + error.message);
-    } else {
+    try {
+      const { error } = await supabase
+        .from('sites' as any)
+        .update({ 
+          publish_status: 'published',
+          last_published_at: new Date().toISOString()
+        })
+        .eq('id', publishId);
+      
+      if (error) throw error;
+      
       toast.success("Site publicado com sucesso!");
       setPublishId(null);
-      fetchSites();
+      await fetchSites();
+    } catch (error: any) {
+      console.error("Erro ao publicar:", error);
+      toast.error("Erro ao publicar site: " + error.message);
+    } finally {
+      setPublishing(false);
     }
   }
 
