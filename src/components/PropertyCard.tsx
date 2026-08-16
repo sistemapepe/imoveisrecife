@@ -137,30 +137,30 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 border-t border-white/5 pt-4">
           <div className="flex items-center gap-1 min-w-0">
             <Ruler className="h-3.5 w-3.5 shrink-0 text-accent" />
-            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.area}m²</span>
+            <span className="text-[10px] font-extrabold text-white/50 uppercase tracking-widest truncate">{property.area}m²</span>
           </div>
         {!!property.bedrooms && (
           <div className="flex items-center gap-1 min-w-0">
-            <DoorOpen className="h-3.5 w-3.5 shrink-0 text-accent" />
-            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.bedrooms} Qts</span>
+            <DoorOpen className="h-3.5 w-3.5 shrink-0 text-accent/70" />
+            <span className="text-[10px] font-extrabold text-white/50 uppercase tracking-widest truncate">{property.bedrooms} Qts</span>
           </div>
         )}
         {!!property.suites && (
           <div className="flex items-center gap-1 min-w-0">
-            <BedDouble className="h-3.5 w-3.5 shrink-0 text-accent" />
-            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.suites} Suítes</span>
+            <BedDouble className="h-3.5 w-3.5 shrink-0 text-accent/70" />
+            <span className="text-[10px] font-extrabold text-white/50 uppercase tracking-widest truncate">{property.suites} Suítes</span>
           </div>
         )}
         {!!property.bathrooms && (
           <div className="flex items-center gap-1 min-w-0">
-            <Bath className="h-3.5 w-3.5 shrink-0 text-accent" />
-            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.bathrooms} Banh.</span>
+            <Bath className="h-3.5 w-3.5 shrink-0 text-accent/70" />
+            <span className="text-[10px] font-extrabold text-white/50 uppercase tracking-widest truncate">{property.bathrooms} Banh.</span>
           </div>
         )}
         {!!property.parking && (
           <div className="flex items-center gap-1 min-w-0">
-            <Car className="h-3.5 w-3.5 shrink-0 text-accent" />
-            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.parking} Vagas</span>
+            <Car className="h-3.5 w-3.5 shrink-0 text-accent/70" />
+            <span className="text-[10px] font-extrabold text-white/50 uppercase tracking-widest truncate">{property.parking} Vagas</span>
           </div>
         )}
         </div>
