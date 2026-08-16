@@ -25,6 +25,7 @@ const UsersTab = lazy(() => import("@/components/admin/UsersTab"));
 const AnalyticsTab = lazy(() => import("@/components/admin/AnalyticsTab"));
 const BulkImportTab = lazy(() => import("@/components/admin/BulkImportTab"));
 const NetworkSettingsTab = lazy(() => import("@/components/admin/NetworkSettingsTab"));
+const NetworkDashboard = lazy(() => import("@/components/admin/NetworkDashboard"));
 
 type NetworkTab = "dashboard" | "sites" | "users" | "analytics" | "security" | "settings" | "import";
 
