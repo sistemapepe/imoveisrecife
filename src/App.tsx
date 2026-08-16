@@ -19,6 +19,7 @@ import DynamicTheme from "@/components/DynamicTheme";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
 import { useWebVitals } from "@/hooks/useWebVitals";
+import PageLoader from "@/components/PageLoader";
 
 // Lazy loading rotas
 const Index = lazy(() => import("./pages/Index"));
@@ -35,12 +36,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookieConsent = lazy(() => import("./components/CookieConsent"));
 
-// Loading fallback component
-const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-[60vh] w-full">
-    <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-  </div>
-);
+// PageLoader is now imported from its own file
 
 const queryClient = new QueryClient({
   defaultOptions: {
