@@ -187,11 +187,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (mounted) {
-        const update = async () => {
+        const update = () => {
           setRole(selectedRole);
-          await loadPermissions(selectedRole);
+          loadPermissions(selectedRole);
         };
-        startTransition ? startTransition(() => update()) : update();
+        startTransition ? startTransition(update) : update();
       }
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
