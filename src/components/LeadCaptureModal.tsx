@@ -197,7 +197,7 @@ export default function LeadCaptureModal({
                   aria-hidden="true"
                   style={honeypotInputStyle}
                 />
-                <p className="text-sm text-muted-foreground whitespace-pre-line">
+                <p className="text-sm text-white/50 leading-relaxed whitespace-pre-line px-1">
                   {settings.leadModalDescription}
                 </p>
 
