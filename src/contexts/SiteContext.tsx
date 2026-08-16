@@ -79,9 +79,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
   return (
     <SiteContext.Provider value={{ site, loading, error }}>
-      <div style={{ width: '100%', height: '100%' }}>
-        {children}
-      </div>
+      {children}
     </SiteContext.Provider>
   );
 }
