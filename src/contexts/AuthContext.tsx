@@ -108,13 +108,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const checkRole = useCallback(async (userId: string) => {
+  const checkRole = useCallback(async (userId: string, mounted = true) => {
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
       
       if (!site?.id && siteLoading) {
-        logger.warn("Site not resolved yet in checkRole, awaiting site data...");
-        return; // Don't finalize loading until site is ready
+        logger.warn("Site not resolved yet in checkRole, will retry shortly...");
+        // Em vez de retornar, tentamos carregar sem site_id primeiro para ver se é super_admin
+        // ou definimos um timeout para não travar o carregamento
+        setTimeout(() => {
+          if (mounted && loading) checkRole(userId);
+        }, 1000);
       }
       
       const { data, error } = await supabase
@@ -170,7 +174,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       if (currentUser) {
         setLoading(true);
-        await checkRole(currentUser.id);
+        await checkRole(currentUser.id, mounted);
       } else {
         setRole(null);
         setLoading(false);
@@ -188,7 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(currentUser);
         
         if (currentUser) {
-          await checkRole(currentUser.id);
+          await checkRole(currentUser.id, mounted);
         } else {
           setLoading(false);
           setIsInitializing(false);
