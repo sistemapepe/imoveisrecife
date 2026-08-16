@@ -67,10 +67,10 @@ function AppContent() {
           <Globe2 className="h-10 w-10 text-accent animate-pulse" />
         </div>
         <h1 className="text-2xl font-serif font-bold text-accent mb-2 uppercase tracking-widest">
-          Site em Configuração
+          Domínio Offline
         </h1>
         <p className="text-white/60 max-w-md mb-8 leading-relaxed">
-          O domínio <span className="text-white font-mono">{window.location.hostname}</span> ainda não foi associado a um site ativo ou está aguardando propagação de DNS.
+          O domínio <span className="text-white font-mono">{window.location.hostname}</span> ainda não está respondendo ou não foi configurado corretamente.
         </p>
         <div className="flex flex-col gap-3 w-full max-w-xs">
           <a 
