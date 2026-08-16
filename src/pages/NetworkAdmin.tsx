@@ -47,12 +47,16 @@ export default function NetworkAdmin() {
 
   // Persistence and synchronization
   useEffect(() => {
+    logger.startTimer("NetworkAdmin_Mount");
     sessionStorage.setItem("network_active_tab", tab);
     // Evita loop de renderização verificando se a URL já está correta
     const currentUrlTab = new URLSearchParams(window.location.search).get("tab");
     if (currentUrlTab !== tab) {
       setSearchParams({ tab }, { replace: true });
     }
+    
+    // Pequeno timeout para garantir que a renderização inicial terminou
+    setTimeout(() => logger.endTimer("NetworkAdmin_Mount"), 100);
   }, [tab, setSearchParams]);
 
 

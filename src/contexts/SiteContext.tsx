@@ -22,6 +22,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   const resolveSite = useCallback(async () => {
+    logger.startTimer("resolveSite");
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const siteIdParam = urlParams.get('site_id');
@@ -92,6 +93,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       logger.error("Failed to resolve site", { domain: window.location.hostname }, err as Error);
       setError("Erro ao carregar configurações do site.");
     } finally {
+      logger.endTimer("resolveSite", { domain: window.location.hostname });
       setLoading(false);
     }
   }, []);

@@ -23,6 +23,7 @@ interface LogEntry {
 class Logger {
   private static instance: Logger;
   private requestId: string;
+  private metrics: Map<string, number> = new Map();
 
   private constructor() {
     this.requestId = crypto.randomUUID();
@@ -33,6 +34,21 @@ class Logger {
       Logger.instance = new Logger();
     }
     return Logger.instance;
+  }
+
+  public startTimer(label: string) {
+    this.metrics.set(label, performance.now());
+  }
+
+  public endTimer(label: string, context: LogContext = {}) {
+    const start = this.metrics.get(label);
+    if (start) {
+      const duration = performance.now() - start;
+      this.info(`Metric: ${label}`, { ...context, duration: `${duration.toFixed(2)}ms`, metricLabel: label });
+      this.metrics.delete(label);
+      return duration;
+    }
+    return 0;
   }
 
   private sanitize(data: any): any {

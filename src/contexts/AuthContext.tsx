@@ -109,6 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const checkRole = useCallback(async (userId: string, mounted = true) => {
+    logger.startTimer("checkRole");
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
       
@@ -193,6 +194,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
     } finally {
+      logger.endTimer("checkRole", { userId });
       setLoading(false);
       setIsInitializing(false);
     }
