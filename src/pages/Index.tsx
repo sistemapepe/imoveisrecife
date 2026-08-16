@@ -628,6 +628,6 @@ export default function Index() {
         )}
         </AnimatePresence>
       </div>
-    </PageTransition>
+    </div>
   );
 }
