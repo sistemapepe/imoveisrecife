@@ -33,7 +33,7 @@ export default function SecurityDiagnosticTab() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="bg-card/50 border-border/50">
+        <Card className="bg-black/40 border-white/5">
           <CardHeader>
             <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
               <Shield className="w-4 h-4 text-accent" /> Identidade & Função
@@ -42,7 +42,7 @@ export default function SecurityDiagnosticTab() {
           <CardContent className="space-y-4">
             <div>
               <label className="text-[10px] text-muted-foreground uppercase font-bold">E-mail Logado</label>
-              <p className="text-sm font-medium">{user?.email || "Não identificado"}</p>
+              <p className="text-sm font-medium text-accent">{user?.email || "Não identificado"}</p>
             </div>
             <div>
               <label className="text-[10px] text-muted-foreground uppercase font-bold">ID do Usuário</label>
@@ -69,7 +69,7 @@ export default function SecurityDiagnosticTab() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 border-border/50">
+        <Card className="bg-black/40 border-white/5">
           <CardHeader>
             <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
               <Lock className="w-4 h-4 text-accent" /> Contexto do Site (Tenant)
@@ -78,7 +78,7 @@ export default function SecurityDiagnosticTab() {
           <CardContent className="space-y-4">
             <div>
               <label className="text-[10px] text-muted-foreground uppercase font-bold">Domínio Atual</label>
-              <p className="text-sm font-medium">{window.location.hostname}</p>
+              <p className="text-sm font-medium text-accent">{window.location.hostname}</p>
             </div>
             <div>
               <label className="text-[10px] text-muted-foreground uppercase font-bold">ID da Instância (site_id)</label>
@@ -93,7 +93,7 @@ export default function SecurityDiagnosticTab() {
         </Card>
       </div>
 
-      <Card className="bg-card/50 border-border/50">
+      <Card className="bg-black/40 border-white/5">
         <CardHeader>
           <CardTitle className="text-sm font-bold uppercase tracking-wider">Mapa de Permissões Granulares</CardTitle>
           <CardDescription>Status atual de cada capacidade no sistema para sua conta.</CardDescription>
@@ -103,8 +103,8 @@ export default function SecurityDiagnosticTab() {
             {permissionList.map((p) => {
               const hasPerm = (perms as any)[`can${p.key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')}`];
               return (
-                <div key={p.key} className="flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/5">
-                  <span className="text-xs font-medium">{p.label}</span>
+                <div key={p.key} className="flex items-center justify-between p-2 rounded-lg bg-black/40 border border-white/5">
+                  <span className="text-xs font-medium text-accent">{p.label}</span>
                   {hasPerm ? (
                     <CheckCircle2 className="w-4 h-4 text-green-500" />
                   ) : (

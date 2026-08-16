@@ -134,7 +134,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold">Usuários</h2>
+        <h2 className="text-lg font-bold text-accent">Usuários</h2>
         <button
           onClick={() => setShowCreate(true)}
           className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider"
@@ -150,12 +150,12 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
       ) : (
         <div className="space-y-2">
           {users.map((u) => (
-            <div key={u.id} className="bg-card rounded-xl border border-border p-4 flex items-center gap-3">
+            <div key={u.id} className="bg-black/40 rounded-xl border border-white/5 p-4 flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <Shield className="h-4 w-4 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate text-card">{u.email}</p>
+                <p className="text-sm font-semibold truncate text-accent">{u.email}</p>
                 <div className="flex items-center gap-2 mt-1">
                   {roleBadge(u.role)}
                   <span className="text-[10px] text-card/60">
@@ -166,7 +166,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
               <select
                 value={u.role}
                 onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                className="text-xs px-2 py-1.5 rounded-lg border border-border bg-background text-foreground"
+                className="text-xs px-2 py-1.5 rounded-lg border border-white/10 bg-black/60 text-accent"
               >
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>{r.label}</option>

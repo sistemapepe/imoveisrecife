@@ -204,7 +204,7 @@ export default function SitesTab() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Globe className="h-6 w-6 text-primary" /> Gerenciar Sites (Domínios)
+            <Globe className="h-6 w-6 text-accent" /> Gerenciar Sites (Domínios)
           </h2>
           <p className="text-sm text-muted-foreground">Crie e gerencie múltiplas instâncias da plataforma.</p>
         </div>
@@ -228,7 +228,7 @@ export default function SitesTab() {
           </Button>
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent text-luxury-dark text-xs font-bold uppercase tracking-wider"
           >
             <Plus className="h-4 w-4" /> Novo Site (Vazio)
           </button>
@@ -264,10 +264,10 @@ export default function SitesTab() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sites.map(site => (
-            <div key={site.id} className="bg-card rounded-xl border border-border p-5 space-y-4 hover:border-primary/30 transition-colors group">
+            <div key={site.id} className="bg-black/40 rounded-xl border border-white/5 p-5 space-y-4 hover:border-accent/30 transition-colors group">
               <div className="flex items-start justify-between">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Globe className="h-5 w-5 text-primary" />
+                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                  <Globe className="h-5 w-5 text-accent" />
                 </div>
                 <div className="flex gap-1">
                   {site.domain !== 'localhost' && (
@@ -318,7 +318,7 @@ export default function SitesTab() {
               </div>
               
               <div>
-                <h3 className="font-bold text-lg leading-tight">{site.brand_name}</h3>
+                <h3 className="font-bold text-lg leading-tight text-accent">{site.brand_name}</h3>
                 <p className="text-xs text-muted-foreground font-mono truncate">{site.domain}</p>
               </div>
 
