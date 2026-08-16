@@ -409,7 +409,7 @@ export default function BulkImportTab() {
       const valid = parsed.imoveis
         .filter((i) => !parsed.imoveisErrors.some((e) => e.row === i.__row))
         .filter((i) => !reprocessRows || reprocessRows.has(i.__row));
-      let updated = 0;
+      let updatedCount = 0;
       const startedAt = Date.now();
       setProgress({ current: 0, total: valid.length, startedAt });
       for (let idx = 0; idx < valid.length; idx++) {
@@ -430,7 +430,7 @@ export default function BulkImportTab() {
           if (existingId) {
             const { error } = await supabase.from("properties").update(payload as any).eq("id", existingId);
             if (error) throw error;
-            updated++;
+            updatedCount++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Atualizado", id: existingId });
           } else {
             const { error } = await supabase.from("properties").insert({ ...payload, site_id: site?.id });
@@ -445,14 +445,14 @@ export default function BulkImportTab() {
         setProgress({ current: idx + 1, total: valid.length, startedAt });
       }
 
-      const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && updated === 0 && !companyUpdated ? "falhou" : "concluido");
+      const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && updatedCount === 0 && !companyUpdated ? "falhou" : "concluido");
       await supabase.from("import_history").update({
         status, company_updated: companyUpdated,
-        properties_created: created + updated, properties_failed: failed,
+        properties_created: created + updatedCount, properties_failed: failed,
         log: log as any,
       }).eq("id", histRow.id);
 
-      toast.success(`Importação concluída: ${created} criado(s), ${updated} atualizado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
+      toast.success(`Importação concluída: ${created} criado(s), ${updatedCount} atualizado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
       await refreshProperties?.();
       reset();
       loadHistory();
