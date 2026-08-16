@@ -203,9 +203,7 @@ export default function Admin() {
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
     { key: "security", label: "Segurança", icon: Shield, show: true },
   ];
-  const networkTabs: { key: string; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = isSuperAdmin ? [
-    { key: "sites", label: "Sites", icon: Globe2, show: true }
-  ] : [];
+  const networkTabs: { key: string; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = [];
   
   const visibleTabs = [...allTabs.filter((t) => t.show), ...networkTabs];
 

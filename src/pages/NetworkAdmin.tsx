@@ -105,10 +105,10 @@ export default function NetworkAdmin() {
                 <div className="pt-8 border-t border-white/5 mt-8">
                    <button
                     onClick={() => navigate("/admin")}
-                    className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-accent hover:bg-accent/10 transition-all"
+                    className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-accent hover:bg-accent/10 transition-all border border-accent/20"
                   >
                     <LayoutDashboard className="h-5 w-5" />
-                    Voltar ao Admin Site
+                    Painel do Site
                   </button>
                   <button
                     onClick={handleSignOut}
@@ -167,10 +167,10 @@ export default function NetworkAdmin() {
           <div className="p-6 border-t border-white/5 mt-auto bg-black/20">
             <button
               onClick={() => navigate("/admin")}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-accent hover:bg-accent/10 transition-all mb-3"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent/10 transition-all mb-3 text-left border border-accent/20"
             >
-              <LayoutDashboard className="h-4 w-4" />
-              Admin Site Individual
+              <LayoutDashboard className="h-4 w-4 shrink-0" />
+              <span>Painel do Site</span>
             </button>
             <button
               onClick={handleSignOut}

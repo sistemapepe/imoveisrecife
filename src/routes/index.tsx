@@ -182,6 +182,12 @@ export default function Index() {
               <div className="flex items-center gap-2 text-accent font-bold">
                 <ArrowRight className="w-4 h-4" /> Adicione testes automatizados para o Network Admin cobrindo leitura, edição e persistência das configurações globais via Supabase.
               </div>
+              <div className="flex items-center gap-2 text-green-500 font-bold">
+                <CheckCircle2 className="w-4 h-4" /> Ocultar o menu Network/Rede nos sites individuais para isolamento completo da infraestrutura.
+              </div>
+              <div className="flex items-center gap-2 text-green-500 font-bold">
+                <CheckCircle2 className="w-4 h-4" /> Ajustar labels de navegação entre o Gerenciador Global e os Painéis de Site.
+              </div>
             </div>
           </div>
         </div>
