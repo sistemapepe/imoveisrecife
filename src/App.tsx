@@ -60,8 +60,9 @@ function AppContent() {
   useWebVitals();
   
   const isPropertyDetail = location.pathname.startsWith('/imovel/');
+  const isNetworkPath = location.pathname.startsWith('/network-admin');
 
-  if (siteLoading) return <PageLoader />;
+  if (siteLoading && !isNetworkPath) return <PageLoader />;
   
   return (
     <div className="max-w-screen-lg mx-auto relative min-h-screen">
