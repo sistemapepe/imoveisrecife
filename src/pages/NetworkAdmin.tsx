@@ -31,6 +31,7 @@ const NetworkDashboard = lazy(() => import("@/components/admin/NetworkDashboard"
 type NetworkTab = "dashboard" | "sites" | "users" | "analytics" | "security" | "settings" | "import";
 
 export default function NetworkAdmin() {
+  console.log("NetworkAdmin: rendering...");
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user, isSuperAdmin, loading: authLoading, signOut } = useAuth();
