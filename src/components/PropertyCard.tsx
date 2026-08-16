@@ -112,18 +112,17 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
       </div>
       <div className="p-5">
         <h2 className="font-serif font-bold text-2xl text-foreground line-clamp-2 leading-tight mb-3">{property.title}</h2>
-        <div className="flex items-baseline gap-2 mb-4 flex-wrap relative">
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-white/40 backdrop-blur-md -rotate-1 rounded-lg scale-110 shadow-sm border border-white/20" />
+        <div className="flex items-center gap-3 mb-5 flex-wrap">
+          <div className="px-3 py-1.5 bg-accent/5 rounded-full border border-accent/10">
             <PriceDisplay
               as="p"
               section="card"
               value={property.price}
-              className="relative italic tracking-tight px-1"
+              className="text-accent font-bold tracking-tight"
             />
           </div>
-          <span className="text-xs text-muted-foreground ml-2">
-            ({property.neighborhood})
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground/60 font-bold">
+            {property.neighborhood}
           </span>
           {hasPriceDrop && (
             <PriceDisplay
