@@ -35,31 +35,32 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       let query = supabase.from('sites' as any).select('*');
       
       if (siteIdParam) {
-        // Se temos um ID específico, verificamos o cache por ID
-        // Nota: O SiteProvider não valida permissões aqui, isso é feito pelo AuthContext e ProtectedRoute
-        const cacheKey = `site_resolved_${siteIdParam}`;
-        const cached = sessionStorage.getItem(cacheKey);
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (parsed && parsed.id) {
-            setSite(parsed);
-            setLoading(false);
-            return;
+        try {
+          const cacheKey = `site_resolved_${siteIdParam}`;
+          const cached = sessionStorage.getItem(cacheKey);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (parsed && parsed.id) {
+              setSite(parsed);
+              setLoading(false);
+              return;
+            }
           }
-        }
+        } catch (e) { /* ignore cache errors */ }
         query = query.eq('id', siteIdParam);
       } else {
-        const cacheKey = `site_resolved_${domainToSearch}`;
-        const cached = sessionStorage.getItem(cacheKey);
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (parsed && parsed.id) {
-            setSite(parsed);
-            setLoading(false);
-            return;
+        try {
+          const cacheKey = `site_resolved_${domainToSearch}`;
+          const cached = sessionStorage.getItem(cacheKey);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (parsed && parsed.id) {
+              setSite(parsed);
+              setLoading(false);
+              return;
+            }
           }
-        }
-        // Busca tanto o domínio limpo quanto com www (caso o usuário tenha cadastrado com www)
+        } catch (e) { /* ignore cache errors */ }
         query = query.or(`domain.eq.${domainToSearch},domain.eq.www.${domainToSearch}`);
       }
 
@@ -68,7 +69,6 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       if (siteError) throw siteError;
 
       if (!data) {
-        // Se estivermos em um domínio lovable.app e não achamos por ID, tentamos o fallback 'localhost'
         if (hostname.includes('lovable.app') && !siteIdParam) {
           const { data: localhostSite } = await supabase
             .from('sites' as any)
@@ -86,8 +86,10 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         setSite(null);
       } else {
         setSite(data as any);
-        const key = siteIdParam || domainToSearch;
-        sessionStorage.setItem(`site_resolved_${key}`, JSON.stringify(data));
+        try {
+          const key = siteIdParam || domainToSearch;
+          sessionStorage.setItem(`site_resolved_${key}`, JSON.stringify(data));
+        } catch (e) { /* ignore session storage limits */ }
       }
     } catch (err) {
       logger.error("Failed to resolve site", { domain: window.location.hostname }, err as Error);

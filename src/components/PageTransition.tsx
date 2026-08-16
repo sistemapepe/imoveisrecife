@@ -49,6 +49,7 @@ export const PageTransition = React.forwardRef<HTMLDivElement, { children: React
 
   return (
     <motion.div
+      ref={ref}
       variants={variants}
       initial="initial"
       animate="animate"
