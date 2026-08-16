@@ -1,5 +1,5 @@
 import { useState, useTransition, Suspense, lazy, useCallback, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { logger } from "@/lib/logger";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -13,13 +13,11 @@ import {
   Shield, 
   BarChart3, 
   Home,
-  Menu,
-  X
+  Menu
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-// Lazy loading components with custom names to avoid conflicts
 const SitesTab = lazy(() => import("@/components/admin/SitesTab"));
 const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
 const UsersTab = lazy(() => import("@/components/admin/UsersTab"));
@@ -30,12 +28,12 @@ const NetworkDashboard = lazy(() => import("@/components/admin/NetworkDashboard"
 
 type NetworkTab = "dashboard" | "sites" | "users" | "analytics" | "security" | "settings" | "import";
 
-export default function NetworkAdmin() {
+const NetworkAdmin = React.forwardRef<HTMLDivElement>((_, ref) => {
+  
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user, isSuperAdmin, loading: authLoading, signOut } = useAuth();
   
-  // Initialize tab from URL or sessionStorage for persistence and instant hydration
   const [tab, setTab] = useState<NetworkTab>(() => {
     try {
       const urlTab = new URLSearchParams(window.location.search).get("tab") as NetworkTab;
@@ -49,14 +47,12 @@ export default function NetworkAdmin() {
   const [isPending, startTransition] = useTransition();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Persistence and synchronization
   useEffect(() => {
     if (!user || !isSuperAdmin) return;
 
     logger.startTimer("NetworkAdmin_Mount");
     sessionStorage.setItem("network_active_tab", tab);
     
-    // Sincroniza URL sem causar loops
     const currentUrlTab = searchParams.get("tab");
     if (currentUrlTab !== tab) {
       setSearchParams({ tab }, { replace: true });
@@ -65,9 +61,6 @@ export default function NetworkAdmin() {
     logger.endTimer("NetworkAdmin_Mount");
   }, [tab, setSearchParams, searchParams, user, isSuperAdmin]);
 
-
-
-  // Components map for prefetching
   const componentsMap = useMemo(() => ({
     dashboard: () => import("@/components/admin/NetworkDashboard"),
     sites: () => import("@/components/admin/SitesTab"),
@@ -85,10 +78,7 @@ export default function NetworkAdmin() {
 
   const switchTab = useCallback((newTab: NetworkTab) => {
     if (tab === newTab) return;
-    
-    // Prefetch immediately on click before transition
     prefetchTab(newTab);
-    
     startTransition(() => {
       setTab(newTab);
       setMobileMenuOpen(false);
@@ -123,8 +113,7 @@ export default function NetworkAdmin() {
   };
 
   return (
-    <div className="min-h-screen bg-luxury-dark text-white flex flex-col md:flex-row dark overflow-x-hidden relative">
-        {/* Mobile Header */}
+    <div ref={ref} className="min-h-screen bg-luxury-dark text-white flex flex-col md:flex-row dark overflow-x-hidden relative">
         <header className="md:hidden sticky top-0 z-50 bg-[#0d1419]/90 backdrop-blur-3xl border-b border-white/5 px-4 h-18 flex items-center justify-between shadow-xl">
           <div className="flex items-center gap-3">
             <Globe2 className="h-6 w-6 text-accent" />
@@ -181,7 +170,6 @@ export default function NetworkAdmin() {
           </Sheet>
         </header>
 
-        {/* Sidebar Desktop */}
         <aside className="hidden md:flex flex-col w-72 bg-[#0d1419] border-r border-white/5 h-screen sticky top-0">
           <div className="p-8 mb-8">
             <div className="flex items-center gap-4 mb-2">
@@ -240,7 +228,6 @@ export default function NetworkAdmin() {
           </div>
         </aside>
 
-        {/* Main Content */}
         <main className="flex-1 p-6 md:p-12 overflow-y-auto max-w-7xl mx-auto w-full relative">
           <div className="w-full">
             <Suspense fallback={
@@ -267,4 +254,7 @@ export default function NetworkAdmin() {
         </main>
     </div>
   );
-}
+});
+
+NetworkAdmin.displayName = "NetworkAdmin";
+export default NetworkAdmin;

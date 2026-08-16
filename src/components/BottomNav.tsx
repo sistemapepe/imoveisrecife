@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Home, Search, Heart, MessageSquare } from "lucide-react";
+import React from "react";
 
 const tabs = [
   { path: "/", label: "Início", icon: Home },
@@ -8,7 +9,7 @@ const tabs = [
   { path: "/contato", label: "Contato", icon: MessageSquare },
 ];
 
-export default function BottomNav() {
+const BottomNav = React.forwardRef<HTMLElement>((_, ref) => {
   const location = useLocation();
   const navigate = useNavigate();
   const isActive = (path: string) => location.pathname === path;
@@ -16,7 +17,7 @@ export default function BottomNav() {
   if (location.pathname.startsWith("/admin") || location.pathname === "/login" || location.pathname === "/network-admin") return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-[60] bg-[#0d1419]/95 backdrop-blur-3xl border-t border-white/10 px-6 pb-[calc(0.7rem+env(safe-area-inset-bottom))] pt-3 flex justify-around items-center max-w-screen-lg mx-auto h-[calc(72px+env(safe-area-inset-bottom))] shadow-[0_-20px_50px_rgba(0,0,0,0.5)] rounded-t-[2.5rem]">
+    <nav ref={ref} className="fixed bottom-0 left-0 right-0 z-[60] bg-[#0d1419]/95 backdrop-blur-3xl border-t border-white/10 px-6 pb-[calc(0.7rem+env(safe-area-inset-bottom))] pt-3 flex justify-around items-center max-w-screen-lg mx-auto h-[calc(72px+env(safe-area-inset-bottom))] shadow-[0_-20px_50px_rgba(0,0,0,0.5)] rounded-t-[2.5rem]">
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const active = isActive(tab.path);
@@ -47,4 +48,7 @@ export default function BottomNav() {
       })}
     </nav>
   );
-}
+});
+
+BottomNav.displayName = "BottomNav";
+export default BottomNav;
