@@ -88,8 +88,24 @@ export default function SitesTab() {
   }
 
   async function handleCreate() {
+    const domainPattern = /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+    
     if (!newDomain || !newBrandName) {
       toast.error("Preencha todos os campos");
+      return;
+    }
+
+    if (newDomain !== 'localhost' && !newDomain.includes('8080') && !domainPattern.test(newDomain.replace(/^www\./, ""))) {
+      toast.error("Formato de domínio inválido (ex: site.com.br)");
+      return;
+    }
+
+    // Normalização básica: minúsculo e sem espaços
+    const normalizedDomain = newDomain.toLowerCase().trim();
+    
+    // Verificar duplicidade local na lista carregada
+    if (sites.some(s => s.domain.toLowerCase() === normalizedDomain)) {
+      toast.error("Este domínio já está cadastrado.");
       return;
     }
 
@@ -206,7 +222,7 @@ export default function SitesTab() {
           <h2 className="text-2xl font-bold flex items-center gap-2 text-accent">
             <Globe className="h-6 w-6 text-accent" /> Gerenciar Sites (Domínios)
           </h2>
-          <p className="text-sm text-accent/70">Crie e gerencie múltiplas instâncias da plataforma.</p>
+          <p className="text-sm text-accent/70">Crie instâncias. Aponte o CNAME para este servidor.</p>
         </div>
         <div className="flex gap-2">
           <Button
