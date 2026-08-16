@@ -106,7 +106,7 @@ function AppContent() {
   );
 }
 
-const App = () => {
+export default function App() {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
@@ -127,6 +127,4 @@ const App = () => {
       </QueryClientProvider>
     </HelmetProvider>
   );
-};
-
-export default App;
+}
