@@ -114,24 +114,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logger.info("Checking user role", { userId, siteId: site?.id });
       
       const isNetworkPath = window.location.pathname.startsWith('/network-admin');
+      const isLoginPath = window.location.pathname === '/login';
 
       // 1. Resolve global super_admin early if site is pending
-      if ((!site?.id || siteLoading) && isNetworkPath) {
-        const { data: superAdminCheck } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", userId)
-          .eq("role", "super_admin")
-          .or("site_id.is.null,site_id.eq.00000000-0000-0000-0000-000000000000")
-          .maybeSingle();
+      if ((!site?.id || siteLoading) && (isNetworkPath || isLoginPath)) {
+        try {
+          const { data: superAdminCheck } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", userId)
+            .eq("role", "super_admin")
+            .or("site_id.is.null,site_id.eq.00000000-0000-0000-0000-000000000000")
+            .maybeSingle();
 
-        if (superAdminCheck) {
-          if (mounted) {
-            setRole("super_admin");
-            setLoading(false);
-            setIsInitializing(false);
+          if (superAdminCheck) {
+            if (mounted) {
+              setRole("super_admin");
+              sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
+              setLoading(false);
+              setIsInitializing(false);
+            }
+            return;
           }
-          return;
+        } catch (e) {
+          logger.warn("Early super_admin check failed", { userId });
         }
       }
 
