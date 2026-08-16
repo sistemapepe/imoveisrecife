@@ -135,26 +135,3 @@ const App = React.forwardRef<HTMLDivElement, any>((props, ref) => {
 App.displayName = "App";
 
 export default App;
-
-// Remove the old export default function App() { ... } block below if it exists
-const _oldApp = () => {
-  return (
-    <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <SiteProvider>
-            <AuthProvider>
-              <PropertyProvider>
-                <Toaster />
-                <Sonner />
-                <DynamicTheme />
-                <BrowserRouter>
-                  <AppContent />
-                </BrowserRouter>
-              </PropertyProvider>
-            </AuthProvider>
-          </SiteProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </HelmetProvider>
-}
