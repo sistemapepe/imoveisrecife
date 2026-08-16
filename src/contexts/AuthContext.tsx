@@ -48,7 +48,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export const AuthProvider = React.forwardRef<HTMLDivElement, { children: ReactNode }>(({ children }, ref) => {
   const { site, loading: siteLoading } = useSite();
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
@@ -275,10 +275,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={{ user, isAdmin, isSuperAdmin, role, loading, isInitializing, signIn, signUp, signOut, canManageProperties, canDeleteProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket }}>
-      {children}
+      <div ref={ref} className="contents">
+        {children}
+      </div>
     </AuthContext.Provider>
   );
-}
+});
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
