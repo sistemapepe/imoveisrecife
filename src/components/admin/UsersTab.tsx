@@ -166,7 +166,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
               <select
                 value={u.role}
                 onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                className="text-xs px-2 py-1.5 rounded-lg border border-border bg-background"
+                className="text-xs px-2 py-1.5 rounded-lg border border-border bg-background text-foreground"
               >
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>{r.label}</option>
