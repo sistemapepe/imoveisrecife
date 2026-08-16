@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSite } from "@/contexts/SiteContext";
 import { toast } from "sonner";
-import { UserPlus, Trash2, Shield, Eye, EyeOff } from "lucide-react";
+import { UserPlus, Trash2, Shield, Eye, EyeOff, Key } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import PermissionsConfig from "./PermissionsConfig";
@@ -193,12 +193,24 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
                   <option key={r.value} value={r.value}>{r.label}</option>
                 ))}
               </select>
-              <button
-                onClick={() => setDeleteId(u.id)}
-                className="p-3 rounded-xl bg-red-500/5 text-red-500/50 hover:bg-red-500 hover:text-white transition-all duration-300 border border-red-500/10"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setResetPasswordId(u.id);
+                    setNewPassword("");
+                  }}
+                  className="p-3 rounded-xl bg-accent/5 text-accent/50 hover:bg-accent hover:text-luxury-dark transition-all duration-300 border border-accent/10"
+                  title="Resetar Senha"
+                >
+                  <Key className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setDeleteId(u.id)}
+                  className="p-3 rounded-xl bg-red-500/5 text-red-500/50 hover:bg-red-500 hover:text-white transition-all duration-300 border border-red-500/10"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           ))}
         </div>
