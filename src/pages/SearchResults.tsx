@@ -139,18 +139,18 @@ export default function SearchResults() {
             })}
           </div>
 
-          <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-2 border-t border-border/50">
-            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground self-center mr-1">Status:</span>
+          <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-2.5 border-t border-white/5">
+            <span className="shrink-0 text-[9px] font-extrabold uppercase tracking-[0.2em] text-accent/50 self-center mr-2">Status:</span>
             {statusOptions.map(({ value, label }) => {
               const active = activeStatus.includes(value);
               return (
                 <button
                   key={value}
                   onClick={() => toggleStatus(value)}
-                  className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${
+                  className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-[0.15em] transition-all border ${
                     active
-                      ? value === "vendido" ? "bg-red-500 text-white" : value === "reservado" ? "bg-yellow-500 text-white" : "bg-green-600 text-white"
-                      : "bg-card border border-border text-muted-foreground"
+                      ? value === "vendido" ? "bg-red-500/80 border-transparent text-white" : value === "reservado" ? "bg-amber-500/80 border-transparent text-white" : "bg-emerald-600/80 border-transparent text-white"
+                      : "bg-white/5 border-white/10 text-white/40 hover:border-accent/40"
                   }`}
                 >
                   {label}
