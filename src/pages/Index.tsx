@@ -327,7 +327,7 @@ export default function Index() {
                       navigate("/busca");
                     }
                   }}
-                  className="group relative flex min-w-[200px] items-center justify-center overflow-hidden rounded-full h-14 px-10 mb-8 border border-white/20 text-card text-sm font-bold uppercase tracking-[0.25em] transition-all hover:border-accent active:scale-95 premium-shadow"
+                  className="group relative flex min-w-[220px] items-center justify-center overflow-hidden rounded-2xl h-14 px-10 mb-8 border border-white/20 text-white text-xs font-extrabold uppercase tracking-[0.25em] transition-all hover:border-accent/60 active:scale-[0.98] premium-shadow"
                 >
                   <span
                     className="pointer-events-none absolute inset-0 opacity-90 transition-opacity group-hover:opacity-100"
