@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Calendar, CheckCircle, Clock, XCircle, Phone, Mail, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { useSite } from "@/contexts/SiteContext";
 
 interface VisitRequest {
   id: string;
