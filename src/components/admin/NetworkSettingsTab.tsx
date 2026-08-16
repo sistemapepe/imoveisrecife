@@ -114,7 +114,7 @@ export default function NetworkSettingsTab() {
         <div className="flex items-center gap-3">
           <Button 
             variant="outline" 
-            onClick={fetchSettings} 
+            onClick={() => fetchSettings(true)} 
             className="border-white/10 hover:bg-white/5"
             disabled={saving}
           >
