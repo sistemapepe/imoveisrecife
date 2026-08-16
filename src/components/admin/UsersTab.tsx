@@ -46,23 +46,29 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
     if (!site && !isNetwork) return;
     
     const cacheKey = `users_list_${isNetwork ? 'global' : site?.id}`;
-    if (showLoading) {
-      const cached = sessionStorage.getItem(cacheKey);
-      if (cached) {
-        try {
-          const { data, timestamp } = JSON.parse(cached);
-          // Aumentado cache para 5 minutos se for rede global para evitar hits na Edge Function
-          const ttl = isNetwork ? 300000 : 60000;
-          if (Date.now() - timestamp < ttl) {
-            setUsers(data);
-            setLoading(false);
-            return;
-          }
-        } catch (e) {}
-      }
-      setLoading(true);
+    const cached = sessionStorage.getItem(cacheKey);
+    
+    if (cached) {
+      try {
+        const { data, timestamp } = JSON.parse(cached);
+        setUsers(data);
+        
+        // TTL de 5 minutos para cache global, 1 minuto para site específico
+        const ttl = isNetwork ? 300000 : 60000;
+        if (Date.now() - timestamp < ttl) {
+          setLoading(false);
+          // Atualiza em background sem mostrar loading
+          fetchUsersInternal(cacheKey, false);
+          return;
+        }
+      } catch (e) {}
     }
 
+    if (showLoading) setLoading(true);
+    fetchUsersInternal(cacheKey, true);
+  }, [site?.id, isNetwork]);
+
+  const fetchUsersInternal = async (cacheKey: string, updateLoadingState: boolean) => {
     const { data, error } = await supabase.functions.invoke("manage-users", {
       body: { action: "list", siteId: isNetwork ? null : site?.id },
     });
@@ -74,10 +80,10 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
       setUsers(usersList);
       sessionStorage.setItem(cacheKey, JSON.stringify({ data: usersList, timestamp: Date.now() }));
     }
-    setLoading(false);
-  }, [site?.id, isNetwork]);
+    if (updateLoadingState) setLoading(false);
+  };
 
-  useEffect(() => { fetchUsers(); }, [fetchUsers]);
+  useEffect(() => { fetchUsers(true); }, [fetchUsers]);
 
   const handleCreate = async () => {
     if (!newEmail || !newPassword) { toast.error("Preencha e-mail e senha"); return; }
