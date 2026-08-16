@@ -304,8 +304,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    setUser(null);
-    setRole(null);
+    const update = () => {
+      setUser(null);
+      setRole(null);
+    };
+    startTransition ? startTransition(update) : update();
   };
 
   return (

@@ -185,8 +185,10 @@ export default function Admin() {
   };
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
+    startTransition(async () => {
+      await signOut();
+      navigate("/");
+    });
   };
 
   const allTabs: { key: Tab; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = [
