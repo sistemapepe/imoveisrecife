@@ -164,6 +164,6 @@ export const DynamicTheme = (props: any) => {
   ]);
 
 
-  return null;
-};
+  return <div ref={ref} style={{ display: 'none' }} />;
+});
 export default DynamicTheme;

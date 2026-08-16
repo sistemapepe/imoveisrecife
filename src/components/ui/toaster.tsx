@@ -1,6 +1,13 @@
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "@/components/ui/toast";
+import {
+  Toast,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+} from "@/components/ui/toast";
 
 export const Toaster = React.forwardRef<HTMLDivElement, any>((props, ref) => {
   const { toasts } = useToast();
@@ -25,3 +32,4 @@ export const Toaster = React.forwardRef<HTMLDivElement, any>((props, ref) => {
     </ToastProvider>
   );
 });
+Toaster.displayName = "Toaster";
