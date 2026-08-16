@@ -280,7 +280,7 @@ export default function SitesTab() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sites.map(site => (
-            <div key={site.id} className="bg-black/40 rounded-xl border border-white/5 p-5 space-y-4 hover:border-accent/30 transition-colors group">
+            <div key={site.id} className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-6 space-y-5 hover:border-accent/30 transition-all duration-500 group premium-shadow">
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
                   <Globe className="h-5 w-5 text-accent" />
