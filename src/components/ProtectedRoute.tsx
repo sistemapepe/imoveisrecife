@@ -2,7 +2,11 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading, role } = useAuth();
   const location = useLocation();
 
@@ -15,8 +19,9 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   }
 
   // Se não houver usuário ou o papel for 'user' (sem permissões administrativas), redireciona para login
-  if (!user || role === "user") {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!user || role === "user" || !role) {
+    // Usamos replace: false temporariamente para depurar se o redirecionamento é o problema
+    return <Navigate to="/login" state={{ from: location }} replace={false} />;
   }
 
   return <>{children}</>;

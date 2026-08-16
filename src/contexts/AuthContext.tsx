@@ -110,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userRole = (data?.role as AppRole) || "user";
       setRole(userRole);
       await loadPermissions(userRole);
+      setLoading(false);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
@@ -121,14 +122,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!mounted) return;
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        setTimeout(async () => {
-          if (mounted) {
-            await checkRole(session.user.id);
-            setLoading(false);
-          }
-        }, 0);
+      
+      const newUser = session?.user ?? null;
+      setUser(newUser);
+      
+      if (newUser) {
+        setLoading(true);
+        await checkRole(newUser.id);
       } else {
         setRole(null);
         setLoading(false);

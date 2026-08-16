@@ -12,7 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
-import PageTransition from "@/components/PageTransition";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -137,8 +137,14 @@ export default function Admin() {
     return () => clearInterval(interval);
   }, [isAdmin, role, tab]);
 
+  useEffect(() => {
+    if (!authLoading && (!user || role === "user")) {
+      navigate("/login");
+    }
+  }, [user, role, authLoading, navigate]);
+
   if (authLoading) return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
-  if (!user) return null;
+  if (!user || role === "user") return null;
 
   const startEdit = (p: Property) => {
     setEditing(p.id);
@@ -211,7 +217,7 @@ export default function Admin() {
   const currentTabLabel = visibleTabs.find((t) => t.key === tab)?.label ?? "Painel";
 
   return (
-    <PageTransition>
+    <div>
       <div className="min-h-screen bg-background pb-8">
         <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">
@@ -715,6 +721,6 @@ export default function Admin() {
           </DialogContent>
         </Dialog>
       </div>
-    </PageTransition>
+    </div>
   );
 }
