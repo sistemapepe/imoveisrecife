@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Mail, Phone, Tag, RefreshCw, MessageSquareText } from "lucide-react";
+import { useSite } from "@/contexts/SiteContext";
 
 interface ContactMessage {
   id: string;
@@ -31,14 +32,17 @@ interface MessagesTabProps {
 }
 
 export default function MessagesTab({ onNewMessage }: MessagesTabProps) {
+  const { site } = useSite();
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchMessages = useCallback(async () => {
+    if (!site?.id) return;
     setLoading(true);
     const { data, error } = await supabase
       .from("contact_messages")
       .select("*")
+      .eq("site_id", site.id)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -50,16 +54,22 @@ export default function MessagesTab({ onNewMessage }: MessagesTabProps) {
   }, []);
 
   useEffect(() => {
-    fetchMessages();
-  }, [fetchMessages]);
+    if (site?.id) fetchMessages();
+  }, [fetchMessages, site?.id]);
 
   // Realtime subscription for new messages
   useEffect(() => {
+    if (!site?.id) return;
     const channel = supabase
-      .channel("contact_messages_realtime")
+      .channel(`contact_messages_${site.id}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "contact_messages" },
+        { 
+          event: "INSERT", 
+          schema: "public", 
+          table: "contact_messages",
+          filter: `site_id=eq.${site.id}`
+        },
         (payload) => {
           const newMsg = payload.new as ContactMessage;
           setMessages((prev) => [newMsg, ...prev]);
