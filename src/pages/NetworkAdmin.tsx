@@ -128,7 +128,7 @@ export default function NetworkAdmin() {
         <header className="md:hidden sticky top-0 z-50 bg-[#0d1419]/90 backdrop-blur-3xl border-b border-white/5 px-4 h-18 flex items-center justify-between shadow-xl">
           <div className="flex items-center gap-3">
             <Globe2 className="h-6 w-6 text-accent" />
-            <span className="font-serif font-bold text-accent tracking-wider">NETWORK</span>
+            <span className="font-serif font-bold text-accent tracking-[0.2em] uppercase">Network</span>
           </div>
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
@@ -140,7 +140,7 @@ export default function NetworkAdmin() {
               <div className="p-6 border-b border-white/5 mb-4">
                 <div className="flex items-center gap-3">
                   <Globe2 className="h-8 w-8 text-accent" />
-                  <span className="font-serif font-bold text-xl text-accent tracking-widest">NETWORK</span>
+                  <span className="font-serif font-bold text-xl text-accent tracking-[0.2em] uppercase">Network</span>
                 </div>
               </div>
               <nav className="px-4 space-y-2">
@@ -151,8 +151,8 @@ export default function NetworkAdmin() {
                       key={item.key}
                       onClick={() => switchTab(item.key as NetworkTab)}
                       onMouseEnter={() => prefetchTab(item.key as NetworkTab)}
-                      className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold transition-all ${
-                        tab === item.key ? "bg-accent text-luxury-dark shadow-lg shadow-accent/20" : "text-accent/60 hover:text-accent hover:bg-white/5"
+                      className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl font-extrabold transition-all duration-300 ${
+                        tab === item.key ? "bg-accent text-luxury-dark shadow-xl shadow-accent/20" : "text-accent/60 hover:text-accent hover:bg-white/5"
                       }`}
                     >
                       <Icon className="h-5 w-5" />
@@ -163,14 +163,14 @@ export default function NetworkAdmin() {
                 <div className="pt-8 border-t border-white/5 mt-8">
                    <button
                     onClick={() => navigate("/admin")}
-                    className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-accent hover:bg-accent/10 transition-all border border-accent/20"
+                    className="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest text-accent hover:bg-accent/10 transition-all border border-accent/20"
                   >
                     <LayoutDashboard className="h-5 w-5" />
                     Painel do Site
                   </button>
                   <button
                     onClick={handleSignOut}
-                    className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-red-400 hover:bg-red-400/10 transition-all mt-2"
+                    className="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest text-red-400/80 hover:bg-red-400/10 transition-all mt-2"
                   >
                     <LogOut className="h-5 w-5" />
                     Sair
@@ -189,7 +189,7 @@ export default function NetworkAdmin() {
                 <Globe2 className="h-7 w-7 text-accent" />
               </div>
               <div>
-                <h1 className="font-serif font-bold text-2xl text-accent tracking-widest">NETWORK</h1>
+                <h1 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Network</h1>
                 <p className="text-[10px] text-accent/60 font-black uppercase tracking-[0.3em]">Gerenciador Global</p>
               </div>
             </div>
