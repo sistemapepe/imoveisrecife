@@ -3,9 +3,6 @@ import { useProperties } from "@/contexts/PropertyContext";
 import { parseHsl, formatHsl, pickBestContrast, adjustForContrast } from "@/lib/color-contrast";
 import { supabase } from "@/integrations/supabase/client";
 
-/**
- * Clamp lightness para evitar branco/preto puro como cor de marca.
- */
 function clampHslLightness(hsl: string, min = 25, max = 65): string {
   const c = parseHsl(hsl);
   if (!c) return hsl;
@@ -21,8 +18,6 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement>((_, ref) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    
-    // 1. Cores Individuais do Site (Prioridade)
     const primary = settings.primaryColor ? clampHslLightness(settings.primaryColor) : null;
     const accent = settings.accentColor ? clampHslLightness(settings.accentColor) : null;
 
@@ -35,7 +30,6 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement>((_, ref) => {
       root.style.setProperty("--gold", accent);
     }
 
-    // 2. Fallback para Cores Globais da Rede (Network Settings) se as do site não existirem
     const applyGlobalFallbacks = async () => {
       if (!primary || !accent) {
         try {
@@ -66,7 +60,6 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement>((_, ref) => {
 
     applyGlobalFallbacks();
 
-    // Calcula --price-color: melhor contraste entre primary/accent contra fundos claro e escuro.
     const pc = parseHsl(primary ?? "195 85% 45%");
     const ac = parseHsl(accent ?? "42 56% 55%");
     if (pc && ac) {
@@ -84,7 +77,6 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement>((_, ref) => {
     root.style.setProperty("--logo-h", `${settings.logoHeightPx ?? 140}px`);
     root.style.setProperty("--marquee-py", `${settings.marqueePaddingYPx ?? 4}px`);
 
-    // Atualiza favicon e apple-touch-icon dinamicamente com a logo do site.
     if (settings.logoUrl) {
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -96,7 +88,6 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement>((_, ref) => {
           canvas.height = size;
           const ctx = canvas.getContext("2d");
           if (!ctx) return;
-          // Fundo escuro com cantos arredondados
           const radius = 12;
           ctx.fillStyle = "#0a0a0a";
           ctx.beginPath();
@@ -111,7 +102,6 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement>((_, ref) => {
           ctx.quadraticCurveTo(0, 0, radius, 0);
           ctx.closePath();
           ctx.fill();
-          // Desenha a logo centralizada com padding
           const pad = 6;
           const maxW = size - pad * 2;
           const maxH = size - pad * 2;
@@ -133,17 +123,13 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement>((_, ref) => {
           setIcon("icon");
           setIcon("apple-touch-icon");
         } catch {
-          // Fallback: usa diretamente a URL da logo
           const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
           if (link) link.href = settings.logoUrl!;
         }
       };
-      img.onerror = () => {/* mantém favicon atual */};
       img.src = settings.logoUrl;
     }
 
-
-    // Atualiza o título da aba com o nome da marca
     if (settings.brandName) {
       const current = document.title;
       if (!current.includes(settings.brandName)) {
@@ -163,6 +149,7 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement>((_, ref) => {
 
   return <div ref={ref} style={{ display: 'none' }} />;
 });
+
 DynamicTheme.displayName = "DynamicTheme";
 
 export default DynamicTheme;
