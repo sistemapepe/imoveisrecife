@@ -36,20 +36,24 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
     if (cached) {
       try {
         const { data, timestamp } = JSON.parse(cached);
-        if (Date.now() - timestamp < 30000) { // 30s cache
-          setTotalViews(data.totalViews);
-          setTotalLeads(data.totalLeads);
-          setTotalVisits(data.totalVisits);
-          setViewsByProperty(data.viewsByProperty);
-          setViewsByDay(data.viewsByDay);
-          setLeadsByDay(data.leadsByDay);
+        setTotalViews(data.totalViews);
+        setTotalLeads(data.totalLeads);
+        setTotalVisits(data.totalVisits);
+        setViewsByProperty(data.viewsByProperty);
+        setViewsByDay(data.viewsByDay);
+        setLeadsByDay(data.leadsByDay);
+        
+        // Se o cache for recente (< 5 min), não mostra loading
+        if (Date.now() - timestamp < 300000) {
           setLoading(false);
+          // Opcional: faz o fetch em background para atualizar
+          fetchAnalytics(cacheKey, false);
           return;
         }
       } catch (e) {}
     }
 
-    fetchAnalytics(cacheKey);
+    fetchAnalytics(cacheKey, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString(), site?.id, isNetwork]);
 
