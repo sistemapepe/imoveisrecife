@@ -543,12 +543,14 @@ export default function Index() {
                         <Heart className={`h-4 w-4 ${favorites.includes(p.id) ? "fill-accent text-accent" : "text-card"}`} />
                       </button>
                     </div>
-                    <div className="p-5">
-                      <PriceDisplay as="p" section="banner" value={p.price} />
-                      <p className="text-card/70 text-sm font-medium mb-3">
-                        {p.title}
-                        {settings.showLocationOnCard && ` - ${p.neighborhood}`}
-                      </p>
+                    <div className="p-6">
+                      <h4 className="font-serif text-lg text-white mb-2 line-clamp-1">{p.title}</h4>
+                      <div className="flex items-center gap-2 mb-4">
+                        <PriceDisplay as="p" section="banner" value={p.price} className="text-accent font-bold text-lg" />
+                        <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">
+                          {p.neighborhood}
+                        </span>
+                      </div>
                       <div className="flex items-center gap-4 text-card/50 text-xs uppercase tracking-tighter">
                         {!!p.area && <div className="flex items-center gap-1"><Ruler className="h-3 w-3 text-primary" />{p.area}m²</div>}
                         {!!p.suites && <div className="flex items-center gap-1"><BedDouble className="h-3 w-3 text-primary" />{p.suites} Suítes</div>}
