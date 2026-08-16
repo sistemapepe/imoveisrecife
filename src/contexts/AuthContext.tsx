@@ -115,7 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       const isNetworkPath = window.location.pathname.startsWith('/network-admin');
 
-      // Verifica cache de super_admin global para resposta instantânea
+      // 1. Check global super_admin cache for instant response
       const cachedSuperAdmin = sessionStorage.getItem(`is_global_super_admin_${userId}`);
       if (cachedSuperAdmin === 'true') {
         if (mounted) {
@@ -125,10 +125,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
 
-      // Se for caminho de rede, precisamos garantir que o checkRole não trave esperando o site
+      // 2. Resolve global super_admin early if site is pending
       if (!site?.id && siteLoading && !isNetworkPath) {
-        logger.warn("Site not resolved yet in checkRole, checking global super_admin first...");
-        
         const { data: superAdminCheck } = await supabase
           .from("user_roles")
           .select("role")
@@ -138,7 +136,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .maybeSingle();
 
         if (superAdminCheck) {
-          logger.info("Global super_admin detected early", { userId });
           sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
           if (mounted) {
             setRole("super_admin");
@@ -147,32 +144,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
           return;
         }
-
-        if (cachedSuperAdmin !== 'true' && !isNetworkPath) {
-          logger.warn("Site not resolved yet in checkRole, checking global super_admin first...");
-          
-          const { data: superAdminCheck } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", userId)
-            .eq("role", "super_admin")
-            .or("site_id.is.null,site_id.eq.00000000-0000-0000-0000-000000000000")
-            .maybeSingle();
-
-          if (superAdminCheck) {
-            logger.info("Global super_admin detected early", { userId });
-            sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
-            if (mounted) {
-              setRole("super_admin");
-              setLoading(false);
-              setIsInitializing(false);
-            }
-            return;
-          }
-        }
       }
 
-      
+      // 3. Main role resolution
       const { data, error } = await supabase
         .from("user_roles")
         .select("role, site_id")
@@ -191,27 +165,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
         } else if (site?.id) {
           const siteSpecific = data.find(r => r.site_id === site.id);
-          if (siteSpecific) {
-            selectedRole = siteSpecific.role as AppRole;
-          } else {
-            selectedRole = data[0].role as AppRole;
-          }
+          selectedRole = siteSpecific ? (siteSpecific.role as AppRole) : (data[0].role as AppRole);
         } else {
           selectedRole = data[0].role as AppRole;
         }
       }
 
-      logger.info("Role determined", { userId, role: selectedRole, siteId: site?.id });
-      
-      setRole(selectedRole);
-      await loadPermissions(selectedRole);
+      if (mounted) {
+        setRole(selectedRole);
+        await loadPermissions(selectedRole);
+      }
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
-      setRole("user");
+      if (mounted) setRole("user");
     } finally {
       logger.endTimer("checkRole", { userId });
-      setLoading(false);
-      setIsInitializing(false);
+      if (mounted) {
+        setLoading(false);
+        setIsInitializing(false);
+      }
     }
   }, [site?.id, siteLoading, loadPermissions]);
 
@@ -237,7 +209,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     const initAuth = async () => {
-      // Always try to load user even if site is loading
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!mounted) return;
@@ -253,8 +224,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         logger.error("Initial session check failed", {}, error as Error);
-        setLoading(false);
-        setIsInitializing(false);
+        if (mounted) {
+          setLoading(false);
+          setIsInitializing(false);
+        }
       }
     };
 
@@ -266,7 +239,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         authSubscription.unsubscribe();
       }
     };
-  }, [checkRole, siteLoading]);
+  }, [checkRole]);
 
   const signIn = async (email: string, password: string) => {
     const { error, data } = await supabase.auth.signInWithPassword({ email, password });
