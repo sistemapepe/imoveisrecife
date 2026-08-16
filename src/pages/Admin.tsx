@@ -728,9 +728,6 @@ export default function Admin() {
               <UsersTab />
             )}
 
-            {tab === "settings" && canManageSettings && (
-              <SettingsTab settings={settings} updateSettings={updateSettings} />
-            )}
 
             {tab === "messages" && canViewContacts && (
               <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
