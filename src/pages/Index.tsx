@@ -327,19 +327,19 @@ export default function Index() {
                       navigate("/busca");
                     }
                   }}
-                  className="group relative flex min-w-[160px] items-center justify-center overflow-hidden rounded-full h-12 px-8 mb-6 border-2 border-accent text-card text-sm font-bold uppercase tracking-[0.2em] transition-colors active:brightness-95"
+                  className="group relative flex min-w-[200px] items-center justify-center overflow-hidden rounded-full h-14 px-10 mb-8 border border-white/20 text-card text-sm font-bold uppercase tracking-[0.25em] transition-all hover:border-accent active:scale-95 premium-shadow"
                 >
                   <span
-                    className="pointer-events-none absolute inset-0 animate-[gradient-shift_4s_ease_infinite]"
+                    className="pointer-events-none absolute inset-0 opacity-90 transition-opacity group-hover:opacity-100"
                     style={{
                       backgroundImage:
-                        "linear-gradient(120deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 35%, hsl(var(--accent)) 65%, hsl(var(--primary)) 100%)",
-                      backgroundSize: "300% 300%",
+                        "var(--gold-gradient)",
                     }}
                   />
-                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_2.5s_infinite]" />
-                  <span className="relative z-10">Descobrir</span>
-
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_3s_infinite]" />
+                  <span className="relative z-10 drop-shadow-sm flex items-center gap-2">
+                    Descobrir <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </span>
                 </motion.button>
 
 
