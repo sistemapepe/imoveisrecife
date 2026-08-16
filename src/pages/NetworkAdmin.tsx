@@ -112,7 +112,7 @@ export default function NetworkAdmin() {
     { key: "sites", label: "Gerenciar Sites", icon: Globe2 },
     { key: "users", label: "Usuários Globais", icon: Users },
     { key: "analytics", label: "Analytics Global", icon: BarChart3 },
-    { key: "import", label: "Importação Massa", icon: Globe2 },
+    { key: "import", label: "Importação Massa", icon: LayoutDashboard },
     { key: "security", label: "Segurança", icon: Shield },
     { key: "settings", label: "Configurações", icon: Settings },
   ];
