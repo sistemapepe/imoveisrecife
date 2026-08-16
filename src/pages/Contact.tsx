@@ -105,7 +105,7 @@ export default function Contact() {
                 onChange={(e) => setForm({ ...form, [key]: e.target.value })}
                 placeholder={label}
                 required={key !== "phone"}
-                className="w-full border-0 border-b border-border bg-transparent pb-2 pt-4 text-sm focus:outline-none focus:border-accent placeholder:text-muted-foreground placeholder:uppercase placeholder:text-xs placeholder:tracking-wider"
+                className="w-full border-0 border-b border-white/10 bg-transparent pb-3 pt-5 text-sm focus:outline-none focus:border-accent transition-all placeholder:text-white/30 placeholder:uppercase placeholder:text-[10px] placeholder:tracking-[0.2em]"
               />
             ))}
             <select
