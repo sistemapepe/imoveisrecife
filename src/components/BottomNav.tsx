@@ -16,7 +16,7 @@ export default function BottomNav() {
   if (location.pathname.startsWith("/admin") || location.pathname === "/login" || location.pathname === "/network-admin") return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/90 backdrop-blur-xl border-t border-border px-6 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 flex justify-around items-center max-w-screen-lg mx-auto h-[calc(64px+env(safe-area-inset-bottom))]">
+    <nav className="fixed bottom-0 left-0 right-0 z-[60] bg-card/95 backdrop-blur-2xl border-t border-white/10 px-6 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2.5 flex justify-around items-center max-w-screen-lg mx-auto h-[calc(64px+env(safe-area-inset-bottom))] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] rounded-t-[2rem]">
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const active = isActive(tab.path);
