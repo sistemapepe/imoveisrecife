@@ -36,8 +36,11 @@ const NetworkAdmin = React.forwardRef<HTMLDivElement>((_, ref) => {
   
   const initialTab = useMemo<NetworkTab>(() => {
     try {
-      const urlTab = new URLSearchParams(window.location.search).get("tab") as NetworkTab;
-      if (urlTab) return urlTab;
+      const params = new URLSearchParams(window.location.search);
+      const urlTab = params.get("tab") as NetworkTab;
+      if (urlTab && ["dashboard", "sites", "users", "analytics", "security", "settings", "import"].includes(urlTab)) {
+        return urlTab;
+      }
       return (sessionStorage.getItem("network_active_tab") as NetworkTab) || "dashboard";
     } catch (e) {
       return "dashboard";
