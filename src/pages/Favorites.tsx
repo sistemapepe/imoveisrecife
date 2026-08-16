@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { useProperties } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
-import PageTransition from "@/components/PageTransition";
+
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -14,7 +14,7 @@ export default function Favorites() {
   const favProperties = properties.filter((p) => favorites.includes(p.id));
 
   return (
-    <PageTransition>
+    <>
       <SEOHead title="Favoritos" description="Seus imóveis favoritos salvos para consulta rápida." noIndex />
       <div className="min-h-screen bg-background pb-24 max-w-screen-lg mx-auto">
         <Navbar />
@@ -37,6 +37,6 @@ export default function Favorites() {
           <Footer />
         </main>
       </div>
-    </PageTransition>
+    </>
   );
 }
