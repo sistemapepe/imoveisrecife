@@ -421,18 +421,18 @@ export default function Index() {
 
             {/* Inline Filters - Minimal top bar */}
             <div className="sticky top-[var(--navbar-height)] z-40 glass-nav border-b border-white/5 transition-all duration-300">
-              <div className="flex overflow-x-auto hide-scrollbar gap-1.5 px-3 py-2">
+              <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-3">
                 {typeFilters.map(({ label, short, icon: Icon }) => (
                   <button
                     key={label}
                     onClick={() => { setActiveType(label); setShowAll(false); }}
-                    className={`shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all active:scale-95 ${
+                    className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-extrabold uppercase tracking-widest transition-all active:scale-95 ${
                       activeType === label
-                        ? "bg-accent text-accent-foreground shadow-md"
-                        : "bg-card/5 text-card/50 hover:text-card hover:bg-card/10"
+                        ? "gold-gradient text-white shadow-lg shadow-accent/20"
+                        : "bg-white/5 text-white/40 hover:text-white hover:bg-white/10 border border-white/5"
                     }`}
                   >
-                    <Icon className="h-3 w-3" />
+                    <Icon className="h-3.5 w-3.5" />
                     {short}
                   </button>
                 ))}
