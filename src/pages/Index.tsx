@@ -480,7 +480,7 @@ export default function Index() {
                       <div className="flex justify-center mt-8">
                         <button
                           onClick={() => setShowAll(true)}
-                          className="flex items-center gap-2 px-8 py-3 rounded-full border-2 border-accent text-accent text-sm font-bold uppercase tracking-wider hover:bg-accent hover:text-accent-foreground transition-all"
+                          className="flex items-center gap-2 px-10 py-4 rounded-full gold-gradient text-white text-sm font-bold uppercase tracking-[0.15em] hover:scale-105 transition-all shadow-xl shadow-accent/20"
                         >
                           Ver todos os {filteredProperties.length} imóveis <ArrowRight className="h-4 w-4" />
                         </button>
