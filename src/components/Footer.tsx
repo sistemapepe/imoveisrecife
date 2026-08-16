@@ -93,7 +93,7 @@ export default function Footer() {
 
       <div className="flex flex-col items-center gap-2">
         {settings.developerName && (
-          <p className="text-[9px] text-muted-foreground/50 tracking-wider text-center flex items-center gap-1.5">
+          <p className="text-[9px] text-white/20 font-extrabold uppercase tracking-[0.2em] text-center flex items-center gap-2">
             Desenvolvido por{" "}
             {settings.developerUrl ? (
               <a href={settings.developerUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-accent transition-colors">
