@@ -59,9 +59,9 @@ export default function Contact() {
         
         {/* Floating Back Button handled by App.tsx */}
 
-        <header className="px-6 pt-10 pb-6 text-center">
-          <h2 className="font-serif text-4xl mb-2">Atendimento Exclusivo</h2>
-          <div className="w-12 h-[1px] bg-accent mx-auto" />
+        <header className="px-6 pt-12 pb-8 text-center">
+          <h2 className="font-serif text-5xl mb-3 tracking-tight">Atendimento Exclusivo</h2>
+          <div className="w-16 h-[1.5px] gold-gradient mx-auto rounded-full" />
         </header>
 
         <section className="px-6 mb-10">
