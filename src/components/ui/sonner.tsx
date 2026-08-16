@@ -4,11 +4,13 @@ import { useTheme } from "next-themes";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
+// Use a plain object for ref if it's not a valid DOM element, or just omit if Sonner doesn't support it.
+// Here we wrap it in a div to safely attach the ref.
 export const Toaster = React.forwardRef<HTMLDivElement, ToasterProps>((props, ref) => {
   const { theme = "system" } = useTheme();
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="contents">
       <Sonner
         theme={theme as ToasterProps["theme"]}
         className="toaster group"
