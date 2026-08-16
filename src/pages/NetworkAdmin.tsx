@@ -190,7 +190,7 @@ export default function NetworkAdmin() {
             </button>
             <button
               onClick={handleSignOut}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-red-400 hover:bg-red-400/10 transition-all"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-red-400 hover:bg-red-400/10 transition-all border border-red-400/10"
             >
               <LogOut className="h-4 w-4" />
               Encerrar Sessão
@@ -200,18 +200,30 @@ export default function NetworkAdmin() {
 
         {/* Main Content */}
         <main className="flex-1 p-6 md:p-12 overflow-y-auto max-w-7xl mx-auto w-full relative">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={tab}
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.2 }}
+              initial={{ opacity: 0, x: 20, filter: "blur(10px)" }}
+              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, x: -20, filter: "blur(10px)" }}
+              transition={{ 
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                opacity: { duration: 0.2 }
+              }}
+              className="w-full"
             >
               <Suspense fallback={
-                <div className="flex flex-col items-center justify-center py-32 space-y-4">
-                  <Loader2 className="h-10 w-10 animate-spin text-accent" />
-                  <p className="text-accent/60 font-serif italic animate-pulse">Preparando interface...</p>
+                <div className="flex flex-col items-center justify-center py-32 space-y-6">
+                  <div className="relative">
+                    <Loader2 className="h-12 w-12 animate-spin text-accent" />
+                    <div className="absolute inset-0 blur-xl bg-accent/20 animate-pulse rounded-full" />
+                  </div>
+                  <div className="text-center space-y-2">
+                    <p className="text-accent font-serif text-xl font-bold tracking-widest animate-pulse">CARREGANDO</p>
+                    <p className="text-accent/40 text-[10px] font-black uppercase tracking-[0.3em]">Preparando interface gold</p>
+                  </div>
                 </div>
               }>
                 {tab === "dashboard" && <NetworkDashboard />}
