@@ -123,7 +123,7 @@ export default function NetworkAdmin() {
   };
 
   return (
-    <div className="min-h-screen bg-luxury-dark text-white flex flex-col md:flex-row dark overflow-x-hidden">
+    <div className="min-h-screen bg-luxury-dark text-white flex flex-col md:flex-row dark overflow-x-hidden relative">
         {/* Mobile Header */}
         <header className="md:hidden sticky top-0 z-50 bg-[#0d1419]/90 backdrop-blur-3xl border-b border-white/5 px-4 h-18 flex items-center justify-between shadow-xl">
           <div className="flex items-center gap-3">
