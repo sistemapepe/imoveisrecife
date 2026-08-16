@@ -217,8 +217,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    // Limit fetching to 100 most recent properties for general overview performance
-    const query = supabase.from("properties").select("id, code, title, address, neighborhood, city, price, area, bedrooms, suites, bathrooms, parking, type, description, amenities, images, exclusive, featured, category, status, video_tour_url, previous_price, site_id").limit(100);
+    // Limit fetching to 500 properties to balance performance and visibility
+    const query = supabase.from("properties").select("id, code, title, address, neighborhood, city, price, area, bedrooms, suites, bathrooms, parking, type, description, amenities, images, exclusive, featured, category, status, video_tour_url, previous_price, site_id").limit(500);
     const { data, error } = await (query as any)
       .eq("site_id", site.id)
       .order("created_at", { ascending: false });
