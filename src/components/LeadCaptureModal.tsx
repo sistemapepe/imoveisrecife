@@ -219,8 +219,8 @@ export default function LeadCaptureModal({
                 </div>
 
                 <div>
-                  <label htmlFor="lead-phone" className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-muted-foreground">
-                    {settings.leadModalPhoneLabel} <span className="text-destructive">*</span>
+                  <label htmlFor="lead-phone" className="block text-[10px] font-extrabold mb-2 uppercase tracking-[0.2em] text-accent/70 px-1">
+                    {settings.leadModalPhoneLabel} <span className="text-accent">*</span>
                   </label>
                   <input
                     id="lead-phone"
