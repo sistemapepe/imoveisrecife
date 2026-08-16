@@ -51,11 +51,11 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
       if (cached) {
         try {
           const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 60000) { // 1 min cache
+          // Aumentado cache para 5 minutos se for rede global para evitar hits na Edge Function
+          const ttl = isNetwork ? 300000 : 60000;
+          if (Date.now() - timestamp < ttl) {
             setUsers(data);
             setLoading(false);
-            // Refresh in background
-            fetchUsers(false);
             return;
           }
         } catch (e) {}

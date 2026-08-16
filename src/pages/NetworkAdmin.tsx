@@ -1,4 +1,4 @@
-import { useState, useTransition, Suspense, lazy } from "react";
+import { useState, useTransition, Suspense, lazy, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -36,14 +36,9 @@ export default function NetworkAdmin() {
   const [isPending, startTransition] = useTransition();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  if (authLoading) return <div className="min-h-screen flex items-center justify-center bg-luxury-dark text-card">Carregando...</div>;
-  if (!user || !isSuperAdmin) {
-    navigate("/login");
-    return null;
-  }
-
-  const prefetchTab = (tab: NetworkTab) => {
-    switch (tab) {
+  // Memoize prefetch to avoid re-renders
+  const prefetchTab = useCallback((targetTab: NetworkTab) => {
+    switch (targetTab) {
       case "dashboard": import("@/components/admin/NetworkDashboard"); break;
       case "sites": import("@/components/admin/SitesTab"); break;
       case "users": import("@/components/admin/UsersTab"); break;
@@ -52,15 +47,21 @@ export default function NetworkAdmin() {
       case "security": import("@/components/admin/SecurityDiagnosticTab"); break;
       case "settings": import("@/components/admin/NetworkSettingsTab"); break;
     }
-  };
+  }, []);
 
-  const switchTab = (newTab: NetworkTab) => {
+  const switchTab = useCallback((newTab: NetworkTab) => {
     if (tab === newTab) return;
     startTransition(() => {
       setTab(newTab);
       setMobileMenuOpen(false);
     });
-  };
+  }, [tab]);
+
+  if (authLoading) return <div className="min-h-screen flex items-center justify-center bg-luxury-dark text-card">Carregando...</div>;
+  if (!user || !isSuperAdmin) {
+    navigate("/login");
+    return null;
+  }
 
   const menuItems = [
     { key: "dashboard", label: "Dashboard Rede", icon: Home },
