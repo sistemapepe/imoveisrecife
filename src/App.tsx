@@ -61,7 +61,7 @@ function AppContent() {
   if (siteLoading && !isNetworkPath && !location.pathname.startsWith('/admin')) return <PageLoader />;
   
   return (
-    <div ref={undefined} className="max-w-screen-lg mx-auto relative min-h-screen">
+    <div className="max-w-screen-lg mx-auto relative min-h-screen">
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Index />} />

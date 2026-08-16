@@ -36,21 +36,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!user || role === "user") {
-    return (
-      <div className="contents">
-        <Navigate to="/login" state={{ from: location }} replace />
-      </div>
-    );
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (isNetworkPath && role !== "super_admin") {
-    return (
-      <div className="contents">
-        <Navigate to="/admin" replace />
-      </div>
-    );
+    return <Navigate to="/admin" replace />;
   }
 
-  return <div className="contents">{children}</div>;
+  return children;
 };
 export default ProtectedRoute;
