@@ -110,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userRole = (data?.role as AppRole) || "user";
       setRole(userRole);
       await loadPermissions(userRole);
+      setLoading(false);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
@@ -126,6 +127,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(newUser);
       
       if (newUser) {
+        setLoading(true);
         await checkRole(newUser.id);
       } else {
         setRole(null);

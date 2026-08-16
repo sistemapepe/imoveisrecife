@@ -28,8 +28,7 @@ export default function Login() {
       setLoading(false);
     } else {
       toast.success("Login realizado!");
-      // Pequeno delay para garantir que o AuthContext atualizou o estado antes do redirecionamento
-      setTimeout(() => navigate("/admin"), 100);
+      navigate("/admin");
     }
   };
 
