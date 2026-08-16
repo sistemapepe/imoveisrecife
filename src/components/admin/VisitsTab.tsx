@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Calendar, CheckCircle, Clock, XCircle, Phone, Mail, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { useSite } from "@/contexts/SiteContext";
 
 interface VisitRequest {
   id: string;
@@ -18,31 +19,28 @@ interface VisitRequest {
 }
 
 export default function VisitsTab() {
+  const { site } = useSite();
   const [visits, setVisits] = useState<VisitRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "pending" | "confirmed" | "cancelled">("all");
 
   useEffect(() => {
-    fetchVisits();
-  }, []);
+    if (site?.id) fetchVisits();
+  }, [site?.id]);
 
   const fetchVisits = async () => {
+    if (!site?.id) return;
     setLoading(true);
     const { data } = await supabase
       .from("visit_requests")
-      .select("*")
+      .select("*, properties!inner(site_id, title)")
+      .eq("properties.site_id", site.id)
       .order("created_at", { ascending: false });
 
     if (data) {
-      const propIds = [...new Set(data.map((v) => v.property_id))];
-      const { data: props } = await supabase
-        .from("properties")
-        .select("id, title")
-        .in("id", propIds);
-
-      const enriched = data.map((v) => ({
+      const enriched = data.map((v: any) => ({
         ...v,
-        property_title: props?.find((p) => p.id === v.property_id)?.title || "Imóvel removido",
+        property_title: v.properties?.title || "Imóvel removido",
       }));
       setVisits(enriched);
     }
