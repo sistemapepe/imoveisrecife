@@ -219,10 +219,8 @@ export default function SitesTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2 text-accent">
-            <Globe className="h-6 w-6 text-accent" /> Gerenciar Sites (Domínios)
-          </h2>
-          <p className="text-sm text-accent/70">Crie instâncias. Aponte o CNAME para este servidor.</p>
+            <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Gerenciar Sites</h2>
+            <p className="text-[10px] text-white/40 font-extrabold uppercase tracking-widest mt-2">Crie instâncias. Aponte o CNAME para este servidor.</p>
         </div>
         <div className="flex gap-2">
           <Button

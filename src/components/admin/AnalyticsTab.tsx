@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
-import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp, Download } from "lucide-react";
+import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp, Download, RefreshCw } from "lucide-react";
 import { useSite } from "@/contexts/SiteContext";
 import { DateRangePicker } from "./DateRangePicker";
 import { downloadCSV } from "@/lib/csv-export";
@@ -163,8 +163,19 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
     );
   }
 
-  return (
     <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Analytics</h2>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => fetchAnalytics(undefined, true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-accent text-luxury-dark text-[10px] font-extrabold uppercase tracking-widest hover:bg-accent/80 transition-all shadow-lg shadow-accent/20"
+          >
+            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} /> Atualizar
+          </button>
+        </div>
+      </div>
+
       {/* Period filter */}
       <div className="flex flex-wrap gap-2 items-center">
         {(["today", "7d", "30d", "90d"] as const).map((p) => (
