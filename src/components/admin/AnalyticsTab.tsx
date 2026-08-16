@@ -161,8 +161,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
         ))}
       </div>
     );
-  }
-
+  return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Analytics</h2>
