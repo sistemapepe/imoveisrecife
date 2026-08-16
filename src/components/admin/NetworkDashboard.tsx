@@ -130,7 +130,7 @@ export default function NetworkDashboard() {
           </div>
         </div>
         
-        <div className="bg-accent/5 border border-accent/20 rounded-3xl p-8 space-y-6">
+        <div className="bg-[#0d1419] border border-white/10 rounded-[2.5rem] p-8 space-y-6 premium-shadow">
           <h3 className="text-xl font-serif font-bold text-accent">Configurações Rápidas</h3>
           <div className="space-y-4">
             <p className="text-sm text-accent/70 leading-relaxed">
