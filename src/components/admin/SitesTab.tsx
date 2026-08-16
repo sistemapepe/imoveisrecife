@@ -354,7 +354,7 @@ export default function SitesTab() {
                   <Button 
                     size="sm" 
                     variant="outline"
-                    className="h-8 text-[10px] font-bold border-accent/20 text-accent hover:bg-accent/10"
+                    className="h-9 text-[9px] font-extrabold uppercase tracking-widest border-white/10 text-white/70 hover:bg-white/5 rounded-xl"
                     onClick={() => {
                       const isLocal = site.domain === 'localhost' || site.domain.includes('8080');
                       const url = isLocal ? window.location.origin : (site.domain.startsWith('http') ? site.domain : `https://${site.domain}`);
