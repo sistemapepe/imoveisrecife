@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { parseHsl, formatHsl, pickBestContrast, adjustForContrast } from "@/lib/color-contrast";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,7 +16,7 @@ function clampHslLightness(hsl: string, min = 25, max = 65): string {
 const LIGHT_CARD = { h: 0, s: 0, l: 100 };
 const DARK_CARD = { h: 195, s: 25, l: 13 };
 
-export const DynamicTheme = (props: any) => {
+export const DynamicTheme = React.forwardRef<HTMLDivElement, any>((props, ref) => {
   const { settings } = useProperties();
 
   useEffect(() => {
@@ -85,8 +85,6 @@ export const DynamicTheme = (props: any) => {
     root.style.setProperty("--marquee-py", `${settings.marqueePaddingYPx ?? 4}px`);
 
     // Atualiza favicon e apple-touch-icon dinamicamente com a logo do site.
-    // Renderiza a logo sobre um fundo escuro para garantir visibilidade
-    // mesmo quando a logo é branca/clara contra a aba clara do navegador.
     if (settings.logoUrl) {
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -163,7 +161,9 @@ export const DynamicTheme = (props: any) => {
     settings.brandName,
   ]);
 
-
   return <div ref={ref} style={{ display: 'none' }} />;
 });
+
+DynamicTheme.displayName = "DynamicTheme";
+
 export default DynamicTheme;
