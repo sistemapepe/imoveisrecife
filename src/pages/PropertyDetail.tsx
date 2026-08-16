@@ -493,16 +493,16 @@ export default function PropertyDetail() {
         </motion.div>
 
         {/* Mobile bottom CTA */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-card/80 backdrop-blur-xl border-t border-border z-50 max-w-screen-lg mx-auto md:hidden">
+        <div className="fixed bottom-0 left-0 right-0 p-4 pb-[calc(1.2rem+env(safe-area-inset-bottom))] glass-nav border-t border-white/10 z-[70] max-w-screen-lg mx-auto md:hidden rounded-t-[2.5rem] shadow-[0_-20px_50px_rgba(0,0,0,0.3)]">
           <div className="flex gap-3">
-            <button onClick={handleShare} aria-label="Compartilhar imóvel" className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-secondary text-foreground shadow-lg active:scale-95 transition-transform border border-border gap-0.5">
+            <button onClick={handleShare} aria-label="Compartilhar imóvel" className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-white/5 text-white shadow-lg active:scale-90 transition-all border border-white/10 gap-0.5">
               <Share2 className="h-5 w-5" />
-              <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground">Enviar</span>
+              <span className="text-[8px] font-bold uppercase tracking-widest opacity-60">Enviar</span>
             </button>
-            <button onClick={handleTap(handleWhatsApp)} aria-label="Falar pelo WhatsApp" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-whatsapp text-card shadow-lg active:scale-95 transition-transform">
+            <button onClick={handleTap(handleWhatsApp)} aria-label="Falar pelo WhatsApp" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-whatsapp text-white shadow-lg active:scale-90 transition-all">
               <MessageCircle className="h-6 w-6" />
             </button>
-            <button onClick={handleTap(() => navigate("/contato"))} className="flex-1 flex items-center justify-center gap-2 rounded-xl gold-gradient py-4 text-accent-foreground font-bold text-base shadow-lg active:scale-95 transition-transform uppercase tracking-widest">
+            <button onClick={handleTap(() => navigate("/contato"))} className="flex-1 flex items-center justify-center gap-2 rounded-2xl gold-gradient py-4 text-white font-bold text-sm shadow-lg active:scale-[0.98] transition-all uppercase tracking-[0.15em]">
               <Calendar className="h-5 w-5" /> Agendar Visita
             </button>
           </div>
