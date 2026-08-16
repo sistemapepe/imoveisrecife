@@ -45,7 +45,7 @@ export default function Footer() {
   const navigate = useNavigate();
 
   return (
-    <footer className="px-6 py-16 mt-12 border-t border-card/10 flex flex-col items-center gap-8 mb-24 bg-card/30">
+    <footer className="px-6 py-20 mt-20 border-t border-white/5 flex flex-col items-center gap-10 mb-24 bg-[#0d1419]">
       <div className="flex gap-6 flex-wrap justify-center">
         {settings.instagramUrl && (
           <a href={normalizeSocialUrl(settings.instagramUrl, "instagram")} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-accent hover:scale-110 transition-transform">
