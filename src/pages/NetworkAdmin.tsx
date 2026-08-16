@@ -16,7 +16,6 @@ import {
   Menu,
   X
 } from "lucide-react";
-import PageTransition from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 

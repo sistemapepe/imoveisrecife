@@ -8,7 +8,6 @@ import { ArrowLeft, ArrowRight, Plus, Pencil, Trash2, Settings, LayoutDashboard,
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
 import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
-import PageTransition from "@/components/PageTransition";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";

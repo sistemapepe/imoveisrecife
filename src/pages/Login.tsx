@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
-import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 
 export default function Login() {
