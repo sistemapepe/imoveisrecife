@@ -217,7 +217,7 @@ export default function Admin() {
     startTransition(() => {
       setTab(newTab);
       setEditing(null);
-      setCreating(null);
+      setCreating(false);
       if (newTab === "messages") setNewMsgCount(0);
       setMobileMenuOpen(false);
     });

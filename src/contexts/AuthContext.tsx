@@ -108,7 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const checkRole = useCallback(async (userId: string, mounted = true) => {
+  const checkRole = useCallback(async (userId: string, mounted = true, startTransition?: React.TransitionStartFunction) => {
     logger.startTimer("checkRole");
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
@@ -122,9 +122,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const cachedSuperAdmin = sessionStorage.getItem(`is_global_super_admin_${userId}`);
       if (cachedSuperAdmin === 'true') {
         if (mounted) {
-          setRole("super_admin");
-          setLoading(false);
-          setIsInitializing(false);
+          const update = () => {
+            setRole("super_admin");
+            setLoading(false);
+            setIsInitializing(false);
+          };
+          startTransition ? startTransition(update) : update();
         }
         // Continua para carregar permissões ou validar sessão, mas já destrava a UI
       }
@@ -143,10 +146,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
           if (superAdminCheck) {
             if (mounted) {
-              setRole("super_admin");
-              sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
-              setLoading(false);
-              setIsInitializing(false);
+              const update = () => {
+                setRole("super_admin");
+                sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
+                setLoading(false);
+                setIsInitializing(false);
+              };
+              startTransition ? startTransition(update) : update();
             }
             return;
           }
@@ -181,8 +187,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (mounted) {
-        setRole(selectedRole);
-        await loadPermissions(selectedRole);
+        const update = () => {
+          setRole(selectedRole);
+          loadPermissions(selectedRole);
+        };
+        startTransition ? startTransition(update) : update();
       }
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
@@ -194,11 +203,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       logger.endTimer("checkRole", { userId });
       if (mounted) {
-        setLoading(false);
-        setIsInitializing(false);
+        const update = () => {
+          setLoading(false);
+          setIsInitializing(false);
+        };
+        startTransition ? startTransition(update) : update();
       }
     }
   }, [site?.id, siteLoading, loadPermissions]);
+
+  const [, startTransition] = React.useTransition();
 
   useEffect(() => {
     let mounted = true;
@@ -217,17 +231,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const roleTimeout = setTimeout(() => {
           if (mounted && loading) {
             logger.warn("checkRole taking too long, forcing load end");
-            setLoading(false);
-            setIsInitializing(false);
+            const update = () => {
+              setLoading(false);
+              setIsInitializing(false);
+            };
+            startTransition(update);
           }
         }, 5000);
 
-        await checkRole(currentUser.id, mounted);
+        await checkRole(currentUser.id, mounted, startTransition);
         clearTimeout(roleTimeout);
       } else {
-        setRole(null);
-        setLoading(false);
-        setIsInitializing(false);
+        const update = () => {
+          setRole(null);
+          setLoading(false);
+          setIsInitializing(false);
+        };
+        startTransition(update);
       }
     });
 
@@ -240,10 +260,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(currentUser);
         
         if (currentUser) {
-          await checkRole(currentUser.id, mounted);
+          await checkRole(currentUser.id, mounted, startTransition);
         } else {
-          setLoading(false);
-          setIsInitializing(false);
+          const update = () => {
+            setLoading(false);
+            setIsInitializing(false);
+          };
+          startTransition(update);
         }
       } catch (error) {
         logger.error("Initial session check failed", {}, error as Error);
