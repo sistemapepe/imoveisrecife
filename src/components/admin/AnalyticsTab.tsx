@@ -310,3 +310,5 @@ function TimelineChart({ title, data, color }: { title: string; data: LeadsByPer
     </div>
   );
 }
+  );
+}
