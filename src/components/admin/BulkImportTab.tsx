@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 
 const UFS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 
+
 // ---- Mapeamento flexível de cabeçalhos ----
 const norm = (s: any) =>
   String(s ?? "")
@@ -357,6 +358,9 @@ export default function BulkImportTab() {
 
 
   const confirmImport = async () => {
+    // Garantir classe dark para contraste no modal/progress se necessário
+    document.documentElement.classList.add('dark');
+
     if (!parsed || !fileMeta) return;
     if (parsed.headerError) {
       toast.error("Cabeçalhos do template inválidos. Importação bloqueada.");
