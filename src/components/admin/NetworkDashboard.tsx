@@ -20,11 +20,13 @@ export default function NetworkDashboard() {
   const fetchStats = async () => {
     try {
       // Usando Promise.all para buscas paralelas
+      // Nota: As tabelas 'user_roles' e 'contact_messages' são usadas como proxies 
+      // para usuários e leads no contexto de contagem global.
       const [sitesRes, propertiesRes, usersRes, leadsRes] = await Promise.all([
         supabase.from("sites").select("id", { count: 'exact', head: true }),
         supabase.from("properties").select("id", { count: 'exact', head: true }),
-        supabase.from("profiles").select("id", { count: 'exact', head: true }),
-        supabase.from("leads").select("id", { count: 'exact', head: true })
+        supabase.from("user_roles").select("user_id", { count: 'exact', head: true }),
+        supabase.from("contact_messages").select("id", { count: 'exact', head: true })
       ]);
 
       setStats({
