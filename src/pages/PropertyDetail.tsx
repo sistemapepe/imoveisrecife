@@ -5,7 +5,7 @@ import { getAmenityIcon } from "@/lib/amenity-icons";
 import { motion } from "framer-motion";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import { PriceDisplay } from "@/components/PriceDisplay";
-import PageTransition from "@/components/PageTransition";
+
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -78,7 +78,7 @@ export default function PropertyDetail() {
   }, [id]);
 
   if (!property && !loading) return (
-    <PageTransition>
+    <>
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
         <Navbar />
         <h1 className="text-2xl font-bold mb-2 mt-24">Imóvel não encontrado</h1>
@@ -90,11 +90,11 @@ export default function PropertyDetail() {
           Voltar ao início
         </button>
       </div>
-    </PageTransition>
+    </>
   );
 
   if (!property) return (
-    <PageTransition>
+    <>
       <div className="min-h-screen bg-background pb-32">
         {/* Skeleton top bar */}
         <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 max-w-screen-lg mx-auto">
@@ -126,7 +126,7 @@ export default function PropertyDetail() {
           </div>
         </div>
       </div>
-    </PageTransition>
+    </>
   );
 
   const isFav = favorites.includes(property.id);
@@ -217,7 +217,7 @@ export default function PropertyDetail() {
   };
 
   return (
-    <PageTransition>
+    <>
       <SEOHead
         title={`${property.title} — ${formatPriceFull(property.price)}`}
         description={`${property.type} com ${property.bedrooms} quartos, ${property.area}m² em ${property.neighborhood}, ${property.city}. ${property.description.slice(0, 120)}`}
@@ -526,6 +526,6 @@ export default function PropertyDetail() {
         onClose={() => setLightboxOpen(false)}
         title={property.title}
       />
-    </PageTransition>
+    </>
   );
 }

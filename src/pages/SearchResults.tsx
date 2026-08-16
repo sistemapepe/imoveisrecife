@@ -4,7 +4,7 @@ import { ArrowLeft, SlidersHorizontal, X, MapPin } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { useProperties } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
-import PageTransition from "@/components/PageTransition";
+
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -92,7 +92,7 @@ export default function SearchResults() {
   }, [properties, activeFilters, activeStatus, locationFilter, bedroomsFilter, parkingFilter]);
 
   return (
-    <PageTransition>
+    <>
       <SEOHead title="Resultados da Busca" description="Encontre imóveis em Recife e região com filtros avançados." />
       <div className="min-h-screen bg-background pb-24 max-w-screen-lg mx-auto">
         <Navbar />
@@ -169,7 +169,7 @@ export default function SearchResults() {
           <Footer />
         </main>
       </div>
-    </PageTransition>
+    </>
   );
 }
 

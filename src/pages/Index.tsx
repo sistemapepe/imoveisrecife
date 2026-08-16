@@ -6,7 +6,6 @@ import heroImage from "@/assets/hero-mansion.jpg";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { Ruler, BedDouble, Car } from "lucide-react";
-import PageTransition from "@/components/PageTransition";
 import PropertyCard from "@/components/PropertyCard";
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";

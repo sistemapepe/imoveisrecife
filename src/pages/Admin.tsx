@@ -8,7 +8,6 @@ import { ArrowLeft, ArrowRight, Plus, Pencil, Trash2, Settings, LayoutDashboard,
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
 import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
-import PageTransition from "@/components/PageTransition";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -224,8 +223,7 @@ export default function Admin() {
   const currentTabLabel = visibleTabs.find((t) => t.key === tab)?.label ?? "Painel";
 
   return (
-    <PageTransition>
-      <div className="min-h-screen bg-background pb-8">
+    <div className="min-h-screen bg-background pb-8">
         <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">
             <div className="flex items-center">
@@ -782,6 +780,5 @@ export default function Admin() {
           </DialogContent>
         </Dialog>
       </div>
-    </PageTransition>
   );
 }
