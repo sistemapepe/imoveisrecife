@@ -375,7 +375,7 @@ export default function SitesTab() {
 
                 <Button 
                   size="sm" 
-                  className="w-full h-8 text-[10px] font-bold bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all"
+                  className="w-full h-10 text-[9px] font-extrabold uppercase tracking-[0.2em] bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-luxury-dark transition-all rounded-xl"
                   onClick={() => {
                     // Para Super Admin, a forma mais segura de editar é manter o domínio atual e usar o site_id
                     // Isso evita problemas com domínios ainda não configurados ou DNS não propagado
