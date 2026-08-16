@@ -139,7 +139,24 @@ export default function Index() {
               <ArrowRight className="w-4 h-4" /> Implemente uma verificação/atualização automática das permissões do usuário após o login para evitar que AppRole fique desatualizado.
             </div>
             <div className="flex items-center gap-2 mt-2 border-t border-white/5 pt-2 text-green-500 font-bold">
-              <CheckCircle2 className="w-4 h-4" /> Tela de diagnóstico de segurança e permissões implementada no painel administrativo.
+            <CheckCircle2 className="w-4 h-4" /> Tela de diagnóstico de segurança e permissões implementada no painel administrativo.
+            </div>
+            <div className="flex flex-col gap-4 mt-6 p-4 bg-accent/5 border border-accent/20 rounded-2xl">
+              <div className="flex items-center gap-2 text-accent font-bold">
+                <ArrowRight className="w-4 h-4" /> Implemente um monitoramento contínuo de performance e alertas (latência, erros e tempos de resposta) para o site principal
+              </div>
+              <div className="flex items-center gap-2 text-accent font-bold">
+                <ArrowRight className="w-4 h-4" /> Crie e ajuste índices no Supabase para acelerar consultas de imóveis, leads e traffic_events
+              </div>
+              <div className="flex items-center gap-2 text-accent font-bold">
+                <ArrowRight className="w-4 h-4" /> Implemente paginação e filtros com carregamento incremental para reduzir payloads na listagem principal de imóveis
+              </div>
+              <div className="flex items-center gap-2 text-accent font-bold">
+                <ArrowRight className="w-4 h-4" /> Implemente cache por chave de consulta e invalidação quando houver mudanças em imóveis ou leads para manter dados atualizados
+              </div>
+              <div className="flex items-center gap-2 text-accent font-bold">
+                <ArrowRight className="w-4 h-4" /> Gere um relatório PDF com os achados da varredura de performance e as mudanças aplicadas, com antes e depois
+              </div>
             </div>
           </div>
         </div>
