@@ -386,7 +386,7 @@ export default function Index() {
                             const loc = s.neighborhood ? `${s.neighborhood}, ${s.city}` : s.city;
                             navigate(`/busca?location=${encodeURIComponent(loc)}`);
                           }}
-                          className="flex items-center gap-3 w-full px-5 py-3.5 text-left hover:bg-card/10 transition-colors duration-200 border-b border-card/5 last:border-0"
+                          className="flex items-center gap-3 w-full px-5 py-4 text-left hover:bg-white/5 transition-colors duration-200 border-b border-white/5 last:border-0"
                         >
                           <MapPin className="h-4 w-4 shrink-0 text-accent" />
                           <div className="min-w-0">
