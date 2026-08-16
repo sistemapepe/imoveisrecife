@@ -86,7 +86,7 @@ export default function Footer() {
       )}
 
       {(settings.creci || settings.creciUf) && (
-        <p className="text-xs font-semibold text-accent uppercase tracking-[0.2em] text-center border border-accent/40 rounded-full px-4 py-1.5 bg-accent/5">
+        <p className="text-[10px] font-extrabold text-accent uppercase tracking-[0.3em] text-center border border-accent/20 rounded-full px-6 py-2 bg-accent/5 premium-shadow">
           CRECI{settings.creciUf ? ` - ${settings.creciUf}` : ""}{settings.creci ? ` ${settings.creci}` : ""}
         </p>
       )}
