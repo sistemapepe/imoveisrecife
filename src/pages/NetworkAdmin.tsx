@@ -211,7 +211,7 @@ export default function NetworkAdmin() {
                   }`}
                 >
                   <Icon className={`h-5 w-5 transition-transform group-hover:scale-110 ${active ? "scale-110" : ""}`} />
-                  <span className="text-sm uppercase tracking-wider">{item.label}</span>
+                  <span className="text-[10px] uppercase tracking-[0.2em]">{item.label}</span>
                   {active && (
                     <motion.div 
                       layoutId="activeNetworkTab"
