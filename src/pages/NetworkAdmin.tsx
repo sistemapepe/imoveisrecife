@@ -230,7 +230,7 @@ export default function NetworkAdmin() {
 
         {/* Main Content */}
         <main className="flex-1 p-6 md:p-12 overflow-y-auto max-w-7xl mx-auto w-full relative">
-          <AnimatePresence mode="wait" initial={false}>
+          <AnimatePresence mode="wait">
             <motion.div
               key={tab}
               initial={{ opacity: 0, x: 20, filter: "blur(10px)" }}
@@ -240,20 +240,14 @@ export default function NetworkAdmin() {
                 type: "spring",
                 stiffness: 300,
                 damping: 30,
-                opacity: { duration: 0.2 }
+                opacity: { duration: 0.15 } // Transição mais rápida
               }}
               className="w-full"
             >
               <Suspense fallback={
-                <div className="flex flex-col items-center justify-center py-32 space-y-6">
-                  <div className="relative">
-                    <Loader2 className="h-12 w-12 animate-spin text-accent" />
-                    <div className="absolute inset-0 blur-xl bg-accent/20 animate-pulse rounded-full" />
-                  </div>
-                  <div className="text-center space-y-2">
-                    <p className="text-accent font-serif text-xl font-bold tracking-widest animate-pulse">CARREGANDO</p>
-                    <p className="text-accent/40 text-[10px] font-black uppercase tracking-[0.3em]">Preparando interface gold</p>
-                  </div>
+                <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                  <Loader2 className="h-8 w-8 animate-spin text-accent opacity-50" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/30">Carregando Aba</p>
                 </div>
               }>
                 {tab === "dashboard" && <NetworkDashboard />}
