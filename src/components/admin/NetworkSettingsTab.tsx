@@ -18,15 +18,32 @@ export default function NetworkSettingsTab() {
     fetchSettings();
   }, []);
 
-  const fetchSettings = async () => {
+  const fetchSettings = async (showLoading = true) => {
     try {
-      setLoading(true);
+      if (showLoading) {
+        const cached = sessionStorage.getItem("network_settings_data");
+        if (cached) {
+          try {
+            const { data, timestamp } = JSON.parse(cached);
+            if (Date.now() - timestamp < 300000) { // 5 min cache for settings
+              setSettings(data);
+              setLoading(false);
+              // Still fetch in background
+              fetchSettings(false);
+              return;
+            }
+          } catch (e) {}
+        }
+        setLoading(true);
+      }
+
       const { data, error } = await supabase
         .from("network_settings")
         .select("*");
       
       if (error) throw error;
       setSettings(data || []);
+      sessionStorage.setItem("network_settings_data", JSON.stringify({ data: data || [], timestamp: Date.now() }));
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -54,10 +71,12 @@ export default function NetworkSettingsTab() {
         if (error) throw error;
       }
 
+      sessionStorage.removeItem("network_settings_data");
       toast({
         title: "Configurações salvas",
         description: "As alterações globais foram aplicadas com sucesso.",
       });
+      fetchSettings(false);
     } catch (error: any) {
       toast({
         variant: "destructive",
