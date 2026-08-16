@@ -13,16 +13,18 @@ interface SEOHeadProps {
   jsonLd?: Record<string, any> | Record<string, any>[];
 }
 
-export default function SEOHead({
-  title,
-  description,
-  image,
-  url,
-  type = "website",
-  keywords,
-  noIndex = false,
-  jsonLd,
-}: SEOHeadProps) {
+import React from "react";
+export const SEOHead = React.forwardRef<HTMLDivElement, SEOHeadProps>((props, ref) => {
+  const {
+    title,
+    description,
+    image,
+    url,
+    type = "website",
+    keywords,
+    noIndex = false,
+    jsonLd,
+  } = props;
   const ctx = useContext(PropertyContext);
   const brandName = ctx?.settings?.brandName || "Imóveis Recife";
   const googleVerify = ctx?.settings?.googleSiteVerification || "";
@@ -81,4 +83,5 @@ export default function SEOHead({
       ))}
     </Helmet>
   );
-}
+});
+export default SEOHead;

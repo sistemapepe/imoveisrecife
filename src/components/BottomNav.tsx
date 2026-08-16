@@ -38,7 +38,7 @@ export default function BottomNav() {
             }}
             aria-label={tab.label}
             aria-current={active ? "page" : undefined}
-            className={`flex flex-col items-center gap-1 ${active ? "text-accent" : "text-muted-foreground"}`}
+            className={`flex flex-col items-center gap-1 transition-colors active:opacity-70 touch-manipulation ${active ? "text-accent" : "text-muted-foreground"}`}
           >
             <Icon className="h-7 w-7" fill={active ? "currentColor" : "none"} aria-hidden="true" />
             <span className="text-[10px] font-bold uppercase tracking-tighter">{tab.label}</span>

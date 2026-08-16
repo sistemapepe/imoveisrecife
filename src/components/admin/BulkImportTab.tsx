@@ -196,13 +196,13 @@ function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[
       address: String(m.address ?? "").trim(),
       neighborhood: String(m.neighborhood ?? "").trim(),
       city: String(m.city ?? "").trim(),
-      price: rawNum("price").n,
-      area: rawNum("area").n,
-      bedrooms: Math.trunc(rawNum("bedrooms").n),
-      suites: Math.trunc(rawNum("suites").n),
-      bathrooms: Math.trunc(rawNum("bathrooms").n),
-      parking: Math.trunc(rawNum("parking").n),
-      status: String(m.status ?? "disponivel").trim().toLowerCase(),
+      price: Math.max(0, rawNum("price").n),
+      area: Math.max(0, rawNum("area").n),
+      bedrooms: Math.max(0, Math.trunc(rawNum("bedrooms").n)),
+      suites: Math.max(0, Math.trunc(rawNum("suites").n)),
+      bathrooms: Math.max(0, Math.trunc(rawNum("bathrooms").n)),
+      parking: Math.max(0, Math.trunc(rawNum("parking").n)),
+      status: String(m.status ?? "disponivel").trim().toLowerCase() || "disponivel",
       exclusive: toBool(m.exclusive),
       featured: toBool(m.featured),
       description: String(m.description ?? "").trim(),
@@ -409,7 +409,7 @@ export default function BulkImportTab() {
       const valid = parsed.imoveis
         .filter((i) => !parsed.imoveisErrors.some((e) => e.row === i.__row))
         .filter((i) => !reprocessRows || reprocessRows.has(i.__row));
-      let updated = 0;
+      let updatedCount = 0;
       const startedAt = Date.now();
       setProgress({ current: 0, total: valid.length, startedAt });
       for (let idx = 0; idx < valid.length; idx++) {
@@ -418,21 +418,22 @@ export default function BulkImportTab() {
         try {
           let existingId: string | null = null;
           if (upsertMode && Array.isArray(payload.images) && payload.images.length > 0) {
-            const query = supabase.from("properties").select("id");
-            const { data: found } = await (query as any)
+            // Find by image overlap
+            const { data: found } = await supabase.from("properties")
+              .select("id")
               .overlaps("images", payload.images)
               .eq("site_id", site?.id)
               .limit(1)
               .maybeSingle();
-            existingId = (found as any)?.id ?? null;
+            existingId = found?.id ?? null;
           }
           if (existingId) {
             const { error } = await supabase.from("properties").update(payload as any).eq("id", existingId);
             if (error) throw error;
-            updated++;
+            updatedCount++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Atualizado", id: existingId });
           } else {
-            const { error } = await supabase.from("properties").insert({ ...payload, site_id: site?.id } as any);
+            const { error } = await supabase.from("properties").insert({ ...payload, site_id: site?.id });
             if (error) throw error;
             created++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Criado" });
@@ -444,14 +445,14 @@ export default function BulkImportTab() {
         setProgress({ current: idx + 1, total: valid.length, startedAt });
       }
 
-      const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && updated === 0 && !companyUpdated ? "falhou" : "concluido");
+      const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && updatedCount === 0 && !companyUpdated ? "falhou" : "concluido");
       await supabase.from("import_history").update({
         status, company_updated: companyUpdated,
-        properties_created: created + updated, properties_failed: failed,
+        properties_created: created + updatedCount, properties_failed: failed,
         log: log as any,
       }).eq("id", histRow.id);
 
-      toast.success(`Importação concluída: ${created} criado(s), ${updated} atualizado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
+      toast.success(`Importação concluída: ${created} criado(s), ${updatedCount} atualizado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
       await refreshProperties?.();
       reset();
       loadHistory();

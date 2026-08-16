@@ -148,7 +148,7 @@ export function trackEvent(eventType: string, propertyId?: string, siteId?: stri
 }
 
 export function useTrafficTracker() {
-  const tracked = useRef(false);
+  const tracked = useRef<string | null>(null);
   const { site } = useSite();
 
   useEffect(() => {
@@ -157,8 +157,9 @@ export function useTrafficTracker() {
       sessionStorage.setItem("landing_page", window.location.pathname);
     }
 
-    if (!tracked.current && site) {
-      tracked.current = true;
+    // Only track once per site_id per session/mount
+    if (site && tracked.current !== site.id) {
+      tracked.current = site.id;
       trackEvent("page_view", undefined, site.id);
     }
   }, [site]);

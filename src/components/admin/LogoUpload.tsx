@@ -57,7 +57,7 @@ export default function LogoUpload({ logoUrl, onChange }: LogoUploadProps) {
           <img
             src={logoUrl}
             alt="Logo"
-            onError={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = "0.3"; }}
+            onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'https://placehold.co/200x64?text=Erro+Logo'; }}
             className="h-16 max-w-[200px] object-contain rounded-lg border border-border bg-background p-2"
           />
           <button

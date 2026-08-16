@@ -257,7 +257,7 @@ export default function PropertyDetail() {
           }}
         >
           <img
-            className="h-full w-full object-cover transition-opacity duration-300 cursor-pointer select-none"
+            className="h-full w-full object-cover transition-opacity duration-300 cursor-pointer select-none touch-none"
             src={getOptimizedImageUrl(resolvedImages[currentImg] ?? property.images[currentImg], IMAGE_SIZES.HERO)}
             srcSet={getImageSrcSet(resolvedImages[currentImg] ?? property.images[currentImg], [600, 1200, 1920])}
             sizes="100vw"

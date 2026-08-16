@@ -90,24 +90,24 @@ function AppContent() {
 
 const App = () => {
   return (
-  <HelmetProvider>
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <SiteProvider>
-        <AuthProvider>
-          <PropertyProvider>
-            <Toaster />
-            <Sonner />
-            <DynamicTheme />
-            <BrowserRouter>
-              <AppContent />
-            </BrowserRouter>
-          </PropertyProvider>
-        </AuthProvider>
-      </SiteProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-  </HelmetProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <SiteProvider>
+            <AuthProvider>
+              <PropertyProvider>
+                <Toaster />
+                <Sonner />
+                <DynamicTheme />
+                <BrowserRouter>
+                  <AppContent />
+                </BrowserRouter>
+              </PropertyProvider>
+            </AuthProvider>
+          </SiteProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 };
 
