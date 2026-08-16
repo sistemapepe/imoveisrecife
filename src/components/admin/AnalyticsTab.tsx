@@ -76,8 +76,8 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
     return { from: d.toISOString() };
   };
 
-  const fetchAnalytics = async (cacheKey?: string) => {
-    setLoading(true);
+  const fetchAnalytics = async (cacheKey?: string, showLoading = true) => {
+    if (showLoading) setLoading(true);
     const { from, to } = getDateRange();
 
     const applyRange = <T,>(q: T): T => {
