@@ -57,9 +57,9 @@ export default function Filters() {
   return (
     <>
       <SEOHead title="Filtros" description="Filtre imóveis por tipo, quartos, localização e mais." noIndex />
-      <div className="relative flex min-h-screen w-full flex-col max-w-screen-lg mx-auto bg-background">
+      <div className="relative flex min-h-screen w-full flex-col max-w-screen-lg mx-auto bg-luxury-dark text-white">
         <Navbar />
-        <header className="sticky top-[var(--navbar-height)] z-30 glass-header border-b border-border transition-all duration-300">
+        <header className="sticky top-[var(--navbar-height)] z-30 glass-nav border-b border-white/5 transition-all duration-300">
           <div className="flex items-center justify-between px-4 h-14">
             <BackButton variant="ghost" label="Fechar filtros" />
             <h1 className="text-base font-bold absolute left-1/2 -translate-x-1/2 pointer-events-none">Refinar Busca</h1>
