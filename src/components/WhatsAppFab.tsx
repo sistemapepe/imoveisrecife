@@ -37,10 +37,10 @@ export default function WhatsAppFab() {
       <button
         onClick={() => setOpen(true)}
         aria-label="Fale conosco pelo WhatsApp"
-        className="fixed bottom-[calc(80px+env(safe-area-inset-bottom))] right-4 z-50 h-14 w-14 rounded-full bg-whatsapp text-white shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all md:bottom-8 md:right-8 touch-manipulation"
+        className="fixed bottom-[calc(90px+env(safe-area-inset-bottom))] right-6 z-50 h-16 w-16 rounded-[1.75rem] bg-whatsapp text-white shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all md:bottom-10 md:right-10 touch-manipulation border-2 border-white/20"
       >
-        <MessageCircle className="h-7 w-7" />
-        <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent border-2 border-background animate-pulse" />
+        <MessageCircle className="h-8 w-8" />
+        <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full gold-gradient border-2 border-[#0d1419] animate-pulse shadow-[0_0_15px_rgba(212,175,55,0.6)]" />
       </button>
 
       <LeadCaptureModal
