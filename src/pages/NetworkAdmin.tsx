@@ -105,10 +105,10 @@ export default function NetworkAdmin() {
                 <div className="pt-8 border-t border-white/5 mt-8">
                    <button
                     onClick={() => navigate("/admin")}
-                    className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-accent hover:bg-accent/10 transition-all"
+                    className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-accent hover:bg-accent/10 transition-all border border-accent/20"
                   >
                     <LayoutDashboard className="h-5 w-5" />
-                    Voltar ao Admin Site
+                    Painel do Site
                   </button>
                   <button
                     onClick={handleSignOut}
