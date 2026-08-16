@@ -137,11 +137,14 @@ export default function Admin() {
     return () => clearInterval(interval);
   }, [isAdmin, role, tab]);
 
+  useEffect(() => {
+    if (!authLoading && (!user || role === "user")) {
+      navigate("/login");
+    }
+  }, [user, role, authLoading, navigate]);
+
   if (authLoading) return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
-  if (!user || role === "user") {
-    navigate("/login");
-    return null;
-  }
+  if (!user || role === "user") return null;
 
   const startEdit = (p: Property) => {
     setEditing(p.id);
