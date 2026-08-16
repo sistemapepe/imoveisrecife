@@ -16,9 +16,9 @@ export default function Favorites() {
   return (
     <>
       <SEOHead title="Favoritos" description="Seus imóveis favoritos salvos para consulta rápida." noIndex />
-      <div className="min-h-screen bg-background pb-24 max-w-screen-lg mx-auto">
+      <div className="min-h-screen bg-luxury-dark text-white pb-24 max-w-screen-lg mx-auto">
         <Navbar />
-        <header className="sticky top-[var(--navbar-height)] z-50 glass-header border-b border-border transition-all duration-300">
+        <header className="sticky top-[var(--navbar-height)] z-50 glass-nav border-b border-white/5 transition-all duration-300">
           <div className="flex items-center justify-between px-4 h-14">
             <BackButton variant="ghost" />
             <h1 className="text-base font-bold absolute left-1/2 -translate-x-1/2 pointer-events-none">Sua Seleção</h1>
