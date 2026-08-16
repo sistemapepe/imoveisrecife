@@ -196,13 +196,13 @@ function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[
       address: String(m.address ?? "").trim(),
       neighborhood: String(m.neighborhood ?? "").trim(),
       city: String(m.city ?? "").trim(),
-      price: rawNum("price").n,
-      area: rawNum("area").n,
-      bedrooms: Math.trunc(rawNum("bedrooms").n),
-      suites: Math.trunc(rawNum("suites").n),
-      bathrooms: Math.trunc(rawNum("bathrooms").n),
-      parking: Math.trunc(rawNum("parking").n),
-      status: String(m.status ?? "disponivel").trim().toLowerCase(),
+      price: Math.max(0, rawNum("price").n),
+      area: Math.max(0, rawNum("area").n),
+      bedrooms: Math.max(0, Math.trunc(rawNum("bedrooms").n)),
+      suites: Math.max(0, Math.trunc(rawNum("suites").n)),
+      bathrooms: Math.max(0, Math.trunc(rawNum("bathrooms").n)),
+      parking: Math.max(0, Math.trunc(rawNum("parking").n)),
+      status: String(m.status ?? "disponivel").trim().toLowerCase() || "disponivel",
       exclusive: toBool(m.exclusive),
       featured: toBool(m.featured),
       description: String(m.description ?? "").trim(),
@@ -418,13 +418,14 @@ export default function BulkImportTab() {
         try {
           let existingId: string | null = null;
           if (upsertMode && Array.isArray(payload.images) && payload.images.length > 0) {
-            const query = supabase.from("properties").select("id");
-            const { data: found } = await (query as any)
+            // Find by image overlap
+            const { data: found } = await supabase.from("properties")
+              .select("id")
               .overlaps("images", payload.images)
               .eq("site_id", site?.id)
               .limit(1)
               .maybeSingle();
-            existingId = (found as any)?.id ?? null;
+            existingId = found?.id ?? null;
           }
           if (existingId) {
             const { error } = await supabase.from("properties").update(payload as any).eq("id", existingId);
@@ -432,7 +433,7 @@ export default function BulkImportTab() {
             updated++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Atualizado", id: existingId });
           } else {
-            const { error } = await supabase.from("properties").insert({ ...payload, site_id: site?.id } as any);
+            const { error } = await supabase.from("properties").insert({ ...payload, site_id: site?.id });
             if (error) throw error;
             created++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Criado" });
