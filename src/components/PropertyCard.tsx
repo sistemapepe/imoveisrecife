@@ -33,7 +33,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
   return (
     <>
     <div
-      className="group bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+      className="group bg-card rounded-[2rem] overflow-hidden premium-shadow cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.3)] border border-transparent hover:border-accent/20"
       onClick={() => navigate(`/imovel/${property.id}`)}
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
