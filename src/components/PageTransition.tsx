@@ -58,4 +58,5 @@ export const PageTransition = React.forwardRef<HTMLDivElement, { children: React
       {children}
     </motion.div>
   );
-}
+});
+export default PageTransition;

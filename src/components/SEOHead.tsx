@@ -83,4 +83,5 @@ export const SEOHead = React.forwardRef<HTMLDivElement, SEOHeadProps>((props, re
       ))}
     </Helmet>
   );
-}
+});
+export default SEOHead;

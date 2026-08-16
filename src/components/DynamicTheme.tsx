@@ -132,4 +132,5 @@ export const DynamicTheme = React.forwardRef<HTMLDivElement, any>((props, ref) =
 
 
   return null;
-}
+});
+export default DynamicTheme;

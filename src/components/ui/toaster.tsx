@@ -21,4 +21,4 @@ export const Toaster = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTM
       <ToastViewport />
     </ToastProvider>
   );
-}
+});
