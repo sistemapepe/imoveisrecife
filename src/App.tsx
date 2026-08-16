@@ -36,19 +36,18 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookieConsent = lazy(() => import("./components/CookieConsent"));
 
 // Loading fallback component
-const PageLoader = React.forwardRef<HTMLDivElement>((props, ref) => (
-  <div ref={ref} className="flex items-center justify-center min-h-[60vh] w-full">
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[60vh] w-full">
     <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
   </div>
-));
-PageLoader.displayName = "PageLoader";
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 min: dados considerados frescos, sem refetch
-      gcTime: 30 * 60 * 1000,   // 30 min em cache antes do garbage collect
-      refetchOnWindowFocus: false, // evita refetch ao trocar de aba
+      staleTime: 5 * 60 * 1000,
+      gcTime: 30 * 60 * 1000,
+      refetchOnWindowFocus: false,
       retry: 1,
     },
   },
@@ -82,7 +81,7 @@ function AppContent() {
   return (
     <div className="max-w-screen-lg mx-auto relative min-h-screen">
       <Suspense fallback={<PageLoader />}>
-        <Routes location={location} key={location.pathname}>
+        <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/busca" element={<SearchResults />} />
           <Route path="/imovel/:id" element={<PropertyDetail />} />
