@@ -173,6 +173,7 @@ export default function Index() {
               </div>
             </div>
           </div>
+        </div>
       </section>
 
       <div className="grid gap-6 md:grid-cols-2">
