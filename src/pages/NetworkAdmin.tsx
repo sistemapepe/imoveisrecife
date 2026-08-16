@@ -34,7 +34,7 @@ const NetworkAdmin = React.forwardRef<HTMLDivElement>((_, ref) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { user, isSuperAdmin, loading: authLoading, signOut } = useAuth();
   
-  const [tab, setTab] = useState<NetworkTab>(() => {
+  const initialTab = useMemo<NetworkTab>(() => {
     try {
       const urlTab = new URLSearchParams(window.location.search).get("tab") as NetworkTab;
       if (urlTab) return urlTab;
@@ -42,16 +42,25 @@ const NetworkAdmin = React.forwardRef<HTMLDivElement>((_, ref) => {
     } catch (e) {
       return "dashboard";
     }
-  });
+  }, []);
+
+  const [tab, setTab] = useState<NetworkTab | null>(null);
   
   const [isPending, startTransition] = useTransition();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Monta a aba inicial dentro de uma transition para evitar suspensão síncrona
   useEffect(() => {
-    if (!user || !isSuperAdmin) return;
+    startTransition(() => setTab(initialTab));
+  }, [initialTab]);
+
+
+  useEffect(() => {
+    if (!user || !isSuperAdmin || !tab) return;
 
     logger.startTimer("NetworkAdmin_Mount");
     sessionStorage.setItem("network_active_tab", tab);
+
     
     const currentUrlTab = searchParams.get("tab");
     if (currentUrlTab !== tab) {
