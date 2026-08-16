@@ -118,14 +118,14 @@ class Logger {
     if (error) {
       entry.error = {
         message: error.message,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+        stack: import.meta.env.DEV ? error.stack : undefined,
       };
     }
 
     const logMethod = level === 'fatal' || level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log';
     
     try {
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         console[logMethod](`[${level.toUpperCase()}] ${message}`, entry.context, error || '');
       } else {
         console[logMethod](JSON.stringify(entry));
