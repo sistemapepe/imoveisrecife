@@ -127,7 +127,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       if (newUser) {
         await checkRole(newUser.id);
-        if (mounted) setLoading(false);
       } else {
         setRole(null);
         setLoading(false);
