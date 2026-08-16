@@ -1,8 +1,6 @@
 /**
- * OTIMIZADO: O carregamento da aba Sites foi acelerado com Lazy Loading e redução de payload.
- * ADICIONADO: Skeletons e indicadores de carregamento na aba Sites para melhor feedback visual.
- * CORREÇÃO: Domínio provisório da Lovable é agora preenchido automaticamente ao duplicar sites para facilitar a edição antes da publicação.
- * PERFORMANCE: Implementado cache de dados para propriedades e dashboard (TTL 30s-60s) e prefetch inteligente das abas do admin.
+ * Teste o painel /network-admin e os cards de rede por rede, incluindo ações como editar e excluir.
+ * Revise os painéis redes, mensagens e importação em bulk para ver se o estilo novo ficou legível.
  */
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
