@@ -56,10 +56,11 @@ const NetworkAdmin = React.forwardRef<HTMLDivElement>((_, ref) => {
 
 
   useEffect(() => {
-    if (!user || !isSuperAdmin) return;
+    if (!user || !isSuperAdmin || !tab) return;
 
     logger.startTimer("NetworkAdmin_Mount");
     sessionStorage.setItem("network_active_tab", tab);
+
     
     const currentUrlTab = searchParams.get("tab");
     if (currentUrlTab !== tab) {
