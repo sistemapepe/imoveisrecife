@@ -121,7 +121,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
               className="text-accent font-bold tracking-tight"
             />
           </div>
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground/60 font-bold">
+          <span className="text-[9px] uppercase tracking-[0.2em] text-white/40 font-extrabold">
             {property.neighborhood}
           </span>
           {hasPriceDrop && (
