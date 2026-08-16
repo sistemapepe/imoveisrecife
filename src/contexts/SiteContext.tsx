@@ -29,7 +29,7 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
     const isLoginPath = pathname === '/login';
     
     // Para rotas administrativas, não bloqueia o carregamento por erro de domínio
-    const isManagementPath = isNetworkPath || isAdminPath || isLoginPath || pathname === '/auth/callback';
+    const isManagementPath = isNetworkPath || isAdminPath || isLoginPath || pathname.startsWith('/auth/callback') || pathname.startsWith('/login');
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const siteIdParam = urlParams.get('site_id');
