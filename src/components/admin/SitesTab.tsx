@@ -53,8 +53,8 @@ export default function SitesTab() {
       const { data, error } = await supabase
         .from('sites' as any)
         .select('id, domain, brand_name, is_active, publish_status, last_published_at, created_at')
-        .order('created_at', { ascending: false })
-        .limit(20);
+        .order('brand_name', { ascending: true })
+        .limit(100);
       
       if (!mounted) return;
 
@@ -75,8 +75,8 @@ export default function SitesTab() {
     const { data, error } = await supabase
       .from('sites' as any)
       .select('id, domain, brand_name, is_active, publish_status, last_published_at, created_at')
-      .order('created_at', { ascending: false })
-      .limit(50);
+      .order('brand_name', { ascending: true })
+      .limit(200);
     
     if (error) {
       if (showToast) toast.error("Erro ao carregar sites");

@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
 import React from "react";
 
-const ProtectedRoute = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => {
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, isInitializing, role } = useAuth();
   const location = useLocation();
   const isNetworkPath = location.pathname.startsWith('/network-admin');
@@ -12,7 +12,7 @@ const ProtectedRoute = React.forwardRef<HTMLDivElement, { children: React.ReactN
 
   if ((isInitializing || loading) && !isBypassLoading) {
     return (
-      <div ref={ref} className="flex h-screen w-full items-center justify-center bg-luxury-dark text-accent">
+      <div className="flex h-screen w-full items-center justify-center bg-luxury-dark text-accent">
         <div className="flex flex-col items-center gap-4 px-6 text-center">
           <Loader2 className="h-8 w-8 animate-spin text-accent" />
           <div>
@@ -35,15 +35,21 @@ const ProtectedRoute = React.forwardRef<HTMLDivElement, { children: React.ReactN
   }
 
   if (!user || role === "user") {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return (
+      <div className="contents">
+        <Navigate to="/login" state={{ from: location }} replace />
+      </div>
+    );
   }
 
   if (isNetworkPath && role !== "super_admin") {
-    return <Navigate to="/admin" replace />;
+    return (
+      <div className="contents">
+        <Navigate to="/admin" replace />
+      </div>
+    );
   }
 
-  return <div ref={ref} className="contents">{children}</div>;
-});
-
-ProtectedRoute.displayName = "ProtectedRoute";
+  return <div className="contents">{children}</div>;
+};
 export default ProtectedRoute;

@@ -16,7 +16,7 @@ interface SiteContextType {
 
 const SiteContext = createContext<SiteContextType | null>(null);
 
-export const SiteProvider = React.forwardRef<HTMLDivElement, { children: ReactNode }>(({ children }, ref) => {
+export const SiteProvider = ({ children }: { children: ReactNode }) => {
   const [site, setSite] = useState<Site | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -79,12 +79,10 @@ export const SiteProvider = React.forwardRef<HTMLDivElement, { children: ReactNo
 
   return (
     <SiteContext.Provider value={{ site, loading, error }}>
-      <div ref={ref} className="contents">{children}</div>
+      <div className="contents">{children}</div>
     </SiteContext.Provider>
   );
-});
-
-SiteProvider.displayName = "SiteProvider";
+};
 
 export function useSite() {
   const ctx = useContext(SiteContext);

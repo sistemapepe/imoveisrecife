@@ -22,9 +22,7 @@ const reducedVariants = {
   exit: { opacity: 0 },
 };
 
-import React from "react";
-export const PageTransition = React.forwardRef<HTMLDivElement, { children: ReactNode }>((props, ref) => {
-  const { children } = props;
+export const PageTransition = ({ children }: { children: ReactNode }) => {
   const shouldReduceMotion = useReducedMotion();
   
   // Detect low-end devices or slow connections
@@ -49,7 +47,6 @@ export const PageTransition = React.forwardRef<HTMLDivElement, { children: React
 
   return (
     <motion.div
-      ref={ref}
       variants={variants}
       initial="initial"
       animate="animate"
@@ -59,5 +56,6 @@ export const PageTransition = React.forwardRef<HTMLDivElement, { children: React
       {children}
     </motion.div>
   );
-});
+};
+
 export default PageTransition;

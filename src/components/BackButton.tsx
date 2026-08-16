@@ -9,7 +9,7 @@ interface BackButtonProps {
   label?: string;
 }
 
-const BackButton = React.forwardRef<HTMLButtonElement, BackButtonProps>(({ variant = "floating", className = "", onClick, label = "Voltar" }, ref) => {
+const BackButton = ({ variant = "floating", className = "", onClick, label = "Voltar" }: BackButtonProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,7 +32,6 @@ const BackButton = React.forwardRef<HTMLButtonElement, BackButtonProps>(({ varia
   if (variant === "ghost") {
     return (
       <button
-        ref={ref}
         onClick={handleBack}
         className={`flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 transition-colors -ml-1 ${className}`}
         aria-label={label}
@@ -44,7 +43,6 @@ const BackButton = React.forwardRef<HTMLButtonElement, BackButtonProps>(({ varia
 
   return (
     <button
-      ref={ref}
       onClick={handleBack}
       className={`fixed top-24 left-6 z-[60] h-11 w-11 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-gray-100 flex items-center justify-center text-gray-800 hover:bg-white transition-all active:scale-90 md:left-10 ${className}`}
       aria-label={label}
@@ -52,7 +50,5 @@ const BackButton = React.forwardRef<HTMLButtonElement, BackButtonProps>(({ varia
       <ArrowLeft className="h-6 w-6" />
     </button>
   );
-});
-
-BackButton.displayName = "BackButton";
+};
 export default BackButton;
