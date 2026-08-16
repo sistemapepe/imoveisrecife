@@ -83,18 +83,18 @@ function AppContent() {
       <AnimatePresence mode="wait">
         <Suspense fallback={<PageLoader />}>
           <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Index />} />
-            <Route path="/busca" element={<SearchResults />} />
-            <Route path="/imovel/:id" element={<PropertyDetail />} />
-            <Route path="/filtros" element={<Filters />} />
-            <Route path="/contato" element={<Contact />} />
-            <Route path="/favoritos" element={<Favorites />} />
-            <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-            <Route path="/network-admin" element={<ProtectedRoute><NetworkAdmin /></ProtectedRoute>} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/privacidade" element={<PrivacyPolicy />} />
-            <Route path="/plano" element={<ProjectPlan />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+            <Route path="/busca" element={<PageTransition><SearchResults /></PageTransition>} />
+            <Route path="/imovel/:id" element={<PageTransition><PropertyDetail /></PageTransition>} />
+            <Route path="/filtros" element={<PageTransition><Filters /></PageTransition>} />
+            <Route path="/contato" element={<PageTransition><Contact /></PageTransition>} />
+            <Route path="/favoritos" element={<PageTransition><Favorites /></PageTransition>} />
+            <Route path="/admin" element={<ProtectedRoute><PageTransition><Admin /></PageTransition></ProtectedRoute>} />
+            <Route path="/network-admin" element={<ProtectedRoute><PageTransition><NetworkAdmin /></PageTransition></ProtectedRoute>} />
+            <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+            <Route path="/privacidade" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+            <Route path="/plano" element={<PageTransition><ProjectPlan /></PageTransition>} />
+            <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
           </Routes>
         </Suspense>
       </AnimatePresence>
