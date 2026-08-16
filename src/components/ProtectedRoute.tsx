@@ -1,18 +1,18 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
+import React from "react";
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+const ProtectedRoute = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => {
   const { user, loading, isInitializing, role } = useAuth();
   const location = useLocation();
   const isNetworkPath = location.pathname.startsWith('/network-admin');
 
-  // No Network Admin, se já tivermos o role de super_admin no estado, ignoramos o loading de auth/site
   const isBypassLoading = isNetworkPath && role === "super_admin";
 
   if ((isInitializing || loading) && !isBypassLoading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-luxury-dark text-accent">
+      <div ref={ref} className="flex h-screen w-full items-center justify-center bg-luxury-dark text-accent">
         <div className="flex flex-col items-center gap-4 px-6 text-center">
           <Loader2 className="h-8 w-8 animate-spin text-accent" />
           <div>
@@ -34,15 +34,16 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     );
   }
 
-  // Se não houver usuário ou o papel for 'user' (sem permissões administrativas), redireciona para login
   if (!user || role === "user") {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Se for acesso à rede, exige explicitamente super_admin
   if (isNetworkPath && role !== "super_admin") {
     return <Navigate to="/admin" replace />;
   }
 
-  return <>{children}</>;
-}
+  return <div ref={ref} className="contents">{children}</div>;
+});
+
+ProtectedRoute.displayName = "ProtectedRoute";
+export default ProtectedRoute;
