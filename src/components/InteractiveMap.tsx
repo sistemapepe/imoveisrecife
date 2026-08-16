@@ -91,7 +91,7 @@ export default function InteractiveMap({ address, neighborhood, city }: Interact
       </AnimatePresence>
 
       {/* Map */}
-      <div className="relative h-64 md:h-96 w-full rounded-2xl overflow-hidden bg-secondary border border-border">
+      <div className="relative h-64 md:h-96 w-full rounded-[2rem] overflow-hidden bg-secondary border border-white/5 premium-shadow">
         <iframe
           key={activeCategory}
           title={`Mapa - ${active.label}`}
