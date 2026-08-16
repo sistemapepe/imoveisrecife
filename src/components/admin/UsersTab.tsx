@@ -15,10 +15,10 @@ interface ManagedUser {
 }
 
 const ROLES = [
-  { value: "super_admin", label: "Super Admin", color: "bg-red-500/10 text-red-600" },
-  { value: "admin", label: "Administrador", color: "bg-destructive/10 text-destructive" },
-  { value: "supervisor", label: "Supervisor", color: "bg-primary/10 text-primary" },
-  { value: "corretor", label: "Corretor", color: "bg-accent/20 text-accent-foreground" },
+  { value: "super_admin", label: "Super Admin", color: "bg-red-500/10 text-red-500" },
+  { value: "admin", label: "Administrador", color: "bg-orange-500/10 text-orange-500" },
+  { value: "supervisor", label: "Supervisor", color: "bg-blue-500/10 text-blue-500" },
+  { value: "corretor", label: "Corretor", color: "bg-accent/10 text-accent" },
 ];
 
 function roleBadge(role: string) {
