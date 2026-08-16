@@ -150,15 +150,15 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
       ) : (
         <div className="space-y-2">
           {users.map((u) => (
-            <div key={u.id} className="bg-black/40 rounded-xl border border-white/5 p-4 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <Shield className="h-4 w-4 text-primary" />
+            <div key={u.id} className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-6 flex items-center gap-4 hover:border-accent/30 transition-all duration-500 premium-shadow group">
+              <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center shrink-0 border border-white/5 group-hover:border-accent/20 transition-colors">
+                <Shield className="h-5 w-5 text-accent/60" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate text-accent">{u.email}</p>
+                <p className="text-sm font-bold text-white tracking-wide truncate group-hover:text-accent transition-colors">{u.email}</p>
                 <div className="flex items-center gap-2 mt-1">
                   {roleBadge(u.role)}
-                  <span className="text-[10px] text-accent/60">
+                  <span className="text-[9px] font-extrabold uppercase tracking-[0.2em] text-white/20">
                     {new Date(u.created_at).toLocaleDateString("pt-BR")}
                   </span>
                 </div>
@@ -166,7 +166,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
               <select
                 value={u.role}
                 onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                className="text-xs px-2 py-1.5 rounded-lg border border-white/10 bg-black/60 text-accent"
+                className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-2 rounded-xl border border-white/5 bg-white/5 text-white/70 focus:outline-none focus:border-accent/40"
               >
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>{r.label}</option>
@@ -174,7 +174,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
               </select>
               <button
                 onClick={() => setDeleteId(u.id)}
-                className="p-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
+                className="p-3 rounded-xl bg-red-500/5 text-red-500/50 hover:bg-red-500 hover:text-white transition-all duration-300 border border-red-500/10"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
