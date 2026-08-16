@@ -43,10 +43,8 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
         setViewsByDay(data.viewsByDay);
         setLeadsByDay(data.leadsByDay);
         
-        // Se o cache for recente (< 5 min), não mostra loading
         if (Date.now() - timestamp < 300000) {
           setLoading(false);
-          // Opcional: faz o fetch em background para atualizar
           fetchAnalytics(cacheKey, false);
           return;
         }
@@ -54,7 +52,6 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
     }
 
     fetchAnalytics(cacheKey, true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString(), site?.id, isNetwork]);
 
   const getDateRange = (): { from: string; to?: string } => {
@@ -109,7 +106,6 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
     setTotalLeads(leads.length);
     setTotalVisits(visits.length);
 
-    // Views by property
     const viewCount: Record<string, number> = {};
     views.forEach((v) => { viewCount[v.property_id] = (viewCount[v.property_id] || 0) + 1; });
     const viewsByProp = Object.entries(viewCount)
@@ -122,7 +118,6 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
       .slice(0, 10);
     setViewsByProperty(viewsByProp);
 
-    // Group by day
     const groupByDay = (items: { created_at: string }[]) => {
       const map: Record<string, number> = {};
       items.forEach((item) => {
@@ -161,6 +156,8 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
         ))}
       </div>
     );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -175,7 +172,6 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
         </div>
       </div>
 
-      {/* Period filter */}
       <div className="flex flex-wrap gap-2 items-center">
         {(["today", "7d", "30d", "90d"] as const).map((p) => (
           <button
@@ -231,7 +227,6 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
         </button>
       </div>
 
-      {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { icon: Eye, label: "Visualizações", value: totalViews, color: "text-blue-500" },
@@ -247,7 +242,6 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
         ))}
       </div>
 
-      {/* Views by Property */}
       <div className="p-5 rounded-xl bg-black/40 border border-white/5">
         <h3 className="font-bold mb-4 flex items-center gap-2">
           <BarChart3 className="h-5 w-5 text-accent" /> Top Imóveis Visualizados
@@ -274,7 +268,6 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
         )}
       </div>
 
-      {/* Timeline charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TimelineChart title="Visualizações por Dia" data={viewsByDay} color="bg-primary" />
         <TimelineChart title="Leads por Dia" data={leadsByDay} color="bg-green-500" />
