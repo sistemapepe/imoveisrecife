@@ -108,13 +108,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const checkRole = useCallback(async (userId: string) => {
+  const checkRole = useCallback(async (userId: string, mounted = true) => {
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
       
       if (!site?.id && siteLoading) {
-        logger.warn("Site not resolved yet in checkRole, awaiting site data...");
-        return; // Don't finalize loading until site is ready
+        logger.warn("Site not resolved yet in checkRole, checking global super_admin first...");
+        // Tentamos verificar se o usuário é super_admin global antes mesmo do site carregar
+        const { data: superAdminCheck } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", userId)
+          .eq("role", "super_admin")
+          .or("site_id.is.null,site_id.eq.00000000-0000-0000-0000-000000000000")
+          .maybeSingle();
+
+        if (superAdminCheck) {
+          logger.info("Global super_admin detected early", { userId });
+          if (mounted) {
+            setRole("super_admin");
+            setLoading(false);
+            setIsInitializing(false);
+          }
+          return;
+        }
+
+        logger.warn("Not a global super_admin or check failed, will retry checkRole when site is ready.");
+        // Se não for super admin global, aguardamos o site carregar e tentamos novamente via timeout
+        setTimeout(() => {
+          if (mounted) checkRole(userId, mounted);
+        }, 800);
+        return;
       }
       
       const { data, error } = await supabase
@@ -170,7 +194,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       if (currentUser) {
         setLoading(true);
-        await checkRole(currentUser.id);
+        await checkRole(currentUser.id, mounted);
       } else {
         setRole(null);
         setLoading(false);
@@ -188,7 +212,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(currentUser);
         
         if (currentUser) {
-          await checkRole(currentUser.id);
+          await checkRole(currentUser.id, mounted);
         } else {
           setLoading(false);
           setIsInitializing(false);
