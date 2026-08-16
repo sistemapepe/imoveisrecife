@@ -15,7 +15,8 @@ function clampHslLightness(hsl: string, min = 25, max = 65): string {
 const LIGHT_CARD = { h: 0, s: 0, l: 100 };
 const DARK_CARD = { h: 195, s: 25, l: 13 };
 
-export default function DynamicTheme() {
+import React from "react";
+export const DynamicTheme = React.forwardRef<HTMLDivElement, any>((props, ref) => {
   const { settings } = useProperties();
 
   useEffect(() => {
