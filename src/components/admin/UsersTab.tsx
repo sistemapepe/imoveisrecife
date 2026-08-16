@@ -155,10 +155,10 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
                 <Shield className="h-4 w-4 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate">{u.email}</p>
+                <p className="text-sm font-semibold truncate text-card">{u.email}</p>
                 <div className="flex items-center gap-2 mt-1">
                   {roleBadge(u.role)}
-                  <span className="text-[10px] text-muted-foreground">
+                  <span className="text-[10px] text-card/60">
                     {new Date(u.created_at).toLocaleDateString("pt-BR")}
                   </span>
                 </div>
@@ -166,7 +166,7 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
               <select
                 value={u.role}
                 onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                className="text-xs px-2 py-1.5 rounded-lg border border-border bg-background"
+                className="text-xs px-2 py-1.5 rounded-lg border border-border bg-background text-foreground"
               >
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>{r.label}</option>
