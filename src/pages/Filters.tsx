@@ -113,10 +113,20 @@ export default function Filters() {
 
         <main className="flex-1 overflow-y-auto hide-scrollbar pb-32">
           <section className="mt-4 px-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3">Tipo de Imóvel</h3>
+            <h3 className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-accent/70 mb-4 px-1">Tipo de Imóvel</h3>
             <div className="flex flex-wrap gap-2">
               {types.map((t) => (
-                <button key={t} onClick={() => toggleType(t)} className={`px-4 py-2 rounded-lg border text-sm font-semibold transition-all ${selectedTypes.includes(t) ? "border-primary bg-primary/10 text-primary" : "border-border bg-card text-muted-foreground hover:border-primary"}`}>{t}</button>
+                <button 
+                  key={t} 
+                  onClick={() => toggleType(t)} 
+                  className={`px-5 py-2.5 rounded-full border text-xs font-bold transition-all ${
+                    selectedTypes.includes(t) 
+                      ? "gold-gradient border-transparent text-white shadow-lg shadow-accent/20" 
+                      : "border-white/10 bg-white/5 text-white/60 hover:border-accent/40 hover:text-white"
+                  }`}
+                >
+                  {t}
+                </button>
               ))}
             </div>
           </section>
