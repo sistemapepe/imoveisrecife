@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { parseHsl, formatHsl, pickBestContrast, adjustForContrast } from "@/lib/color-contrast";
+import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Clamp lightness para evitar branco/preto puro como cor de marca.
