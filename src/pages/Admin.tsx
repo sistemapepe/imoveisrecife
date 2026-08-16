@@ -185,8 +185,8 @@ export default function Admin() {
   };
 
   const handleSignOut = async () => {
-    startTransition(async () => {
-      await signOut();
+    await signOut();
+    startTransition(() => {
       navigate("/");
     });
   };
