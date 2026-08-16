@@ -171,9 +171,9 @@ export default function LeadCaptureModal({
               exit={{ opacity: 0, y: 30, scale: 0.96 }}
               transition={{ duration: 0.25 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-md my-auto bg-card rounded-[2rem] shadow-2xl border border-border overflow-hidden pointer-events-auto"
+              className="relative w-full max-w-md my-auto bg-[#0d1419] rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] border border-white/10 overflow-hidden pointer-events-auto text-white"
             >
-              <div className="flex items-center justify-between p-5 border-b border-border">
+              <div className="flex items-center justify-between p-6 border-b border-white/5">
                 <div className="flex items-center gap-2">
                   <div className="h-9 w-9 rounded-full bg-whatsapp/10 flex items-center justify-center">
                     <MessageCircle className="h-5 w-5 text-whatsapp" />
