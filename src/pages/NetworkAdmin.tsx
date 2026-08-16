@@ -1,6 +1,7 @@
 import { useState, useTransition, Suspense, lazy, useCallback, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { logger } from "@/lib/logger";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { 
   Globe2, 
