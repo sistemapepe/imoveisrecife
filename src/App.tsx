@@ -62,21 +62,6 @@ function AppContent() {
   const isPropertyDetail = location.pathname.startsWith('/imovel/');
 
   if (siteLoading) return <PageLoader />;
-
-  if (siteError && !location.pathname.includes('/admin') && !location.pathname.includes('/login') && !location.pathname.includes('/network-admin')) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-luxury-dark text-card p-6 text-center">
-        <Globe2 className="h-16 w-16 text-accent mb-4 animate-pulse" />
-        <h1 className="text-2xl font-bold mb-2 text-accent">Site em Configuração</h1>
-        <p className="text-accent/70 max-w-md">
-          {siteError || "Este domínio ainda não foi configurado em nossa plataforma."}
-        </p>
-        <div className="mt-8 pt-8 border-t border-white/5 w-full max-w-xs">
-          <p className="text-[10px] text-accent/40 uppercase tracking-widest">Powered by Real Imob Network</p>
-        </div>
-      </div>
-    );
-  }
   
   return (
     <div className="max-w-screen-lg mx-auto relative min-h-screen">
