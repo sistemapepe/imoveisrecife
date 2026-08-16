@@ -42,7 +42,20 @@ export default function NetworkAdmin() {
     return null;
   }
 
+  const prefetchTab = (tab: NetworkTab) => {
+    switch (tab) {
+      case "dashboard": import("@/components/admin/NetworkDashboard"); break;
+      case "sites": import("@/components/admin/SitesTab"); break;
+      case "users": import("@/components/admin/UsersTab"); break;
+      case "analytics": import("@/components/admin/AnalyticsTab"); break;
+      case "import": import("@/components/admin/BulkImportTab"); break;
+      case "security": import("@/components/admin/SecurityDiagnosticTab"); break;
+      case "settings": import("@/components/admin/NetworkSettingsTab"); break;
+    }
+  };
+
   const switchTab = (newTab: NetworkTab) => {
+    if (tab === newTab) return;
     startTransition(() => {
       setTab(newTab);
       setMobileMenuOpen(false);
@@ -93,6 +106,7 @@ export default function NetworkAdmin() {
                     <button
                       key={item.key}
                       onClick={() => switchTab(item.key as NetworkTab)}
+                      onMouseEnter={() => prefetchTab(item.key as NetworkTab)}
                       className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold transition-all ${
                         tab === item.key ? "bg-accent text-luxury-dark shadow-lg shadow-accent/20" : "text-card/60 hover:text-card hover:bg-white/5"
                       }`}
@@ -145,6 +159,7 @@ export default function NetworkAdmin() {
                 <button
                   key={item.key}
                   onClick={() => switchTab(item.key as NetworkTab)}
+                  onMouseEnter={() => prefetchTab(item.key as NetworkTab)}
                   className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl font-bold transition-all duration-300 relative group ${
                     active 
                       ? "bg-accent text-luxury-dark shadow-xl shadow-accent/20" 
