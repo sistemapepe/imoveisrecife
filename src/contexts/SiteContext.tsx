@@ -28,39 +28,14 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       const siteIdParam = urlParams.get('site_id');
       const hostname = window.location.hostname;
       
-      // Normalização: remove www. e trata lovable.app como localhost para desenvolvimento
       const cleanHostname = hostname.replace(/^www\./, "");
       const domainToSearch = cleanHostname.includes('lovable.app') ? 'localhost' : cleanHostname;
       
       let query = supabase.from('sites' as any).select('*');
       
       if (siteIdParam) {
-        try {
-          const cacheKey = `site_resolved_${siteIdParam}`;
-          const cached = sessionStorage.getItem(cacheKey);
-          if (cached) {
-            const parsed = JSON.parse(cached);
-            if (parsed && parsed.id) {
-              setSite(parsed);
-              setLoading(false);
-              return;
-            }
-          }
-        } catch (e) { /* ignore cache errors */ }
         query = query.eq('id', siteIdParam);
       } else {
-        try {
-          const cacheKey = `site_resolved_${domainToSearch}`;
-          const cached = sessionStorage.getItem(cacheKey);
-          if (cached) {
-            const parsed = JSON.parse(cached);
-            if (parsed && parsed.id) {
-              setSite(parsed);
-              setLoading(false);
-              return;
-            }
-          }
-        } catch (e) { /* ignore cache errors */ }
         query = query.or(`domain.eq.${domainToSearch},domain.eq.www.${domainToSearch}`);
       }
 
@@ -78,6 +53,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
           
           if (localhostSite) {
             setSite(localhostSite as any);
+            setLoading(false);
             return;
           }
         }
@@ -86,15 +62,11 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         setSite(null);
       } else {
         setSite(data as any);
-        try {
-          const key = siteIdParam || domainToSearch;
-          sessionStorage.setItem(`site_resolved_${key}`, JSON.stringify(data));
-        } catch (e) { /* ignore session storage limits */ }
       }
     } catch (err) {
       logger.error("Failed to resolve site", { domain: window.location.hostname }, err as Error);
       setError("Erro ao carregar configurações do site.");
-      setSite(null); // Ensure we don't hang if resolution fails
+      setSite(null);
     } finally {
       logger.endTimer("resolveSite", { domain: window.location.hostname });
       setLoading(false);

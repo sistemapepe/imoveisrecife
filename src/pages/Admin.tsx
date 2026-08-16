@@ -223,7 +223,7 @@ export default function Admin() {
   const currentTabLabel = visibleTabs.find((t) => t.key === tab)?.label ?? "Painel";
 
   return (
-    <div className="min-h-screen bg-[#0d1419] pb-8">
+    <div className="min-h-screen bg-[#0d1419] pb-8 relative">
         <header className="sticky top-0 z-50 bg-[#0d1419]/90 backdrop-blur-3xl border-b border-white/5 shadow-xl">
           <div className="flex items-center justify-between px-4 h-14">
             <div className="flex items-center">

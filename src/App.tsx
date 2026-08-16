@@ -20,7 +20,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
 import { useWebVitals } from "@/hooks/useWebVitals";
 
-// Lazy loading rotas com prefetching inteligente
+// Lazy loading rotas
 const Index = lazy(() => import("./pages/Index"));
 const ProjectPlan = lazy(() => import("./routes/index"));
 const NetworkAdmin = lazy(() => import("./pages/NetworkAdmin"));
@@ -36,19 +36,18 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookieConsent = lazy(() => import("./components/CookieConsent"));
 
 // Loading fallback component
-const PageLoader = React.forwardRef<HTMLDivElement>((props, ref) => (
-  <div ref={ref} className="flex items-center justify-center min-h-[60vh] w-full">
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[60vh] w-full">
     <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
   </div>
-));
-PageLoader.displayName = "PageLoader";
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 min: dados considerados frescos, sem refetch
-      gcTime: 30 * 60 * 1000,   // 30 min em cache antes do garbage collect
-      refetchOnWindowFocus: false, // evita refetch ao trocar de aba
+      staleTime: 5 * 60 * 1000,
+      gcTime: 30 * 60 * 1000,
+      refetchOnWindowFocus: false,
       retry: 1,
     },
   },
@@ -63,26 +62,11 @@ function AppContent() {
   const isPropertyDetail = location.pathname.startsWith('/imovel/');
 
   if (siteLoading) return <PageLoader />;
-
-  if (siteError || (!site && !location.pathname.includes('/admin') && !location.pathname.includes('/login') && !location.pathname.includes('/network-admin'))) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-luxury-dark text-card p-6 text-center">
-        <Globe2 className="h-16 w-16 text-accent mb-4 animate-pulse" />
-        <h1 className="text-2xl font-bold mb-2 text-accent">Site em Configuração</h1>
-        <p className="text-accent/70 max-w-md">
-          {siteError || "Este domínio ainda não foi configurado em nossa plataforma."}
-        </p>
-        <div className="mt-8 pt-8 border-t border-white/5 w-full max-w-xs">
-          <p className="text-[10px] text-accent/40 uppercase tracking-widest">Powered by Real Imob Network</p>
-        </div>
-      </div>
-    );
-  }
   
   return (
     <div className="max-w-screen-lg mx-auto relative min-h-screen">
       <Suspense fallback={<PageLoader />}>
-        <Routes location={location} key={location.pathname}>
+        <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/busca" element={<SearchResults />} />
           <Route path="/imovel/:id" element={<PropertyDetail />} />
@@ -109,26 +93,24 @@ function AppContent() {
 
 const App = () => {
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <QueryClientProvider client={queryClient}>
-          <TooltipProvider>
-            <SiteProvider>
-              <AuthProvider>
-                <PropertyProvider>
-                  <Toaster />
-                  <Sonner />
-                  <DynamicTheme />
-                  <BrowserRouter>
-                    <AppContent />
-                  </BrowserRouter>
-                </PropertyProvider>
-              </AuthProvider>
-            </SiteProvider>
-          </TooltipProvider>
-        </QueryClientProvider>
+        <TooltipProvider>
+          <SiteProvider>
+            <AuthProvider>
+              <PropertyProvider>
+                <Toaster />
+                <Sonner />
+                <DynamicTheme />
+                <BrowserRouter>
+                  <AppContent />
+                </BrowserRouter>
+              </PropertyProvider>
+            </AuthProvider>
+          </SiteProvider>
+        </TooltipProvider>
       </HelmetProvider>
-    </div>
+    </QueryClientProvider>
   );
 };
 
