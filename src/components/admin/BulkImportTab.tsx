@@ -501,7 +501,7 @@ export default function BulkImportTab() {
 
   return (
     <div className="space-y-5">
-      <div className="bg-card rounded-xl border border-border p-5">
+      <div className="bg-black/40 rounded-xl border border-white/5 p-5">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
             <h3 className="font-bold text-base flex items-center gap-2"><FileSpreadsheet className="h-5 w-5 text-accent" /> Importação em Massa</h3>
@@ -520,7 +520,7 @@ export default function BulkImportTab() {
         </div>
 
         <label className="mt-4 block">
-          <div className="border-2 border-dashed border-border rounded-xl px-4 py-8 text-center cursor-pointer hover:border-accent transition-colors">
+          <div className="border-2 border-dashed border-white/10 rounded-xl px-4 py-8 text-center cursor-pointer hover:border-accent transition-colors">
             <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
             <p className="text-sm mt-2 font-semibold">{fileMeta ? fileMeta.name : "Selecionar arquivo .xlsx"}</p>
             <p className="text-[11px] text-muted-foreground">Abas esperadas: Empresa, Imóveis</p>
@@ -545,7 +545,7 @@ export default function BulkImportTab() {
       )}
 
       {parsed && (
-        <div className="bg-card rounded-xl border border-border p-5 space-y-4">
+        <div className="bg-black/40 rounded-xl border border-white/5 p-5 space-y-4">
           <h4 className="font-bold text-sm">📊 Pré-visualização</h4>
 
           {parsed.headerError && (
@@ -587,7 +587,7 @@ export default function BulkImportTab() {
             </div>
           )}
 
-          <label className="flex items-start gap-2 text-xs cursor-pointer select-none p-3 rounded-lg border border-border bg-muted/30">
+          <label className="flex items-start gap-2 text-xs cursor-pointer select-none p-3 rounded-lg border border-white/5 bg-black/40">
             <input
               type="checkbox"
               checked={upsertMode}
@@ -620,7 +620,7 @@ export default function BulkImportTab() {
         </div>
       )}
 
-      <div className="bg-card rounded-xl border border-border p-5">
+      <div className="bg-black/40 rounded-xl border border-white/5 p-5">
         <h4 className="font-bold text-sm flex items-center gap-2 mb-3"><History className="h-4 w-4" /> Histórico de importações</h4>
         {loadingHistory ? (
           <p className="text-xs text-muted-foreground">Carregando...</p>
@@ -686,9 +686,9 @@ export default function BulkImportTab() {
 
 function Stat({ label, value, ok, warn }: { label: string; value: string; ok?: boolean; warn?: boolean }) {
   return (
-    <div className={`rounded-lg border p-3 ${warn ? "border-yellow-500/40 bg-yellow-500/5" : ok ? "border-accent/40 bg-accent/5" : "border-border"}`}>
+    <div className={`rounded-lg border p-3 ${warn ? "border-yellow-500/40 bg-yellow-500/5" : ok ? "border-accent/40 bg-accent/5" : "border-white/5 bg-black/40"}`}>
       <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
-      <p className="text-lg font-bold mt-0.5">{value}</p>
+      <p className="text-lg font-bold mt-0.5 text-accent">{value}</p>
     </div>
   );
 }

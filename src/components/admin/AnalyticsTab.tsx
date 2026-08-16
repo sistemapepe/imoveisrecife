@@ -231,7 +231,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
         ].map(({ icon: Icon, label, value, color }) => (
           <div key={label} className="p-4 rounded-xl bg-black/40 border border-white/5">
             <Icon className={`h-5 w-5 ${color} mb-2`} />
-            <div className="text-2xl font-extrabold">{value}</div>
+            <div className="text-2xl font-extrabold text-accent">{value}</div>
             <div className="text-xs text-muted-foreground">{label}</div>
           </div>
         ))}
