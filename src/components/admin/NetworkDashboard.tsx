@@ -68,7 +68,7 @@ export default function NetworkDashboard() {
           </div>
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-accent">Gestão de Rede</h2>
         </div>
-        <p className="text-muted-foreground text-lg max-w-2xl">Visualização consolidada de toda a infraestrutura multi-tenant e performance global.</p>
+        <p className="text-card/60 text-lg max-w-2xl">Visualização consolidada de toda a infraestrutura multi-tenant e performance global.</p>
       </header>
 
       {/* Stats Grid */}

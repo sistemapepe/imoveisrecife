@@ -172,13 +172,13 @@ export default function NetworkSettingsTab() {
                     type="color" 
                     value={themeDefaults.accent || "#b89b5e"} 
                     onChange={(e) => handleUpdateSetting('theme_defaults', { ...themeDefaults, accent: e.target.value })}
-                    className="w-12 h-10 p-1 bg-transparent border-white/10"
+                    className="w-12 h-10 p-1 bg-black/40 border-white/10"
                   />
                   <Input 
                     type="text" 
                     value={themeDefaults.accent || "#b89b5e"} 
                     onChange={(e) => handleUpdateSetting('theme_defaults', { ...themeDefaults, accent: e.target.value })}
-                    className="bg-black/20 border-white/10 font-mono"
+                    className="bg-black/40 border-white/10 font-mono text-card"
                   />
                 </div>
               </div>
@@ -211,7 +211,7 @@ export default function NetworkSettingsTab() {
                   type="number" 
                   value={resourceLimits.max_properties_per_site} 
                   onChange={(e) => handleUpdateSetting('resource_limits', { ...resourceLimits, max_properties_per_site: parseInt(e.target.value) })}
-                  className="bg-black/20 border-white/10"
+                  className="bg-black/40 border-white/10 text-card"
                 />
               </div>
               <div className="space-y-2">
@@ -220,7 +220,7 @@ export default function NetworkSettingsTab() {
                   type="number" 
                   value={resourceLimits.max_users_per_site} 
                   onChange={(e) => handleUpdateSetting('resource_limits', { ...resourceLimits, max_users_per_site: parseInt(e.target.value) })}
-                  className="bg-black/20 border-white/10"
+                  className="bg-black/40 border-white/10 text-card"
                 />
               </div>
             </div>
