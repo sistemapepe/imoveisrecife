@@ -135,9 +135,9 @@ export default function Contact() {
 
         <div className="px-8 mb-10">
           <div className="flex items-center gap-4">
-            <div className="flex-1 h-[1px] bg-border" />
-            <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Ou se preferir</span>
-            <div className="flex-1 h-[1px] bg-border" />
+            <div className="flex-1 h-[1px] bg-white/5" />
+            <span className="text-[9px] text-white/30 font-extrabold uppercase tracking-[0.3em]">Ou se preferir</span>
+            <div className="flex-1 h-[1px] bg-white/5" />
           </div>
         </div>
 
