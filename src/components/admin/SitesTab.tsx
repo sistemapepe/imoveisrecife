@@ -37,10 +37,9 @@ export default function SitesTab() {
       if (cached) {
         try {
           const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 30000) {
+          if (Date.now() - timestamp < 300000) { // Aumentado para 5 minutos
             setSites(data);
             setLoading(false);
-            fetchSites(false);
             return;
           }
         } catch (e) {}

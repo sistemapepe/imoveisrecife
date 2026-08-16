@@ -18,10 +18,8 @@ export default function NetworkDashboard() {
     if (cached) {
       try {
         const { data, timestamp } = JSON.parse(cached);
-        if (Date.now() - timestamp < 60000) { // 60 segundos de cache
+        if (Date.now() - timestamp < 300000) { // Aumentado para 5 minutos
           setStats({ ...data, loading: false });
-          // Ainda busca em background para atualizar se necessário
-          fetchStats(false);
           return;
         }
       } catch (e) {}
