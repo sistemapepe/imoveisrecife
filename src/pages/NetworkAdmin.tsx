@@ -29,7 +29,7 @@ const NetworkDashboard = lazy(() => import("@/components/admin/NetworkDashboard"
 type NetworkTab = "dashboard" | "sites" | "users" | "analytics" | "security" | "settings" | "import";
 
 const NetworkAdmin = React.forwardRef<HTMLDivElement>((_, ref) => {
-  console.log("NetworkAdmin: rendering...");
+  
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user, isSuperAdmin, loading: authLoading, signOut } = useAuth();
