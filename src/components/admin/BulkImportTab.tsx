@@ -620,8 +620,8 @@ export default function BulkImportTab() {
         </div>
       )}
 
-      <div className="bg-black/40 rounded-xl border border-white/5 p-5">
-        <h4 className="font-bold text-sm flex items-center gap-2 mb-3 text-accent"><History className="h-4 w-4" /> Histórico de importações</h4>
+      <div className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-8 premium-shadow">
+        <h4 className="font-serif font-bold text-xl flex items-center gap-3 mb-6 text-accent"><History className="h-5 w-5" /> Histórico de importações</h4>
         {loadingHistory ? (
           <p className="text-xs text-muted-foreground">Carregando...</p>
         ) : history.length === 0 ? (
@@ -630,7 +630,7 @@ export default function BulkImportTab() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-left text-accent/50 border-b border-white/5">
+                <tr className="text-left text-white/30 border-b border-white/5 font-extrabold uppercase tracking-[0.2em] text-[9px]">
                   <th className="py-2 pr-2">Data</th>
                   <th className="py-2 pr-2">Arquivo</th>
                   <th className="py-2 pr-2">Status</th>
@@ -641,7 +641,7 @@ export default function BulkImportTab() {
               </thead>
               <tbody>
                 {history.map((h) => (
-                  <tr key={h.id} className="border-b border-white/5 text-accent/80">
+                  <tr key={h.id} className="border-b border-white/5 text-white/70 hover:bg-white/5 transition-colors group">
                     <td className="py-2 pr-2 whitespace-nowrap">{new Date(h.created_at).toLocaleString("pt-BR")}</td>
                     <td className="py-2 pr-2">{h.file_name}</td>
                     <td className="py-2 pr-2">
