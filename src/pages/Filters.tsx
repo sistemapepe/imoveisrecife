@@ -144,7 +144,7 @@ export default function Filters() {
             <h3 className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-accent/70 mb-5 px-1">Vagas de Garagem</h3>
             <div className="grid grid-cols-5 gap-2">
               {parkingOptions.map((p) => (
-                <button key={p} onClick={() => setSelectedParking(p)} className={`aspect-square flex items-center justify-center rounded-lg border text-sm font-bold ${selectedParking === p ? "border-primary bg-primary/10 text-primary" : "border-border bg-card"}`}>{p}</button>
+                <button key={p} onClick={() => setSelectedParking(p)} className={`aspect-square flex items-center justify-center rounded-2xl border text-sm font-bold transition-all ${selectedParking === p ? "gold-gradient border-transparent text-white shadow-lg shadow-accent/20" : "border-white/10 bg-white/5 text-white/40 hover:border-accent/40"}`}>{p}</button>
               ))}
             </div>
           </section>
