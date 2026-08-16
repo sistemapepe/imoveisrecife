@@ -80,7 +80,7 @@ export default function Footer() {
       </div>
 
       {settings.footerText && (
-        <p className="text-[10px] text-muted-foreground uppercase tracking-widest text-center whitespace-pre-line max-w-sm">
+        <p className="text-[11px] text-muted-foreground/80 font-medium uppercase tracking-[0.15em] text-center whitespace-pre-line max-w-sm leading-relaxed">
           {settings.footerText}
         </p>
       )}
