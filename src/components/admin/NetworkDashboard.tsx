@@ -120,7 +120,7 @@ export default function NetworkDashboard() {
                   <p className="text-xs text-accent/70">Conexão estável e latência otimizada.</p>
                 </div>
              </div>
-             <div className="bg-green-500/5 border border-green-500/10 rounded-2xl p-6 flex items-center gap-4">
+             <div className="bg-white/5 border border-white/10 rounded-[1.5rem] p-6 flex items-center gap-4">
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <div>
                   <h4 className="font-bold text-accent">Serviços de Auth</h4>
