@@ -125,7 +125,7 @@ export default function NetworkAdmin() {
   return (
     <div className="min-h-screen bg-luxury-dark text-white flex flex-col md:flex-row dark overflow-x-hidden">
         {/* Mobile Header */}
-        <header className="md:hidden sticky top-0 z-50 bg-luxury-dark-lighter/80 backdrop-blur-md border-b border-white/5 px-4 h-16 flex items-center justify-between">
+        <header className="md:hidden sticky top-0 z-50 bg-[#0d1419]/90 backdrop-blur-3xl border-b border-white/5 px-4 h-18 flex items-center justify-between shadow-xl">
           <div className="flex items-center gap-3">
             <Globe2 className="h-6 w-6 text-accent" />
             <span className="font-serif font-bold text-accent tracking-wider">NETWORK</span>
