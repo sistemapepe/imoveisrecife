@@ -34,35 +34,29 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
     const load = async () => {
       if (!site?.id) return;
       
-      const cacheKey = `dashboard_stats_${site.id}`;
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) {
-        try {
-          const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 60000) {
-            setStats(data);
-            setLoading(false);
-          }
-        } catch (e) {}
-      }
-
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
       const isoWeek = sevenDaysAgo.toISOString();
 
       try {
         const fetchC = async () => {
-          const { count, error } = await (supabase.from("contact_messages").select("id", { count: "exact", head: true }) as any).eq("site_id", site.id).gte("created_at", isoWeek);
+          const { count, error } = await (supabase.from("contact_messages").select("id", { count: "exact", head: true }) as any)
+            .eq("site_id", site.id)
+            .gte("created_at", isoWeek);
           if (error) throw error;
           return count ?? 0;
         };
         const fetchV = async () => {
-          const { count, error } = await (supabase.from("visit_requests").select("id", { count: "exact", head: true }) as any).eq("site_id", site.id).eq("status", "pending");
+          const { count, error } = await (supabase.from("visit_requests").select("id", { count: "exact", head: true }) as any)
+            .eq("site_id", site.id)
+            .eq("status", "pending");
           if (error) throw error;
           return count ?? 0;
         };
         const fetchW = async () => {
-          const { count, error } = await (supabase.from("property_views").select("id", { count: "exact", head: true }) as any).eq("site_id", site.id).gte("created_at", isoWeek);
+          const { count, error } = await (supabase.from("property_views").select("id", { count: "exact", head: true }) as any)
+            .eq("site_id", site.id)
+            .gte("created_at", isoWeek);
           if (error) throw error;
           return count ?? 0;
         };
@@ -76,12 +70,11 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
           newContacts: cCount,
           pendingVisits: vCount,
           weekViews: wCount,
-          priceDrops: properties.filter((p) => !!p.previous_price && p.previous_price > p.price).length,
+          priceDrops: properties.filter((p) => !!p.previous_price && Number(p.previous_price) > Number(p.price)).length,
           exclusives: properties.filter((p) => p.exclusive).length,
         };
 
         setStats(newStats);
-        localStorage.setItem(cacheKey, JSON.stringify({ data: newStats, timestamp: Date.now() }));
       } catch (e) {
         console.error("Dashboard stats error", e);
       } finally {

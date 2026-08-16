@@ -221,7 +221,6 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     const query = supabase.from("properties").select("id, code, title, address, neighborhood, city, price, area, bedrooms, suites, bathrooms, parking, type, description, amenities, images, exclusive, featured, category, status, video_tour_url, previous_price, site_id").limit(100);
     const { data, error } = await (query as any)
       .eq("site_id", site.id)
-      .eq("status", "disponivel")
       .order("created_at", { ascending: false });
       
     if (data && !error) {
