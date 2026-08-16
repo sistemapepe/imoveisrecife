@@ -202,8 +202,8 @@ export default function LeadCaptureModal({
                 </p>
 
                 <div>
-                  <label htmlFor="lead-name" className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-muted-foreground">
-                    {settings.leadModalNameLabel} <span className="text-destructive">*</span>
+                  <label htmlFor="lead-name" className="block text-[10px] font-extrabold mb-2 uppercase tracking-[0.2em] text-accent/70 px-1">
+                    {settings.leadModalNameLabel} <span className="text-accent">*</span>
                   </label>
                   <input
                     id="lead-name"
