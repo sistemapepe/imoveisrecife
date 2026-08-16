@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
-import PageTransition from "@/components/PageTransition";
+
 import SEOHead from "@/components/SEOHead";
 
 export default function Login() {
@@ -33,7 +33,7 @@ export default function Login() {
   };
 
   return (
-    <PageTransition>
+    <>
       <SEOHead title="Login" description="Acesse o painel administrativo de gestão de imóveis." noIndex />
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -132,6 +132,6 @@ export default function Login() {
           </div>
         </motion.div>
       </div>
-    </PageTransition>
+    </>
   );
 }
