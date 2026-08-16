@@ -224,8 +224,7 @@ export default function Admin() {
   const currentTabLabel = visibleTabs.find((t) => t.key === tab)?.label ?? "Painel";
 
   return (
-    <PageTransition>
-      <div className="min-h-screen bg-background pb-8">
+    <div className="min-h-screen bg-background pb-8">
         <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">
             <div className="flex items-center">
@@ -782,6 +781,5 @@ export default function Admin() {
           </DialogContent>
         </Dialog>
       </div>
-    </PageTransition>
   );
 }
