@@ -82,7 +82,7 @@ export default function NetworkDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
           >
-            <Card className="bg-luxury-dark-lighter/40 border-white/5 hover:border-accent/30 transition-all group overflow-hidden relative">
+            <Card className="bg-[#0d1419] border-white/5 hover:border-accent/30 transition-all group overflow-hidden relative rounded-[2rem] premium-shadow-hover">
               <CardContent className="p-8">
                 <div className="flex justify-between items-start mb-4">
                   <div className={`p-3 rounded-2xl bg-white/5 group-hover:scale-110 transition-transform ${stat.color}`}>
