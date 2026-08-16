@@ -139,9 +139,9 @@ export default function Filters() {
               ))}
             </div>
           </section>
-          <div className="h-px bg-border mx-4 my-6" />
+          <div className="h-px bg-white/5 mx-4 my-8" />
           <section className="px-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-4">Vagas de Garagem</h3>
+            <h3 className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-accent/70 mb-5 px-1">Vagas de Garagem</h3>
             <div className="grid grid-cols-5 gap-2">
               {parkingOptions.map((p) => (
                 <button key={p} onClick={() => setSelectedParking(p)} className={`aspect-square flex items-center justify-center rounded-lg border text-sm font-bold ${selectedParking === p ? "border-primary bg-primary/10 text-primary" : "border-border bg-card"}`}>{p}</button>
