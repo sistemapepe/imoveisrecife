@@ -588,10 +588,10 @@ export default function Index() {
                       <span className="text-accent text-[9px] font-extrabold uppercase tracking-[0.4em] mb-2 px-1">Em destaque</span>
                       <h3 className="font-serif text-3xl md:text-4xl text-white leading-tight mb-2 tracking-tight">{properties[0].title}</h3>
                       {settings.showLocationOnCard && (
-                        <p className="text-card/70 text-sm mb-4">{properties[0].neighborhood} · {properties[0].city}</p>
+                        <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-6 px-1">{properties[0].neighborhood} · {properties[0].city}</p>
                       )}
-                      <span className="inline-flex items-center gap-2 text-accent font-bold text-sm uppercase tracking-wider group-hover:gap-3 transition-all">
-                        Saiba mais <ArrowRight className="h-4 w-4" />
+                      <span className="inline-flex items-center gap-3 text-white font-extrabold text-[10px] uppercase tracking-[0.25em] group-hover:text-accent transition-all px-1">
+                        Saiba mais <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-2" />
                       </span>
                     </div>
                   </motion.div>
