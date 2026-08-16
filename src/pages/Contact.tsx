@@ -147,7 +147,7 @@ export default function Contact() {
               href={`https://wa.me/${settings.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 w-full border border-whatsapp text-whatsapp font-bold py-4 rounded-sm uppercase tracking-[0.2em] text-xs transition-all hover:bg-whatsapp/5"
+              className="flex items-center justify-center gap-3 w-full border border-whatsapp/30 text-whatsapp font-extrabold py-5 rounded-2xl uppercase tracking-[0.2em] text-[10px] transition-all hover:bg-whatsapp/5 active:scale-[0.98] shadow-lg shadow-whatsapp/5"
             >
               💬 Falar pelo WhatsApp
             </a>
