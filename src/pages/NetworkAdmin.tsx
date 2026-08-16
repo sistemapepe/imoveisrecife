@@ -48,10 +48,13 @@ export default function NetworkAdmin() {
   // Persistence and synchronization
   useEffect(() => {
     sessionStorage.setItem("network_active_tab", tab);
-    if (searchParams.get("tab") !== tab) {
+    // Evita loop de renderização verificando se a URL já está correta
+    const currentUrlTab = new URLSearchParams(window.location.search).get("tab");
+    if (currentUrlTab !== tab) {
       setSearchParams({ tab }, { replace: true });
     }
-  }, [tab, searchParams, setSearchParams]);
+  }, [tab, setSearchParams]);
+
 
   // Components map for prefetching
   const componentsMap = useMemo(() => ({

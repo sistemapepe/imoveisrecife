@@ -112,6 +112,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
       
+      const isNetworkPath = window.location.pathname.startsWith('/network-admin');
+
       // Verifica cache de super_admin global para resposta instantânea
       const cachedSuperAdmin = sessionStorage.getItem(`is_global_super_admin_${userId}`);
       if (cachedSuperAdmin === 'true') {
@@ -120,10 +122,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setLoading(false);
           setIsInitializing(false);
         }
-        // Background check to verify if still super_admin
       }
 
-      if (!site?.id && siteLoading) {
+      // Se for caminho de rede, precisamos garantir que o checkRole não trave esperando o site
+      if (!site?.id && siteLoading && !isNetworkPath) {
         logger.warn("Site not resolved yet in checkRole, checking global super_admin first...");
         
         const { data: superAdminCheck } = await supabase
@@ -153,6 +155,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
       }
+
       
       const { data, error } = await supabase
         .from("user_roles")
