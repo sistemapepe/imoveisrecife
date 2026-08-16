@@ -66,7 +66,7 @@ function AppContent() {
             <Route path="/filtros" element={<Filters />} />
             <Route path="/contato" element={<Contact />} />
             <Route path="/favoritos" element={<Favorites />} />
-            <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+            <Route path="/admin/*" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/privacidade" element={<PrivacyPolicy />} />
             <Route path="*" element={<NotFound />} />
