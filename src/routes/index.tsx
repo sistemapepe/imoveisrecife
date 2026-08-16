@@ -172,6 +172,17 @@ export default function Index() {
                 <CheckCircle2 className="w-4 h-4" /> Garantir que apenas o Super Admin tenha acesso à tela de Configurações de Rede e que permissões sejam verificadas antes do carregamento completo da página.
               </div>
             </div>
+            <div className="flex flex-col gap-4 mt-6 p-4 bg-accent/5 border border-accent/20 rounded-2xl">
+              <div className="flex items-center gap-2 text-accent font-bold text-[10px] uppercase tracking-wider mb-2 opacity-70">
+                Próximos Passos (Network)
+              </div>
+              <div className="flex items-center gap-2 text-accent font-bold">
+                <ArrowRight className="w-4 h-4" /> Configure alertas e uma página de status do Network Admin com indicadores de integridade e falhas do sistema em tempo real.
+              </div>
+              <div className="flex items-center gap-2 text-accent font-bold">
+                <ArrowRight className="w-4 h-4" /> Adicione testes automatizados para o Network Admin cobrindo leitura, edição e persistência das configurações globais via Supabase.
+              </div>
+            </div>
           </div>
         </div>
       </section>
