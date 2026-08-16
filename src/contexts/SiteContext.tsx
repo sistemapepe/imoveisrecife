@@ -23,6 +23,13 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
 
   const resolveSite = useCallback(async () => {
     logger.startTimer("resolveSite");
+    const pathname = window.location.pathname;
+    const isNetworkPath = pathname.startsWith('/network-admin');
+    const isAdminPath = pathname.startsWith('/admin');
+    const isLoginPath = pathname === '/login';
+    
+    // Para rotas administrativas, não bloqueia o carregamento por erro de domínio
+    const isManagementPath = isNetworkPath || isAdminPath || isLoginPath;
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const siteIdParam = urlParams.get('site_id');
@@ -59,6 +66,9 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
       if (siteError) throw siteError;
 
       if (!data) {
+        if (!isManagementPath) {
+          setError("Domínio não configurado na plataforma.");
+        }
         if (hostname.includes('lovable.app') && !siteIdParam) {
           const { data: localhostSite } = await supabase
             .from('sites' as any)
@@ -81,7 +91,9 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (err) {
       logger.error("Failed to resolve site", { domain: window.location.hostname }, err as Error);
-      setError("Erro ao carregar configurações do site.");
+      if (!isManagementPath) {
+        setError("Erro ao carregar configurações do site.");
+      }
       setSite(null);
     } finally {
       logger.endTimer("resolveSite", { domain: window.location.hostname });

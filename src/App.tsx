@@ -58,7 +58,7 @@ function AppContent() {
   const isPropertyDetail = location.pathname.startsWith('/imovel/');
   const isNetworkPath = location.pathname.startsWith('/network-admin');
 
-  if (siteLoading && !isNetworkPath) return <PageLoader />;
+  if (siteLoading && !isNetworkPath && !location.pathname.startsWith('/admin')) return <PageLoader />;
   
   return (
     <div ref={undefined} className="max-w-screen-lg mx-auto relative min-h-screen">

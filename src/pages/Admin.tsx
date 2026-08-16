@@ -140,7 +140,10 @@ export default function Admin() {
     return () => clearInterval(interval);
   }, [isAdmin, role, tab]);
 
-  if (authLoading) return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
+  if (authLoading) return <div className="min-h-screen flex flex-col items-center justify-center bg-luxury-dark text-accent space-y-4">
+    <Loader2 className="h-10 w-10 animate-spin" />
+    <span className="text-xs uppercase tracking-widest opacity-50">Carregando Painel Administrativo...</span>
+  </div>;
   if (!user) return null;
 
   const startEdit = (p: Property) => {
