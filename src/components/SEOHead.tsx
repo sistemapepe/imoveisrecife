@@ -13,8 +13,7 @@ interface SEOHeadProps {
   jsonLd?: Record<string, any> | Record<string, any>[];
 }
 
-import React from "react";
-export const SEOHead = React.forwardRef<HTMLDivElement, SEOHeadProps>((props, ref) => {
+export const SEOHead = (props: SEOHeadProps) => {
   const {
     title,
     description,
@@ -83,5 +82,6 @@ export const SEOHead = React.forwardRef<HTMLDivElement, SEOHeadProps>((props, re
       ))}
     </Helmet>
   );
-});
+};
+
 export default SEOHead;
