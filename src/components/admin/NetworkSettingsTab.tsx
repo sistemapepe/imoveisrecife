@@ -155,13 +155,13 @@ export default function NetworkSettingsTab() {
                     type="color" 
                     value={themeDefaults.primary} 
                     onChange={(e) => handleUpdateSetting('theme_defaults', { ...themeDefaults, primary: e.target.value })}
-                    className="w-12 h-10 p-1 bg-transparent border-white/10"
+                    className="w-12 h-10 p-1 bg-black/40 border-white/10"
                   />
                   <Input 
                     type="text" 
                     value={themeDefaults.primary} 
                     onChange={(e) => handleUpdateSetting('theme_defaults', { ...themeDefaults, primary: e.target.value })}
-                    className="bg-black/20 border-white/10 font-mono"
+                    className="bg-black/40 border-white/10 font-mono text-card"
                   />
                 </div>
               </div>
