@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy, ArrowRight, Rocket, Eye, AlertCircle, Clock } from "lucide-react";
+import { Globe, Plus, Trash2, CheckCircle2, XCircle, Copy, ArrowRight, Rocket, Eye, AlertCircle, Clock, RefreshCw } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
