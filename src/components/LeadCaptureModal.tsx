@@ -161,7 +161,7 @@ export default function LeadCaptureModal({
           className="fixed inset-0 z-[100] bg-foreground/60 backdrop-blur-sm"
           onClick={onClose}
         >
-          <div className="fixed inset-0 flex items-center justify-center overflow-y-auto px-4 py-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] pointer-events-none">
+          <div className="fixed inset-0 flex items-center justify-center overflow-y-auto px-4 py-[max(1rem,env(safe-area-inset-top))] pb-[max(5rem,env(safe-area-inset-bottom))] pointer-events-none">
             <motion.div
               role="dialog"
               aria-modal="true"
