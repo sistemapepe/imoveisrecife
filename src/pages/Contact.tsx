@@ -4,7 +4,7 @@ import { Verified, ArrowLeft } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import PageTransition from "@/components/PageTransition";
+
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -52,7 +52,7 @@ export default function Contact() {
   };
 
   return (
-    <PageTransition>
+    <>
       <SEOHead title="Contato" description="Entre em contato com nossa equipe de corretores especializados em imóveis de luxo em Recife." />
       <div className="relative flex min-h-screen w-full flex-col pb-32 bg-background max-w-screen-lg mx-auto">
         <Navbar />
@@ -156,6 +156,6 @@ export default function Contact() {
 
         <Footer />
       </div>
-    </PageTransition>
+    </>
   );
 }
