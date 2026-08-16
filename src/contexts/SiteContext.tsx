@@ -34,9 +34,12 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         const cacheKey = `site_resolved_${siteIdParam}`;
         const cached = sessionStorage.getItem(cacheKey);
         if (cached) {
-          setSite(JSON.parse(cached));
-          setLoading(false);
-          return;
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.id) {
+            setSite(parsed);
+            setLoading(false);
+            return;
+          }
         }
         query = query.eq('id', siteIdParam);
       } else {
@@ -44,9 +47,12 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         const cacheKey = `site_resolved_${domainToSearch}`;
         const cached = sessionStorage.getItem(cacheKey);
         if (cached) {
-          setSite(JSON.parse(cached));
-          setLoading(false);
-          return;
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.id) {
+            setSite(parsed);
+            setLoading(false);
+            return;
+          }
         }
         query = query.eq('domain', domainToSearch);
       }
