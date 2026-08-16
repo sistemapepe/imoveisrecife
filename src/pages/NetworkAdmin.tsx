@@ -204,7 +204,7 @@ export default function NetworkAdmin() {
                   key={item.key}
                   onClick={() => switchTab(item.key as NetworkTab)}
                   onMouseEnter={() => prefetchTab(item.key as NetworkTab)}
-                  className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl font-bold transition-all duration-300 relative group ${
+                  className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl font-extrabold transition-all duration-300 relative group ${
                     active 
                       ? "bg-accent text-luxury-dark shadow-xl shadow-accent/20" 
                       : "text-accent/50 hover:text-accent hover:bg-white/5"
