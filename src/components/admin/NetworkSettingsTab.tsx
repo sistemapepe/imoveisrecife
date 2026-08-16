@@ -109,7 +109,7 @@ export default function NetworkSettingsTab() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/5 pb-8">
         <div>
           <h2 className="text-3xl font-serif font-bold text-accent">Configurações de Rede</h2>
-          <p className="text-muted-foreground">Gerencie temas globais e limites de recursos para toda a rede.</p>
+          <p className="text-accent/70">Gerencie temas globais e limites de recursos para toda a rede.</p>
         </div>
         <div className="flex items-center gap-3">
           <Button 
@@ -161,7 +161,7 @@ export default function NetworkSettingsTab() {
                     type="text" 
                     value={themeDefaults.primary} 
                     onChange={(e) => handleUpdateSetting('theme_defaults', { ...themeDefaults, primary: e.target.value })}
-                    className="bg-black/40 border-white/10 font-mono text-card"
+                    className="bg-black/40 border-white/10 font-mono text-accent"
                   />
                 </div>
               </div>
@@ -178,7 +178,7 @@ export default function NetworkSettingsTab() {
                     type="text" 
                     value={themeDefaults.accent || "#b89b5e"} 
                     onChange={(e) => handleUpdateSetting('theme_defaults', { ...themeDefaults, accent: e.target.value })}
-                    className="bg-black/40 border-white/10 font-mono text-card"
+                    className="bg-black/40 border-white/10 font-mono text-accent"
                   />
                 </div>
               </div>
@@ -211,7 +211,7 @@ export default function NetworkSettingsTab() {
                   type="number" 
                   value={resourceLimits.max_properties_per_site} 
                   onChange={(e) => handleUpdateSetting('resource_limits', { ...resourceLimits, max_properties_per_site: parseInt(e.target.value) })}
-                  className="bg-black/40 border-white/10 text-card"
+                  className="bg-black/40 border-white/10 text-accent"
                 />
               </div>
               <div className="space-y-2">
@@ -220,7 +220,7 @@ export default function NetworkSettingsTab() {
                   type="number" 
                   value={resourceLimits.max_users_per_site} 
                   onChange={(e) => handleUpdateSetting('resource_limits', { ...resourceLimits, max_users_per_site: parseInt(e.target.value) })}
-                  className="bg-black/40 border-white/10 text-card"
+                  className="bg-black/40 border-white/10 text-accent"
                 />
               </div>
             </div>
