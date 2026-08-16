@@ -420,7 +420,7 @@ export default function Index() {
             </section>
 
             {/* Inline Filters - Minimal top bar */}
-            <div className="sticky top-[var(--navbar-height)] z-40 bg-luxury-dark/95 backdrop-blur-xl border-b border-card/10 shadow-lg transition-all duration-300">
+            <div className="sticky top-[var(--navbar-height)] z-40 glass-nav border-b border-white/5 transition-all duration-300">
               <div className="flex overflow-x-auto hide-scrollbar gap-1.5 px-3 py-2">
                 {typeFilters.map(({ label, short, icon: Icon }) => (
                   <button
