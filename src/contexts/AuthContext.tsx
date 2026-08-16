@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const checkRole = useCallback(async (userId: string, mounted = true) => {
+  const checkRole = useCallback(async (userId: string, mounted = true, retryCount = 0) => {
     logger.startTimer("checkRole");
     try {
       logger.info("Checking user role", { userId, siteId: site?.id });
@@ -148,11 +148,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        if (cachedSuperAdmin !== 'true') {
-          logger.warn("Not a global super_admin or check failed, will retry checkRole when site is ready.");
+        if (cachedSuperAdmin !== 'true' && retryCount < 5) {
+          logger.warn("Site not resolved, retrying role check...", { retryCount });
           setTimeout(() => {
-            if (mounted) checkRole(userId, mounted);
-          }, 800);
+            if (mounted) checkRole(userId, mounted, retryCount + 1);
+          }, 1000);
           return;
         }
       }
