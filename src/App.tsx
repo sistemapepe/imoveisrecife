@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
+
 import { HelmetProvider } from "react-helmet-async";
 import { Globe2 } from "lucide-react";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -41,6 +41,7 @@ const PageLoader = React.forwardRef<HTMLDivElement>((props, ref) => (
     <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
   </div>
 ));
+PageLoader.displayName = "PageLoader";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -106,25 +107,29 @@ function AppContent() {
   );
 }
 
-export default function App() {
+const App = () => {
   return (
-    <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <SiteProvider>
-            <AuthProvider>
-              <PropertyProvider>
-                <Toaster />
-                <Sonner />
-                <DynamicTheme />
-                <BrowserRouter>
-                  <AppContent />
-                </BrowserRouter>
-              </PropertyProvider>
-            </AuthProvider>
-          </SiteProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </HelmetProvider>
+    <div>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <SiteProvider>
+              <AuthProvider>
+                <PropertyProvider>
+                  <Toaster />
+                  <Sonner />
+                  <DynamicTheme />
+                  <BrowserRouter>
+                    <AppContent />
+                  </BrowserRouter>
+                </PropertyProvider>
+              </AuthProvider>
+            </SiteProvider>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </HelmetProvider>
+    </div>
   );
-}
+};
+
+export default App;

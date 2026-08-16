@@ -754,14 +754,11 @@ export default function Admin() {
             {tab === "performance" && canViewAnalytics && (
               <PerformanceTab />
             )}
-          </Suspense>
 
-
-          {tab === "security" && (
-            <Suspense fallback={<div className="p-8 text-center animate-pulse text-muted-foreground italic">Carregando diagnóstico...</div>}>
+            {tab === "security" && (
               <SecurityDiagnosticTab />
-            </Suspense>
-          )}
+            )}
+          </Suspense>
           </main>
         </div>
 

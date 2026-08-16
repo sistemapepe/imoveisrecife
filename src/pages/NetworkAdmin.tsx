@@ -213,8 +213,7 @@ export default function NetworkAdmin() {
                   <Icon className={`h-5 w-5 transition-transform group-hover:scale-110 ${active ? "scale-110" : ""}`} />
                   <span className="text-[10px] uppercase tracking-[0.2em]">{item.label}</span>
                   {active && (
-                    <motion.div 
-                      layoutId="activeNetworkTab"
+                    <div 
                       className="absolute left-0 w-1 h-6 bg-luxury-dark rounded-full"
                     />
                   )}
@@ -243,36 +242,22 @@ export default function NetworkAdmin() {
 
         {/* Main Content */}
         <main className="flex-1 p-6 md:p-12 overflow-y-auto max-w-7xl mx-auto w-full relative">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={tab}
-              initial={{ opacity: 0, x: 20, filter: "blur(10px)" }}
-              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, x: -20, filter: "blur(10px)" }}
-              transition={{ 
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-                opacity: { duration: 0.15 } // Transição mais rápida
-              }}
-              className="w-full"
-            >
-              <Suspense fallback={
-                <div className="flex flex-col items-center justify-center py-20 space-y-4">
-                  <Loader2 className="h-8 w-8 animate-spin text-accent opacity-50" />
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/30">Carregando Aba</p>
-                </div>
-              }>
-                {tab === "dashboard" && <NetworkDashboard />}
-                {tab === "sites" && <SitesTab />}
-                {tab === "users" && <UsersTab isNetwork={true} />}
-                {tab === "analytics" && <AnalyticsTab isNetwork={true} />}
-                {tab === "import" && <BulkImportTab />}
-                {tab === "security" && <SecurityDiagnosticTab />}
-                {tab === "settings" && <NetworkSettingsTab />}
-              </Suspense>
-            </motion.div>
-          </AnimatePresence>
+          <div className="w-full">
+            <Suspense fallback={
+              <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                <Loader2 className="h-8 w-8 animate-spin text-accent opacity-50" />
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/30">Carregando Aba</p>
+              </div>
+            }>
+              {tab === "dashboard" && <NetworkDashboard />}
+              {tab === "sites" && <SitesTab />}
+              {tab === "users" && <UsersTab isNetwork={true} />}
+              {tab === "analytics" && <AnalyticsTab isNetwork={true} />}
+              {tab === "import" && <BulkImportTab />}
+              {tab === "security" && <SecurityDiagnosticTab />}
+              {tab === "settings" && <NetworkSettingsTab />}
+            </Suspense>
+          </div>
           
           {isPending && (
             <div className="absolute top-4 right-4">
