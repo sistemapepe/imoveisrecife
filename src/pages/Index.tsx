@@ -174,7 +174,7 @@ export default function Index() {
   ].filter(Boolean) as Record<string, any>[];
 
   return (
-    <PageTransition>
+    <div className="contents">
       <SEOHead
         title={settings.heroTitle}
         description={`${settings.brandName} — Imóveis de alto padrão em Recife e região. Encontre casas, apartamentos, coberturas e terrenos exclusivos com atendimento personalizado.`}
@@ -628,6 +628,6 @@ export default function Index() {
         )}
         </AnimatePresence>
       </div>
-    </PageTransition>
+    </div>
   );
 }
