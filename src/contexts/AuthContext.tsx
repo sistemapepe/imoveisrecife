@@ -115,7 +115,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       const pathname = window.location.pathname;
       const isNetworkPath = pathname.startsWith('/network-admin');
-      const isLoginPath = pathname === '/login';
+      const isLoginPath = pathname.startsWith('/login');
       const isAdminPath = pathname.startsWith('/admin');
 
       // Se for um super_admin global já cacheado, libera o carregamento instantaneamente
