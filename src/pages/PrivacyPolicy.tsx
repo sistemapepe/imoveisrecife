@@ -2,7 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BackButton from "@/components/BackButton";
 import { useProperties } from "@/contexts/PropertyContext";
-
+import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -41,7 +41,7 @@ export default function PrivacyPolicy() {
   const content = settings.privacyPolicy || defaultPolicy;
 
   return (
-    <>
+    <PageTransition>
       <SEOHead title="Política de Privacidade" description="Política de privacidade e proteção de dados - LGPD" />
       <div className="min-h-screen bg-background pb-24 max-w-screen-lg mx-auto">
         <Navbar />
@@ -62,6 +62,6 @@ export default function PrivacyPolicy() {
         </div>
         <Footer />
       </div>
-    </>
+    </PageTransition>
   );
 }

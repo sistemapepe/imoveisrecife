@@ -1,34 +1,32 @@
-import { useState, useEffect, useCallback, useTransition, Suspense, lazy } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect, useCallback } from "react";
+import SettingsTab from "@/components/admin/SettingsTab";
+import UsersTab from "@/components/admin/UsersTab";
+import MessagesTab from "@/components/admin/MessagesTab";
+import PrivacyTab from "@/components/admin/PrivacyTab";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap } from "lucide-react";
+import BackButton from "@/components/BackButton";
+import ImageUpload from "@/components/ImageUpload";
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Globe2, Shield } from "lucide-react";
-import BackButton from "@/components/BackButton";
-import ImageUpload from "@/components/ImageUpload";
+import { supabase } from "@/integrations/supabase/client";
 import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
+import PageTransition from "@/components/PageTransition";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
-const DashboardTab = lazy(() => import("@/components/admin/DashboardTab"));
-const BucketAccessTab = lazy(() => import("@/components/admin/BucketAccessTab"));
-const SettingsTab = lazy(() => import("@/components/admin/SettingsTab"));
-const UsersTab = lazy(() => import("@/components/admin/UsersTab"));
-const MessagesTab = lazy(() => import("@/components/admin/MessagesTab"));
-const PrivacyTab = lazy(() => import("@/components/admin/PrivacyTab"));
+import AnalyticsTab from "@/components/admin/AnalyticsTab";
+import VisitsTab from "@/components/admin/VisitsTab";
+import TrafficTab from "@/components/admin/TrafficTab";
+import DashboardTab from "@/components/admin/DashboardTab";
+import SeoAuditTab from "@/components/admin/SeoAuditTab";
+import BucketAccessTab from "@/components/admin/BucketAccessTab";
+import BulkImportTab from "@/components/admin/BulkImportTab";
+import PerformanceTab from "@/components/admin/PerformanceTab";
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security";
-
-// Lazy loaded for performance optimization
-const SecurityDiagnosticTab = lazy(() => import("@/components/admin/SecurityDiagnosticTab"));
-const AnalyticsTab = lazy(() => import("@/components/admin/AnalyticsTab"));
-const VisitsTab = lazy(() => import("@/components/admin/VisitsTab"));
-const TrafficTab = lazy(() => import("@/components/admin/TrafficTab"));
-const PerformanceTab = lazy(() => import("@/components/admin/PerformanceTab"));
-const BulkImportTab = lazy(() => import("@/components/admin/BulkImportTab"));
-const SeoAuditTab = lazy(() => import("@/components/admin/SeoAuditTab"));
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -66,7 +64,6 @@ export default function Admin() {
   const [generatingSeo, setGeneratingSeo] = useState(false);
   const [cepLoading, setCepLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
 
   const DEFAULT_CATEGORIES = ["Venda", "Locação", "Temporada", "Repasse"];
   const [categories, setCategories] = useState<string[]>(() => {
@@ -140,10 +137,7 @@ export default function Admin() {
     return () => clearInterval(interval);
   }, [isAdmin, role, tab]);
 
-  if (authLoading) return <div className="min-h-screen flex flex-col items-center justify-center bg-luxury-dark text-accent space-y-4">
-    <Loader2 className="h-10 w-10 animate-spin" />
-    <span className="text-xs uppercase tracking-widest opacity-50">Carregando Painel Administrativo...</span>
-  </div>;
+  if (authLoading) return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
   if (!user) return null;
 
   const startEdit = (p: Property) => {
@@ -186,9 +180,7 @@ export default function Admin() {
 
   const handleSignOut = async () => {
     await signOut();
-    startTransition(() => {
-      navigate("/");
-    });
+    navigate("/");
   };
 
   const allTabs: { key: Tab; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = [
@@ -205,37 +197,29 @@ export default function Admin() {
     { key: "bucket", label: "Imagens (Acesso)", icon: ImageIcon, show: !!canManageBucket },
     { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
-    { key: "security", label: "Segurança", icon: Shield, show: true },
   ];
-  const networkTabs: { key: string; label: string; icon: typeof Settings; show: boolean; badge?: number }[] = [];
-  
-  const visibleTabs = [...allTabs.filter((t) => t.show), ...networkTabs];
+  const visibleTabs = allTabs.filter((t) => t.show);
 
-  const switchTab = (newTab: any) => {
-    if (newTab === 'sites') {
-      navigate("/network-admin");
-      return;
-    }
-    startTransition(() => {
-      setTab(newTab);
-      setEditing(null);
-      setCreating(false);
-      if (newTab === "messages") setNewMsgCount(0);
-      setMobileMenuOpen(false);
-    });
+  const switchTab = (newTab: Tab) => {
+    setTab(newTab);
+    setEditing(null);
+    setCreating(false);
+    if (newTab === "messages") setNewMsgCount(0);
+    setMobileMenuOpen(false);
   };
 
   const currentTabLabel = visibleTabs.find((t) => t.key === tab)?.label ?? "Painel";
 
   return (
-    <div className="min-h-screen bg-[#0d1419] pb-8 relative">
-        <header className="sticky top-0 z-50 bg-[#0d1419]/90 backdrop-blur-3xl border-b border-white/5 shadow-xl">
+    <PageTransition>
+      <div className="min-h-screen bg-background pb-8">
+        <header className="sticky top-0 z-50 glass-header border-b border-border">
           <div className="flex items-center justify-between px-4 h-14">
             <div className="flex items-center">
               <BackButton variant="ghost" onClick={() => navigate("/")} />
               {/* Removido botão de menu mobile lateral conforme solicitado */}
             </div>
-            <h1 className="text-sm md:text-base font-serif font-bold tracking-[0.2em] uppercase text-accent px-2">
+            <h1 className="text-base md:text-lg font-bold truncate px-2">
               <span className="md:hidden">{currentTabLabel}</span>
               <span className="hidden md:inline">Painel {role === "super_admin" ? "Super Admin" : role === "admin" ? "Admin" : role === "supervisor" ? "Supervisor" : "Corretor"}</span>
             </h1>
@@ -268,64 +252,22 @@ export default function Admin() {
 
         <div className="md:flex md:items-start">
           {/* Vertical sidebar (desktop) */}
-          <aside className="hidden md:flex md:flex-col sticky top-14 self-start h-[calc(100vh-3.5rem)] w-60 shrink-0 border-r border-white/5 bg-[#0d1419] overflow-y-auto py-6 transform transition-transform duration-300">
+          <aside className="hidden md:flex md:flex-col sticky top-14 self-start h-[calc(100vh-3.5rem)] w-56 shrink-0 border-r border-border bg-card/40 overflow-y-auto py-3">
             <nav className="flex flex-col gap-1 px-2">
               {visibleTabs.map((t) => {
                 const Icon = t.icon;
                 const active = tab === t.key;
-                const componentMap: Record<string, any> = {
-                  dashboard: DashboardTab,
-                  bucket: BucketAccessTab,
-                  settings: SettingsTab,
-                  users: UsersTab,
-                  messages: MessagesTab,
-                  privacy: PrivacyTab,
-                  security: SecurityDiagnosticTab,
-                  analytics: AnalyticsTab,
-                  visits: VisitsTab,
-                  traffic: TrafficTab,
-                  performance: PerformanceTab,
-                  import: BulkImportTab,
-                  seo: SeoAuditTab,
-                };
-
-                if (t.key === 'sites' && isSuperAdmin) {
-                  return (
-                    <button
-                      key={t.key}
-                      onClick={() => navigate("/network-admin")}
-                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-accent hover:bg-accent/10 border-l-2 border-transparent transition-all"
-                    >
-                      <Icon className="h-4 w-4 shrink-0" />
-                      <span className="truncate flex-1 text-left">{t.label} (Rede)</span>
-                      <ArrowRight className="h-3 w-3 opacity-50" />
-                    </button>
-                  );
-                }
-
                 return (
                   <button
                     key={t.key}
                     onClick={() => switchTab(t.key)}
-                    onMouseEnter={() => {
-                      // Prefetch the component on hover
-                      const loader = componentMap[t.key] as any;
-                      if (loader && typeof loader === 'function') {
-                        try { 
-                          // React lazy components have a _payload or similar if we want to be deep, 
-                          // but just calling the factory function triggers the dynamic import.
-                          const factory = (loader as any)._payload?._result || loader;
-                          if (typeof factory === 'function') factory(); 
-                        } catch(e) {}
-                      }
-                    }}
-                    className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-[10px] font-extrabold uppercase tracking-widest transition-all duration-300 ${
+                    className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
                       active
-                        ? "bg-accent text-luxury-dark shadow-xl shadow-accent/20 translate-x-1"
-                        : "text-accent/60 hover:text-accent hover:bg-white/5"
+                        ? "bg-primary/15 text-primary border-l-2 border-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/60 border-l-2 border-transparent"
                     }`}
                   >
-                    <Icon className={`h-4 w-4 shrink-0 transition-transform ${active ? "scale-110" : "group-hover:scale-110"}`} />
+                    <Icon className="h-4 w-4 shrink-0" />
                     <span className="truncate flex-1 text-left">{t.label}</span>
                     {!!t.badge && t.badge > 0 && (
                       <span className="h-4 min-w-[16px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
@@ -340,11 +282,9 @@ export default function Admin() {
 
           <main className="flex-1 min-w-0 p-4">
 
-          <Suspense fallback={<div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
-            {tab === "dashboard" && (
-              <DashboardTab onNavigate={(t) => switchTab(t)} />
-            )}
-          </Suspense>
+          {tab === "dashboard" && (
+            <DashboardTab onNavigate={(t) => switchTab(t)} />
+          )}
 
           {tab === "properties" && !editing && !creating && (
             <div className="space-y-4">
@@ -718,52 +658,45 @@ export default function Admin() {
             <SettingsTab settings={settings} updateSettings={updateSettings} />
           )}
 
-          <Suspense fallback={<div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
-            {tab === "privacy" && canManagePrivacy && (
-              <PrivacyTab settings={settings} updateSettings={updateSettings} />
-            )}
+          {tab === "privacy" && canManagePrivacy && (
+            <PrivacyTab settings={settings} updateSettings={updateSettings} />
+          )}
 
-            {tab === "bucket" && canManageBucket && (
-              <BucketAccessTab settings={settings} updateSettings={updateSettings} />
-            )}
+          {tab === "bucket" && canManageBucket && (
+            <BucketAccessTab settings={settings} updateSettings={updateSettings} />
+          )}
 
-            {tab === "users" && canManageUsers && (
-              <UsersTab />
-            )}
+          {tab === "users" && canManageUsers && (
+            <UsersTab />
+          )}
 
+          {tab === "messages" && canViewContacts && (
+            <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
+          )}
 
-            {tab === "messages" && canViewContacts && (
-              <MessagesTab onNewMessage={() => { if (tab !== "messages") setNewMsgCount((c) => c + 1); }} />
-            )}
+          {tab === "analytics" && canViewAnalytics && (
+            <AnalyticsTab />
+          )}
 
-            {tab === "analytics" && canViewAnalytics && (
-              <AnalyticsTab />
-            )}
+          {tab === "visits" && canViewVisits && (
+            <VisitsTab />
+          )}
 
-            {tab === "visits" && canViewVisits && (
-              <VisitsTab />
-            )}
+          {tab === "traffic" && canViewTraffic && (
+            <TrafficTab />
+          )}
 
-            {tab === "traffic" && canViewTraffic && (
-              <TrafficTab />
-            )}
+          {tab === "seo" && canManageSeo && (
+            <SeoAuditTab />
+          )}
 
-            {tab === "seo" && canManageSeo && (
-              <SeoAuditTab />
-            )}
+          {tab === "import" && canBulkImport && (
+            <BulkImportTab />
+          )}
 
-            {tab === "import" && canBulkImport && (
-              <BulkImportTab />
-            )}
-
-            {tab === "performance" && canViewAnalytics && (
-              <PerformanceTab />
-            )}
-
-            {tab === "security" && (
-              <SecurityDiagnosticTab />
-            )}
-          </Suspense>
+          {tab === "performance" && canViewAnalytics && (
+            <PerformanceTab />
+          )}
           </main>
         </div>
 
@@ -782,5 +715,6 @@ export default function Admin() {
           </DialogContent>
         </Dialog>
       </div>
+    </PageTransition>
   );
 }

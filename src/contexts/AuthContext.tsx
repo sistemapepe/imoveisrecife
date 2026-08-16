@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/lib/logger";
-import { useSite } from "./SiteContext";
 import type { User } from "@supabase/supabase-js";
 
 type AppRole = "super_admin" | "admin" | "supervisor" | "corretor" | "user";
@@ -27,7 +26,6 @@ interface AuthContextType {
   isSuperAdmin: boolean;
   role: AppRole | null;
   loading: boolean;
-  isInitializing: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signUp: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
@@ -48,8 +46,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { site, loading: siteLoading } = useSite();
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
   const [permissions, setPermissions] = useState<Record<PermissionKey, boolean>>({
@@ -68,7 +65,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     manage_bucket: false,
   });
   const [loading, setLoading] = useState(true);
-  const [isInitializing, setIsInitializing] = useState(true);
 
   const isSuperAdmin = role === "super_admin";
   const isAdmin = isSuperAdmin || role === "admin";
@@ -88,7 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const canManageBucket = isAdmin || permissions.manage_bucket;
 
   const loadPermissions = useCallback(async (userRole: AppRole) => {
-    if (userRole === "super_admin") return;
+    if (userRole === "super_admin") return; // super_admin has all
     try {
       const { data } = await supabase
         .from("role_permissions")
@@ -108,184 +104,54 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const checkRole = useCallback(async (userId: string, mounted = true, startTransition?: React.TransitionStartFunction) => {
-    logger.startTimer("checkRole");
+  const checkRole = async (userId: string) => {
     try {
-      logger.info("Checking user role", { userId, siteId: site?.id });
-      
-      const pathname = window.location.pathname;
-      const isNetworkPath = pathname.startsWith('/network-admin');
-      const isLoginPath = pathname.startsWith('/login');
-      const isAdminPath = pathname.startsWith('/admin');
-
-      // Se for um super_admin global já cacheado, libera o carregamento instantaneamente
-      const cachedSuperAdmin = sessionStorage.getItem(`is_global_super_admin_${userId}`);
-      if (cachedSuperAdmin === 'true') {
-        if (mounted) {
-          const update = () => {
-            setRole("super_admin");
-            setLoading(false);
-            setIsInitializing(false);
-          };
-          startTransition ? startTransition(update) : update();
-        }
-        // Continua para carregar permissões ou validar sessão, mas já destrava a UI
-      }
-
-      // Se estiver no admin com site_id, ou no network-admin, e o site ainda não resolveu,
-      // tenta um check rápido de super_admin para não travar a tela
-      if ((!site?.id || siteLoading) && (isNetworkPath || isLoginPath || isAdminPath)) {
-        try {
-          const { data: superAdminCheck } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", userId)
-            .eq("role", "super_admin")
-            .or("site_id.is.null,site_id.eq.00000000-0000-0000-0000-000000000000")
-            .maybeSingle();
-
-          if (superAdminCheck) {
-            if (mounted) {
-              const update = () => {
-                setRole("super_admin");
-                sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
-                setLoading(false);
-                setIsInitializing(false);
-              };
-              startTransition ? startTransition(update) : update();
-            }
-            return;
-          }
-        } catch (e) {
-          logger.warn("Early super_admin check failed", { userId });
-        }
-      }
-
-
-      const { data, error } = await supabase
-        .from("user_roles")
-        .select("role, site_id")
-        .eq("user_id", userId);
-
-      if (error) throw error;
-
-      let selectedRole: AppRole = "user";
-
-      if (data && data.length > 0) {
-        const globalSuperAdmin = data.find(r => r.role === "super_admin" && (!r.site_id || r.site_id === '00000000-0000-0000-0000-000000000000'));
-        const anySuperAdmin = data.find(r => r.role === "super_admin");
-        
-        if (globalSuperAdmin || anySuperAdmin) {
-          selectedRole = "super_admin";
-          sessionStorage.setItem(`is_global_super_admin_${userId}`, 'true');
-        } else if (site?.id) {
-          const siteSpecific = data.find(r => r.site_id === site.id);
-          selectedRole = siteSpecific ? (siteSpecific.role as AppRole) : (data[0].role as AppRole);
-        } else {
-          selectedRole = data[0].role as AppRole;
-        }
-      }
-
-      if (mounted) {
-        const update = () => {
-          setRole(selectedRole);
-          loadPermissions(selectedRole);
-        };
-        startTransition ? startTransition(update) : update();
-      }
+      const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
+      const userRole = (data?.role as AppRole) || "user";
+      setRole(userRole);
+      await loadPermissions(userRole);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
-      if (mounted) {
-        setRole("user");
-        setLoading(false);
-        setIsInitializing(false);
-      }
-    } finally {
-      logger.endTimer("checkRole", { userId });
-      if (mounted) {
-        const update = () => {
-          setLoading(false);
-          setIsInitializing(false);
-        };
-        startTransition ? startTransition(update) : update();
-      }
+      setRole("user");
     }
-  }, [site?.id, siteLoading, loadPermissions]);
-
-  const [, startTransition] = React.useTransition();
+  };
 
   useEffect(() => {
     let mounted = true;
-    let authSubscription: any = null;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      authSubscription = subscription;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!mounted) return;
-      
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      
-      if (currentUser) {
-        setLoading(true);
-        // Garantir que a UI não trave em white screen mesmo em caso de erro na checagem de role
-        const roleTimeout = setTimeout(() => {
-          if (mounted && loading) {
-            logger.warn("checkRole taking too long, forcing load end");
-            const update = () => {
-              setLoading(false);
-              setIsInitializing(false);
-            };
-            startTransition(update);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        setTimeout(async () => {
+          if (mounted) {
+            await checkRole(session.user.id);
+            setLoading(false);
           }
-        }, 5000);
-
-        await checkRole(currentUser.id, mounted, startTransition);
-        clearTimeout(roleTimeout);
+        }, 0);
       } else {
-        const update = () => {
-          setRole(null);
-          setLoading(false);
-          setIsInitializing(false);
-        };
-        startTransition(update);
+        setRole(null);
+        setLoading(false);
       }
     });
 
-    const initAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!mounted) return;
-        
-        const currentUser = session?.user ?? null;
-        setUser(currentUser);
-        
-        if (currentUser) {
-          await checkRole(currentUser.id, mounted, startTransition);
-        } else {
-          const update = () => {
-            setLoading(false);
-            setIsInitializing(false);
-          };
-          startTransition(update);
-        }
-      } catch (error) {
-        logger.error("Initial session check failed", {}, error as Error);
-        if (mounted) {
-          setLoading(false);
-          setIsInitializing(false);
-        }
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        checkRole(session.user.id).finally(() => {
+          if (mounted) setLoading(false);
+        });
+      } else {
+        setLoading(false);
       }
-    };
-
-    initAuth();
+    });
 
     return () => {
       mounted = false;
-      if (authSubscription) {
-        authSubscription.unsubscribe();
-      }
+      subscription.unsubscribe();
     };
-  }, [checkRole]);
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     const { error, data } = await supabase.auth.signInWithPassword({ email, password });
@@ -304,19 +170,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    const update = () => {
-      setUser(null);
-      setRole(null);
-    };
-    startTransition ? startTransition(update) : update();
+    setUser(null);
+    setRole(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, isSuperAdmin, role, loading, isInitializing, signIn, signUp, signOut, canManageProperties, canDeleteProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket }}>
+    <AuthContext.Provider value={{ user, isAdmin, isSuperAdmin, role, loading, signIn, signUp, signOut, canManageProperties, canDeleteProperties, canViewProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
 export function useAuth() {
   const ctx = useContext(AuthContext);

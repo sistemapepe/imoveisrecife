@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo } from "react";
 import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
 import { Globe, Smartphone, Monitor, Tablet, TrendingUp, Users, Eye, MousePointerClick, Download } from "lucide-react";
-import { useSite } from "@/contexts/SiteContext";
 import { DateRangePicker } from "./DateRangePicker";
 import { downloadCSV } from "@/lib/csv-export";
 
@@ -24,7 +23,6 @@ interface TrafficEvent {
 }
 
 export default function TrafficTab() {
-  const { site } = useSite();
   const [events, setEvents] = useState<TrafficEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<"today" | "7d" | "30d" | "90d" | "custom">("today");
@@ -51,13 +49,11 @@ export default function TrafficTab() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!site?.id) return;
       setLoading(true);
       const { from, to } = getDateRange();
       let query = supabase
         .from("traffic_events")
         .select("id, channel, source, medium, social_network, device_type, browser, os, landing_page, event_type, created_at, campaign, visitor_id, session_id")
-        .eq("site_id", site.id)
         .gte("created_at", from);
       if (to) query = query.lte("created_at", to);
       const { data } = await query.order("created_at", { ascending: false }).limit(5000);
@@ -66,7 +62,7 @@ export default function TrafficTab() {
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString(), site?.id]);
+  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString()]);
 
   const stats = useMemo(() => {
     const pageViews = events.filter((e) => e.event_type === "page_view");
@@ -155,9 +151,9 @@ export default function TrafficTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Tráfego</h2>
-      </div>
+      <h2 className="text-lg font-bold flex items-center gap-2">
+        <Globe className="h-5 w-5 text-accent" /> Módulo de Tráfego
+      </h2>
 
       {/* Period filter */}
       <div className="flex flex-wrap gap-2 items-center">

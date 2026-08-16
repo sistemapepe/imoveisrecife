@@ -22,7 +22,7 @@ const reducedVariants = {
   exit: { opacity: 0 },
 };
 
-export const PageTransition = ({ children }: { children: ReactNode }) => {
+export default function PageTransition({ children }: { children: ReactNode }) {
   const shouldReduceMotion = useReducedMotion();
   
   // Detect low-end devices or slow connections
@@ -56,6 +56,4 @@ export const PageTransition = ({ children }: { children: ReactNode }) => {
       {children}
     </motion.div>
   );
-};
-
-export default PageTransition;
+}

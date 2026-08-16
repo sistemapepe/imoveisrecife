@@ -4,7 +4,7 @@ import { Verified, ArrowLeft } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-
+import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -52,23 +52,23 @@ export default function Contact() {
   };
 
   return (
-    <>
+    <PageTransition>
       <SEOHead title="Contato" description="Entre em contato com nossa equipe de corretores especializados em imóveis de luxo em Recife." />
-      <div className="relative flex min-h-screen w-full flex-col pb-32 bg-luxury-dark text-white max-w-screen-lg mx-auto">
+      <div className="relative flex min-h-screen w-full flex-col pb-32 bg-background max-w-screen-lg mx-auto">
         <Navbar />
         
         {/* Floating Back Button handled by App.tsx */}
 
-        <header className="px-6 pt-12 pb-8 text-center">
-          <h2 className="font-serif text-5xl mb-3 tracking-tight">Atendimento Exclusivo</h2>
-          <div className="w-16 h-[1.5px] gold-gradient mx-auto rounded-full" />
+        <header className="px-6 pt-10 pb-6 text-center">
+          <h2 className="font-serif text-4xl mb-2">Atendimento Exclusivo</h2>
+          <div className="w-12 h-[1px] bg-accent mx-auto" />
         </header>
 
         <section className="px-6 mb-10">
           <div className="flex flex-col items-center">
             <div className="relative mb-4">
-              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-accent p-1 bg-white/5 flex items-center justify-center backdrop-blur-md">
-                <span className="text-3xl grayscale opacity-80">👤</span>
+              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-accent p-1 bg-secondary flex items-center justify-center">
+                <span className="text-3xl">👤</span>
               </div>
               <div className="absolute bottom-0 right-0 bg-accent w-6 h-6 rounded-full flex items-center justify-center border-2 border-card">
                 <Verified className="h-3 w-3 text-accent-foreground" />
@@ -105,13 +105,13 @@ export default function Contact() {
                 onChange={(e) => setForm({ ...form, [key]: e.target.value })}
                 placeholder={label}
                 required={key !== "phone"}
-                className="w-full border-0 border-b border-white/10 bg-transparent pb-3 pt-5 text-sm focus:outline-none focus:border-accent transition-all placeholder:text-white/30 placeholder:uppercase placeholder:text-[10px] placeholder:tracking-[0.2em]"
+                className="w-full border-0 border-b border-border bg-transparent pb-2 pt-4 text-sm focus:outline-none focus:border-accent placeholder:text-muted-foreground placeholder:uppercase placeholder:text-xs placeholder:tracking-wider"
               />
             ))}
             <select
               value={form.interest}
               onChange={(e) => setForm({ ...form, interest: e.target.value })}
-              className="w-full border-0 border-b border-white/10 bg-transparent pb-3 pt-5 text-sm focus:outline-none focus:border-accent text-white/40 uppercase text-[10px] tracking-[0.2em] appearance-none"
+              className="w-full border-0 border-b border-border bg-transparent pb-2 pt-4 text-sm focus:outline-none focus:border-accent text-muted-foreground uppercase text-xs tracking-wider"
             >
               <option value="">Interesse</option>
               <option value="Comprar Imóvel">Comprar Imóvel</option>
@@ -125,9 +125,9 @@ export default function Contact() {
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               placeholder="Sua mensagem"
               rows={4}
-              className="w-full border border-white/10 rounded-2xl bg-white/5 p-4 mt-4 text-sm focus:outline-none focus:border-accent transition-all placeholder:text-white/30 placeholder:uppercase placeholder:text-[10px] placeholder:tracking-[0.2em] resize-none min-h-[120px]"
+              className="w-full border border-border rounded-lg bg-transparent p-3 mt-2 text-sm focus:outline-none focus:border-accent placeholder:text-muted-foreground placeholder:uppercase placeholder:text-xs placeholder:tracking-wider resize-none"
             />
-            <button type="submit" disabled={sending} className="w-full gold-gradient text-white font-extrabold py-5 rounded-2xl uppercase tracking-[0.25em] text-[10px] shadow-2xl shadow-accent/20 mt-10 disabled:opacity-50 active:scale-[0.98] transition-all">
+            <button type="submit" disabled={sending} className="w-full gold-gradient text-accent-foreground font-bold py-4 rounded-sm uppercase tracking-[0.2em] text-xs shadow-lg mt-8 disabled:opacity-50">
               {sending ? "Enviando..." : "Solicitar Contato"}
             </button>
           </form>
@@ -135,9 +135,9 @@ export default function Contact() {
 
         <div className="px-8 mb-10">
           <div className="flex items-center gap-4">
-            <div className="flex-1 h-[1px] bg-white/5" />
-            <span className="text-[9px] text-white/30 font-extrabold uppercase tracking-[0.3em]">Ou se preferir</span>
-            <div className="flex-1 h-[1px] bg-white/5" />
+            <div className="flex-1 h-[1px] bg-border" />
+            <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Ou se preferir</span>
+            <div className="flex-1 h-[1px] bg-border" />
           </div>
         </div>
 
@@ -147,7 +147,7 @@ export default function Contact() {
               href={`https://wa.me/${settings.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 w-full border border-whatsapp/30 text-whatsapp font-extrabold py-5 rounded-2xl uppercase tracking-[0.2em] text-[10px] transition-all hover:bg-whatsapp/5 active:scale-[0.98] shadow-lg shadow-whatsapp/5"
+              className="flex items-center justify-center gap-3 w-full border border-whatsapp text-whatsapp font-bold py-4 rounded-sm uppercase tracking-[0.2em] text-xs transition-all hover:bg-whatsapp/5"
             >
               💬 Falar pelo WhatsApp
             </a>
@@ -156,6 +156,6 @@ export default function Contact() {
 
         <Footer />
       </div>
-    </>
+    </PageTransition>
   );
 }

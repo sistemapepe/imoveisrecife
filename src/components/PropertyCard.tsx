@@ -33,7 +33,7 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
   return (
     <>
     <div
-      className="group bg-[#0d1419] rounded-[2.5rem] overflow-hidden premium-shadow cursor-pointer transition-all duration-700 hover:-translate-y-3 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.5)] border border-white/5 hover:border-accent/30"
+      className="group bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
       onClick={() => navigate(`/imovel/${property.id}`)}
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
@@ -84,14 +84,14 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         <button
           aria-label={isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
           aria-pressed={isFav}
-          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-black/20 backdrop-blur-md rounded-2xl border border-white/10"
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-foreground/20 backdrop-blur-md rounded-full border border-card/30"
           onClick={(e) => { e.stopPropagation(); toggleFavorite(property.id); }}
         >
-          <Heart className={`h-5 w-5 ${isFav ? "fill-accent text-accent" : "text-white/70"}`} />
+          <Heart className={`h-5 w-5 ${isFav ? "fill-accent text-accent" : "text-card"}`} />
         </button>
         <button
           aria-label={`Falar no WhatsApp sobre ${property.title}`}
-          className="absolute bottom-4 right-4 w-12 h-12 flex items-center justify-center bg-whatsapp text-white rounded-2xl shadow-xl hover:scale-110 active:scale-90 transition-all border border-white/20"
+          className="absolute bottom-4 right-4 w-11 h-11 flex items-center justify-center bg-whatsapp text-white rounded-full shadow-lg hover:scale-110 transition-transform"
           onClick={(e) => { e.stopPropagation(); setLeadOpen(true); }}
         >
           <MessageCircle className="h-5 w-5" />
@@ -111,18 +111,19 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
         )}
       </div>
       <div className="p-5">
-        <h2 className="font-serif font-bold text-2xl text-white line-clamp-2 leading-tight mb-4 group-hover:text-accent transition-colors">{property.title}</h2>
-        <div className="flex items-center gap-3 mb-5 flex-wrap">
-          <div className="px-3 py-1.5 bg-white/5 rounded-full border border-white/10">
+        <h2 className="font-serif font-bold text-2xl text-foreground line-clamp-2 leading-tight mb-3">{property.title}</h2>
+        <div className="flex items-baseline gap-2 mb-4 flex-wrap relative">
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-white/40 backdrop-blur-md -rotate-1 rounded-lg scale-110 shadow-sm border border-white/20" />
             <PriceDisplay
               as="p"
               section="card"
               value={property.price}
-              className="text-accent font-bold tracking-tight"
+              className="relative italic tracking-tight px-1"
             />
           </div>
-          <span className="text-[9px] uppercase tracking-[0.2em] text-white/40 font-extrabold">
-            {property.neighborhood}
+          <span className="text-xs text-muted-foreground ml-2">
+            ({property.neighborhood})
           </span>
           {hasPriceDrop && (
             <PriceDisplay
@@ -134,33 +135,33 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
             />
           )}
         </div>
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 border-t border-white/5 pt-4">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 border-t border-border pt-4">
           <div className="flex items-center gap-1 min-w-0">
             <Ruler className="h-3.5 w-3.5 shrink-0 text-accent" />
-            <span className="text-[10px] font-extrabold text-white/50 uppercase tracking-widest truncate">{property.area}m²</span>
+            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.area}m²</span>
           </div>
         {!!property.bedrooms && (
           <div className="flex items-center gap-1 min-w-0">
-            <DoorOpen className="h-3.5 w-3.5 shrink-0 text-accent/70" />
-            <span className="text-[10px] font-extrabold text-white/50 uppercase tracking-widest truncate">{property.bedrooms} Qts</span>
+            <DoorOpen className="h-3.5 w-3.5 shrink-0 text-accent" />
+            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.bedrooms} Qts</span>
           </div>
         )}
         {!!property.suites && (
           <div className="flex items-center gap-1 min-w-0">
-            <BedDouble className="h-3.5 w-3.5 shrink-0 text-accent/70" />
-            <span className="text-[10px] font-extrabold text-white/50 uppercase tracking-widest truncate">{property.suites} Suítes</span>
+            <BedDouble className="h-3.5 w-3.5 shrink-0 text-accent" />
+            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.suites} Suítes</span>
           </div>
         )}
         {!!property.bathrooms && (
           <div className="flex items-center gap-1 min-w-0">
-            <Bath className="h-3.5 w-3.5 shrink-0 text-accent/70" />
-            <span className="text-[10px] font-extrabold text-white/50 uppercase tracking-widest truncate">{property.bathrooms} Banh.</span>
+            <Bath className="h-3.5 w-3.5 shrink-0 text-accent" />
+            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.bathrooms} Banh.</span>
           </div>
         )}
         {!!property.parking && (
           <div className="flex items-center gap-1 min-w-0">
-            <Car className="h-3.5 w-3.5 shrink-0 text-accent/70" />
-            <span className="text-[10px] font-extrabold text-white/50 uppercase tracking-widest truncate">{property.parking} Vagas</span>
+            <Car className="h-3.5 w-3.5 shrink-0 text-accent" />
+            <span className="text-[11px] font-semibold text-muted-foreground truncate">{property.parking} Vagas</span>
           </div>
         )}
         </div>

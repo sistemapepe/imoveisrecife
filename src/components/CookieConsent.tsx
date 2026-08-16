@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Shield } from "lucide-react";
-import React from "react";
 
-const CookieConsent = () => {
+export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -59,5 +58,4 @@ const CookieConsent = () => {
       </div>
     </div>
   );
-};
-export default CookieConsent;
+}

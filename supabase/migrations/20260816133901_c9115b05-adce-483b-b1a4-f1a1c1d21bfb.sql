@@ -1,1 +1,0 @@
-UPDATE sites SET domain = 'www.rrochaconsultor.com.br' WHERE id = '1f8ff626-396d-491d-b192-00a1bdf251eb';

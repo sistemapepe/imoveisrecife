@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
-import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp, Download, RefreshCw } from "lucide-react";
-import { useSite } from "@/contexts/SiteContext";
+import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp, Download } from "lucide-react";
 import { DateRangePicker } from "./DateRangePicker";
 import { downloadCSV } from "@/lib/csv-export";
 
@@ -17,8 +16,7 @@ interface LeadsByPeriod {
   count: number;
 }
 
-export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolean }) {
-  const { site } = useSite();
+export default function AnalyticsTab() {
   const [totalViews, setTotalViews] = useState(0);
   const [totalLeads, setTotalLeads] = useState(0);
   const [totalVisits, setTotalVisits] = useState(0);
@@ -30,29 +28,9 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
   const [customRange, setCustomRange] = useState<DateRange | undefined>();
 
   useEffect(() => {
-    const cacheKey = `analytics_${isNetwork ? 'global' : site?.id}_${period}_${customRange?.from?.toISOString()}_${customRange?.to?.toISOString()}`;
-    const cached = sessionStorage.getItem(cacheKey);
-    
-    if (cached) {
-      try {
-        const { data, timestamp } = JSON.parse(cached);
-        setTotalViews(data.totalViews);
-        setTotalLeads(data.totalLeads);
-        setTotalVisits(data.totalVisits);
-        setViewsByProperty(data.viewsByProperty);
-        setViewsByDay(data.viewsByDay);
-        setLeadsByDay(data.leadsByDay);
-        
-        if (Date.now() - timestamp < 300000) {
-          setLoading(false);
-          fetchAnalytics(cacheKey, false);
-          return;
-        }
-      } catch (e) {}
-    }
-
-    fetchAnalytics(cacheKey, true);
-  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString(), site?.id, isNetwork]);
+    fetchAnalytics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString()]);
 
   const getDateRange = (): { from: string; to?: string } => {
     if (period === "custom" && customRange?.from) {
@@ -73,28 +51,20 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
     return { from: d.toISOString() };
   };
 
-  const fetchAnalytics = async (cacheKey?: string, showLoading = true) => {
-    if (showLoading) setLoading(true);
+  const fetchAnalytics = async () => {
+    setLoading(true);
     const { from, to } = getDateRange();
 
     const applyRange = <T,>(q: T): T => {
-      let qq = q as any;
-      if (to) qq = qq.lte("created_at", to);
-      if (!isNetwork && site?.id) qq = qq.eq("site_id", site.id);
-      return qq;
-    };
-
-    const applySiteFilter = <T,>(q: T): T => {
-      let qq = q as any;
-      if (!isNetwork && site?.id) qq = qq.eq("site_id", site.id);
-      return qq;
+      const qq = (q as unknown as { lte: (col: string, v: string) => T });
+      return to ? qq.lte("created_at", to) : q;
     };
 
     const [viewsRes, leadsRes, visitsRes, propertiesRes] = await Promise.all([
       applyRange(supabase.from("property_views").select("id, property_id, created_at").gte("created_at", from)),
       applyRange(supabase.from("contact_messages").select("id, created_at").gte("created_at", from)),
       applyRange(supabase.from("visit_requests").select("id, created_at").gte("created_at", from)),
-      applySiteFilter(supabase.from("properties").select("id, title")),
+      supabase.from("properties").select("id, title"),
     ]);
 
     const views = viewsRes.data || [];
@@ -106,6 +76,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
     setTotalLeads(leads.length);
     setTotalVisits(visits.length);
 
+    // Views by property
     const viewCount: Record<string, number> = {};
     views.forEach((v) => { viewCount[v.property_id] = (viewCount[v.property_id] || 0) + 1; });
     const viewsByProp = Object.entries(viewCount)
@@ -118,6 +89,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
       .slice(0, 10);
     setViewsByProperty(viewsByProp);
 
+    // Group by day
     const groupByDay = (items: { created_at: string }[]) => {
       const map: Record<string, number> = {};
       items.forEach((item) => {
@@ -132,18 +104,6 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
     setViewsByDay(groupByDay(views));
     setLeadsByDay(groupByDay(leads));
     setLoading(false);
-
-    if (cacheKey) {
-      const cacheData = {
-        totalViews: views.length,
-        totalLeads: leads.length,
-        totalVisits: visits.length,
-        viewsByProperty: viewsByProp,
-        viewsByDay: groupByDay(views),
-        leadsByDay: groupByDay(leads)
-      };
-      sessionStorage.setItem(cacheKey, JSON.stringify({ data: cacheData, timestamp: Date.now() }));
-    }
   };
 
   const maxBarValue = Math.max(...viewsByProperty.map((v) => v.count), 1);
@@ -160,18 +120,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Analytics</h2>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => fetchAnalytics(undefined, true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-accent text-luxury-dark text-[10px] font-extrabold uppercase tracking-widest hover:bg-accent/80 transition-all shadow-lg shadow-accent/20"
-          >
-            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} /> Atualizar
-          </button>
-        </div>
-      </div>
-
+      {/* Period filter */}
       <div className="flex flex-wrap gap-2 items-center">
         {(["today", "7d", "30d", "90d"] as const).map((p) => (
           <button
@@ -227,6 +176,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
         </button>
       </div>
 
+      {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { icon: Eye, label: "Visualizações", value: totalViews, color: "text-blue-500" },
@@ -234,20 +184,21 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
           { icon: Calendar, label: "Agendamentos", value: totalVisits, color: "text-accent" },
           { icon: TrendingUp, label: "Conversão", value: totalViews > 0 ? `${((totalLeads + totalVisits) / totalViews * 100).toFixed(1)}%` : "0%", color: "text-primary" },
         ].map(({ icon: Icon, label, value, color }) => (
-          <div key={label} className="p-4 rounded-xl bg-black/40 border border-white/5">
+          <div key={label} className="p-4 rounded-xl bg-card border border-border">
             <Icon className={`h-5 w-5 ${color} mb-2`} />
-            <div className="text-2xl font-extrabold text-accent">{value}</div>
-            <div className="text-xs text-accent/70">{label}</div>
+            <div className="text-2xl font-extrabold">{value}</div>
+            <div className="text-xs text-muted-foreground">{label}</div>
           </div>
         ))}
       </div>
 
-      <div className="p-5 rounded-xl bg-black/40 border border-white/5">
+      {/* Views by Property */}
+      <div className="p-5 rounded-xl bg-card border border-border">
         <h3 className="font-bold mb-4 flex items-center gap-2">
           <BarChart3 className="h-5 w-5 text-accent" /> Top Imóveis Visualizados
         </h3>
         {viewsByProperty.length === 0 ? (
-          <p className="text-sm text-accent/70">Nenhuma visualização registrada no período.</p>
+          <p className="text-sm text-muted-foreground">Nenhuma visualização registrada no período.</p>
         ) : (
           <div className="space-y-3">
             {viewsByProperty.map((item) => (
@@ -268,6 +219,7 @@ export default function AnalyticsTab({ isNetwork = false }: { isNetwork?: boolea
         )}
       </div>
 
+      {/* Timeline charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TimelineChart title="Visualizações por Dia" data={viewsByDay} color="bg-primary" />
         <TimelineChart title="Leads por Dia" data={leadsByDay} color="bg-green-500" />
@@ -280,10 +232,10 @@ function TimelineChart({ title, data, color }: { title: string; data: LeadsByPer
   const maxVal = Math.max(...data.map((d) => d.count), 1);
 
   return (
-    <div className="p-5 rounded-xl bg-black/40 border border-white/5">
+    <div className="p-5 rounded-xl bg-card border border-border">
       <h3 className="font-bold mb-4 text-sm">{title}</h3>
       {data.length === 0 ? (
-        <p className="text-xs text-accent/70">Sem dados no período.</p>
+        <p className="text-xs text-muted-foreground">Sem dados no período.</p>
       ) : (
         <div className="flex items-end gap-1 h-32">
           {data.slice(-30).map((d) => (

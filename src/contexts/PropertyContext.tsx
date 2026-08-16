@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useSite } from "@/contexts/SiteContext";
 import { toast } from "sonner";
 
 import property1 from "@/assets/property-1.jpg";
@@ -203,44 +202,22 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [lastFetched, setLastFetched] = useState<number>(0);
   const { user } = useAuth();
-  const { site } = useSite();
 
-  const CACHE_TTL = 60000; // 60 segundos de cache para listagens
-
-  const fetchProperties = useCallback(async (force = false) => {
-    if (!site) return;
-    
-    const now = Date.now();
-    if (!force && properties.length > 0 && now - lastFetched < CACHE_TTL) {
-      return;
-    }
-
-    // Limit fetching to 500 properties to balance performance and visibility
-    const query = supabase.from("properties").select("id, code, title, address, neighborhood, city, price, area, bedrooms, suites, bathrooms, parking, type, description, amenities, images, exclusive, featured, category, status, video_tour_url, previous_price, site_id").limit(500);
-    const { data, error } = await (query as any)
-      .eq("site_id", site.id)
-      .order("created_at", { ascending: false });
-      
+  const fetchProperties = useCallback(async () => {
+    const { data, error } = await supabase.from("properties").select("*").order("created_at", { ascending: false });
     if (data && !error) {
       setProperties(data.map((p: any, i: number) => ({
         ...p,
         status: (p.status || "disponivel") as PropertyStatus,
         images: p.images.length > 0 ? p.images : [localImages[i % localImages.length]],
       })));
-      setLastFetched(now);
     }
     setLoading(false);
-  }, [site, properties.length, lastFetched]);
+  }, []);
 
   const fetchSettings = useCallback(async () => {
-    if (!site) return;
-    const query = supabase.from("site_settings").select("*");
-    const { data } = await (query as any)
-      .eq("site_id", site.id)
-      .limit(1)
-      .single();
+    const { data } = await supabase.from("site_settings").select("*").limit(1).single();
     if (data) {
       setSettings((prev) => ({
         ...prev,
@@ -298,7 +275,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         priceFormat: { ...DEFAULT_PRICE_FORMAT, ...((data as any).price_format ?? {}) },
       }));
     }
-  }, [site]);
+  }, []);
 
   const fetchContactInfo = useCallback(async () => {
     try {
@@ -332,28 +309,26 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   }, [fetchFavorites]);
 
   const addProperty = async (p: Omit<Property, "id" | "code">) => {
-    if (!site) return;
     const { error } = await supabase.from("properties").insert({
       title: p.title, address: p.address, neighborhood: p.neighborhood, city: p.city,
       price: p.price, area: p.area, bedrooms: p.bedrooms, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
       type: p.type, description: p.description, amenities: p.amenities, images: p.images,
       exclusive: p.exclusive, featured: p.featured, category: p.category,
-      site_id: site.id
     } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
-    await fetchProperties(true);
+    await fetchProperties();
   };
 
   const updateProperty = async (id: string, updates: Partial<Property>) => {
     const { error } = await supabase.from("properties").update(updates).eq("id", id);
     if (error) { toast.error("Erro ao atualizar: " + error.message); return; }
-    await fetchProperties(true);
+    await fetchProperties();
   };
 
   const deleteProperty = async (id: string) => {
     const { error } = await supabase.from("properties").delete().eq("id", id);
     if (error) { toast.error("Erro ao remover: " + error.message); return; }
-    await fetchProperties(true);
+    await fetchProperties();
   };
 
   const updateSettings = async (s: Partial<SiteSettings>) => {

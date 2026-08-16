@@ -23,14 +23,9 @@ interface LogEntry {
 class Logger {
   private static instance: Logger;
   private requestId: string;
-  private metrics: Map<string, number> = new Map();
 
   private constructor() {
-    this.requestId = this.generateId();
-  }
-
-  private generateId(): string {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    this.requestId = crypto.randomUUID();
   }
 
   public static getInstance(): Logger {
@@ -40,69 +35,35 @@ class Logger {
     return Logger.instance;
   }
 
-  public startTimer(label: string) {
-    try {
-      this.metrics.set(label, performance.now());
-    } catch (e) {
-      // Ignore performance API errors
-    }
-  }
-
-  public endTimer(label: string, context: LogContext = {}) {
-    try {
-      const start = this.metrics.get(label);
-      if (start) {
-        const duration = performance.now() - start;
-        this.info(`Metric: ${label}`, { ...context, duration: `${duration.toFixed(2)}ms`, metricLabel: label });
-        this.metrics.delete(label);
-        return duration;
-      }
-    } catch (e) {
-      // Ignore
-    }
-    return 0;
-  }
-
   private sanitize(data: any): any {
     if (!data) return data;
     
-    try {
-      // Deep copy to avoid mutating original, using a safer approach
-      const sanitized = JSON.parse(JSON.stringify(data));
-      
-      const sensitiveKeys = [
-        'password', 'token', 'secret', 'key', 'auth', 
-        'credential', 'email', 'phone', 'cpf', 'cnpj'
-      ];
+    // Deep copy to avoid mutating original
+    const sanitized = JSON.parse(JSON.stringify(data));
+    
+    const sensitiveKeys = [
+      'password', 'token', 'secret', 'key', 'auth', 
+      'credential', 'email', 'phone', 'cpf', 'cnpj'
+    ];
 
-      const wash = (obj: any) => {
-        for (const key in obj) {
-          if (obj[key] && typeof obj[key] === 'object') {
-            wash(obj[key]);
-          } else if (typeof key === 'string' && sensitiveKeys.some(sk => key.toLowerCase().includes(sk))) {
-            obj[key] = '[REDACTED]';
-          }
+    const wash = (obj: any) => {
+      for (const key in obj) {
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          wash(obj[key]);
+        } else if (sensitiveKeys.some(sk => key.toLowerCase().includes(sk))) {
+          obj[key] = '[REDACTED]';
         }
-      };
+      }
+    };
 
-      wash(sanitized);
-      return sanitized;
-    } catch (e) {
-      return "[Unsanitizable Data]";
-    }
+    wash(sanitized);
+    return sanitized;
   }
 
   private log(level: LogLevel, message: string, context: LogContext = {}, error?: Error) {
-    let userId = undefined;
-    try {
-      const authKey = 'sb-bqxfopftcoagiautjeqz-auth-token';
-      const stored = localStorage.getItem(authKey);
-      if (stored) {
-        userId = JSON.parse(stored).user?.id;
-      }
-    } catch (e) {
-      // Ignore localStorage errors
-    }
+    const userId = localStorage.getItem('sb-bqxfopftcoagiautjeqz-auth-token') 
+      ? JSON.parse(localStorage.getItem('sb-bqxfopftcoagiautjeqz-auth-token')!).user?.id 
+      : undefined;
 
     const entry: LogEntry = {
       timestamp: new Date().toISOString(),
@@ -118,21 +79,18 @@ class Logger {
     if (error) {
       entry.error = {
         message: error.message,
-        stack: import.meta.env.DEV ? error.stack : undefined,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
       };
     }
 
+    // In a real production environment, we would send this to a logging service (Datadog, Loggly, etc.)
+    // For now, we use structured console logs which are picked up by cloud collectors
     const logMethod = level === 'fatal' || level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log';
     
-    try {
-      if (import.meta.env.DEV) {
-        console[logMethod](`[${level.toUpperCase()}] ${message}`, entry.context, error || '');
-      } else {
-        console[logMethod](JSON.stringify(entry));
-      }
-    } catch (e) {
-      // Ultimate fallback if console fails or stringify fails
-      console.error("Logger failed", level, message);
+    if (process.env.NODE_ENV === 'development') {
+      console[logMethod](`[${level.toUpperCase()}] ${message}`, entry.context, error || '');
+    } else {
+      console[logMethod](JSON.stringify(entry));
     }
   }
 

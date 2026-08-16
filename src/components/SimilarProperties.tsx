@@ -43,8 +43,8 @@ export default function SimilarProperties({ current }: SimilarPropertiesProps) {
   if (similar.length === 0) return null;
 
   return (
-    <section className="mt-16 mb-12" aria-labelledby="similar-heading">
-      <h2 id="similar-heading" className="text-2xl font-serif font-bold mb-6 px-1">
+    <section className="mt-10 mb-8" aria-labelledby="similar-heading">
+      <h2 id="similar-heading" className="text-lg font-bold mb-4">
         Imóveis similares
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

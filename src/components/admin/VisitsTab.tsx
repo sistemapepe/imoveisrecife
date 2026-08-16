@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Calendar, CheckCircle, Clock, XCircle, Phone, Mail, RefreshCw } from "lucide-react";
+import { Calendar, CheckCircle, Clock, XCircle, Phone, Mail } from "lucide-react";
 import { toast } from "sonner";
-import { useSite } from "@/contexts/SiteContext";
 
 interface VisitRequest {
   id: string;
@@ -19,28 +18,31 @@ interface VisitRequest {
 }
 
 export default function VisitsTab() {
-  const { site } = useSite();
   const [visits, setVisits] = useState<VisitRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "pending" | "confirmed" | "cancelled">("all");
 
   useEffect(() => {
-    if (site?.id) fetchVisits();
-  }, [site?.id]);
+    fetchVisits();
+  }, []);
 
   const fetchVisits = async () => {
-    if (!site?.id) return;
     setLoading(true);
     const { data } = await supabase
       .from("visit_requests")
-      .select("*, properties!inner(site_id, title)")
-      .eq("properties.site_id", site.id)
+      .select("*")
       .order("created_at", { ascending: false });
 
     if (data) {
-      const enriched = data.map((v: any) => ({
+      const propIds = [...new Set(data.map((v) => v.property_id))];
+      const { data: props } = await supabase
+        .from("properties")
+        .select("id, title")
+        .in("id", propIds);
+
+      const enriched = data.map((v) => ({
         ...v,
-        property_title: v.properties?.title || "Imóvel removido",
+        property_title: props?.find((p) => p.id === v.property_id)?.title || "Imóvel removido",
       }));
       setVisits(enriched);
     }
@@ -87,16 +89,8 @@ export default function VisitsTab() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Visitas</h2>
-        <button
-          onClick={fetchVisits}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-accent text-luxury-dark text-[10px] font-extrabold uppercase tracking-widest hover:bg-accent/80 transition-all shadow-lg shadow-accent/20"
-        >
-          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} /> Atualizar
-        </button>
-      </div>
+    <div className="space-y-4">
+      {/* Filters */}
       <div className="flex gap-2 flex-wrap">
         {(["all", "pending", "confirmed", "cancelled"] as const).map((f) => (
           <button

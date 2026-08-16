@@ -1,15 +1,12 @@
-import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-
+import { AnimatePresence } from "framer-motion";
 import { HelmetProvider } from "react-helmet-async";
-import { Globe2 } from "lucide-react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PropertyProvider } from "@/contexts/PropertyContext";
-import { SiteProvider, useSite } from "@/contexts/SiteContext";
 import { lazy, Suspense } from "react";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppFab from "@/components/WhatsAppFab";
@@ -19,12 +16,9 @@ import DynamicTheme from "@/components/DynamicTheme";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
 import { useWebVitals } from "@/hooks/useWebVitals";
-import PageLoader from "@/components/PageLoader";
 
-// Lazy loading rotas
+// Lazy loading rotas com prefetching inteligente
 const Index = lazy(() => import("./pages/Index"));
-const ProjectPlan = lazy(() => import("./routes/index"));
-const NetworkAdmin = lazy(() => import("./pages/NetworkAdmin"));
 const SearchResults = lazy(() => import("./pages/SearchResults").then(module => ({ default: module.default })));
 const PropertyDetail = lazy(() => import("./pages/PropertyDetail").then(module => ({ default: module.default })));
 const Filters = lazy(() => import("./pages/Filters"));
@@ -36,14 +30,19 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookieConsent = lazy(() => import("./components/CookieConsent"));
 
-// PageLoader is now imported from its own file
+// Loading fallback component
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[60vh] w-full">
+    <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000,
-      gcTime: 30 * 60 * 1000,
-      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 min: dados considerados frescos, sem refetch
+      gcTime: 30 * 60 * 1000,   // 30 min em cache antes do garbage collect
+      refetchOnWindowFocus: false, // evita refetch ao trocar de aba
       retry: 1,
     },
   },
@@ -51,63 +50,29 @@ const queryClient = new QueryClient({
 
 function AppContent() {
   const location = useLocation();
-  const { site, loading: siteLoading, error: siteError } = useSite();
   useTrafficTracker();
   useWebVitals();
   
   const isPropertyDetail = location.pathname.startsWith('/imovel/');
-  const isNetworkPath = location.pathname.startsWith('/network-admin');
-
-  if (siteLoading && !isNetworkPath && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/login') && location.pathname !== '/auth/callback') return <PageLoader />;
-  
-  if (siteError && !isNetworkPath && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/login') && location.pathname !== '/auth/callback') {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0d1419] p-6 text-center">
-        <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mb-6">
-          <Globe2 className="h-10 w-10 text-accent animate-pulse" />
-        </div>
-        <h1 className="text-2xl font-serif font-bold text-accent mb-2 uppercase tracking-widest">
-          Domínio Offline
-        </h1>
-        <p className="text-white/60 max-w-md mb-8 leading-relaxed">
-          O domínio <span className="text-white font-mono">{window.location.hostname}</span> ainda não está respondendo ou não foi configurado corretamente.
-        </p>
-        <div className="flex flex-col gap-3 w-full max-w-xs">
-          <a 
-            href="/login" 
-            className="py-3 px-6 rounded-xl gold-gradient text-accent-foreground font-bold uppercase tracking-widest text-xs transition-all hover:scale-[1.02]"
-          >
-            Acessar Painel
-          </a>
-          <button 
-            onClick={() => window.location.reload()}
-            className="py-3 px-6 rounded-xl bg-white/5 border border-white/10 text-white/70 font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-all"
-          >
-            Tentar Novamente
-          </button>
-        </div>
-      </div>
-    );
-  }
   
   return (
     <div className="max-w-screen-lg mx-auto relative min-h-screen">
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/busca" element={<SearchResults />} />
-          <Route path="/imovel/:id" element={<PropertyDetail />} />
-          <Route path="/filtros" element={<Filters />} />
-          <Route path="/contato" element={<Contact />} />
-          <Route path="/favoritos" element={<Favorites />} />
-          <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-          <Route path="/network-admin" element={<ProtectedRoute><NetworkAdmin /></ProtectedRoute>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/privacidade" element={<PrivacyPolicy />} />
-          <Route path="/plano" element={<ProjectPlan />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
+      <AnimatePresence mode="wait">
+        <Suspense fallback={<PageLoader />}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Index />} />
+            <Route path="/busca" element={<SearchResults />} />
+            <Route path="/imovel/:id" element={<PropertyDetail />} />
+            <Route path="/filtros" element={<Filters />} />
+            <Route path="/contato" element={<Contact />} />
+            <Route path="/favoritos" element={<Favorites />} />
+            <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/privacidade" element={<PrivacyPolicy />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </AnimatePresence>
       
       <BackButton />
       {!isPropertyDetail && <WhatsAppFab />}
@@ -120,24 +85,22 @@ function AppContent() {
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <TooltipProvider>
-          <SiteProvider>
-            <AuthProvider>
-              <PropertyProvider>
-                <Toaster />
-                <Sonner />
-                <DynamicTheme />
-                <BrowserRouter>
-                  <AppContent />
-                </BrowserRouter>
-              </PropertyProvider>
-            </AuthProvider>
-          </SiteProvider>
-        </TooltipProvider>
-      </HelmetProvider>
-    </QueryClientProvider>
+  <HelmetProvider>
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <AuthProvider>
+        <PropertyProvider>
+          <Toaster />
+          <Sonner />
+          <DynamicTheme />
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
+        </PropertyProvider>
+      </AuthProvider>
+    </TooltipProvider>
+  </QueryClientProvider>
+  </HelmetProvider>
   );
 };
 

@@ -1,33 +1,22 @@
-import { useState, startTransition, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProperties } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
 import { Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
+import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 
-const Login = () => {
+export default function Login() {
   const navigate = useNavigate();
-  const { signIn, user, role, loading: authLoading, isInitializing } = useAuth();
+  const { signIn } = useAuth();
   const { settings } = useProperties();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  // Auto-redirect if already logged in with valid role
-  useEffect(() => {
-    if (!isInitializing && !authLoading && user && role && role !== "user") {
-      const urlParams = new URLSearchParams(window.location.search);
-      const siteId = urlParams.get('site_id');
-      const target = siteId ? `/admin?site_id=${siteId}` : "/admin";
-      
-      startTransition(() => {
-        window.location.href = target;
-      });
-    }
-  }, [user, role, isInitializing, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,20 +26,13 @@ const Login = () => {
     if (error) {
       toast.error(error);
     } else {
-      toast.success("Login realizado! Redirecionando...");
-      // Forçar redirecionamento com site_id se presente na URL original
-      const urlParams = new URLSearchParams(window.location.search);
-      const siteId = urlParams.get('site_id');
-      const target = siteId ? `/admin?site_id=${siteId}` : "/admin";
-      
-      startTransition(() => {
-        window.location.href = target;
-      });
+      toast.success("Login realizado!");
+      navigate("/admin");
     }
   };
 
   return (
-    <>
+    <PageTransition>
       <SEOHead title="Login" description="Acesse o painel administrativo de gestão de imóveis." noIndex />
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -149,8 +131,6 @@ const Login = () => {
           </div>
         </motion.div>
       </div>
-    </>
+    </PageTransition>
   );
-};
-
-export default Login;
+}

@@ -3,12 +3,10 @@ import * as XLSX from "xlsx";
 import { Upload, FileSpreadsheet, CheckCircle2, AlertTriangle, Loader2, Download, RefreshCw, History } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useProperties, SiteSettings } from "@/contexts/PropertyContext";
-import { useSite } from "@/contexts/SiteContext";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 const UFS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
-
 
 // ---- Mapeamento flexível de cabeçalhos ----
 const norm = (s: any) =>
@@ -197,13 +195,13 @@ function parseImoveisSheet(ws: XLSX.WorkSheet): { data: any[]; errors: RowError[
       address: String(m.address ?? "").trim(),
       neighborhood: String(m.neighborhood ?? "").trim(),
       city: String(m.city ?? "").trim(),
-      price: Math.max(0, rawNum("price").n),
-      area: Math.max(0, rawNum("area").n),
-      bedrooms: Math.max(0, Math.trunc(rawNum("bedrooms").n)),
-      suites: Math.max(0, Math.trunc(rawNum("suites").n)),
-      bathrooms: Math.max(0, Math.trunc(rawNum("bathrooms").n)),
-      parking: Math.max(0, Math.trunc(rawNum("parking").n)),
-      status: String(m.status ?? "disponivel").trim().toLowerCase() || "disponivel",
+      price: rawNum("price").n,
+      area: rawNum("area").n,
+      bedrooms: Math.trunc(rawNum("bedrooms").n),
+      suites: Math.trunc(rawNum("suites").n),
+      bathrooms: Math.trunc(rawNum("bathrooms").n),
+      parking: Math.trunc(rawNum("parking").n),
+      status: String(m.status ?? "disponivel").trim().toLowerCase(),
       exclusive: toBool(m.exclusive),
       featured: toBool(m.featured),
       description: String(m.description ?? "").trim(),
@@ -269,7 +267,6 @@ interface HistoryRow {
 
 export default function BulkImportTab() {
   const { updateSettings, refreshProperties } = useProperties() as any;
-  const { site } = useSite();
   const fileRef = useRef<HTMLInputElement>(null);
   const [parsed, setParsed] = useState<ParsedResult | null>(null);
   const [fileMeta, setFileMeta] = useState<{ name: string; size: number } | null>(null);
@@ -358,9 +355,6 @@ export default function BulkImportTab() {
 
 
   const confirmImport = async () => {
-    // Garantir classe dark para contraste no modal/progress se necessário
-    document.documentElement.classList.add('dark');
-
     if (!parsed || !fileMeta) return;
     if (parsed.headerError) {
       toast.error("Cabeçalhos do template inválidos. Importação bloqueada.");
@@ -413,7 +407,7 @@ export default function BulkImportTab() {
       const valid = parsed.imoveis
         .filter((i) => !parsed.imoveisErrors.some((e) => e.row === i.__row))
         .filter((i) => !reprocessRows || reprocessRows.has(i.__row));
-      let updatedCount = 0;
+      let updated = 0;
       const startedAt = Date.now();
       setProgress({ current: 0, total: valid.length, startedAt });
       for (let idx = 0; idx < valid.length; idx++) {
@@ -422,22 +416,21 @@ export default function BulkImportTab() {
         try {
           let existingId: string | null = null;
           if (upsertMode && Array.isArray(payload.images) && payload.images.length > 0) {
-            // Find by image overlap
-            const { data: found } = await supabase.from("properties")
+            const { data: found } = await supabase
+              .from("properties")
               .select("id")
               .overlaps("images", payload.images)
-              .eq("site_id", site?.id)
               .limit(1)
               .maybeSingle();
-            existingId = found?.id ?? null;
+            existingId = (found as any)?.id ?? null;
           }
           if (existingId) {
             const { error } = await supabase.from("properties").update(payload as any).eq("id", existingId);
             if (error) throw error;
-            updatedCount++;
+            updated++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Atualizado", id: existingId });
           } else {
-            const { error } = await supabase.from("properties").insert({ ...payload, site_id: site?.id });
+            const { error } = await supabase.from("properties").insert(payload as any);
             if (error) throw error;
             created++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Criado" });
@@ -449,14 +442,14 @@ export default function BulkImportTab() {
         setProgress({ current: idx + 1, total: valid.length, startedAt });
       }
 
-      const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && updatedCount === 0 && !companyUpdated ? "falhou" : "concluido");
+      const status = failed === 0 && (companyUpdated || !parsed.empresa) ? "concluido" : (created === 0 && updated === 0 && !companyUpdated ? "falhou" : "concluido");
       await supabase.from("import_history").update({
         status, company_updated: companyUpdated,
-        properties_created: created + updatedCount, properties_failed: failed,
+        properties_created: created + updated, properties_failed: failed,
         log: log as any,
       }).eq("id", histRow.id);
 
-      toast.success(`Importação concluída: ${created} criado(s), ${updatedCount} atualizado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
+      toast.success(`Importação concluída: ${created} criado(s), ${updated} atualizado(s)${companyUpdated ? ", empresa atualizada" : ""}.`);
       await refreshProperties?.();
       reset();
       loadHistory();
@@ -500,33 +493,30 @@ export default function BulkImportTab() {
     : 0;
 
   return (
-    <div className="space-y-6">
-      <div className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-8 premium-shadow">
-        <div className="flex items-start justify-between gap-4 flex-wrap">
+    <div className="space-y-5">
+      <div className="bg-card rounded-xl border border-border p-5">
+        <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
-            <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Importação em Massa</h2>
-            <p className="text-[10px] text-white/40 mt-2 font-extrabold uppercase tracking-widest mt-2">Empresa e Imóveis via Excel (.xlsx)</p>
-          </div>
-          <div className="max-w-md">
-            <p className="text-xs text-white/40 mt-2 font-extrabold uppercase tracking-widest leading-relaxed">
+            <h3 className="font-bold text-base flex items-center gap-2"><FileSpreadsheet className="h-5 w-5 text-accent" /> Importação em Massa</h3>
+            <p className="text-xs text-muted-foreground mt-1">
               Envie o formulário Excel preenchido. O sistema valida, mostra uma prévia e só importa após sua confirmação.
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Button variant="default" className="bg-accent text-luxury-dark hover:bg-accent/80 font-extrabold uppercase tracking-widest text-[10px] h-10 px-6 rounded-2xl shadow-lg shadow-accent/20" asChild>
+            <Button variant="default" size="sm" asChild>
               <a href="/modelo-importacao-imoveis.xlsx" download>
-                <Download className="h-4 w-4 mr-2" /> Baixar modelo (.xlsx)
+                <Download className="h-4 w-4 mr-1" /> Baixar modelo (.xlsx)
               </a>
             </Button>
-            <Button variant="outline" className="border-white/10 text-white/70 hover:bg-white/5 font-extrabold uppercase tracking-widest text-[10px] h-10 px-6 rounded-2xl" onClick={loadHistory}><RefreshCw className="h-4 w-4 mr-2" /> Atualizar histórico</Button>
+            <Button variant="outline" size="sm" onClick={loadHistory}><RefreshCw className="h-4 w-4 mr-1" /> Atualizar histórico</Button>
           </div>
         </div>
 
         <label className="mt-4 block">
-          <div className="border-2 border-dashed border-white/5 rounded-[2rem] px-4 py-12 text-center cursor-pointer hover:border-accent/40 transition-all duration-500 bg-white/5 group">
-            <Upload className="h-10 w-10 mx-auto text-accent/30 group-hover:text-accent transition-colors" />
-            <p className="text-sm mt-4 font-extrabold uppercase tracking-widest text-white">{fileMeta ? fileMeta.name : "Selecionar arquivo .xlsx"}</p>
-            <p className="text-[10px] text-white/30 font-extrabold uppercase tracking-widest mt-2">Abas esperadas: Empresa, Imóveis</p>
+          <div className="border-2 border-dashed border-border rounded-xl px-4 py-8 text-center cursor-pointer hover:border-accent transition-colors">
+            <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
+            <p className="text-sm mt-2 font-semibold">{fileMeta ? fileMeta.name : "Selecionar arquivo .xlsx"}</p>
+            <p className="text-[11px] text-muted-foreground">Abas esperadas: Empresa, Imóveis</p>
             <input
               ref={fileRef}
               type="file"
@@ -541,14 +531,14 @@ export default function BulkImportTab() {
       {reprocessOf && (
         <div className="bg-accent/10 border border-accent/40 rounded-xl p-4 text-xs flex items-center justify-between gap-3 flex-wrap">
           <span>
-            🔁 <strong>Modo reprocesso</strong>: importando apenas linhas com erro da importação <span className="font-mono">{reprocessOf.file_name}</span> ({(reprocessOf.errors as any[] | null ?? []).filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis").length} linha(s) alvo).
+            🔁 <strong>Modo reprocesso</strong>: importando apenas linhas com erro da importação <span className="font-mono">{reprocessOf.file_name}</span> ({(reprocessOf.errors as any[] ?? []).filter((e: any) => (e.sheet ?? "Imóveis") === "Imóveis").length} linha(s) alvo).
           </span>
           <Button size="sm" variant="ghost" onClick={() => setReprocessOf(null)}>Cancelar reprocesso</Button>
         </div>
       )}
 
       {parsed && (
-        <div className="bg-black/40 rounded-xl border border-white/5 p-5 space-y-4">
+        <div className="bg-card rounded-xl border border-border p-5 space-y-4">
           <h4 className="font-bold text-sm">📊 Pré-visualização</h4>
 
           {parsed.headerError && (
@@ -590,7 +580,7 @@ export default function BulkImportTab() {
             </div>
           )}
 
-          <label className="flex items-start gap-2 text-xs cursor-pointer select-none p-3 rounded-lg border border-white/5 bg-black/40">
+          <label className="flex items-start gap-2 text-xs cursor-pointer select-none p-3 rounded-lg border border-border bg-muted/30">
             <input
               type="checkbox"
               checked={upsertMode}
@@ -599,8 +589,8 @@ export default function BulkImportTab() {
               disabled={importing}
             />
             <span>
-              <span className="font-semibold text-accent">Atualizar registros existentes (upsert)</span>
-              <span className="block text-accent/60 text-[11px] mt-0.5">
+              <span className="font-semibold">Atualizar registros existentes (upsert)</span>
+              <span className="block text-muted-foreground text-[11px] mt-0.5">
                 Empresa: sempre atualizada (CRECI + UF). Imóveis: se alguma URL de imagem já existir no banco, o registro é atualizado em vez de criar duplicado.
               </span>
             </span>
@@ -623,8 +613,8 @@ export default function BulkImportTab() {
         </div>
       )}
 
-      <div className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-8 premium-shadow">
-        <h4 className="font-serif font-bold text-xl flex items-center gap-3 mb-6 text-accent"><History className="h-5 w-5" /> Histórico de importações</h4>
+      <div className="bg-card rounded-xl border border-border p-5">
+        <h4 className="font-bold text-sm flex items-center gap-2 mb-3"><History className="h-4 w-4" /> Histórico de importações</h4>
         {loadingHistory ? (
           <p className="text-xs text-muted-foreground">Carregando...</p>
         ) : history.length === 0 ? (
@@ -633,7 +623,7 @@ export default function BulkImportTab() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-left text-white/30 border-b border-white/5 font-extrabold uppercase tracking-[0.2em] text-[9px]">
+                <tr className="text-left text-muted-foreground border-b border-border">
                   <th className="py-2 pr-2">Data</th>
                   <th className="py-2 pr-2">Arquivo</th>
                   <th className="py-2 pr-2">Status</th>
@@ -644,7 +634,7 @@ export default function BulkImportTab() {
               </thead>
               <tbody>
                 {history.map((h) => (
-                  <tr key={h.id} className="border-b border-white/5 text-white/70 hover:bg-white/5 transition-colors group">
+                  <tr key={h.id} className="border-b border-border/40">
                     <td className="py-2 pr-2 whitespace-nowrap">{new Date(h.created_at).toLocaleString("pt-BR")}</td>
                     <td className="py-2 pr-2">{h.file_name}</td>
                     <td className="py-2 pr-2">
@@ -655,7 +645,7 @@ export default function BulkImportTab() {
                       <span className="text-green-600 font-semibold">{h.properties_created}</span>
                       {" / "}
                       <span className="text-destructive font-semibold">{h.properties_failed}</span>
-                      <span className="text-accent/50"> de {h.properties_total}</span>
+                      <span className="text-muted-foreground"> de {h.properties_total}</span>
                     </td>
                     <td className="py-2 space-x-1 whitespace-nowrap">
                       <Button variant="ghost" size="sm" onClick={() => downloadLog(h)}>
@@ -666,6 +656,8 @@ export default function BulkImportTab() {
                           variant="outline"
                           size="sm"
                           onClick={() => {
+                            setReprocessOf(h);
+                            reset();
                             setReprocessOf(h);
                             fileRef.current?.click();
                           }}
@@ -687,9 +679,9 @@ export default function BulkImportTab() {
 
 function Stat({ label, value, ok, warn }: { label: string; value: string; ok?: boolean; warn?: boolean }) {
   return (
-    <div className={`rounded-[1.25rem] border p-4 transition-all duration-300 ${warn ? "border-yellow-500/20 bg-yellow-500/5" : ok ? "border-accent/20 bg-accent/5" : "border-white/5 bg-white/5"}`}>
-      <p className="text-[9px] uppercase tracking-[0.2em] font-extrabold text-white/30">{label}</p>
-      <p className="text-2xl font-serif font-bold mt-1 text-accent">{value}</p>
+    <div className={`rounded-lg border p-3 ${warn ? "border-yellow-500/40 bg-yellow-500/5" : ok ? "border-accent/40 bg-accent/5" : "border-border"}`}>
+      <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="text-lg font-bold mt-0.5">{value}</p>
     </div>
   );
 }

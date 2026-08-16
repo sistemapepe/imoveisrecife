@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useSite } from "@/contexts/SiteContext";
 import { toast } from "sonner";
-import { UserPlus, Trash2, Shield, Eye, EyeOff, Key } from "lucide-react";
+import { UserPlus, Trash2, Shield, Eye, EyeOff } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import PermissionsConfig from "./PermissionsConfig";
@@ -15,23 +14,22 @@ interface ManagedUser {
 }
 
 const ROLES = [
-  { value: "super_admin", label: "Super Admin", color: "bg-red-500/10 text-red-500" },
-  { value: "admin", label: "Administrador", color: "bg-orange-500/10 text-orange-500" },
-  { value: "supervisor", label: "Supervisor", color: "bg-blue-500/10 text-blue-500" },
-  { value: "corretor", label: "Corretor", color: "bg-accent/10 text-accent" },
+  { value: "super_admin", label: "Super Admin", color: "bg-red-500/10 text-red-600" },
+  { value: "admin", label: "Administrador", color: "bg-destructive/10 text-destructive" },
+  { value: "supervisor", label: "Supervisor", color: "bg-primary/10 text-primary" },
+  { value: "corretor", label: "Corretor", color: "bg-accent/20 text-accent-foreground" },
 ];
 
 function roleBadge(role: string) {
   const r = ROLES.find((x) => x.value === role);
   return (
-    <span className={`px-2.5 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-[0.2em] border border-white/5 ${r?.color || "bg-muted text-muted-foreground"}`}>
+    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${r?.color || "bg-muted text-muted-foreground"}`}>
       {r?.label || role}
     </span>
   );
 }
 
-export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean }) {
-  const { site } = useSite();
+export default function UsersTab() {
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
@@ -40,60 +38,29 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
   const [newRole, setNewRole] = useState("corretor");
   const [creating, setCreating] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [resetPasswordId, setResetPasswordId] = useState<string | null>(null);
-  const [resetting, setResetting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-
-  const fetchUsers = useCallback(async (showLoading = true) => {
-    if (!site && !isNetwork) return;
-    
-    const cacheKey = `users_list_${isNetwork ? 'global' : site?.id}`;
-    const cached = sessionStorage.getItem(cacheKey);
-    
-    if (cached) {
-      try {
-        const { data, timestamp } = JSON.parse(cached);
-        setUsers(data);
-        
-        // TTL de 5 minutos para cache global, 1 minuto para site específico
-        const ttl = isNetwork ? 300000 : 60000;
-        if (Date.now() - timestamp < ttl) {
-          setLoading(false);
-          // Atualiza em background sem mostrar loading
-          fetchUsersInternal(cacheKey, false);
-          return;
-        }
-      } catch (e) {}
-    }
-
-    if (showLoading) setLoading(true);
-    fetchUsersInternal(cacheKey, true);
-  }, [site?.id, isNetwork]);
-
-  const fetchUsersInternal = async (cacheKey: string, updateLoadingState: boolean) => {
+  const fetchUsers = useCallback(async () => {
+    setLoading(true);
     const { data, error } = await supabase.functions.invoke("manage-users", {
-      body: { action: "list", siteId: isNetwork ? null : site?.id },
+      body: { action: "list" },
     });
-
     if (error || data?.error) {
       toast.error(data?.error || "Erro ao carregar usuários");
     } else {
-      const usersList = data.users || [];
-      setUsers(usersList);
-      sessionStorage.setItem(cacheKey, JSON.stringify({ data: usersList, timestamp: Date.now() }));
+      setUsers(data.users || []);
     }
-    if (updateLoadingState) setLoading(false);
-  };
+    setLoading(false);
+  }, []);
 
-  useEffect(() => { fetchUsers(true); }, [fetchUsers]);
+  useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
   const handleCreate = async () => {
     if (!newEmail || !newPassword) { toast.error("Preencha e-mail e senha"); return; }
     if (newPassword.length < 6) { toast.error("Senha mínima: 6 caracteres"); return; }
     setCreating(true);
     const { data, error } = await supabase.functions.invoke("manage-users", {
-      body: { action: "create", email: newEmail, password: newPassword, role: newRole, siteId: isNetwork ? null : site?.id },
+      body: { action: "create", email: newEmail, password: newPassword, role: newRole },
     });
     setCreating(false);
     if (error || data?.error) {
@@ -134,31 +101,13 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
     setDeleteId(null);
   };
 
-  const handleResetPassword = async () => {
-    if (!resetPasswordId || !newPassword) { toast.error("Informe a nova senha"); return; }
-    if (newPassword.length < 6) { toast.error("Senha mínima: 6 caracteres"); return; }
-    setResetting(true);
-    const { data, error } = await supabase.functions.invoke("manage-users", {
-      body: { action: "reset_password", userId: resetPasswordId, password: newPassword },
-    });
-    setResetting(false);
-    if (error || data?.error) {
-      toast.error(data?.error || "Erro ao resetar senha");
-    } else {
-      toast.success("Senha atualizada com sucesso!");
-      setResetPasswordId(null);
-      setNewPassword("");
-    }
-  };
-
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Usuários</h2>
+        <h2 className="text-lg font-bold">Usuários</h2>
         <button
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-accent text-luxury-dark text-[10px] font-extrabold uppercase tracking-widest hover:bg-accent/80 transition-all shadow-lg shadow-accent/20"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider"
         >
           <UserPlus className="h-4 w-4" /> Novo
         </button>
@@ -171,15 +120,15 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
       ) : (
         <div className="space-y-2">
           {users.map((u) => (
-            <div key={u.id} className="bg-[#0d1419] rounded-[2rem] border border-white/5 p-6 flex items-center gap-4 hover:border-accent/30 transition-all duration-500 premium-shadow group">
-              <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center shrink-0 border border-white/5 group-hover:border-accent/20 transition-colors">
-                <Shield className="h-5 w-5 text-accent/60" />
+            <div key={u.id} className="bg-card rounded-xl border border-border p-4 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <Shield className="h-4 w-4 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-white tracking-wide truncate group-hover:text-accent transition-colors">{u.email}</p>
+                <p className="text-sm font-semibold truncate">{u.email}</p>
                 <div className="flex items-center gap-2 mt-1">
                   {roleBadge(u.role)}
-                  <span className="text-[9px] font-extrabold uppercase tracking-[0.2em] text-white/20">
+                  <span className="text-[10px] text-muted-foreground">
                     {new Date(u.created_at).toLocaleDateString("pt-BR")}
                   </span>
                 </div>
@@ -187,30 +136,18 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
               <select
                 value={u.role}
                 onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-2 rounded-xl border border-white/5 bg-white/5 text-white/70 focus:outline-none focus:border-accent/40"
+                className="text-xs px-2 py-1.5 rounded-lg border border-border bg-background"
               >
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>{r.label}</option>
                 ))}
               </select>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => {
-                    setResetPasswordId(u.id);
-                    setNewPassword("");
-                  }}
-                  className="p-3 rounded-xl bg-accent/5 text-accent/50 hover:bg-accent hover:text-luxury-dark transition-all duration-300 border border-accent/10"
-                  title="Resetar Senha"
-                >
-                  <Key className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setDeleteId(u.id)}
-                  className="p-3 rounded-xl bg-red-500/5 text-red-500/50 hover:bg-red-500 hover:text-white transition-all duration-300 border border-red-500/10"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
+              <button
+                onClick={() => setDeleteId(u.id)}
+                className="p-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
             </div>
           ))}
         </div>
@@ -289,59 +226,10 @@ export default function UsersTab({ isNetwork = false }: { isNetwork?: boolean })
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Reset Password Dialog */}
-      <Dialog open={!!resetPasswordId} onOpenChange={(open) => {
-        if (!open) {
-          setResetPasswordId(null);
-          setNewPassword("");
-        }
-      }}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Resetar Senha</DialogTitle>
-            <DialogDescription>
-              Defina uma nova senha para o usuário: <strong>{users.find(u => u.id === resetPasswordId)?.email}</strong>
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3 py-4">
-            <div>
-              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Nova Senha</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full mt-1 px-3 py-2.5 pr-10 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                  placeholder="Mínimo 6 caracteres"
-                  minLength={6}
-                  autoFocus
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 mt-0.5 text-muted-foreground"
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-          </div>
-          <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setResetPasswordId(null)}>Cancelar</Button>
-            <Button onClick={handleResetPassword} disabled={resetting}>
-              {resetting ? "Salvando..." : "Salvar Nova Senha"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Permissions Config - Hidden in Network Admin as it is site-specific */}
-      {!isNetwork && (
-        <div className="mt-8 pt-6 border-t border-border">
-          <PermissionsConfig />
-        </div>
-      )}
+      {/* Permissions Config */}
+      <div className="mt-8 pt-6 border-t border-border">
+        <PermissionsConfig />
+      </div>
     </div>
   );
 }

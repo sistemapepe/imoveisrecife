@@ -36,7 +36,7 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { action, email, password, role, userId, perms, siteId } = body;
+    const { action, email, password, role, userId, perms } = body;
 
     if (action === "update_perms") {
       if (!perms || !Array.isArray(perms)) {
@@ -51,10 +51,9 @@ serve(async (req) => {
           .upsert({
             role: row.role as any,
             permission: row.permission,
-            enabled: row.enabled,
-            site_id: siteId || null
+            enabled: row.enabled
           }, { 
-            onConflict: siteId ? "role,permission,site_id" : "role,permission" 
+            onConflict: "role,permission" 
           });
         if (error) {
           console.error("Erro no upsert:", error);
@@ -77,7 +76,6 @@ serve(async (req) => {
       const { error: roleError } = await supabaseAdmin.from("user_roles").insert({
         user_id: newUser.user.id,
         role: role || "corretor",
-        site_id: siteId
       });
       if (roleError) {
         return new Response(JSON.stringify({ error: roleError.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -92,19 +90,9 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const query = supabaseAdmin.from("user_roles").select("*");
-      if (siteId) {
-        query.eq("site_id", siteId);
-      } else {
-        query.or("site_id.is.null,site_id.eq.00000000-0000-0000-0000-000000000000");
-      }
-      
-      const { data: roles } = await query;
+      const { data: roles } = await supabaseAdmin.from("user_roles").select("*");
       const roleMap: Record<string, string> = {};
-      (roles || []).forEach((r: any) => { 
-        // Prioritize site-specific roles if multiple found, though usually it's filtered
-        roleMap[r.user_id] = r.role; 
-      });
+      (roles || []).forEach((r: any) => { roleMap[r.user_id] = r.role; });
 
       const result = users.users.map((u: any) => ({
         id: u.id,
@@ -118,7 +106,7 @@ serve(async (req) => {
 
     if (action === "update_role") {
       await supabaseAdmin.from("user_roles").delete().eq("user_id", userId);
-      const { error } = await supabaseAdmin.from("user_roles").insert({ user_id: userId, role, site_id: siteId });
+      const { error } = await supabaseAdmin.from("user_roles").insert({ user_id: userId, role });
       if (error) {
         return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
@@ -133,19 +121,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    if (action === "reset_password") {
-      if (!password || password.length < 6) {
-        return new Response(JSON.stringify({ error: "Senha inválida (mínimo 6 caracteres)" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      }
-      const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, { password });
-      if (error) {
-        return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      }
-      return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    }
-
     return new Response(JSON.stringify({ error: "Ação inválida" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }

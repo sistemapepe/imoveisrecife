@@ -17,8 +17,8 @@ export default function MarqueeBanner() {
 
   return (
     <div 
-      style={{ paddingTop: `var(--marquee-py, 6px)`, paddingBottom: `var(--marquee-py, 6px)` }}
-      className="w-full bg-[#0d1419]/80 backdrop-blur-md border-b border-white/5 overflow-hidden select-none"
+      style={{ paddingTop: `var(--marquee-py, 4px)`, paddingBottom: `var(--marquee-py, 4px)` }}
+      className="w-full bg-accent/20 border-b border-accent/30 overflow-hidden select-none"
       role="region"
       aria-label="Banner de propriedades em destaque"
     >
@@ -46,10 +46,10 @@ export default function MarqueeBanner() {
             <button
               key={`${item}-${index}`}
               onClick={() => isLink ? navigate(`/imovel/${property.id}`) : null}
-              className={`text-[9px] md:text-[10px] font-extrabold uppercase tracking-[0.35em] text-white/40 hover:text-accent focus-visible:text-accent transition-all flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded px-2 py-1 ${!isLink ? 'cursor-default pointer-events-none' : ''}`}
+              className={`text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-accent-foreground hover:text-primary focus-visible:text-primary transition-all flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded px-2 py-1 ${!isLink ? 'cursor-default pointer-events-none' : ''}`}
               aria-label={isLink ? `Ver detalhes de ${item}` : item}
             >
-              <span className="w-1.5 h-1.5 rounded-full gold-gradient shadow-[0_0_8px_rgba(212,175,55,0.4)]" />
+              <span className="w-2 h-2 rounded-full bg-primary/60" />
               {item}
             </button>
           );

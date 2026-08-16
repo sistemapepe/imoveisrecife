@@ -136,12 +136,12 @@ export default function SeoAuditTab() {
   const totalIssues = withIssues.length;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="font-serif font-bold text-2xl text-accent tracking-[0.2em] uppercase">Auditoria SEO</h2>
-          <p className="text-[10px] text-white/40 font-extrabold uppercase tracking-widest mt-2">Identifique lacunas e use IA para preenchê-las.</p>
-        </div>
+    <div className="space-y-4">
+      <div>
+        <h2 className="text-2xl font-bold mb-1">Auditoria SEO</h2>
+        <p className="text-sm text-muted-foreground">
+          Identifique imóveis com lacunas de SEO e use IA para preenchê-las em massa.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">

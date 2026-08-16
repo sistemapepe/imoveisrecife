@@ -40,7 +40,7 @@ export function PriceDisplay({
 
   // Fallback automático: usa --price-color (auto-calculado por contraste em DynamicTheme)
   // quando o admin não definir cor ou deixar em branco.
-  const color = style?.color?.trim() ? style.color : undefined;
+  const color = style?.color?.trim() ? style.color : "hsl(var(--price-color))";
 
   const inline: CSSProperties = {
     fontFamily: style?.fontFamily,

@@ -6,6 +6,7 @@ import heroImage from "@/assets/hero-mansion.jpg";
 import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { Ruler, BedDouble, Car } from "lucide-react";
+import PageTransition from "@/components/PageTransition";
 import PropertyCard from "@/components/PropertyCard";
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
@@ -173,14 +174,13 @@ export default function Index() {
   ].filter(Boolean) as Record<string, any>[];
 
   return (
-    <div className="contents">
+    <PageTransition>
       <SEOHead
         title={settings.heroTitle}
         description={`${settings.brandName} — Imóveis de alto padrão em Recife e região. Encontre casas, apartamentos, coberturas e terrenos exclusivos com atendimento personalizado.`}
         jsonLd={homeJsonLd}
       />
-      <div className="contents">
-        <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait">
         {loading ? (
           <motion.div
             key="skeleton"
@@ -192,21 +192,21 @@ export default function Index() {
           >
             {/* Skeleton Nav */}
             <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-2 border-b border-card/10 max-w-screen-lg mx-auto bg-luxury-dark h-16">
-              <div className="w-10 h-10 rounded-full bg-card/10 " />
-              <div className="h-10 w-40 rounded bg-card/10 " />
+              <div className="w-10 h-10 rounded-full bg-card/10 animate-pulse" />
+              <div className="h-10 w-40 rounded bg-card/10 animate-pulse" />
               <div className="w-10" />
             </nav>
 
             {/* Skeleton Hero - Fixed Aspect Ratio to prevent layout shift */}
-            <section className="relative h-[calc(100svh-220px)] md:h-[85vh] w-full shrink-0 overflow-hidden bg-card/5 ">
+            <section className="relative h-[calc(100svh-220px)] md:h-[85vh] w-full shrink-0 overflow-hidden bg-card/5 animate-pulse">
               <div className="absolute inset-0 bg-gradient-to-t from-luxury-dark via-transparent to-transparent" />
               <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 px-8 gap-4">
-                <div className="h-10 w-64 rounded bg-card/10 " />
-                <div className="h-8 w-48 rounded bg-card/10 " />
-                <div className="h-12 w-40 rounded-full border-2 border-card/10  mt-2" />
+                <div className="h-10 w-64 rounded bg-card/10 animate-pulse" />
+                <div className="h-8 w-48 rounded bg-card/10 animate-pulse" />
+                <div className="h-12 w-40 rounded-full border-2 border-card/10 animate-pulse mt-2" />
                 <div className="flex gap-2 mt-4">
                   {[0, 1, 2].map((i) => (
-                    <div key={i} className={`h-1 rounded-full bg-card/10  ${i === 0 ? "w-8" : "w-2"}`} />
+                    <div key={i} className={`h-1 rounded-full bg-card/10 animate-pulse ${i === 0 ? "w-8" : "w-2"}`} />
                   ))}
                 </div>
               </div>
@@ -216,22 +216,22 @@ export default function Index() {
             <section className="relative -mt-12 z-10 bg-luxury-dark rounded-t-xl pb-8">
               <div className="px-6 pt-8 pb-4 flex justify-between items-end">
                 <div>
-                  <div className="h-3 w-20 rounded bg-card/10  mb-2" />
-                  <div className="h-7 w-32 rounded bg-card/10 " />
+                  <div className="h-3 w-20 rounded bg-card/10 animate-pulse mb-2" />
+                  <div className="h-7 w-32 rounded bg-card/10 animate-pulse" />
                 </div>
-                <div className="h-4 w-20 rounded bg-card/10 " />
+                <div className="h-4 w-20 rounded bg-card/10 animate-pulse" />
               </div>
               <div className="flex overflow-x-auto hide-scrollbar gap-5 px-6 pb-6">
                 {[0, 1].map((i) => (
                   <div key={i} className="flex flex-col min-w-[280px] bg-luxury-dark-lighter/40 rounded-xl overflow-hidden border border-card/5">
-                    <div className="w-full aspect-[4/3] bg-card/10 " />
+                    <div className="w-full aspect-[4/3] bg-card/10 animate-pulse" />
                     <div className="p-5 space-y-3">
-                      <div className="h-5 w-28 rounded bg-card/10 " />
-                      {settings.showLocationOnCard && <div className="h-4 w-40 rounded bg-card/10 " />}
+                      <div className="h-5 w-28 rounded bg-card/10 animate-pulse" />
+                      {settings.showLocationOnCard && <div className="h-4 w-40 rounded bg-card/10 animate-pulse" />}
                       <div className="flex gap-4">
-                        <div className="h-3 w-14 rounded bg-card/10 " />
-                        <div className="h-3 w-14 rounded bg-card/10 " />
-                        <div className="h-3 w-14 rounded bg-card/10 " />
+                        <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
+                        <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
+                        <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
                       </div>
                     </div>
                   </div>
@@ -278,11 +278,11 @@ export default function Index() {
               {/* Navigation arrows */}
               {heroSlides.length > 1 && (
                 <>
-                  <button onClick={prevSlide} aria-label="Slide anterior" className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/20 backdrop-blur-md p-3 rounded-2xl border border-white/10 text-white/70 hover:text-white hover:bg-black/40 transition-all">
-                    <ChevronLeft className="h-6 w-6" />
+                  <button onClick={prevSlide} aria-label="Slide anterior" className="absolute left-3 top-1/3 sm:top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-2 rounded-full">
+                    <ChevronLeft className="h-5 w-5 text-card" />
                   </button>
-                  <button onClick={nextSlide} aria-label="Próximo slide" className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/20 backdrop-blur-md p-3 rounded-2xl border border-white/10 text-white/70 hover:text-white hover:bg-black/40 transition-all">
-                    <ChevronRight className="h-6 w-6" />
+                  <button onClick={nextSlide} aria-label="Próximo slide" className="absolute right-3 top-1/3 sm:top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-2 rounded-full">
+                    <ChevronRight className="h-5 w-5 text-card" />
                   </button>
                 </>
               )}
@@ -295,7 +295,7 @@ export default function Index() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.5 }}
-                    className="font-serif text-5xl md:text-6xl text-card leading-[1.1] mb-8 drop-shadow-2xl"
+                    className="font-serif text-4xl text-card leading-tight mb-6"
                   >
                     {heroSlides[currentSlide].title}
                   </motion.h2>
@@ -327,19 +327,19 @@ export default function Index() {
                       navigate("/busca");
                     }
                   }}
-                  className="group relative flex min-w-[220px] items-center justify-center overflow-hidden rounded-2xl h-14 px-10 mb-8 border border-white/20 text-white text-xs font-extrabold uppercase tracking-[0.25em] transition-all hover:border-accent/60 active:scale-[0.98] premium-shadow"
+                  className="group relative flex min-w-[160px] items-center justify-center overflow-hidden rounded-full h-12 px-8 mb-6 border-2 border-accent text-card text-sm font-bold uppercase tracking-[0.2em] transition-colors active:brightness-95"
                 >
                   <span
-                    className="pointer-events-none absolute inset-0 opacity-90 transition-opacity group-hover:opacity-100"
+                    className="pointer-events-none absolute inset-0 animate-[gradient-shift_4s_ease_infinite]"
                     style={{
                       backgroundImage:
-                        "var(--gold-gradient)",
+                        "linear-gradient(120deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 35%, hsl(var(--accent)) 65%, hsl(var(--primary)) 100%)",
+                      backgroundSize: "300% 300%",
                     }}
                   />
-                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_3s_infinite]" />
-                  <span className="relative z-10 drop-shadow-sm flex items-center gap-2">
-                    Descobrir <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                  </span>
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_2.5s_infinite]" />
+                  <span className="relative z-10">Descobrir</span>
+
                 </motion.button>
 
 
@@ -355,7 +355,7 @@ export default function Index() {
                     <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-accent/40 via-primary/20 to-accent/40 opacity-60 blur-sm group-focus-within:opacity-100 transition-opacity duration-500" />
                     <Search className="absolute left-5 h-5 w-5 text-accent/80 z-10" />
                     <input
-                      className="relative w-full h-14 pl-13 pr-5 bg-foreground/20 backdrop-blur-3xl rounded-[1.25rem] text-sm font-medium text-white shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.1)] border border-white/10 focus:border-accent/60 focus:shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_25px_rgba(212,175,55,0.15)] focus:outline-none transition-all duration-300 placeholder:text-white/40"
+                      className="relative w-full h-14 pl-13 pr-5 bg-foreground/20 backdrop-blur-2xl rounded-full text-sm font-medium text-card shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)] border border-card/15 focus:border-accent/40 focus:shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_20px_hsl(var(--accent)/0.15)] focus:outline-none transition-all duration-300 placeholder:text-card/50"
                       style={{ paddingLeft: '3.25rem' }}
                       value={quickSearch}
                       onChange={(e) => { 
@@ -378,7 +378,7 @@ export default function Index() {
                     />
                   </div>
                   {showQuickSuggestions && quickSearch.trim() && quickSuggestions.length > 0 && (
-                    <div className="absolute left-0 right-0 top-full mt-3 max-h-56 overflow-y-auto rounded-2xl bg-[#0d1419]/90 backdrop-blur-3xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] z-50">
+                    <div className="absolute left-0 right-0 top-full mt-3 max-h-56 overflow-y-auto rounded-2xl bg-foreground/25 backdrop-blur-2xl border border-card/15 shadow-[0_16px_48px_rgba(0,0,0,0.5)] z-50">
                       {quickSuggestions.map((s, i) => (
                         <button
                           key={`${s.city}-${s.neighborhood || ""}-${i}`}
@@ -386,14 +386,14 @@ export default function Index() {
                             const loc = s.neighborhood ? `${s.neighborhood}, ${s.city}` : s.city;
                             navigate(`/busca?location=${encodeURIComponent(loc)}`);
                           }}
-                          className="flex items-center gap-3 w-full px-5 py-4 text-left hover:bg-white/5 transition-colors duration-200 border-b border-white/5 last:border-0"
+                          className="flex items-center gap-3 w-full px-5 py-3.5 text-left hover:bg-card/10 transition-colors duration-200 border-b border-card/5 last:border-0"
                         >
                           <MapPin className="h-4 w-4 shrink-0 text-accent" />
                           <div className="min-w-0">
                             {s.neighborhood ? (
                               <>
-                                <span className="text-sm font-semibold text-white">{s.neighborhood}</span>
-                                <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest ml-2">{s.city}, PE</span>
+                                <span className="text-sm font-semibold text-card">{s.neighborhood}</span>
+                                <span className="text-xs text-card/50 ml-1.5">{s.city}, PE</span>
                               </>
                             ) : (
                               <span className="text-sm font-semibold text-card">{s.city}, PE</span>
@@ -420,19 +420,19 @@ export default function Index() {
             </section>
 
             {/* Inline Filters - Minimal top bar */}
-            <div className="sticky top-[var(--navbar-height)] z-40 glass-nav border-b border-white/5 transition-all duration-300">
-              <div className="flex overflow-x-auto hide-scrollbar gap-2 px-4 py-3">
+            <div className="sticky top-[var(--navbar-height)] z-40 bg-luxury-dark/95 backdrop-blur-xl border-b border-card/10 shadow-lg transition-all duration-300">
+              <div className="flex overflow-x-auto hide-scrollbar gap-1.5 px-3 py-2">
                 {typeFilters.map(({ label, short, icon: Icon }) => (
                   <button
                     key={label}
                     onClick={() => { setActiveType(label); setShowAll(false); }}
-                    className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-extrabold uppercase tracking-widest transition-all active:scale-95 ${
+                    className={`shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all active:scale-95 ${
                       activeType === label
-                        ? "gold-gradient text-white shadow-lg shadow-accent/20"
-                        : "bg-white/5 text-white/40 hover:text-white hover:bg-white/10 border border-white/5"
+                        ? "bg-accent text-accent-foreground shadow-md"
+                        : "bg-card/5 text-card/50 hover:text-card hover:bg-card/10"
                     }`}
                   >
-                    <Icon className="h-3.5 w-3.5" />
+                    <Icon className="h-3 w-3" />
                     {short}
                   </button>
                 ))}
@@ -480,7 +480,7 @@ export default function Index() {
                       <div className="flex justify-center mt-8">
                         <button
                           onClick={() => setShowAll(true)}
-                          className="flex items-center gap-2 px-10 py-4 rounded-full gold-gradient text-white text-sm font-bold uppercase tracking-[0.15em] hover:scale-105 transition-all shadow-xl shadow-accent/20"
+                          className="flex items-center gap-2 px-8 py-3 rounded-full border-2 border-accent text-accent text-sm font-bold uppercase tracking-wider hover:bg-accent hover:text-accent-foreground transition-all"
                         >
                           Ver todos os {filteredProperties.length} imóveis <ArrowRight className="h-4 w-4" />
                         </button>
@@ -500,7 +500,7 @@ export default function Index() {
                   <span className="text-accent text-xs font-bold uppercase tracking-widest">Exclusividade {settings.brandName}</span>
                   <h3 className="text-2xl font-serif text-card mt-1">Destaques</h3>
                 </div>
-                <button onClick={() => navigate("/busca")} className="text-accent text-[10px] uppercase tracking-[0.2em] font-bold flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <button onClick={() => navigate("/busca")} className="text-primary text-sm font-semibold flex items-center gap-1">
                   Ver todos <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
@@ -512,7 +512,7 @@ export default function Index() {
                     initial={{ opacity: 0, x: 40 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: 0.1 * i }}
-                    className="flex flex-col min-w-[300px] bg-white/[0.03] rounded-[2rem] overflow-hidden border border-white/5 cursor-pointer premium-shadow-hover transition-all duration-500"
+                    className="flex flex-col min-w-[280px] bg-luxury-dark-lighter/40 rounded-xl overflow-hidden border border-card/5 cursor-pointer"
                     onClick={() => navigate(`/imovel/${p.id}`)}
                   >
                     <div className="relative w-full aspect-[4/3] overflow-hidden">
@@ -543,18 +543,16 @@ export default function Index() {
                         <Heart className={`h-4 w-4 ${favorites.includes(p.id) ? "fill-accent text-accent" : "text-card"}`} />
                       </button>
                     </div>
-                    <div className="p-6">
-                      <h4 className="font-serif text-lg text-white mb-2 line-clamp-1">{p.title}</h4>
-                      <div className="flex items-center gap-2 mb-4">
-                        <PriceDisplay as="p" section="banner" value={p.price} className="text-accent font-bold text-lg" />
-                        <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">
-                          {p.neighborhood}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-4 text-white/50 text-[10px] uppercase tracking-widest font-bold border-t border-white/5 pt-4">
-                        {!!p.area && <div className="flex items-center gap-1.5"><Ruler className="h-3 w-3 text-accent" />{p.area}m²</div>}
-                        {!!p.suites && <div className="flex items-center gap-1.5"><BedDouble className="h-3 w-3 text-accent" />{p.suites} Suítes</div>}
-                        {!!p.parking && <div className="flex items-center gap-1.5"><Car className="h-3 w-3 text-accent" />{p.parking} Vagas</div>}
+                    <div className="p-5">
+                      <PriceDisplay as="p" section="banner" value={p.price} />
+                      <p className="text-card/70 text-sm font-medium mb-3">
+                        {p.title}
+                        {settings.showLocationOnCard && ` - ${p.neighborhood}`}
+                      </p>
+                      <div className="flex items-center gap-4 text-card/50 text-xs uppercase tracking-tighter">
+                        {!!p.area && <div className="flex items-center gap-1"><Ruler className="h-3 w-3 text-primary" />{p.area}m²</div>}
+                        {!!p.suites && <div className="flex items-center gap-1"><BedDouble className="h-3 w-3 text-primary" />{p.suites} Suítes</div>}
+                        {!!p.parking && <div className="flex items-center gap-1"><Car className="h-3 w-3 text-primary" />{p.parking} Vagas</div>}
                       </div>
                     </div>
                   </motion.div>
@@ -571,7 +569,7 @@ export default function Index() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="relative h-64 md:h-80 rounded-[2.5rem] overflow-hidden cursor-pointer group border border-white/10 premium-shadow-hover transition-all duration-500"
+                    className="relative h-56 md:h-64 rounded-2xl overflow-hidden cursor-pointer group"
                     onClick={() => navigate(`/imovel/${properties[0].id}`)}
                   >
                     <img
@@ -583,15 +581,15 @@ export default function Index() {
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-luxury-dark/95 via-luxury-dark/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/50 to-transparent" />
                     <div className="relative z-10 flex flex-col justify-center h-full px-8 max-w-sm">
-                      <span className="text-accent text-[9px] font-extrabold uppercase tracking-[0.4em] mb-2 px-1">Em destaque</span>
-                      <h3 className="font-serif text-3xl md:text-4xl text-white leading-tight mb-2 tracking-tight">{properties[0].title}</h3>
+                      <span className="text-accent text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Em destaque</span>
+                      <h3 className="font-serif text-2xl md:text-3xl text-card leading-tight mb-2">{properties[0].title}</h3>
                       {settings.showLocationOnCard && (
-                        <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-6 px-1">{properties[0].neighborhood} · {properties[0].city}</p>
+                        <p className="text-card/70 text-sm mb-4">{properties[0].neighborhood} · {properties[0].city}</p>
                       )}
-                      <span className="inline-flex items-center gap-3 text-white font-extrabold text-[10px] uppercase tracking-[0.25em] group-hover:text-accent transition-all px-1">
-                        Saiba mais <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-2" />
+                      <span className="inline-flex items-center gap-2 text-accent font-bold text-sm uppercase tracking-wider group-hover:gap-3 transition-all">
+                        Saiba mais <ArrowRight className="h-4 w-4" />
                       </span>
                     </div>
                   </motion.div>
@@ -599,21 +597,21 @@ export default function Index() {
               )}
 
               {/* Dynamic Collections */}
-              <div className="px-6 py-10">
-                <h4 className="text-white font-serif text-3xl mb-8 tracking-tight">Coleções Exclusivas</h4>
+              <div className="px-6 py-6">
+                <h4 className="text-card font-serif text-lg mb-4">Coleções</h4>
                 {collections.length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {collections.map((col) => (
                       <button
                         key={col.type}
                         onClick={() => { setActiveType(col.type); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                        className="relative h-32 rounded-[1.5rem] overflow-hidden border border-white/5 premium-shadow-hover transition-all duration-300"
+                        className="relative h-28 rounded-lg overflow-hidden border border-card/5"
                       >
                         <img src={col.image} alt={col.type} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
-                        <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
+                        <div className="absolute inset-0 bg-foreground/50" />
                         <div className="relative z-10 flex flex-col justify-center items-center h-full">
-                          <span className="text-white font-extrabold tracking-[0.3em] text-[10px] uppercase">{col.type}</span>
-                          <span className="text-white/40 text-[9px] mt-2 font-extrabold uppercase tracking-widest">{col.count} {col.count === 1 ? "imóvel" : "imóveis"}</span>
+                          <span className="text-card font-bold tracking-widest text-xs uppercase">{col.type}</span>
+                          <span className="text-card/60 text-[10px] mt-1">{col.count} {col.count === 1 ? "imóvel" : "imóveis"}</span>
                         </div>
                       </button>
                     ))}
@@ -627,8 +625,7 @@ export default function Index() {
             </section>
           </motion.div>
         )}
-        </AnimatePresence>
-      </div>
-    </div>
+      </AnimatePresence>
+    </PageTransition>
   );
 }

@@ -1,6 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import React from "react";
 
 interface BackButtonProps {
   variant?: "floating" | "ghost";
@@ -9,10 +8,11 @@ interface BackButtonProps {
   label?: string;
 }
 
-const BackButton = ({ variant = "floating", className = "", onClick, label = "Voltar" }: BackButtonProps) => {
+export default function BackButton({ variant = "floating", className = "", onClick, label = "Voltar" }: BackButtonProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Pages that already have a header back button - don't show the floating one
   const pagesWithHeaderBack = ["/busca", "/favoritos", "/admin", "/filtros", "/login", "/privacidade"];
   if (variant === "floating" && (location.pathname === "/" || pagesWithHeaderBack.includes(location.pathname))) return null;
 
@@ -50,5 +50,4 @@ const BackButton = ({ variant = "floating", className = "", onClick, label = "Vo
       <ArrowLeft className="h-6 w-6" />
     </button>
   );
-};
-export default BackButton;
+}

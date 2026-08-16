@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useProperties } from "@/contexts/PropertyContext";
-import { useSite } from "@/contexts/SiteContext";
 import { checkHoneypot, HONEYPOT_FIELD_NAME, honeypotInputStyle } from "@/lib/honeypot";
 
 interface LeadCaptureModalProps {
@@ -53,7 +52,6 @@ export default function LeadCaptureModal({
   source = "whatsapp_fab",
 }: LeadCaptureModalProps) {
   const { settings } = useProperties();
-  const { site } = useSite();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [honeypot, setHoneypot] = useState("");
@@ -129,8 +127,7 @@ export default function LeadCaptureModal({
       interest: interestText.slice(0, 100),
       message: messageText.slice(0, 5000),
       source: source.slice(0, 50),
-      site_id: site?.id
-    } as any);
+    });
     setSubmitting(false);
     if (error) {
       const msg = error.message?.includes("rate_limit_exceeded")
@@ -158,10 +155,10 @@ export default function LeadCaptureModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] bg-luxury-dark/80 backdrop-blur-xl"
+          className="fixed inset-0 z-[100] bg-foreground/60 backdrop-blur-sm"
           onClick={onClose}
         >
-          <div className="fixed inset-0 flex items-center justify-center overflow-y-auto px-4 py-[max(1rem,env(safe-area-inset-top))] pb-[max(5rem,env(safe-area-inset-bottom))] pointer-events-none">
+          <div className="fixed inset-0 flex items-center justify-center overflow-y-auto px-4 py-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] pointer-events-none">
             <motion.div
               role="dialog"
               aria-modal="true"
@@ -171,17 +168,17 @@ export default function LeadCaptureModal({
               exit={{ opacity: 0, y: 30, scale: 0.96 }}
               transition={{ duration: 0.25 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-md my-auto bg-[#0d1419] rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] border border-white/10 overflow-hidden pointer-events-auto text-white"
+              className="relative w-full max-w-md my-auto bg-card rounded-2xl shadow-2xl border border-border overflow-hidden pointer-events-auto"
             >
-              <div className="flex items-center justify-between p-6 border-b border-white/5">
+              <div className="flex items-center justify-between p-5 border-b border-border">
                 <div className="flex items-center gap-2">
                   <div className="h-9 w-9 rounded-full bg-whatsapp/10 flex items-center justify-center">
                     <MessageCircle className="h-5 w-5 text-whatsapp" />
                   </div>
-                  <h2 id="lead-modal-title" className="font-serif font-bold text-lg tracking-tight outline-none" tabIndex={-1}>{settings.leadModalTitle}</h2>
+                  <h2 id="lead-modal-title" className="font-bold text-base outline-none" tabIndex={-1}>{settings.leadModalTitle}</h2>
                 </div>
-                <button onClick={onClose} aria-label="Fechar" className="p-2 rounded-full hover:bg-white/5 transition-colors">
-                  <X className="h-5 w-5 text-white/40" />
+                <button onClick={onClose} aria-label="Fechar" className="p-1 rounded-full hover:bg-muted transition-colors">
+                  <X className="h-5 w-5 text-muted-foreground" />
                 </button>
               </div>
 
@@ -197,13 +194,13 @@ export default function LeadCaptureModal({
                   aria-hidden="true"
                   style={honeypotInputStyle}
                 />
-                <p className="text-sm text-white/50 leading-relaxed whitespace-pre-line px-1">
+                <p className="text-sm text-muted-foreground whitespace-pre-line">
                   {settings.leadModalDescription}
                 </p>
 
                 <div>
-                  <label htmlFor="lead-name" className="block text-[10px] font-extrabold mb-2 uppercase tracking-[0.2em] text-accent/70 px-1">
-                    {settings.leadModalNameLabel} <span className="text-accent">*</span>
+                  <label htmlFor="lead-name" className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-muted-foreground">
+                    {settings.leadModalNameLabel} <span className="text-destructive">*</span>
                   </label>
                   <input
                     id="lead-name"
@@ -213,14 +210,14 @@ export default function LeadCaptureModal({
                     maxLength={100}
                     required
                     autoComplete="name"
-                    className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-base focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all placeholder:text-white/20 text-white"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-accent md:text-sm"
                     placeholder={settings.leadModalNamePlaceholder}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="lead-phone" className="block text-[10px] font-extrabold mb-2 uppercase tracking-[0.2em] text-accent/70 px-1">
-                    {settings.leadModalPhoneLabel} <span className="text-accent">*</span>
+                  <label htmlFor="lead-phone" className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-muted-foreground">
+                    {settings.leadModalPhoneLabel} <span className="text-destructive">*</span>
                   </label>
                   <input
                     id="lead-phone"
@@ -231,7 +228,7 @@ export default function LeadCaptureModal({
                     maxLength={16}
                     required
                     autoComplete="tel-national"
-                    className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-base focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all placeholder:text-white/20 text-white"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-accent md:text-sm"
                     placeholder="(81) 99999-9999"
                   />
                 </div>
@@ -239,7 +236,7 @@ export default function LeadCaptureModal({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full rounded-2xl bg-whatsapp text-white py-5 font-bold text-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60 shadow-xl shadow-whatsapp/10"
+                  className="w-full rounded-xl bg-whatsapp text-white py-3.5 font-bold text-sm active:scale-95 transition-transform flex items-center justify-center gap-2 disabled:opacity-60"
                 >
                   <MessageCircle className="h-5 w-5" />
                   {submitting ? settings.leadModalSubmittingText : settings.leadModalSubmitText}
@@ -249,7 +246,7 @@ export default function LeadCaptureModal({
                   <button
                     type="button"
                     onClick={handleSkip}
-                    className="w-full text-[10px] font-extrabold uppercase tracking-[0.2em] text-white/30 hover:text-white transition-colors py-2"
+                    className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
                   >
                     {settings.leadModalSkipText}
                   </button>
