@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PropertyProvider } from "@/contexts/PropertyContext";
+import { TenantProvider } from "@/contexts/TenantContext";
 import { lazy, Suspense } from "react";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppFab from "@/components/WhatsAppFab";
