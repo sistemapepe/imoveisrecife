@@ -138,11 +138,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setRole(userRole);
       await loadPermissions(userRole);
       logger.info("Auth initialization complete", { userId, role: userRole });
-      setLoading(false);
+      
+      // Use startTransition to avoid blocking synchronous rendering
+      import("react").then(({ startTransition }) => {
+        startTransition(() => {
+          setLoading(false);
+        });
+      });
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
-      setLoading(false);
+      import("react").then(({ startTransition }) => {
+        startTransition(() => {
+          setLoading(false);
+        });
+      });
     }
   };
 
@@ -161,7 +171,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await checkRole(newUser.id);
       } else {
         setRole(null);
-        setLoading(false);
+        import("react").then(({ startTransition }) => {
+          startTransition(() => {
+            setLoading(false);
+          });
+        });
       }
     });
 
@@ -175,7 +189,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         checkRole(initialUser.id);
       } else {
         logger.info("No session found");
-        setLoading(false);
+        import("react").then(({ startTransition }) => {
+          startTransition(() => {
+            setLoading(false);
+          });
+        });
       }
     });
 
