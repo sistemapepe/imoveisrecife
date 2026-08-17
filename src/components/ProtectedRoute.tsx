@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -9,8 +10,19 @@ interface ProtectedRouteProps {
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading, role } = useAuth();
   const location = useLocation();
+  const [isInitializing, setIsInitializing] = useState(true);
 
-  if (loading) {
+  useEffect(() => {
+    // Quando o loading do AuthContext termina, damos um pequeno delay para garantir que o estado do role estabilizou
+    if (!loading) {
+      const timer = setTimeout(() => {
+        setIsInitializing(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
+
+  if (loading || isInitializing) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -20,8 +32,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   // Se não houver usuário ou o papel for 'user' (sem permissões administrativas), redireciona para login
   if (!user || role === "user" || !role) {
-    // Usamos replace: false temporariamente para depurar se o redirecionamento é o problema
-    return <Navigate to="/login" state={{ from: location }} replace={false} />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;
