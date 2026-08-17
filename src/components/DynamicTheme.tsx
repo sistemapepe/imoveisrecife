@@ -111,11 +111,14 @@ export default function DynamicTheme() {
     }
 
 
-    // Atualiza o título da aba com o nome da marca
+    // Atualiza o título da aba com o nome da marca (sem suspender a renderização do React)
     if (settings.brandName) {
       const current = document.title;
       if (!current.includes(settings.brandName)) {
-        document.title = `${settings.brandName} — ${current}`;
+        // Usar setTimeout para mover a mutação do DOM para fora do fluxo síncrono do React
+        setTimeout(() => {
+          document.title = `${settings.brandName} — ${current}`;
+        }, 0);
       }
     }
   }, [
