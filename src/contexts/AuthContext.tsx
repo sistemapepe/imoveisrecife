@@ -115,15 +115,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkRole = async (userId: string) => {
     try {
       logger.info("Checking user role", { userId });
-      const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
+      // Remove site_id filtering as it's handled by other logic if needed, 
+      // or ensure the user has at least one valid role across any site.
+      const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", userId);
       
       if (error) {
         logger.error("Database error checking user role", { userId }, error);
         throw error;
       }
 
-      const userRole = (data?.role as AppRole) || "user";
-      logger.info("User role identified", { userId, role: userRole });
+      // If user has multiple roles, super_admin takes precedence, then admin
+      const roles = data?.map(r => r.role as AppRole) || [];
+      let userRole: AppRole = "user";
+      
+      if (roles.includes("super_admin")) userRole = "super_admin";
+      else if (roles.includes("admin")) userRole = "admin";
+      else if (roles.includes("supervisor")) userRole = "supervisor";
+      else if (roles.includes("corretor")) userRole = "corretor";
+      
+      logger.info("User role identified", { userId, roles, selectedRole: userRole });
       
       setRole(userRole);
       await loadPermissions(userRole);
