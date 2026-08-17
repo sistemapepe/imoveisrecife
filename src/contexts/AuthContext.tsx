@@ -91,15 +91,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .select("permission, enabled")
         .eq("role", userRole);
       if (data) {
-        startTransition(() => {
-          const perms = { ...permissions };
-          data.forEach((row: any) => {
-            if (row.permission in perms) {
-              perms[row.permission as PermissionKey] = row.enabled;
-            }
-          });
-          setPermissions(perms);
+        const perms = { ...permissions };
+        data.forEach((row: any) => {
+          if (row.permission in perms) {
+            perms[row.permission as PermissionKey] = row.enabled;
+          }
         });
+        setPermissions(perms);
       }
     } catch (error) {
       logger.error("Failed to load permissions", { role: userRole }, error as Error);
@@ -134,19 +132,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       logger.info("User role identified", { userId, identifiedRole: userRole, allRoles: roles });
-      startTransition(() => {
-        setRole(userRole);
-      });
+      setRole(userRole);
       await loadPermissions(userRole);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
-      startTransition(() => {
-        setRole("user");
-      });
+      setRole("user");
     } finally {
-      startTransition(() => {
-        setLoading(false);
-      });
+      setLoading(false);
     }
   };
 
@@ -159,17 +151,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logger.info("Auth state changed", { event, userId: session?.user?.id });
       const newUser = session?.user ?? null;
       
-      startTransition(() => {
-        setUser(newUser);
-        
-        if (newUser) {
-          setLoading(true);
-          checkRole(newUser.id);
-        } else {
-          setRole(null);
-          setLoading(false);
-        }
-      });
+      setUser(newUser);
+      
+      if (newUser) {
+        setLoading(true);
+        checkRole(newUser.id);
+      } else {
+        setRole(null);
+        setLoading(false);
+      }
     });
 
     const initSession = async () => {
@@ -179,16 +169,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         const currentUser = session?.user ?? null;
         
-        startTransition(() => {
-          setUser(currentUser);
-          
-          if (currentUser) {
-            setLoading(true);
-            checkRole(currentUser.id);
-          } else {
-            setLoading(false);
-          }
-        });
+        setUser(currentUser);
+        
+        if (currentUser) {
+          setLoading(true);
+          checkRole(currentUser.id);
+        } else {
+          setLoading(false);
+        }
       } catch (error) {
         logger.error("Failed to get session", {}, error as Error);
         if (mounted) setLoading(false);
