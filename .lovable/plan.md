@@ -1,47 +1,116 @@
-# Architectural Proposal: Multi-tenant / White-label Platform
+# Architectural Proposal: Multi-tenant / White-label Platform (SaaS)
 
-This plan outlines the transformation of the current project into a centralized multi-tenant architecture, allowing multiple "tenants" (real estate clients) to operate from a single codebase with isolated data and custom branding.
-
-## 1. Core Architecture Overview
-
-We will move from a single-site model to a **Single-Database Multi-tenant** approach.
-
-### Database Strategy (Supabase)
-- **Tenant Isolation**: Every client-facing table (properties, messages, settings, users) will include a `site_id` (UUID).
-- **RLS (Row Level Security)**: Strict policies will ensure that a user or a public visitor only sees data where `site_id` matches their current context.
-- **Shared Master Tables**: Tables like `site_configs` will store domain mappings, logos, and custom CSS variables for each tenant.
-
-### Routing & Discovery
-- **Tenant Identification**: The application will identify the tenant based on the `window.location.hostname`.
-- **Domain Mapping**: A master table `site_domains` will map custom domains (e.g., `imobiliaria-a.com.br`) or subdomains to a specific `site_id`.
-- **Dynamic Configuration**: A global `SiteProvider` will fetch the configuration (colors, logo, features enabled) for the identified `site_id` on app load.
-
-## 2. Implementation Phases
-
-### Phase 1: Foundation & Data Isolation
-- Standardize the `site_id` column across all relevant tables.
-- Refactor Supabase RLS policies to use a `current_site_id()` function that derives the tenant from the session or request context.
-- Implement the `SiteContext` to handle tenant discovery via hostname.
-
-### Phase 2: Centralized Super Admin
-- Create a `Super Admin` dashboard (accessible only to master users).
-- Features: Create new tenants, manage domain mappings, monitor global analytics, and toggle premium features per site.
-- Automated onboarding: A script to seed a new tenant with default settings and roles.
-
-### Phase 3: Dynamic Branding & Customization
-- Replace hardcoded styles with CSS Variables (already partially implemented) driven by the `site_configs` table.
-- Support for custom assets (logos, favicons, OG images) stored in tenant-specific storage buckets or folders.
-- DNS Management: Documentation/tools for clients to point CNAME records to the central platform.
-
-## 3. Benefits of this Approach
-- **Single Source of Truth**: One repository. A bug fix in the search logic benefits 100% of clients instantly.
-- **Scalability**: Adding a new client is a database row insertion, not a code deployment.
-- **Operational Efficiency**: Centralized billing, support, and monitoring.
-
-## 4. Risks & Considerations
-- **Global Failure**: A deployment error affects all clients. (Mitigation: Strong E2E testing and staged rollouts).
-- **Performance**: As the database grows, indexes on `site_id` become critical.
-- **Custom Code Requests**: Tenants may ask for unique features. (Mitigation: Feature-flag architecture to enable/disable modules per site).
+This document outlines a centralized architecture to transform the project into a multi-tenant SaaS platform. The core objective is a **Single Source of Truth** where a single codebase serves multiple independent clients (tenants) via dynamic hostname routing and data isolation.
 
 ---
-**Next Step**: Please review this plan. Upon approval, I will begin by documenting the specific schema changes required for the `site_id` standardization.
+
+## 1. Database Modeling (Supabase)
+
+The current schema already includes a `site_id` in some tables (like `site_settings` and `user_roles`). We will extend this to ensure absolute data isolation.
+
+### Core Tables Structure
+- **`tenants`**: The master registry for every site instance.
+  - `id` (uuid, primary key)
+  - `name` (text)
+  - `slug` (text, unique) — e.g., 'empresa-a' for `empresa-a.platform.com`
+  - `status` ('active', 'inactive', 'maintenance')
+  - `plan_id` (uuid) — for tier-based feature gating
+- **`tenant_domains`**: Maps hostnames to tenants.
+  - `id` (uuid)
+  - `tenant_id` (uuid, fk to tenants)
+  - `hostname` (text, unique) — e.g., 'www.cliente.com.br' or 'empresa.meudominio.com'
+  - `is_primary` (boolean)
+  - `verification_token` (text) — for Vercel domain verification
+- **`site_configs` (Evolution of `site_settings`)**: Tenant-specific branding.
+  - `tenant_id` (uuid, unique)
+  - `brand_name`, `logo_url`, `primary_color` (hex/hsl), `secondary_color`
+  - `custom_css` (text), `json_ld_schema` (jsonb)
+  - `whatsapp_number`, `social_links` (jsonb)
+- **Business Data Tables** (`properties`, `leads`, `amenities`):
+  - Every row MUST include a `tenant_id` column.
+  - `tenant_id` will be indexed to ensure high performance.
+
+### Security: Row Level Security (RLS)
+We will implement a security-definer function to retrieve the active tenant context:
+```sql
+CREATE OR REPLACE FUNCTION auth.current_tenant_id() 
+RETURNS uuid AS $$
+  -- Logic to extract tenant_id from JWT metadata or request headers
+$$ LANGUAGE sql STABLE;
+
+CREATE POLICY "Tenant Data Isolation" ON public.properties
+FOR ALL TO authenticated, anon
+USING (tenant_id = auth.current_tenant_id());
+```
+
+---
+
+## 2. Dynamic Routing & Domain Resolution
+
+### Frontend Strategy
+Instead of hardcoded site IDs, the frontend will derive context from `window.location.hostname`.
+
+1. **Discovery Service**: A lightweight API call (or cached configuration) fetches the `tenant_id` and branding based on the hostname.
+2. **Context Provider**: A `TenantProvider` wraps the app, supplying the `tenant_id` to all hooks and API calls.
+3. **Fallback**: If a hostname isn't recognized, the app redirects to a generic "Not Found" or "System Maintenance" page.
+
+### Edge Middleware (Optimization)
+To avoid a "flash of unstyled content" or extra round-trips:
+- **Vercel Edge Middleware**: Inspects the incoming hostname, queries Supabase (or a fast cache like Upstash/Redis), and injects the `tenant_id` as a header or cookie.
+- The React app reads this header/cookie immediately on boot.
+
+---
+
+## 3. Vercel Domains API Integration
+
+We will automate the "Custom Domain" experience within the Admin Panel.
+
+### Technical Workflow
+1. **Request**: User enters `www.imobiliaria-luxo.com.br` in the Admin UI.
+2. **API Call**: A Supabase Edge Function calls the [Vercel Domains API](https://vercel.com/docs/rest-api/endpoints/domains#add-a-domain-to-a-project) to add the domain to the project.
+3. **Verification**: The Edge Function returns the required DNS records (A, CNAME, TXT) to the user.
+4. **Polling**: The UI polls the Vercel API status until the domain is "Verified" and "SSL Issued".
+5. **Activation**: Once verified, the `tenant_domains` record is updated to `status: 'active'`.
+
+---
+
+## 4. Hierarchy & Permissions
+
+- **Super Admin (Master)**
+  - Manage all Tenants (Edit info, change plans, manually verify domains).
+  - Global metrics (total properties across all sites).
+  - Feature Flags (Enable "Luxury Theme" for specific tenants).
+- **Tenant Admin (Local)**
+  - Manage only their properties and leads.
+  - Customize their specific branding and contact info.
+  - Manage their own domain settings.
+- **Preview Mode**
+  - A specialized route `/admin/preview?token=...` that allows a Tenant Admin to view their site with "Draft" changes without affecting the live public domain.
+
+---
+
+## 5. Roadmap
+
+### Phase 1: Foundation (DB & Isolation)
+- Rename `site_id` to `tenant_id` across the database (or alias it).
+- Update RLS policies to be strictly `tenant_id` scoped.
+- Implement `TenantContext` in the React frontend.
+
+### Phase 2: Dynamic Routing & Fallback
+- Implement hostname-based tenant discovery.
+- Create global theme injection (CSS variables mapping from DB).
+- Build the "Site Inactive" / "Maintenance" fallback views.
+
+### Phase 3: Domain & Vercel API
+- Build the Vercel Integration Edge Function.
+- Create the "Domain Management" tab in the Admin.
+- Implement real-time DNS status checks.
+
+### Phase 4: Super Admin & Scaling
+- Develop the Master Dashboard for the platform owner.
+- Implement multi-tenant storage (isolated buckets/folders per tenant).
+- Add "Preview/Draft" vs "Published" state for site configurations.
+
+---
+
+*This is a high-level architectural overview. No code has been modified. Please review and provide feedback or approval to proceed with Phase 1.*
