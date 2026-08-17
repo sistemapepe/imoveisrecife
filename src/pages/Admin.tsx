@@ -145,7 +145,10 @@ export default function Admin() {
           hasUser: !!user, 
           role 
         });
-        navigate("/login");
+        // Use setImmediate ou setTimeout para evitar suspension synchronous
+        setTimeout(() => {
+          navigate("/login");
+        }, 0);
       }
     }
   }, [user, role, authLoading, navigate]);
