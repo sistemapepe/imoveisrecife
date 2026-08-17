@@ -212,7 +212,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         status: (p.status || "disponivel") as PropertyStatus,
         images: p.images.length > 0 ? p.images : [localImages[i % localImages.length]],
       })));
-      setLoading(false);
+    }
+    setLoading(false);
   }, []);
 
   const fetchSettings = useCallback(async () => {
