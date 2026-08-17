@@ -89,18 +89,20 @@ const App = () => {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <AuthProvider>
-            <PropertyProvider>
-              <Suspense fallback={<PageLoader />}>
-                <DynamicTheme />
-              </Suspense>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <AppContent />
-              </BrowserRouter>
-            </PropertyProvider>
-          </AuthProvider>
+          <TenantProvider>
+            <AuthProvider>
+              <PropertyProvider>
+                <Suspense fallback={<PageLoader />}>
+                  <DynamicTheme />
+                </Suspense>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <AppContent />
+                </BrowserRouter>
+              </PropertyProvider>
+            </AuthProvider>
+          </TenantProvider>
         </TooltipProvider>
       </QueryClientProvider>
     </HelmetProvider>
