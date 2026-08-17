@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-optimization";
+import { logger } from "@/lib/logger";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -138,13 +139,27 @@ export default function Admin() {
   }, [isAdmin, role, tab]);
 
   useEffect(() => {
-    if (!authLoading && (!user || role === "user")) {
-      navigate("/login");
+    if (!authLoading) {
+      if (!user || role === "user" || !role) {
+        logger.info("Unauthorized access to admin, redirecting to login", { 
+          hasUser: !!user, 
+          role 
+        });
+        navigate("/login");
+      }
     }
   }, [user, role, authLoading, navigate]);
 
-  if (authLoading) return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
-  if (!user || role === "user") return null;
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-muted-foreground animate-pulse text-sm">Carregando painel...</p>
+      </div>
+    );
+  }
+
+  if (!user || role === "user" || !role) return null;
 
   const startEdit = (p: Property) => {
     setEditing(p.id);
