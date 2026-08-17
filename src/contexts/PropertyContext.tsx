@@ -205,9 +205,17 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const { tenant, loading: tenantLoading } = useTenant();
 
   const fetchProperties = useCallback(async () => {
-    const { data, error } = await supabase.from("properties").select("*").order("created_at", { ascending: false });
+    if (!tenant) return;
+    logger.info("Fetching properties for tenant", { tenantId: tenant.id });
+    const { data, error } = await supabase
+      .from("properties")
+      .select("*")
+      .eq("site_id", tenant.id) // Filtering by site_id/tenant_id
+      .order("created_at", { ascending: false });
+    
     if (data && !error) {
       setProperties(data.map((p: any, i: number) => ({
         ...p,
@@ -216,10 +224,18 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       })));
     }
     setLoading(false);
-  }, []);
+  }, [tenant]);
 
   const fetchSettings = useCallback(async () => {
-    const { data } = await supabase.from("site_settings").select("*").limit(1).single();
+    if (!tenant) return;
+    logger.info("Fetching settings for tenant", { tenantId: tenant.id });
+    const { data } = await supabase
+      .from("site_settings")
+      .select("*")
+      .eq("site_id", tenant.id)
+      .limit(1)
+      .maybeSingle();
+    
     if (data) {
       setSettings((prev) => ({
         ...prev,
