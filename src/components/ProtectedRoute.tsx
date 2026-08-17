@@ -22,7 +22,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     }
   }, [loading]);
 
-  if (loading || isInitializing) {
+  if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -31,7 +31,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   // Se não houver usuário ou o papel for 'user' (sem permissões administrativas), redireciona para login
-  if (!user || role === "user" || !role) {
+  // IMPORTANTE: Permitimos o acesso se o role ainda for null mas o user existir, 
+  // pois o AuthContext garante que o loading=true enquanto busca o role.
+  if (!user || (role === "user")) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
