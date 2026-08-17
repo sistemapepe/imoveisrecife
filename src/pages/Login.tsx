@@ -67,9 +67,7 @@ export default function Login() {
                 <Lock className="h-7 w-7 text-primary" />
               </motion.div>
             )}
-            <h1 className="font-serif text-2xl font-bold text-foreground tracking-tight">
-              {settings.brandName || "Admin"}
-            </h1>
+            {/* Removed brand name title as per request */}
             <p className="text-muted-foreground text-sm mt-1.5">Acesso Restrito</p>
           </div>
 
