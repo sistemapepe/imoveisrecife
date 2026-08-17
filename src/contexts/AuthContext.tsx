@@ -106,14 +106,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkRole = async (userId: string) => {
     try {
-      const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
+      logger.info("Checking user role", { userId });
+      const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
+      
+      if (error) {
+        logger.error("Database error checking user role", { userId }, error);
+        throw error;
+      }
+
       const userRole = (data?.role as AppRole) || "user";
+      logger.info("User role identified", { userId, role: userRole });
+      
       setRole(userRole);
       await loadPermissions(userRole);
       setLoading(false);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
+      setLoading(false);
     }
   };
 
@@ -137,11 +147,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!mounted) return;
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        checkRole(session.user.id).finally(() => {
-          if (mounted) setLoading(false);
-        });
+      const initialUser = session?.user ?? null;
+      setUser(initialUser);
+      if (initialUser) {
+        setLoading(true);
+        checkRole(initialUser.id);
       } else {
         setLoading(false);
       }
