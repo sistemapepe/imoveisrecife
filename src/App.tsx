@@ -85,22 +85,24 @@ function AppContent() {
 
 const App = () => {
   return (
-  <HelmetProvider>
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <PropertyProvider>
-          <Toaster />
-          <Sonner />
-          <DynamicTheme />
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
-        </PropertyProvider>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-  </HelmetProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <AuthProvider>
+            <PropertyProvider>
+              <Suspense fallback={<PageLoader />}>
+                <DynamicTheme />
+              </Suspense>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <AppContent />
+              </BrowserRouter>
+            </PropertyProvider>
+          </AuthProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 };
 
