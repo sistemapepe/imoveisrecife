@@ -120,9 +120,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
       
+      logger.info("Auth state changed", { event, userId: session?.user?.id });
       const newUser = session?.user ?? null;
       setUser(newUser);
       
@@ -135,17 +136,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!mounted) return;
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        checkRole(session.user.id).finally(() => {
-          if (mounted) setLoading(false);
-        });
-      } else {
-        setLoading(false);
+    const initSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!mounted) return;
+        
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+        
+        if (currentUser) {
+          setLoading(true);
+          await checkRole(currentUser.id);
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        logger.error("Failed to get session", {}, error as Error);
+        if (mounted) setLoading(false);
       }
-    });
+    };
+
+    initSession();
 
     return () => {
       mounted = false;
