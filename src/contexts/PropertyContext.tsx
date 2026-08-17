@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, startTransition } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -299,13 +299,17 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   useEffect(() => {
-    fetchProperties();
-    fetchSettings();
-    fetchContactInfo();
+    startTransition(() => {
+      fetchProperties();
+      fetchSettings();
+      fetchContactInfo();
+    });
   }, [fetchProperties, fetchSettings, fetchContactInfo]);
 
   useEffect(() => {
-    fetchFavorites();
+    startTransition(() => {
+      fetchFavorites();
+    });
   }, [fetchFavorites]);
 
   const addProperty = async (p: Omit<Property, "id" | "code">) => {
