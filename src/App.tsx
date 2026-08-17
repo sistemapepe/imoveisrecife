@@ -55,6 +55,40 @@ function AppContent() {
   useWebVitals();
   
   const isPropertyDetail = location.pathname.startsWith('/imovel/');
+  const { tenant, loading: tenantLoading, error: tenantError } = useTenant();
+
+  if (tenantLoading) {
+    return <PageLoader />;
+  }
+
+  if (tenantError || !tenant) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-4 text-center">
+        <div className="max-w-md space-y-4">
+          <h1 className="text-2xl font-bold text-destructive">Configuração não encontrada</h1>
+          <p className="text-muted-foreground">
+            Não foi possível identificar o site para este endereço. 
+            Verifique se o domínio está configurado corretamente.
+          </p>
+          {tenantError && <p className="text-xs text-muted-foreground/50">{tenantError.message}</p>}
+        </div>
+      </div>
+    );
+  }
+
+  if (tenant.status === 'maintenance') {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-4 text-center">
+        <div className="max-w-md space-y-4">
+          <h1 className="text-2xl font-bold text-amber-500">Em Manutenção</h1>
+          <p className="text-muted-foreground">
+            O site {tenant.name} está passando por atualizações no momento. 
+            Voltaremos em breve!
+          </p>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="max-w-screen-lg mx-auto relative min-h-screen">
