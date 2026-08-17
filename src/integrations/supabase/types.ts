@@ -672,6 +672,71 @@ export type Database = {
         }
         Relationships: []
       }
+      tenant_domains: {
+        Row: {
+          created_at: string
+          hostname: string
+          id: string
+          is_primary: boolean | null
+          status: Database["public"]["Enums"]["domain_status"] | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          hostname: string
+          id?: string
+          is_primary?: boolean | null
+          status?: Database["public"]["Enums"]["domain_status"] | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          hostname?: string
+          id?: string
+          is_primary?: boolean | null
+          status?: Database["public"]["Enums"]["domain_status"] | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_domains_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenants: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          status: Database["public"]["Enums"]["tenant_status"] | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          status?: Database["public"]["Enums"]["tenant_status"] | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          status?: Database["public"]["Enums"]["tenant_status"] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       traffic_events: {
         Row: {
           browser: string
@@ -864,6 +929,10 @@ export type Database = {
         }
         Returns: string
       }
+      get_tenant_id_by_hostname: {
+        Args: { _hostname: string }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -876,7 +945,9 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user" | "supervisor" | "corretor" | "super_admin"
+      domain_status: "pending" | "active" | "failed"
       publish_status_type: "draft" | "published" | "scheduled"
+      tenant_status: "active" | "inactive" | "maintenance"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1005,7 +1076,9 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user", "supervisor", "corretor", "super_admin"],
+      domain_status: ["pending", "active", "failed"],
       publish_status_type: ["draft", "published", "scheduled"],
+      tenant_status: ["active", "inactive", "maintenance"],
     },
   },
 } as const
