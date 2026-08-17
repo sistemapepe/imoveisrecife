@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, startTransition } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -207,73 +207,79 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const fetchProperties = useCallback(async () => {
     const { data, error } = await supabase.from("properties").select("*").order("created_at", { ascending: false });
     if (data && !error) {
-      setProperties(data.map((p: any, i: number) => ({
-        ...p,
-        status: (p.status || "disponivel") as PropertyStatus,
-        images: p.images.length > 0 ? p.images : [localImages[i % localImages.length]],
-      })));
+      startTransition(() => {
+        setProperties(data.map((p: any, i: number) => ({
+          ...p,
+          status: (p.status || "disponivel") as PropertyStatus,
+          images: p.images.length > 0 ? p.images : [localImages[i % localImages.length]],
+        })));
+      });
     }
-    setLoading(false);
+    startTransition(() => {
+      setLoading(false);
+    });
   }, []);
 
   const fetchSettings = useCallback(async () => {
     const { data } = await supabase.from("site_settings").select("*").limit(1).single();
     if (data) {
-      setSettings((prev) => ({
-        ...prev,
-        id: data.id,
-        heroTitle: data.hero_title,
-        heroSubtitle: data.hero_subtitle,
-        conciergeNome: data.concierge_nome,
-        conciergeCargo: data.concierge_cargo,
-        conciergeDesc: data.concierge_desc,
-        brandName: data.brand_name,
-        logoUrl: data.logo_url,
-        footerText: data.footer_text,
-        creci: (data as any).creci ?? "",
-        creciUf: (data as any).creci_uf ?? "",
-        instagramUrl: data.instagram_url,
-        facebookUrl: data.facebook_url,
-        youtubeUrl: data.youtube_url,
-        linkedinUrl: data.linkedin_url,
-        websiteUrl: data.website_url,
-        primaryColor: data.primary_color,
-        accentColor: data.accent_color,
-        bannerInterval: (data as any).banner_interval ?? 5,
-        whatsappMessage: (data as any).whatsapp_message ?? defaultSettings.whatsappMessage,
-        availableAmenities: (data as any).available_amenities ?? defaultSettings.availableAmenities,
-        privacyPolicy: (data as any).privacy_policy ?? "",
-        showLocationOnCard: (data as any).show_location_on_card ?? true,
-        developerName: (data as any).developer_name ?? "",
-        developerUrl: (data as any).developer_url ?? "",
-        showVisitSchedule: (data as any).show_visit_schedule ?? true,
-        leadModalEnabled: (data as any).lead_modal_enabled ?? true,
-        leadModalShowSkip: (data as any).lead_modal_show_skip ?? true,
-        leadModalTitle: (data as any).lead_modal_title ?? defaultSettings.leadModalTitle,
-        leadModalDescription: (data as any).lead_modal_description ?? defaultSettings.leadModalDescription,
-        leadModalNameLabel: (data as any).lead_modal_name_label ?? defaultSettings.leadModalNameLabel,
-        leadModalNamePlaceholder: (data as any).lead_modal_name_placeholder ?? defaultSettings.leadModalNamePlaceholder,
-        leadModalPhoneLabel: (data as any).lead_modal_phone_label ?? defaultSettings.leadModalPhoneLabel,
-        leadModalPhonePlaceholder: (data as any).lead_modal_phone_placeholder ?? defaultSettings.leadModalPhonePlaceholder,
-        leadModalSubmitText: (data as any).lead_modal_submit_text ?? defaultSettings.leadModalSubmitText,
-        leadModalSubmittingText: (data as any).lead_modal_submitting_text ?? defaultSettings.leadModalSubmittingText,
-        leadModalSkipText: (data as any).lead_modal_skip_text ?? defaultSettings.leadModalSkipText,
-        googleSiteVerification: (data as any).google_site_verification ?? "",
-        bingSiteVerification: (data as any).bing_site_verification ?? "",
-        headerStyle: (data as any).header_style ?? 'normal',
-        marqueeText: (data as any).marquee_text ?? "",
-        imagesAccessMode: ((data as any).images_access_mode ?? 'public') as 'public' | 'signed',
-        navbarHeightPx: (data as any).navbar_height_px ?? 100,
-        logoWidthPx: (data as any).logo_width_px ?? 270,
-        logoHeightPx: (data as any).logo_height_px ?? 140,
-        marqueePaddingYPx: (data as any).marquee_padding_y_px ?? 4,
-        watermarkEnabled: (data as any).watermark_enabled ?? true,
-        watermarkOpacity: (data as any).watermark_opacity ?? 40,
-        watermarkSizePct: (data as any).watermark_size_pct ?? 30,
-        watermarkPosition: ((data as any).watermark_position ?? 'center') as any,
-        priceStyles: { ...DEFAULT_PRICE_STYLES, ...((data as any).price_styles ?? {}) },
-        priceFormat: { ...DEFAULT_PRICE_FORMAT, ...((data as any).price_format ?? {}) },
-      }));
+      startTransition(() => {
+        setSettings((prev) => ({
+          ...prev,
+          id: data.id,
+          heroTitle: data.hero_title,
+          heroSubtitle: data.hero_subtitle,
+          conciergeNome: data.concierge_nome,
+          conciergeCargo: data.concierge_cargo,
+          conciergeDesc: data.concierge_desc,
+          brandName: data.brand_name,
+          logoUrl: data.logo_url,
+          footerText: data.footer_text,
+          creci: (data as any).creci ?? "",
+          creciUf: (data as any).creci_uf ?? "",
+          instagramUrl: data.instagram_url,
+          facebookUrl: data.facebook_url,
+          youtubeUrl: data.youtube_url,
+          linkedinUrl: data.linkedin_url,
+          websiteUrl: data.website_url,
+          primaryColor: data.primary_color,
+          accentColor: data.accent_color,
+          bannerInterval: (data as any).banner_interval ?? 5,
+          whatsappMessage: (data as any).whatsapp_message ?? defaultSettings.whatsappMessage,
+          availableAmenities: (data as any).available_amenities ?? defaultSettings.availableAmenities,
+          privacyPolicy: (data as any).privacy_policy ?? "",
+          showLocationOnCard: (data as any).show_location_on_card ?? true,
+          developerName: (data as any).developer_name ?? "",
+          developerUrl: (data as any).developer_url ?? "",
+          showVisitSchedule: (data as any).show_visit_schedule ?? true,
+          leadModalEnabled: (data as any).lead_modal_enabled ?? true,
+          leadModalShowSkip: (data as any).lead_modal_show_skip ?? true,
+          leadModalTitle: (data as any).lead_modal_title ?? defaultSettings.leadModalTitle,
+          leadModalDescription: (data as any).lead_modal_description ?? defaultSettings.leadModalDescription,
+          leadModalNameLabel: (data as any).lead_modal_name_label ?? defaultSettings.leadModalNameLabel,
+          leadModalNamePlaceholder: (data as any).lead_modal_name_placeholder ?? defaultSettings.leadModalNamePlaceholder,
+          leadModalPhoneLabel: (data as any).lead_modal_phone_label ?? defaultSettings.leadModalPhoneLabel,
+          leadModalPhonePlaceholder: (data as any).lead_modal_phone_placeholder ?? defaultSettings.leadModalPhonePlaceholder,
+          leadModalSubmitText: (data as any).lead_modal_submit_text ?? defaultSettings.leadModalSubmitText,
+          leadModalSubmittingText: (data as any).lead_modal_submitting_text ?? defaultSettings.leadModalSubmittingText,
+          leadModalSkipText: (data as any).lead_modal_skip_text ?? defaultSettings.leadModalSkipText,
+          googleSiteVerification: (data as any).google_site_verification ?? "",
+          bingSiteVerification: (data as any).bing_site_verification ?? "",
+          headerStyle: (data as any).header_style ?? 'normal',
+          marqueeText: (data as any).marquee_text ?? "",
+          imagesAccessMode: ((data as any).images_access_mode ?? 'public') as 'public' | 'signed',
+          navbarHeightPx: (data as any).navbar_height_px ?? 100,
+          logoWidthPx: (data as any).logo_width_px ?? 270,
+          logoHeightPx: (data as any).logo_height_px ?? 140,
+          marqueePaddingYPx: (data as any).marquee_padding_y_px ?? 4,
+          watermarkEnabled: (data as any).watermark_enabled ?? true,
+          watermarkOpacity: (data as any).watermark_opacity ?? 40,
+          watermarkSizePct: (data as any).watermark_size_pct ?? 30,
+          watermarkPosition: ((data as any).watermark_position ?? 'center') as any,
+          priceStyles: { ...DEFAULT_PRICE_STYLES, ...((data as any).price_styles ?? {}) },
+          priceFormat: { ...DEFAULT_PRICE_FORMAT, ...((data as any).price_format ?? {}) },
+        }));
+      });
     }
   }, []);
 
@@ -281,11 +287,13 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     try {
       const { data, error } = await supabase.functions.invoke("get-contact-info");
       if (!error && data) {
-        setSettings((prev) => ({
-          ...prev,
-          whatsappNumber: data.whatsapp_number ?? prev.whatsappNumber,
-          emailContact: data.email_contact ?? prev.emailContact,
-        }));
+        startTransition(() => {
+          setSettings((prev) => ({
+            ...prev,
+            whatsappNumber: data.whatsapp_number ?? prev.whatsappNumber,
+            emailContact: data.email_contact ?? prev.emailContact,
+          }));
+        });
       }
     } catch (e) {
       console.error("Failed to fetch contact info", e);
@@ -293,19 +301,23 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const fetchFavorites = useCallback(async () => {
-    if (!user) { setFavorites([]); return; }
+    if (!user) { startTransition(() => { setFavorites([]); }); return; }
     const { data } = await supabase.from("favorites").select("property_id").eq("user_id", user.id);
-    if (data) setFavorites(data.map((f) => f.property_id));
+    if (data) startTransition(() => { setFavorites(data.map((f) => f.property_id)); });
   }, [user]);
 
   useEffect(() => {
-    fetchProperties();
-    fetchSettings();
-    fetchContactInfo();
+    startTransition(() => {
+      fetchProperties();
+      fetchSettings();
+      fetchContactInfo();
+    });
   }, [fetchProperties, fetchSettings, fetchContactInfo]);
 
   useEffect(() => {
-    fetchFavorites();
+    startTransition(() => {
+      fetchFavorites();
+    });
   }, [fetchFavorites]);
 
   const addProperty = async (p: Omit<Property, "id" | "code">) => {

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback, startTransition } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/lib/logger";
 import type { User } from "@supabase/supabase-js";
@@ -91,13 +91,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .select("permission, enabled")
         .eq("role", userRole);
       if (data) {
-        const perms = { ...permissions };
-        data.forEach((row: any) => {
-          if (row.permission in perms) {
-            perms[row.permission as PermissionKey] = row.enabled;
-          }
+        startTransition(() => {
+          const perms = { ...permissions };
+          data.forEach((row: any) => {
+            if (row.permission in perms) {
+              perms[row.permission as PermissionKey] = row.enabled;
+            }
+          });
+          setPermissions(perms);
         });
-        setPermissions(perms);
       }
     } catch (error) {
       logger.error("Failed to load permissions", { role: userRole }, error as Error);
@@ -132,33 +134,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       logger.info("User role identified", { userId, identifiedRole: userRole, allRoles: roles });
-      setRole(userRole);
+      startTransition(() => {
+        setRole(userRole);
+      });
       await loadPermissions(userRole);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
-      setRole("user");
+      startTransition(() => {
+        setRole("user");
+      });
     } finally {
-      setLoading(false);
+      startTransition(() => {
+        setLoading(false);
+      });
     }
   };
 
   useEffect(() => {
     let mounted = true;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return;
       
       logger.info("Auth state changed", { event, userId: session?.user?.id });
       const newUser = session?.user ?? null;
-      setUser(newUser);
       
-      if (newUser) {
-        setLoading(true);
-        await checkRole(newUser.id);
-      } else {
-        setRole(null);
-        setLoading(false);
-      }
+      startTransition(() => {
+        setUser(newUser);
+        
+        if (newUser) {
+          setLoading(true);
+          checkRole(newUser.id);
+        } else {
+          setRole(null);
+          setLoading(false);
+        }
+      });
     });
 
     const initSession = async () => {
@@ -167,14 +178,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!mounted) return;
         
         const currentUser = session?.user ?? null;
-        setUser(currentUser);
         
-        if (currentUser) {
-          setLoading(true);
-          await checkRole(currentUser.id);
-        } else {
-          setLoading(false);
-        }
+        startTransition(() => {
+          setUser(currentUser);
+          
+          if (currentUser) {
+            setLoading(true);
+            checkRole(currentUser.id);
+          } else {
+            setLoading(false);
+          }
+        });
       } catch (error) {
         logger.error("Failed to get session", {}, error as Error);
         if (mounted) setLoading(false);
