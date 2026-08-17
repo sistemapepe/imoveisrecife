@@ -106,14 +106,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkRole = async (userId: string) => {
     try {
-      const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
-      const userRole = (data?.role as AppRole) || "user";
+      logger.info("Checking user role", { userId });
+      const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", userId);
+      
+      if (error) {
+        logger.error("Error fetching role", { userId }, error);
+        setRole("user");
+        return;
+      }
+
+      // Se o usuário tiver QUALQUER role administrativo em qualquer site, permitimos o acesso ao admin
+      // A filtragem por site_id deve acontecer dentro do dashboard, não no guard da rota se o usuário
+      // é globalmente um administrador.
+      const roles = data?.map(r => r.role as AppRole) || [];
+      let userRole: AppRole = "user";
+      
+      if (roles.includes("super_admin")) {
+        userRole = "super_admin";
+      } else if (roles.includes("admin")) {
+        userRole = "admin";
+      } else if (roles.includes("supervisor")) {
+        userRole = "supervisor";
+      } else if (roles.includes("corretor")) {
+        userRole = "corretor";
+      }
+
+      logger.info("User role identified", { userId, identifiedRole: userRole, allRoles: roles });
       setRole(userRole);
       await loadPermissions(userRole);
-      setLoading(false);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
+    } finally {
+      setLoading(false);
     }
   };
 
