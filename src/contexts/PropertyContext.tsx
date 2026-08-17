@@ -404,7 +404,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     }
 
     if (settings.id && Object.keys(dbUpdate).length > 0) {
-      await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
+      await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id).eq("site_id", tenant?.id);
     }
 
     // Contact info lives in a separate, admin-only table
