@@ -327,11 +327,13 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   }, [fetchFavorites]);
 
   const addProperty = async (p: Omit<Property, "id" | "code">) => {
+    if (!tenant) return;
     const { error } = await supabase.from("properties").insert({
       title: p.title, address: p.address, neighborhood: p.neighborhood, city: p.city,
       price: p.price, area: p.area, bedrooms: p.bedrooms, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
       type: p.type, description: p.description, amenities: p.amenities, images: p.images,
       exclusive: p.exclusive, featured: p.featured, category: p.category,
+      site_id: tenant.id // Ensure site_id is set
     } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
     await fetchProperties();
