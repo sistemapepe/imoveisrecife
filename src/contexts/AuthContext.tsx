@@ -91,13 +91,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .select("permission, enabled")
         .eq("role", userRole);
       if (data) {
-        const perms = { ...permissions };
-        data.forEach((row: any) => {
-          if (row.permission in perms) {
-            perms[row.permission as PermissionKey] = row.enabled;
-          }
+        startTransition(() => {
+          const perms = { ...permissions };
+          data.forEach((row: any) => {
+            if (row.permission in perms) {
+              perms[row.permission as PermissionKey] = row.enabled;
+            }
+          });
+          setPermissions(perms);
         });
-        setPermissions(perms);
       }
     } catch (error) {
       logger.error("Failed to load permissions", { role: userRole }, error as Error);
