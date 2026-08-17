@@ -22,6 +22,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   // Se não houver usuário ou o papel for 'user' (sem permissões administrativas), redireciona para login
   if (!user || role === "user" || !role) {
     console.log("ProtectedRoute: Unauthorized, redirecting", { hasUser: !!user, role });
+    // Usar uma URL absoluta para evitar que o Navigate entre em loop se estivermos em uma rota aninhada
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

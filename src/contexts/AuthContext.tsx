@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback, startTransition } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/lib/logger";
 import type { User } from "@supabase/supabase-js";
@@ -138,11 +138,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setRole(userRole);
       await loadPermissions(userRole);
       logger.info("Auth initialization complete", { userId, role: userRole });
-      setLoading(false);
+      
+      // Use startTransition to avoid blocking synchronous rendering
+      startTransition(() => {
+        setLoading(false);
+      });
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
-      setLoading(false);
+      startTransition(() => {
+        setLoading(false);
+      });
     }
   };
 
@@ -161,7 +167,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await checkRole(newUser.id);
       } else {
         setRole(null);
-        setLoading(false);
+        startTransition(() => {
+          setLoading(false);
+        });
       }
     });
 
@@ -175,7 +183,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         checkRole(initialUser.id);
       } else {
         logger.info("No session found");
-        setLoading(false);
+        startTransition(() => {
+          setLoading(false);
+        });
       }
     });
 
