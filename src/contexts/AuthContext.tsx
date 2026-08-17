@@ -132,13 +132,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       logger.info("User role identified", { userId, identifiedRole: userRole, allRoles: roles });
-      setRole(userRole);
+      startTransition(() => {
+        setRole(userRole);
+      });
       await loadPermissions(userRole);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
-      setRole("user");
+      startTransition(() => {
+        setRole("user");
+      });
     } finally {
-      setLoading(false);
+      startTransition(() => {
+        setLoading(false);
+      });
     }
   };
 
