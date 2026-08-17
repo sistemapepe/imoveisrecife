@@ -86,10 +86,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loadPermissions = useCallback(async (userRole: AppRole) => {
     if (userRole === "super_admin") return; // super_admin has all
     try {
-      const { data } = await supabase
+      logger.info("Loading permissions for role", { role: userRole });
+      const { data, error } = await supabase
         .from("role_permissions")
         .select("permission, enabled")
         .eq("role", userRole);
+      
+      if (error) {
+        logger.error("Database error loading permissions", { role: userRole }, error);
+        return;
+      }
+
       if (data) {
         const perms = { ...permissions };
         data.forEach((row: any) => {
@@ -98,11 +105,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         });
         setPermissions(perms);
+        logger.info("Permissions loaded", { role: userRole, enabledCount: data.filter(r => r.enabled).length });
       }
     } catch (error) {
       logger.error("Failed to load permissions", { role: userRole }, error as Error);
     }
-  }, []);
+  }, [permissions]);
 
   const checkRole = async (userId: string) => {
     try {
@@ -130,9 +138,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
       
+      logger.info("Auth state change", { event });
       const newUser = session?.user ?? null;
       setUser(newUser);
       
