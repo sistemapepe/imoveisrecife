@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback, startTransition } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/lib/logger";
 import type { User } from "@supabase/supabase-js";
@@ -86,17 +86,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loadPermissions = useCallback(async (userRole: AppRole) => {
     if (userRole === "super_admin") return; // super_admin has all
     try {
-      logger.info("Loading permissions for role", { role: userRole });
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("role_permissions")
         .select("permission, enabled")
         .eq("role", userRole);
-      
-      if (error) {
-        logger.error("Database error loading permissions", { role: userRole }, error);
-        return;
-      }
-
       if (data) {
         const perms = { ...permissions };
         data.forEach((row: any) => {
@@ -105,60 +98,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         });
         setPermissions(perms);
-        logger.info("Permissions loaded", { role: userRole, enabledCount: data.filter(r => r.enabled).length });
       }
     } catch (error) {
       logger.error("Failed to load permissions", { role: userRole }, error as Error);
     }
-  }, [permissions]);
+  }, []);
 
   const checkRole = async (userId: string) => {
     try {
-      logger.info("Checking user role", { userId });
-      // Remove site_id filtering as it's handled by other logic if needed, 
-      // or ensure the user has at least one valid role across any site.
-      const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", userId);
-      
-      if (error) {
-        logger.error("Database error checking user role", { userId }, error);
-        throw error;
-      }
-
-      // If user has multiple roles, super_admin takes precedence, then admin
-      const roles = data?.map(r => r.role as AppRole) || [];
-      let userRole: AppRole = "user";
-      
-      if (roles.includes("super_admin")) userRole = "super_admin";
-      else if (roles.includes("admin")) userRole = "admin";
-      else if (roles.includes("supervisor")) userRole = "supervisor";
-      else if (roles.includes("corretor")) userRole = "corretor";
-      
-      logger.info("User role identified", { userId, roles, selectedRole: userRole });
-      
+      const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
+      const userRole = (data?.role as AppRole) || "user";
       setRole(userRole);
       await loadPermissions(userRole);
-      logger.info("Auth initialization complete", { userId, role: userRole });
-      
-      // Use startTransition to avoid blocking synchronous rendering
-      startTransition(() => {
-        setLoading(false);
-      });
+      setLoading(false);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
       setRole("user");
-      startTransition(() => {
-        setLoading(false);
-      });
     }
   };
 
   useEffect(() => {
     let mounted = true;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!mounted) return;
       
-      logger.info("Auth state change", { event });
       const newUser = session?.user ?? null;
       setUser(newUser);
       
@@ -167,25 +131,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await checkRole(newUser.id);
       } else {
         setRole(null);
-        startTransition(() => {
-          setLoading(false);
-        });
+        setLoading(false);
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!mounted) return;
-      const initialUser = session?.user ?? null;
-      setUser(initialUser);
-      if (initialUser) {
-        setLoading(true);
-        logger.info("Session found, checking role", { userId: initialUser.id });
-        checkRole(initialUser.id);
-      } else {
-        logger.info("No session found");
-        startTransition(() => {
-          setLoading(false);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        checkRole(session.user.id).finally(() => {
+          if (mounted) setLoading(false);
         });
+      } else {
+        setLoading(false);
       }
     });
 

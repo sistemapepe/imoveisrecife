@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useTenant } from "@/contexts/TenantContext";
 import { toast } from "sonner";
-import { logger } from "@/lib/logger";
 
 import property1 from "@/assets/property-1.jpg";
 import property2 from "@/assets/property-2.jpg";
@@ -205,17 +203,9 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-  const { tenant, loading: tenantLoading } = useTenant();
 
   const fetchProperties = useCallback(async () => {
-    if (!tenant) return;
-    logger.info("Fetching properties for tenant", { tenantId: tenant.id });
-    const { data, error } = await supabase
-      .from("properties")
-      .select("*")
-      .eq("site_id", tenant.id) // Filtering by site_id/tenant_id
-      .order("created_at", { ascending: false });
-    
+    const { data, error } = await supabase.from("properties").select("*").order("created_at", { ascending: false });
     if (data && !error) {
       setProperties(data.map((p: any, i: number) => ({
         ...p,
@@ -224,18 +214,10 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       })));
     }
     setLoading(false);
-  }, [tenant]);
+  }, []);
 
   const fetchSettings = useCallback(async () => {
-    if (!tenant) return;
-    logger.info("Fetching settings for tenant", { tenantId: tenant.id });
-    const { data } = await supabase
-      .from("site_settings")
-      .select("*")
-      .eq("site_id", tenant.id)
-      .limit(1)
-      .maybeSingle();
-    
+    const { data } = await supabase.from("site_settings").select("*").limit(1).single();
     if (data) {
       setSettings((prev) => ({
         ...prev,
@@ -327,13 +309,11 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   }, [fetchFavorites]);
 
   const addProperty = async (p: Omit<Property, "id" | "code">) => {
-    if (!tenant) return;
     const { error } = await supabase.from("properties").insert({
       title: p.title, address: p.address, neighborhood: p.neighborhood, city: p.city,
       price: p.price, area: p.area, bedrooms: p.bedrooms, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
       type: p.type, description: p.description, amenities: p.amenities, images: p.images,
       exclusive: p.exclusive, featured: p.featured, category: p.category,
-      site_id: tenant.id // Ensure site_id is set
     } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
     await fetchProperties();
@@ -404,7 +384,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     }
 
     if (settings.id && Object.keys(dbUpdate).length > 0) {
-      await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id).eq("site_id", tenant?.id);
+      await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
     }
 
     // Contact info lives in a separate, admin-only table

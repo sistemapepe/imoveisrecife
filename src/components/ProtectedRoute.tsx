@@ -12,18 +12,16 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (loading) {
     return (
-      <div className="flex h-screen w-full flex-col items-center justify-center bg-background gap-4">
+      <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-muted-foreground animate-pulse text-sm">Verificando acesso...</p>
       </div>
     );
   }
 
   // Se não houver usuário ou o papel for 'user' (sem permissões administrativas), redireciona para login
   if (!user || role === "user" || !role) {
-    console.log("ProtectedRoute: Unauthorized, redirecting", { hasUser: !!user, role });
-    // Usar uma URL absoluta para evitar que o Navigate entre em loop se estivermos em uma rota aninhada
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    // Usamos replace: false temporariamente para depurar se o redirecionamento é o problema
+    return <Navigate to="/login" state={{ from: location }} replace={false} />;
   }
 
   return <>{children}</>;

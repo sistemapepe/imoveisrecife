@@ -111,17 +111,12 @@ export default function DynamicTheme() {
     }
 
 
-    // Atualiza o título da aba com o nome da marca (sem suspender a renderização do React)
+    // Atualiza o título da aba com o nome da marca
     if (settings.brandName) {
-      const brand = settings.brandName;
-      // Usar setTimeout para mover a mutação do DOM para fora do fluxo síncrono do React
-      // evitando o erro "A component suspended while responding to synchronous input"
-      setTimeout(() => {
-        const current = document.title;
-        if (!current.includes(brand)) {
-          document.title = `${brand} — ${current}`;
-        }
-      }, 0);
+      const current = document.title;
+      if (!current.includes(settings.brandName)) {
+        document.title = `${settings.brandName} — ${current}`;
+      }
     }
   }, [
     settings.primaryColor,
