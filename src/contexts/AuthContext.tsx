@@ -127,6 +127,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       setRole(userRole);
       await loadPermissions(userRole);
+      logger.info("Auth initialization complete", { userId, role: userRole });
       setLoading(false);
     } catch (error) {
       logger.error("Failed to check user role", { userId }, error as Error);
@@ -160,8 +161,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(initialUser);
       if (initialUser) {
         setLoading(true);
+        logger.info("Session found, checking role", { userId: initialUser.id });
         checkRole(initialUser.id);
       } else {
+        logger.info("No session found");
         setLoading(false);
       }
     });
