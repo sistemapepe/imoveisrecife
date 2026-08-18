@@ -65,10 +65,20 @@ export default function TrafficTab() {
   }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString()]);
 
   const stats = useMemo(() => {
-    const pageViews = events.filter((e) => e.event_type === "page_view");
-    const uniqueVisitors = new Set(events.map((e) => e.visitor_id)).size;
-    const sessions = new Set(events.map((e) => e.session_id)).size;
-    const whatsappClicks = events.filter((e) => e.event_type === "whatsapp_click").length;
+    // Filter out development/preview traffic from total counts
+    const filteredEvents = events.filter((e) => {
+      const page = e.landing_page?.toLowerCase() || "";
+      return (
+        !page.includes("lovable.app") && 
+        !page.includes("localhost") &&
+        !page.includes("id-preview--")
+      );
+    });
+
+    const pageViews = filteredEvents.filter((e) => e.event_type === "page_view");
+    const uniqueVisitors = new Set(filteredEvents.map((e) => e.visitor_id)).size;
+    const sessions = new Set(filteredEvents.map((e) => e.session_id)).size;
+    const whatsappClicks = filteredEvents.filter((e) => e.event_type === "whatsapp_click").length;
 
     // By channel
     const byChannel: Record<string, number> = {};
