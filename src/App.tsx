@@ -7,7 +7,8 @@ import { AnimatePresence } from "framer-motion";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PropertyProvider } from "@/contexts/PropertyContext";
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
+import { safeLazy } from "@/lib/safe-lazy";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -17,18 +18,18 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { useTrafficTracker } from "@/hooks/useTrafficTracker";
 import { useWebVitals } from "@/hooks/useWebVitals";
 
-// Lazy loading rotas com prefetching inteligente
-const Index = lazy(() => import("./pages/Index"));
-const SearchResults = lazy(() => import("./pages/SearchResults").then(module => ({ default: module.default })));
-const PropertyDetail = lazy(() => import("./pages/PropertyDetail").then(module => ({ default: module.default })));
-const Filters = lazy(() => import("./pages/Filters"));
-const Contact = lazy(() => import("./pages/Contact"));
-const Favorites = lazy(() => import("./pages/Favorites"));
-const Admin = lazy(() => import("./pages/Admin"));
-const Login = lazy(() => import("./pages/Login"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
-const CookieConsent = lazy(() => import("./components/CookieConsent"));
+// Lazy loading rotas com prefetching inteligente e proteção contra erros de chunk
+const Index = safeLazy(() => import("./pages/Index"));
+const SearchResults = safeLazy(() => import("./pages/SearchResults"));
+const PropertyDetail = safeLazy(() => import("./pages/PropertyDetail"));
+const Filters = safeLazy(() => import("./pages/Filters"));
+const Contact = safeLazy(() => import("./pages/Contact"));
+const Favorites = safeLazy(() => import("./pages/Favorites"));
+const Admin = safeLazy(() => import("./pages/Admin"));
+const Login = safeLazy(() => import("./pages/Login"));
+const NotFound = safeLazy(() => import("./pages/NotFound"));
+const PrivacyPolicy = safeLazy(() => import("./pages/PrivacyPolicy"));
+const CookieConsent = safeLazy(() => import("./components/CookieConsent"));
 
 // Loading fallback component
 const PageLoader = () => (
