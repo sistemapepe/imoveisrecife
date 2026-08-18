@@ -387,7 +387,11 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     }
 
     if (settings.id && Object.keys(dbUpdate).length > 0) {
-      await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
+      const { error } = await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
+      if (error) {
+        console.error("Error updating site_settings:", error);
+        toast.error("Erro ao salvar no banco: " + error.message);
+      }
     }
 
     // Contact info lives in a separate, admin-only table

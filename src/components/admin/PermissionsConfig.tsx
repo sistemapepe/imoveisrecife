@@ -90,8 +90,15 @@ export default function PermissionsConfig() {
         }))
       );
 
-      const { error } = await supabase.rpc("save_role_perms", {
-        p_rows: rows
+      // Use Edge Function if RPC fails due to site_id context or RLS
+      const { data: userRoles } = await supabase.from("user_roles").select("site_id").limit(1);
+      const siteId = userRoles?.[0]?.site_id;
+
+      const { error } = await supabase.functions.invoke("manage-users", {
+        body: { 
+          action: "update_perms", 
+          perms: rows.map(r => ({ ...r, site_id: siteId })) 
+        }
       });
       
       if (error) throw error;

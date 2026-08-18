@@ -2,3 +2,9 @@ project_id = "bqxfopftcoagiautjeqz"
 
 [functions.seo-generate]
 verify_jwt = true
+
+[functions.update-seo]
+verify_jwt = true
+
+[functions.manage-users]
+verify_jwt = true
