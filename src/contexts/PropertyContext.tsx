@@ -94,6 +94,7 @@ export interface SiteSettings {
   leadModalSkipText: string;
   googleSiteVerification: string;
   bingSiteVerification: string;
+  twitterUser?: string;
   headerStyle?: 'normal' | 'compact';
   marqueeText?: string;
   imagesAccessMode?: 'public' | 'signed';
@@ -260,6 +261,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         leadModalSkipText: (data as any).lead_modal_skip_text ?? defaultSettings.leadModalSkipText,
         googleSiteVerification: (data as any).google_site_verification ?? "",
         bingSiteVerification: (data as any).bing_site_verification ?? "",
+        twitterUser: (data as any).twitter_user ?? "",
         headerStyle: (data as any).header_style ?? 'normal',
         marqueeText: (data as any).marquee_text ?? "",
         imagesAccessMode: ((data as any).images_access_mode ?? 'public') as 'public' | 'signed',
@@ -365,6 +367,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       leadModalSkipText: "lead_modal_skip_text",
       googleSiteVerification: "google_site_verification",
       bingSiteVerification: "bing_site_verification",
+      twitterUser: "twitter_user",
       headerStyle: "header_style",
       marqueeText: "marquee_text",
       imagesAccessMode: "images_access_mode",

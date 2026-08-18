@@ -505,6 +505,7 @@ export type Database = {
           show_location_on_card: boolean
           show_visit_schedule: boolean
           site_id: string | null
+          twitter_user: string | null
           updated_at: string
           watermark_enabled: boolean
           watermark_opacity: number
@@ -561,6 +562,7 @@ export type Database = {
           show_location_on_card?: boolean
           show_visit_schedule?: boolean
           site_id?: string | null
+          twitter_user?: string | null
           updated_at?: string
           watermark_enabled?: boolean
           watermark_opacity?: number
@@ -617,6 +619,7 @@ export type Database = {
           show_location_on_card?: boolean
           show_visit_schedule?: boolean
           site_id?: string | null
+          twitter_user?: string | null
           updated_at?: string
           watermark_enabled?: boolean
           watermark_opacity?: number
