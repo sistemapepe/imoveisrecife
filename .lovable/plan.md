@@ -1,46 +1,30 @@
-# Plan - User Role Control System Expansion
+# SEO Optimization Plan
 
-Expand the existing RBAC (Role-Based Access Control) system to include a "Super Admin" role and ensure all menu items in the Admin panel are gated by granular permissions that can be managed by the Super Admin.
-
-## User Review Required
-
-> [!IMPORTANT]
-> The current system already has "Admin", "Supervisor", and "Corretor". I will rename "Admin" to "Super Admin" and ensure "Supervisor" and "Corretor" only see what is permitted.
+Perform a comprehensive SEO sweep to improve Google ranking, indexing, and user experience (Core Web Vitals).
 
 ## Proposed Changes
 
-### Database (Supabase)
-- Update `app_role` enum to include `super_admin`.
-- Ensure `role_permissions` table exists and covers all current Admin tabs.
-- Set up initial permissions where only `super_admin` has access to user management and critical settings.
+### 1. Semantic HTML & Accessibility Refinements
+- **Search Results & Favorites**: Ensure `h1` is unique and relevant. Update breadcrumb navigation for better crawlability.
+- **Components**: Add `aria-current` to active navigation links. Improve `alt` text descriptions dynamically.
+- **Image Optimization**: Ensure all images have appropriate `width` and `height` attributes to prevent CLS (Cumulative Layout Shift).
 
-### Authentication Context
-- Update `AuthContext.tsx` to handle the new `super_admin` role.
-- Map granular permissions from the database to application-level flags (`canViewProperties`, `canManageUsers`, etc.).
+### 2. Structured Data (JSON-LD) Enhancements
+- **BreadcrumbList**: Standardize breadcrumbs across all pages for Google's "Rich Results".
+- **RealEstateListing**: Refine property detail schema to include more attributes (building name, energy rating if applicable).
+- **FAQ Schema**: Add FAQ schema to the home page or contact page to capture more SERP real estate.
 
-### Admin Panel
-- Ensure every tab (Dashboard, Properties, Import, Messages, Visits, Analytics, Traffic, SEO, Team, Settings, Bucket, LGPD) is correctly gated by the relevant permission flag.
-- Improve the "Team" tab to allow a Super Admin to toggle permissions for other roles (Supervisor, Corretor) in real-time.
+### 3. Meta & Head Optimizations
+- **Index.html**: Optimize the static fallback title and description for times when JavaScript is not yet loaded.
+- **SEOHead**: Add `twitter:site` and `twitter:creator` tags. Ensure canonical URLs always use the absolute production domain if configured in settings.
 
-### Permissions Mapping
-- **Dashboard**: `view_analytics`
-- **Properties**: `view_properties` / `manage_properties`
-- **Import**: `bulk_import`
-- **Messages**: `view_contacts`
-- **Visits**: `view_visits`
-- **Analytics**: `view_analytics`
-- **Traffic**: `view_traffic`
-- **SEO**: `manage_seo`
-- **Team**: `manage_users` (Only Super Admin)
-- **Settings**: `manage_settings`
-- **Bucket**: `manage_bucket`
-- **LGPD**: `manage_privacy`
+### 4. Site Architecture & Performance
+- **Sitemap**: Ensure the Supabase Edge Function sitemap is correctly referenced in `robots.txt` (if not already) and `index.html`.
+- **Preconnect/Preload**: Add `preconnect` hints for Supabase and Google Fonts to speed up initial connection.
 
 ## Technical Details
-
-- **Supabase Migration**: Add `super_admin` to `app_role` enum and migrate existing `admin` users to `super_admin` if necessary.
-- **Role Permissions**: Ensure the `role_permissions` table is the source of truth for Supervisor and Corretor access.
-- **React Components**: 
-  - `Admin.tsx`: Update `visibleTabs` logic.
-  - `PermissionsConfig.tsx`: Ensure it displays all 13 permission keys.
-  - `ProtectedRoute.tsx`: Update to allow `super_admin`, `supervisor`, and `corretor` (base access), but specific tabs will still be gated inside the Admin component.
+- Update `src/components/SEOHead.tsx` to handle more structured data types.
+- Modify `index.html` to add preconnect hints and refine static meta tags.
+- Update `src/pages/SearchResults.tsx` and `src/pages/Favorites.tsx` for better header hierarchy.
+- Refine `src/components/Footer.tsx` to include internal links for better link equity distribution.
+- Ensure `src/components/Navbar.tsx` and `src/components/BottomNav.tsx` use semantic `<nav>` and appropriate ARIA roles.
