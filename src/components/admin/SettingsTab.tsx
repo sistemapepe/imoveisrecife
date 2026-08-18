@@ -110,6 +110,7 @@ const sections: SectionDef[] = [
     fields: [
       { label: "Google Search Console (token)", key: "googleSiteVerification", icon: <Search className="h-4 w-4" />, placeholder: "abc123XYZ_seu_token..." },
       { label: "Bing Webmaster (token)", key: "bingSiteVerification", icon: <Search className="h-4 w-4" />, placeholder: "ABCDEF1234567890..." },
+      { label: "Usuário Twitter/X (ex: @rrocha)", key: "twitterUser", icon: <Search className="h-4 w-4" />, placeholder: "@rrocha" },
     ],
   },
   {
