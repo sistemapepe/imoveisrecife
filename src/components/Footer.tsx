@@ -46,38 +46,45 @@ export default function Footer() {
 
   return (
     <footer className="px-6 py-10 mt-6 border-t border-card/10 flex flex-col items-center gap-6 mb-20">
-      <div className="flex gap-6 flex-wrap justify-center">
+      <div className="flex gap-6 flex-wrap justify-center mb-4">
         {settings.instagramUrl && (
-          <a href={normalizeSocialUrl(settings.instagramUrl, "instagram")} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-accent hover:scale-110 transition-transform">
+          <a href={normalizeSocialUrl(settings.instagramUrl, "instagram")} target="_blank" rel="noopener noreferrer" aria-label="Siga-nos no Instagram" className="text-accent hover:scale-110 transition-transform">
             <Instagram className="h-5 w-5" />
           </a>
         )}
         {settings.facebookUrl && (
-          <a href={normalizeSocialUrl(settings.facebookUrl, "facebook")} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-accent hover:scale-110 transition-transform">
+          <a href={normalizeSocialUrl(settings.facebookUrl, "facebook")} target="_blank" rel="noopener noreferrer" aria-label="Curta nossa página no Facebook" className="text-accent hover:scale-110 transition-transform">
             <Facebook className="h-5 w-5" />
           </a>
         )}
         {settings.youtubeUrl && (
-          <a href={normalizeSocialUrl(settings.youtubeUrl, "youtube")} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-accent hover:scale-110 transition-transform">
+          <a href={normalizeSocialUrl(settings.youtubeUrl, "youtube")} target="_blank" rel="noopener noreferrer" aria-label="Inscreva-se no nosso canal do YouTube" className="text-accent hover:scale-110 transition-transform">
             <Youtube className="h-5 w-5" />
           </a>
         )}
         {settings.linkedinUrl && (
-          <a href={normalizeSocialUrl(settings.linkedinUrl, "linkedin")} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-accent hover:scale-110 transition-transform">
+          <a href={normalizeSocialUrl(settings.linkedinUrl, "linkedin")} target="_blank" rel="noopener noreferrer" aria-label="Conecte-se conosco no LinkedIn" className="text-accent hover:scale-110 transition-transform">
             <Linkedin className="h-5 w-5" />
           </a>
         )}
         {settings.websiteUrl && (
-          <a href={normalizeSocialUrl(settings.websiteUrl, "website")} target="_blank" rel="noopener noreferrer" aria-label="Site" className="text-accent hover:scale-110 transition-transform">
+          <a href={normalizeSocialUrl(settings.websiteUrl, "website")} target="_blank" rel="noopener noreferrer" aria-label="Visite nosso site oficial" className="text-accent hover:scale-110 transition-transform">
             <Globe className="h-5 w-5" />
           </a>
         )}
         {settings.emailContact && (
-          <a href={`mailto:${settings.emailContact}`} aria-label="E-mail" className="text-accent hover:scale-110 transition-transform">
+          <a href={`mailto:${settings.emailContact}`} aria-label="Envie-nos um e-mail" className="text-accent hover:scale-110 transition-transform">
             <Mail className="h-5 w-5" />
           </a>
         )}
       </div>
+
+      <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4" aria-label="Links úteis">
+        <button onClick={() => navigate("/")} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-accent transition-colors">Início</button>
+        <button onClick={() => navigate("/busca")} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-accent transition-colors">Buscar Imóveis</button>
+        <button onClick={() => navigate("/contato")} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-accent transition-colors">Contato</button>
+        <button onClick={() => navigate("/privacidade")} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-accent transition-colors">Privacidade</button>
+      </nav>
 
       {settings.footerText && (
         <p className="text-[10px] text-muted-foreground uppercase tracking-widest text-center whitespace-pre-line max-w-sm">

@@ -21,7 +21,7 @@ export default function Favorites() {
         <header className="sticky top-[var(--navbar-height)] z-50 glass-header border-b border-border transition-all duration-300">
           <div className="flex items-center justify-between px-4 h-14">
             <BackButton variant="ghost" />
-            <h1 className="text-base font-bold absolute left-1/2 -translate-x-1/2 pointer-events-none">Sua Seleção</h1>
+            <h1 className="text-base font-bold absolute left-1/2 -translate-x-1/2 pointer-events-none">Meus Favoritos</h1>
             <div className="w-10" />
           </div>
         </header>

@@ -72,6 +72,8 @@ export default function SEOHead({
       <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={metaImage} />
       <meta name="twitter:image:alt" content={fullTitle} />
+      {ctx?.settings?.twitterUser && <meta name="twitter:site" content={ctx.settings.twitterUser} />}
+      {ctx?.settings?.twitterUser && <meta name="twitter:creator" content={ctx.settings.twitterUser} />}
 
       {/* JSON-LD structured data */}
       {jsonLdArray.map((schema, i) => (
