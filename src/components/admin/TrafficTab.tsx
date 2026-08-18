@@ -96,9 +96,20 @@ export default function TrafficTab() {
       bySocial[e.social_network] = (bySocial[e.social_network] || 0) + 1;
     });
 
-    // Top landing pages
+    // Top landing pages - Filter out Lovable previews and internal tool noise
     const byPage: Record<string, number> = {};
-    pageViews.forEach((e) => { byPage[e.landing_page] = (byPage[e.landing_page] || 0) + 1; });
+    pageViews
+      .filter((e) => {
+        const page = e.landing_page.toLowerCase();
+        return (
+          !page.includes("lovable.app") && 
+          !page.includes("localhost") &&
+          !page.includes("id-preview--")
+        );
+      })
+      .forEach((e) => {
+        byPage[e.landing_page] = (byPage[e.landing_page] || 0) + 1;
+      });
 
     // By day
     const byDay: Record<string, number> = {};
