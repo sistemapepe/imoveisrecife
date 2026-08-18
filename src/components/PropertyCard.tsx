@@ -46,6 +46,8 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
           loading={index < 2 ? "eager" : "lazy"}
           decoding="async"
           fetchPriority={index === 0 ? "high" : "auto"}
+          width="400"
+          height="300"
         />
         <Watermark />
 
