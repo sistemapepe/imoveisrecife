@@ -134,6 +134,24 @@ export default function TrafficTab() {
       byCampaign[e.campaign] = (byCampaign[e.campaign] || 0) + 1;
     });
 
+    // Clean up top pages to remove duplicates/query params for better visualization
+    const sortedPages = Object.entries(byPage)
+      .map(([url, count]) => {
+        // Remove protocol and domain if present, keep path
+        let cleanPath = url;
+        try {
+          if (url.startsWith('http')) {
+            const parsed = new URL(url);
+            cleanPath = parsed.pathname;
+          }
+        } catch (e) {
+          // fallback to original if URL is invalid or relative
+        }
+        return [cleanPath, count] as [string, number];
+      })
+      .sort(([, a], [, b]) => b - a);
+
+
     const sortDesc = (obj: Record<string, number>) =>
       Object.entries(obj).sort(([, a], [, b]) => b - a);
 
