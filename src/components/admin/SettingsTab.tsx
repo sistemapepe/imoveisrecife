@@ -208,8 +208,27 @@ export default function SettingsTab({ settings, updateSettings }: SettingsTabPro
     } else {
       toSave.customDomain = "";
     }
-    await updateSettings(toSave);
-    toast.success("Configurações salvas!");
+
+    const t = toast.loading("Salvando configurações...");
+    try {
+      // SEO fields might need edge function if RLS update fails or for persistence verification
+      if (localSettings.id && (toSave.twitterUser !== undefined || toSave.websiteUrl !== undefined)) {
+        const { error: seoError } = await supabase.functions.invoke("update-seo", {
+          body: {
+            settingsId: localSettings.id,
+            twitterUser: toSave.twitterUser,
+            websiteUrl: toSave.websiteUrl
+          }
+        });
+        if (seoError) console.error("Edge function SEO update failed, falling back to standard update", seoError);
+      }
+
+      await updateSettings(toSave);
+      toast.success("Configurações salvas!", { id: t });
+    } catch (err) {
+      console.error("Save error:", err);
+      toast.error("Erro ao salvar configurações", { id: t });
+    }
   };
 
   return (
