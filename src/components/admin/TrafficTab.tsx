@@ -65,10 +65,20 @@ export default function TrafficTab() {
   }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString()]);
 
   const stats = useMemo(() => {
-    const pageViews = events.filter((e) => e.event_type === "page_view");
-    const uniqueVisitors = new Set(events.map((e) => e.visitor_id)).size;
-    const sessions = new Set(events.map((e) => e.session_id)).size;
-    const whatsappClicks = events.filter((e) => e.event_type === "whatsapp_click").length;
+    // Filter out development/preview traffic from total counts
+    const filteredEvents = events.filter((e) => {
+      const page = e.landing_page?.toLowerCase() || "";
+      return (
+        !page.includes("lovable.app") && 
+        !page.includes("localhost") &&
+        !page.includes("id-preview--")
+      );
+    });
+
+    const pageViews = filteredEvents.filter((e) => e.event_type === "page_view");
+    const uniqueVisitors = new Set(filteredEvents.map((e) => e.visitor_id)).size;
+    const sessions = new Set(filteredEvents.map((e) => e.session_id)).size;
+    const whatsappClicks = filteredEvents.filter((e) => e.event_type === "whatsapp_click").length;
 
     // By channel
     const byChannel: Record<string, number> = {};
@@ -96,9 +106,20 @@ export default function TrafficTab() {
       bySocial[e.social_network] = (bySocial[e.social_network] || 0) + 1;
     });
 
-    // Top landing pages
+    // Top landing pages - Filter out Lovable previews and internal tool noise
     const byPage: Record<string, number> = {};
-    pageViews.forEach((e) => { byPage[e.landing_page] = (byPage[e.landing_page] || 0) + 1; });
+    pageViews
+      .filter((e) => {
+        const page = e.landing_page.toLowerCase();
+        return (
+          !page.includes("lovable.app") && 
+          !page.includes("localhost") &&
+          !page.includes("id-preview--")
+        );
+      })
+      .forEach((e) => {
+        byPage[e.landing_page] = (byPage[e.landing_page] || 0) + 1;
+      });
 
     // By day
     const byDay: Record<string, number> = {};
@@ -112,6 +133,24 @@ export default function TrafficTab() {
     pageViews.filter((e) => e.campaign).forEach((e) => {
       byCampaign[e.campaign] = (byCampaign[e.campaign] || 0) + 1;
     });
+
+    // Clean up top pages to remove duplicates/query params for better visualization
+    const sortedPages = Object.entries(byPage)
+      .map(([url, count]) => {
+        // Remove protocol and domain if present, keep path
+        let cleanPath = url;
+        try {
+          if (url.startsWith('http')) {
+            const parsed = new URL(url);
+            cleanPath = parsed.pathname;
+          }
+        } catch (e) {
+          // fallback to original if URL is invalid or relative
+        }
+        return [cleanPath, count] as [string, number];
+      })
+      .sort(([, a], [, b]) => b - a);
+
 
     const sortDesc = (obj: Record<string, number>) =>
       Object.entries(obj).sort(([, a], [, b]) => b - a);
@@ -127,7 +166,7 @@ export default function TrafficTab() {
       byBrowser: sortDesc(byBrowser).slice(0, 6),
       byOS: sortDesc(byOS).slice(0, 6),
       bySocial: sortDesc(bySocial),
-      byPage: sortDesc(byPage).slice(0, 10),
+      byPage: sortedPages.slice(0, 10),
       byDay: Object.entries(byDay).sort(([a], [b]) => a.localeCompare(b)),
       byCampaign: sortDesc(byCampaign).slice(0, 5),
     };
