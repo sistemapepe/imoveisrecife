@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { SiteSettings } from "@/contexts/PropertyContext";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Globe, Mail, Palette, Type, MessageCircle, User, Timer, Plus, X, Tag, MapPin, Calendar, UserPlus, Search, Copy, Check } from "lucide-react";
 // Usando SVG simples para ícones sociais que podem faltar no Lucide
