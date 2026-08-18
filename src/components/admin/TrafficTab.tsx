@@ -166,7 +166,7 @@ export default function TrafficTab() {
       byBrowser: sortDesc(byBrowser).slice(0, 6),
       byOS: sortDesc(byOS).slice(0, 6),
       bySocial: sortDesc(bySocial),
-      byPage: sortDesc(byPage).slice(0, 10),
+      byPage: sortedPages.slice(0, 10),
       byDay: Object.entries(byDay).sort(([a], [b]) => a.localeCompare(b)),
       byCampaign: sortDesc(byCampaign).slice(0, 5),
     };
