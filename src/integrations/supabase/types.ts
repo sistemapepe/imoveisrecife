@@ -152,6 +152,7 @@ export type Database = {
           properties_failed: number
           properties_total: number
           reprocess: boolean
+          site_id: string | null
           status: string
           updated_at: string
           user_id: string | null
@@ -169,6 +170,7 @@ export type Database = {
           properties_failed?: number
           properties_total?: number
           reprocess?: boolean
+          site_id?: string | null
           status?: string
           updated_at?: string
           user_id?: string | null
@@ -186,6 +188,7 @@ export type Database = {
           properties_failed?: number
           properties_total?: number
           reprocess?: boolean
+          site_id?: string | null
           status?: string
           updated_at?: string
           user_id?: string | null
@@ -196,6 +199,13 @@ export type Database = {
             columns: ["parent_import_id"]
             isOneToOne: false
             referencedRelation: "import_history"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "import_history_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
             referencedColumns: ["id"]
           },
         ]
