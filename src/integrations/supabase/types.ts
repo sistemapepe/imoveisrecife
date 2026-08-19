@@ -22,6 +22,7 @@ export type Database = {
           entity_id: string | null
           entity_type: string
           id: string
+          site_id: string | null
           user_id: string | null
         }
         Insert: {
@@ -31,6 +32,7 @@ export type Database = {
           entity_id?: string | null
           entity_type: string
           id?: string
+          site_id?: string | null
           user_id?: string | null
         }
         Update: {
@@ -40,9 +42,18 @@ export type Database = {
           entity_id?: string | null
           entity_type?: string
           id?: string
+          site_id?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       contact_info: {
         Row: {
