@@ -936,13 +936,22 @@ export type Database = {
         Args: { _hostname: string }
         Returns: string
       }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      has_role:
+        | {
+            Args: {
+              _role: Database["public"]["Enums"]["app_role"]
+              _user_id: string
+            }
+            Returns: boolean
+          }
+        | {
+            Args: {
+              _role: Database["public"]["Enums"]["app_role"]
+              _site_id: string
+              _user_id: string
+            }
+            Returns: boolean
+          }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       save_role_perms: { Args: { p_rows: Json }; Returns: boolean }
     }
