@@ -203,6 +203,7 @@ export default function Admin() {
     { key: "settings", label: "Configurações", icon: Settings, show: !!canManageSettings },
     { key: "bucket", label: "Imagens (Acesso)", icon: ImageIcon, show: !!canManageBucket },
     { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
+    { key: "security", label: "Segurança", icon: Shield, show: role === "super_admin" || role === "admin" },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
@@ -703,6 +704,10 @@ export default function Admin() {
 
           {tab === "performance" && canViewAnalytics && (
             <PerformanceTab />
+          )}
+
+          {tab === "security" && (role === "super_admin" || role === "admin") && (
+            <SecurityTab />
           )}
           </main>
         </div>
