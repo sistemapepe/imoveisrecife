@@ -48,22 +48,33 @@ export type Database = {
         Row: {
           email_contact: string
           id: string
+          site_id: string | null
           updated_at: string
           whatsapp_number: string
         }
         Insert: {
           email_contact?: string
           id?: string
+          site_id?: string | null
           updated_at?: string
           whatsapp_number?: string
         }
         Update: {
           email_contact?: string
           id?: string
+          site_id?: string | null
           updated_at?: string
           whatsapp_number?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "contact_info_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       contact_messages: {
         Row: {
@@ -388,6 +399,7 @@ export type Database = {
           id: string
           ip_hash: string
           property_id: string
+          site_id: string | null
           viewer_id: string | null
         }
         Insert: {
@@ -395,6 +407,7 @@ export type Database = {
           id?: string
           ip_hash?: string
           property_id: string
+          site_id?: string | null
           viewer_id?: string | null
         }
         Update: {
@@ -402,6 +415,7 @@ export type Database = {
           id?: string
           ip_hash?: string
           property_id?: string
+          site_id?: string | null
           viewer_id?: string | null
         }
         Relationships: [
@@ -410,6 +424,13 @@ export type Database = {
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_views_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
             referencedColumns: ["id"]
           },
         ]
@@ -886,6 +907,7 @@ export type Database = {
           preferred_date: string
           preferred_time: string
           property_id: string
+          site_id: string | null
           status: string
           updated_at: string
         }
@@ -899,6 +921,7 @@ export type Database = {
           preferred_date: string
           preferred_time?: string
           property_id: string
+          site_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -912,6 +935,7 @@ export type Database = {
           preferred_date?: string
           preferred_time?: string
           property_id?: string
+          site_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -921,6 +945,13 @@ export type Database = {
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visit_requests_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
             referencedColumns: ["id"]
           },
         ]
@@ -946,23 +977,6 @@ export type Database = {
         Args: { _hostname: string }
         Returns: string
       }
-      has_role:
-        | {
-            Args: {
-              _role: Database["public"]["Enums"]["app_role"]
-              _user_id: string
-            }
-            Returns: boolean
-          }
-        | {
-            Args: {
-              _role: Database["public"]["Enums"]["app_role"]
-              _site_id: string
-              _user_id: string
-            }
-            Returns: boolean
-          }
-      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       save_role_perms: { Args: { p_rows: Json }; Returns: boolean }
     }
     Enums: {
