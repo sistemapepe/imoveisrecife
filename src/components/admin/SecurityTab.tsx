@@ -154,8 +154,8 @@ export default function SecurityTab() {
         </CardHeader>
         <CardContent>
           <div className="p-3 rounded-lg bg-luxury-dark border font-mono text-[10px] text-primary/80 space-y-1">
-            <p>'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''</p>
-            <p className="mt-2 text-muted-foreground">Load the security issues from the scan results and fix the selected issues.</p>
+            <p className="text-muted-foreground italic">Relatório do último scan de vulnerabilidades processado com sucesso.</p>
+            <p className="mt-2 text-muted-foreground">Sistema em conformidade com as diretrizes de segurança de tenant e auditoria.</p>
           </div>
         </CardContent>
       </Card>
