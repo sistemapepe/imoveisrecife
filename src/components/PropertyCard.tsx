@@ -37,19 +37,22 @@ function PropertyCard({ property, index = 0 }: { property: Property; index?: num
       className="group bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
       onClick={() => navigate(`/imovel/${property.id}`)}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
         <img
           alt={property.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 img-fade ${imgLoaded ? "is-loaded" : ""}`}
           src={getOptimizedImageUrl(heroImage, IMAGE_SIZES.CARD)}
           srcSet={getImageSrcSet(heroImage, [300, 450, 600])}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           loading={index < 2 ? "eager" : "lazy"}
           decoding="async"
           fetchPriority={index === 0 ? "high" : "auto"}
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgLoaded(true)}
           width="400"
           height="300"
         />
+
         <Watermark />
 
         {/* Gradient top scrim for badge legibility */}
