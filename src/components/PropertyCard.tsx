@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, TrendingDown, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
