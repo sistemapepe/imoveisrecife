@@ -188,3 +188,5 @@ function PropertyCard({ property, index = 0 }: { property: Property; index?: num
     </>
   );
 }
+
+export default memo(PropertyCard);
