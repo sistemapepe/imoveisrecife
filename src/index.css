@@ -140,4 +140,29 @@
   .ios-shadow {
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
   }
+  .img-fade {
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+  .img-fade.is-loaded {
+    opacity: 1;
+  }
+}
+
+/* Mobile: lighten GPU-heavy effects to keep 60fps on iOS/Android */
+@media (max-width: 768px) {
+  .glass-nav {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .glass-header {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .backdrop-blur-2xl,
+  .backdrop-blur-xl,
+  .backdrop-blur-lg {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
 }
