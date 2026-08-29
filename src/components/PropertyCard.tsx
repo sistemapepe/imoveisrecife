@@ -11,7 +11,7 @@ import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-o
 import { useResolvedImage } from "@/lib/property-image-url";
 import Watermark from "@/components/Watermark";
 
-export default function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
+function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const navigate = useNavigate();
   const { favorites, toggleFavorite, settings } = useProperties();
   const isFav = favorites.includes(property.id);
