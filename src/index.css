@@ -80,6 +80,21 @@
     touch-action: manipulation;
   }
 
+  /* Touch/scroll performance on iOS Safari and Android webviews */
+  button, a, [role="button"], input, select, textarea, label {
+    touch-action: manipulation;
+  }
+  .hide-scrollbar,
+  .overflow-y-auto,
+  .overflow-x-auto,
+  .overflow-auto {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  img {
+    content-visibility: auto;
+  }
+
   /* WCAG 2.4.7 — Visible focus indicator (keyboard only) */
   *:focus {
     outline: none;
