@@ -20,15 +20,16 @@ function PropertyCard({ property, index = 0 }: { property: Property; index?: num
     ? Math.round(((property.previous_price! - property.price) / property.previous_price!) * 100)
     : 0;
   const [leadOpen, setLeadOpen] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const heroImage = useResolvedImage(property.images[0]);
 
-  const openWhatsApp = () => {
+  const openWhatsApp = useCallback(() => {
     trackEvent("whatsapp_click", property.id);
     const baseMsg = settings.whatsappMessage || "Olá! Gostaria de mais informações sobre este imóvel.";
     const msg = `${baseMsg}\n\nImóvel: ${property.title} (${property.code || property.id})`;
     const message = encodeURIComponent(msg);
     window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
-  };
+  }, [property.id, property.title, property.code, settings.whatsappMessage, settings.whatsappNumber]);
 
   return (
     <>
