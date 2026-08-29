@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, TrendingDown, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -11,7 +11,7 @@ import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-o
 import { useResolvedImage } from "@/lib/property-image-url";
 import Watermark from "@/components/Watermark";
 
-export default function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
+function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const navigate = useNavigate();
   const { favorites, toggleFavorite, settings } = useProperties();
   const isFav = favorites.includes(property.id);
@@ -20,15 +20,16 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
     ? Math.round(((property.previous_price! - property.price) / property.previous_price!) * 100)
     : 0;
   const [leadOpen, setLeadOpen] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const heroImage = useResolvedImage(property.images[0]);
 
-  const openWhatsApp = () => {
+  const openWhatsApp = useCallback(() => {
     trackEvent("whatsapp_click", property.id);
     const baseMsg = settings.whatsappMessage || "Olá! Gostaria de mais informações sobre este imóvel.";
     const msg = `${baseMsg}\n\nImóvel: ${property.title} (${property.code || property.id})`;
     const message = encodeURIComponent(msg);
     window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
-  };
+  }, [property.id, property.title, property.code, settings.whatsappMessage, settings.whatsappNumber]);
 
   return (
     <>
@@ -36,19 +37,22 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
       className="group bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
       onClick={() => navigate(`/imovel/${property.id}`)}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
         <img
           alt={property.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 img-fade ${imgLoaded ? "is-loaded" : ""}`}
           src={getOptimizedImageUrl(heroImage, IMAGE_SIZES.CARD)}
           srcSet={getImageSrcSet(heroImage, [300, 450, 600])}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           loading={index < 2 ? "eager" : "lazy"}
           decoding="async"
           fetchPriority={index === 0 ? "high" : "auto"}
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgLoaded(true)}
           width="400"
           height="300"
         />
+
         <Watermark />
 
         {/* Gradient top scrim for badge legibility */}
@@ -184,3 +188,5 @@ export default function PropertyCard({ property, index = 0 }: { property: Proper
     </>
   );
 }
+
+export default memo(PropertyCard);

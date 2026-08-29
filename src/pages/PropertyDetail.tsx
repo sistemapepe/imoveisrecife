@@ -265,6 +265,7 @@ export default function PropertyDetail() {
             draggable={false}
             onClick={() => { setLightboxIndex(currentImg); setLightboxOpen(true); }}
             loading="eager"
+            decoding="async"
             fetchPriority="high"
           />
           <Watermark />

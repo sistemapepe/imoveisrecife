@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+/* Fonts are loaded non-blocking via <link> in index.html (font-display: swap) */
 
 @tailwind base;
 @tailwind components;
@@ -80,6 +80,21 @@
     touch-action: manipulation;
   }
 
+  /* Touch/scroll performance on iOS Safari and Android webviews */
+  button, a, [role="button"], input, select, textarea, label {
+    touch-action: manipulation;
+  }
+  .hide-scrollbar,
+  .overflow-y-auto,
+  .overflow-x-auto,
+  .overflow-auto {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  img {
+    content-visibility: auto;
+  }
+
   /* WCAG 2.4.7 — Visible focus indicator (keyboard only) */
   *:focus {
     outline: none;
@@ -124,5 +139,30 @@
   .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .ios-shadow {
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  .img-fade {
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+  .img-fade.is-loaded {
+    opacity: 1;
+  }
+}
+
+/* Mobile: lighten GPU-heavy effects to keep 60fps on iOS/Android */
+@media (max-width: 768px) {
+  .glass-nav {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .glass-header {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .backdrop-blur-2xl,
+  .backdrop-blur-xl,
+  .backdrop-blur-lg {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
   }
 }
