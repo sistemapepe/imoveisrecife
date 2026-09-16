@@ -65,7 +65,9 @@ Não existe preço fixo por funcionalidade: o consumo é por mensagem de trabalh
 | Módulo Rede de Sites | 3 a 5 |
 | Segurança (RLS) e funções do banco | 2 a 4 |
 | SEO/sitemap por domínio + testes e ajustes | 3 a 5 |
-| **Total** | **14 a 23 mensagens** |
+| Botão de download das fotos com marca d'água | 1 a 2 |
+| **Total** | **15 a 25 mensagens** |
+
 
 Comparativo: manter cópias separadas do projeto custaria esse mesmo esforço **multiplicado por cada cliente**, toda vez que houvesse uma atualização. Posso executar por etapas, e você acompanha o consumo em Configurações > Uso/Créditos a cada fase.
 
