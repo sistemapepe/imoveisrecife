@@ -19,6 +19,8 @@ import RecentViewsBadge from "@/components/RecentViewsBadge";
 import FinancingSimulator from "@/components/FinancingSimulator";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
 import Watermark from "@/components/Watermark";
+import DownloadPhotosButton from "@/components/DownloadPhotosButton";
+
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
@@ -269,6 +271,13 @@ export default function PropertyDetail() {
             fetchPriority="high"
           />
           <Watermark />
+
+          <DownloadPhotosButton
+            images={property.images}
+            baseName={property.code || property.title}
+            className="absolute right-3 top-3 z-10"
+          />
+
 
           {totalImages > 1 && (
             <>
