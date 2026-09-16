@@ -51,6 +51,8 @@ Cada imobiliária aponta o domínio dela para este mesmo projeto (Configuraçõe
 - Políticas RLS reescritas com `has_role(auth.uid(), role, site_id)`; `site_id` obrigatório (NOT NULL + default via contexto) nas tabelas de dados.
 - Edge functions `sitemap`, `get-contact-info`, `seo-generate`, `update-seo` e `manage-users` passam a receber/derivar `site_id` do host.
 - Nova tela `src/components/admin/NetworkTab.tsx` + rota no `Admin.tsx`, restrita a `isSuperAdmin`.
+- Download com marca d'água: utilitário que compõe imagem + logo em `<canvas>` reusando os parâmetros de `Watermark.tsx` (`watermark_position/opacity/size_pct`), exporta em JPEG e empacota com JSZip; botão renderizado em `PropertyDetail.tsx` sob `isAdmin || canManageProperties`.
+
 
 ## Estimativa de créditos
 
