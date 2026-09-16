@@ -35,6 +35,10 @@ Revisão das regras de acesso do banco para garantir que nenhum site consiga ler
 ### 6. SEO e compartilhamento por site
 Título, descrição, ícone da aba, imagem de compartilhamento, robots e sitemap passam a ser gerados conforme o domínio acessado.
 
+### 7. Download das fotos com marca d'água (somente administrador logado)
+Na página do imóvel, um botão "Baixar fotos" aparece **apenas para o administrador logado** (invisível para visitantes). Ao clicar, todas as imagens daquele imóvel são baixadas já com a marca d'água aplicada, exatamente como aparecem no site (mesma logo, posição, tamanho e opacidade configurados). Várias fotos vêm em um único arquivo .zip nomeado pelo código do imóvel; uma única foto baixa direto como imagem.
+
+
 ## Como ficam os domínios
 
 Cada imobiliária aponta o domínio dela para este mesmo projeto (Configurações do Projeto > Domínios). Detalhe importante: é preciso deixar **nenhum domínio marcado como principal**, senão o sistema redireciona todos para um só endereço. Depois de conectado, você cadastra o domínio no módulo Rede de Sites e ele já responde com a marca certa.
@@ -47,6 +51,8 @@ Cada imobiliária aponta o domínio dela para este mesmo projeto (Configuraçõe
 - Políticas RLS reescritas com `has_role(auth.uid(), role, site_id)`; `site_id` obrigatório (NOT NULL + default via contexto) nas tabelas de dados.
 - Edge functions `sitemap`, `get-contact-info`, `seo-generate`, `update-seo` e `manage-users` passam a receber/derivar `site_id` do host.
 - Nova tela `src/components/admin/NetworkTab.tsx` + rota no `Admin.tsx`, restrita a `isSuperAdmin`.
+- Download com marca d'água: utilitário que compõe imagem + logo em `<canvas>` reusando os parâmetros de `Watermark.tsx` (`watermark_position/opacity/size_pct`), exporta em JPEG e empacota com JSZip; botão renderizado em `PropertyDetail.tsx` sob `isAdmin || canManageProperties`.
+
 
 ## Estimativa de créditos
 
@@ -59,7 +65,9 @@ Não existe preço fixo por funcionalidade: o consumo é por mensagem de trabalh
 | Módulo Rede de Sites | 3 a 5 |
 | Segurança (RLS) e funções do banco | 2 a 4 |
 | SEO/sitemap por domínio + testes e ajustes | 3 a 5 |
-| **Total** | **14 a 23 mensagens** |
+| Botão de download das fotos com marca d'água | 1 a 2 |
+| **Total** | **15 a 25 mensagens** |
+
 
 Comparativo: manter cópias separadas do projeto custaria esse mesmo esforço **multiplicado por cada cliente**, toda vez que houvesse uma atualização. Posso executar por etapas, e você acompanha o consumo em Configurações > Uso/Créditos a cada fase.
 
