@@ -35,6 +35,10 @@ Revisão das regras de acesso do banco para garantir que nenhum site consiga ler
 ### 6. SEO e compartilhamento por site
 Título, descrição, ícone da aba, imagem de compartilhamento, robots e sitemap passam a ser gerados conforme o domínio acessado.
 
+### 7. Download das fotos com marca d'água (somente administrador logado)
+Na página do imóvel, um botão "Baixar fotos" aparece **apenas para o administrador logado** (invisível para visitantes). Ao clicar, todas as imagens daquele imóvel são baixadas já com a marca d'água aplicada, exatamente como aparecem no site (mesma logo, posição, tamanho e opacidade configurados). Várias fotos vêm em um único arquivo .zip nomeado pelo código do imóvel; uma única foto baixa direto como imagem.
+
+
 ## Como ficam os domínios
 
 Cada imobiliária aponta o domínio dela para este mesmo projeto (Configurações do Projeto > Domínios). Detalhe importante: é preciso deixar **nenhum domínio marcado como principal**, senão o sistema redireciona todos para um só endereço. Depois de conectado, você cadastra o domínio no módulo Rede de Sites e ele já responde com a marca certa.
