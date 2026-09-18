@@ -1,38 +1,38 @@
 {
-  "estrutura": "rapidamente",
-  "reescreve": [
+  "framework": "vite",
+  "rewrites": [
     {
-      "fonte": "/(.*)",
-      "destino": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
-  "cabeçalhos": [
+  "headers": [
     {
-      "fonte": "/(.*)",
-      "cabeçalhos": [
+      "source": "/(.*)",
+      "headers": [
         {
-          "chave": "Política de Segurança de Conteúdo",
-          "valor": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://*.supabase.co https://*.google.com https://*.gstatic.com https://*.ytimg.com https://*.rrochaconsultor.com.br; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://viacep.com.br https://*.google-analytics.com https://*.google.com;rc 'self' https://www.google.com https://www.youtube.com https://*.matterport.com;"
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://*.supabase.co https://*.google.com https://*.gstatic.com https://*.ytimg.com https://*.rrochaconsultor.com.br; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://viacep.com.br https://*.google-analytics.com https://*.google.com; frame-src 'self' https://www.google.com https://www.youtube.com https://*.matterport.com;"
         },
         {
-          "chave": "Opções de quadro X",
-          "valor": "NEGAR"
+          "key": "X-Frame-Options",
+          "value": "DENY"
         },
         {
-          "chave": "Opções de tipo de conteúdo X",
-          "valor": "nos cheirar"
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
         },
         {
-          "chave": "Proteção X-XSS",
-          "valor": "1; modo = bloco"
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
         },
         {
-          "chave": "Política de Referência",
-          "valor": "origem estrita quando origem cruzada"
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         },
         {
-          "chave": "Segurança de transporte estrita",
-          "valor": "max-age=31536000; includeSubDomains; pré-carregar"
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
         }
       ]
     }
