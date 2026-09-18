@@ -57,6 +57,9 @@ export default function Index() {
 
   const displayedProperties = filteredProperties.slice(0, visibleCount);
 
+  useEffect(() => { setVisibleCount(6); }, [activeType, sortBy]);
+
+
   // Hero carousel - somente imóveis ativos
   const heroSlides = useMemo(() => available.length > 0
     ? available.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
