@@ -432,7 +432,7 @@ export default function Index() {
                 {typeFilters.map(({ label, short, icon: Icon }) => (
                   <button
                     key={label}
-                    onClick={() => { setActiveType(label); setShowAll(false); }}
+                    onClick={() => { setActiveType(label); setVisibleCount(6); }}
                     className={`shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all active:scale-95 ${
                       activeType === label
                         ? "bg-accent text-accent-foreground shadow-md"

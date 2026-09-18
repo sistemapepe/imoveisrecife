@@ -149,7 +149,7 @@ export default function SearchResults() {
                   onClick={() => toggleStatus(value)}
                   className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${
                     active
-                      ? value === "vendido" ? "bg-red-500 text-white" : value === "reservado" ? "bg-yellow-500 text-white" : "bg-green-600 text-white"
+                      ? value === "reservado" ? "bg-yellow-500 text-white" : "bg-green-600 text-white"
                       : "bg-card border border-border text-muted-foreground"
                   }`}
                 >
