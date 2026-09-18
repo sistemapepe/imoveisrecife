@@ -387,7 +387,13 @@ export default function Admin() {
                           <TagIcon className="h-4 w-4" />
                         </button>
                       )}
+                      <DownloadPhotosButton
+                        images={p.images}
+                        baseName={p.code || p.title}
+                        variant="icon"
+                      />
                       {canManageProperties && (
+
                         <button onClick={() => startEdit(p)} className="p-2 rounded-lg bg-primary/10 text-primary"><Pencil className="h-4 w-4" /></button>
                       )}
                       {canDeleteProperties && (
