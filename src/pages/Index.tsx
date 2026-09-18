@@ -1,79 +1,79 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowRight, Heart, ChevronLeft, ChevronRight, Search, MapPin, LayoutGrid, Home, Building2, Layers, LandPlot, Store, ArrowUpDown } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import heroImage from "@/assets/hero-mansion.jpg";
-import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
-import { PriceDisplay } from "@/components/PriceDisplay";
-import { Ruler, BedDouble, Car } from "lucide-react";
-import PageTransition from "@/components/PageTransition";
-import PropertyCard from "@/components/PropertyCard";
-import SEOHead from "@/components/SEOHead";
-import Navbar from "@/components/Navbar";
-import MarqueeBanner from "@/components/MarqueeBanner";
-import Footer from "@/components/Footer";
-import { searchLocations } from "@/data/pernambuco-locations";
-import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
-import { getVisibleProperties } from "@/lib/property-visibility";
+importar { usarEstado, useEfeito, useRef, no memorando } de "reagir";
+importar { useNavigate } de "react-roteador-dom";
+importar { Seta Direita, Coração, ChevronEsquerda, ChevronDireita, Procurar, MapPin, LayoutGrid, Lar, Edifício2, Camadas, Terreno, Loja, Seta para cima e para baixo } de "lúcido-reagir";
+importar { movimento, AnimatePresença } de "movimento de enquadramento";
+importar heróiImagem de "@/assets/hero-mansion.jpg";
+importar { usarPropriedades, formatoPriceFull } de "@/contextos/PropertyContext";
+importar { Exibição de preço } de "@/componentes/PriceDisplay";
+importar { Governante, CamaCasal, Carro } de "lúcido-reagir";
+importar Transição de página de "@/componentes/PageTransition";
+importar Cartão de Propriedade de "@/componentes/PropertyCard";
+importar Chefe de ESSE de "@/componentes/SEOHead";
+importar Barra de navegação de "@/componentes/Barra de navegação";
+importar LetreiroBanner de "@/componentes/MarqueeBanner";
+importar Rodapé de "@/componentes/Rodapé";
+importar { locais de pesquisa } de "@/data/pernambuco-locais";
+importar { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } de "@/lib/otimização de imagem";
+importar { getVisibleProperties } de "@/lib/propriedade-visibilidade";
 
 
-const typeFilters = [
-  { label: "Todos", short: "Todos", icon: LayoutGrid },
-  { label: "Casa", short: "Casa", icon: Home },
-  { label: "Apartamento", short: "Apt", icon: Building2 },
-  { label: "Cobertura", short: "Cobertura", icon: Layers },
-  { label: "Terreno", short: "Terreno", icon: LandPlot },
-  { label: "Comercial", short: "Comercial", icon: Store },
+const filtros de tipo = [
+  { rótulo: "Todos", curto: "Todos", ícone: LayoutGrid },
+  { rótulo: "Casa", curto: "Casa", ícone: Lar },
+  { rótulo: "Apartamento", curto: "Apto", ícone: Edifício2 },
+  { rótulo: "Cobertura", curto: "Cobertura", ícone: Camadas },
+  { rótulo: "Terreno", curto: "Terreno", ícone: Terreno },
+  { rótulo: "Comercial", curto: "Comercial", ícone: Loja },
 ];
 const sortOptions = [
-  { value: "area_desc", label: "Maior área", icon: ArrowUpDown },
+  { valor: "área_desc", rótulo: "Maior área", ícone: Seta para cima e para baixo },
 ];
 
-export default function Index() {
-  const navigate = useNavigate();
-  const { properties, settings, favorites, toggleFavorite, loading } = useProperties();
-  const [isScrolled, setIsScrolled] = useState(false);
+exportar padrão função Índice() {
+  const navegar = useNavigate();
+  const { propriedades, configurações, favoritos, alternarFavorito, carregando } = usarPropriedades();
+  const [está rolado, setIsScrolled] = usarEstado(falso);
   
-  useEffect(() => {
+  useEfeito(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(janela.rolarY > 20);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    janela.addEventListener("rolar", handleScroll);
+    retornar () => janela.removedorEventListener("rolar", handleScroll);
   }, []);
 
-  const available = useMemo(() => getVisibleProperties(properties), [properties]);
-  const featured = useMemo(() => available.filter((p) => p.featured), [available]);
-  const [activeType, setActiveType] = useState("Todos");
-  const [sortBy, setSortBy] = useState("");
-  const [visibleCount, setVisibleCount] = useState(6);
+  const disponível = no memorando(() => getVisibleProperties(propriedades), [propriedades]);
+  const apresentou = no memorando(() => disponível.filtro((p) => p.apresentou), [disponível]);
+  const [tipo ativo, setActiveType] = usarEstado("Todos");
+  const [ordenar por, definirSortBy] = usarEstado("");
+  const [contagem visível, setVisibleCount] = usarEstado(6);
 
 
-  const filteredProperties = useMemo(() => {
-    let result = activeType === "Todos" ? available : available.filter((p) => p.type === activeType);
-    if (sortBy === "area_desc") return [...result].sort((a, b) => b.area - a.area);
-    return result;
-  }, [available, activeType, sortBy]);
+  const propriedades filtradas = no memorando(() => {
+    deixar resultado = tipo ativo === "Todos" ? disponível : disponível.filtro((p) => p.tipo === tipo ativo);
+    se (ordenar por === "área_desc") retornar [...resultado].organizar((um, b) => b.área - um.área);
+    retornar resultado;
+  }, [disponível, tipo ativo, ordenar por]);
 
-  const displayedProperties = filteredProperties.slice(0, visibleCount);
+  const propriedades exibidas = propriedades filtradas.fatiar(0, contagem visível);
 
-  useEffect(() => { setVisibleCount(6); }, [activeType, sortBy]);
+  useEfeito(() => { setVisibleCount(6); }, [tipo ativo, ordenar por]);
 
 
   // Hero carousel - somente imóveis ativos
-  const heroSlides = useMemo(() => available.length > 0
-    ? available.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
-    : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }], [available, settings.heroTitle]);
+  const heroSlides = no memorando(() => disponível.comprimento > 0
+    ? disponível.mapa((p) => ({ imagem: p.imagens[0] || heróiImagem, título: p.título, eu isto: p.eu ele }))
+    : [{ imagem: heróiImagem, título: configurações.heroTítulo, eu isto: nulo como corda | nulo }], [disponível, configurações.heroTítulo]);
 
 
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [quickSearch, setQuickSearch] = useState("");
-  const [showQuickSuggestions, setShowQuickSuggestions] = useState(false);
-  const quickSuggestions = searchLocations(quickSearch);
-  const quickSearchRef = useRef<HTMLDivElement>(null);
+  const [deslizar atual, setCurrentSlide] = usarEstado(0);
+  const [pesquisa rápida, definirQuickSearch] = usarEstado("");
+  const [showQuickSuggestions, setShowQuickSuggestions] = usarEstado(falso);
+  const sugestões rápidas = locais de pesquisa(pesquisa rápida);
+  const quickSearchRef = useRef<Elemento HTMLDiv>(nulo);
 
-  // Close suggestions on outside click
-  useEffect(() => {
+  //Fecha sugestões em clique externo
+  useEfeito(() => {
     const handler = (e: MouseEvent) => {
       if (quickSearchRef.current && !quickSearchRef.current.contains(e.target as Node)) {
         setShowQuickSuggestions(false);
