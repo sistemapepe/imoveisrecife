@@ -7,6 +7,8 @@ import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import { isPubliclyVisible } from "@/lib/property-visibility";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -227,6 +229,8 @@ export default function PropertyDetail() {
         type="article"
         keywords={`${property.type} ${property.neighborhood}, ${property.type} ${property.city}, ${property.bedrooms} quartos ${property.neighborhood}, imóvel ${property.code}`}
         jsonLd={[schemaOrg, breadcrumbJsonLd]}
+        noIndex={!isPubliclyVisible(property as any)}
+
       />
       <motion.div
         className="min-h-screen bg-background pb-32"
@@ -340,7 +344,13 @@ export default function PropertyDetail() {
                   <Award className="h-4 w-4" /> Exclusividade {settings.brandName}
                 </div>
               )}
+              {!isPubliclyVisible(property as any) && (
+                <div className="mb-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-700">
+                  Este imóvel não está mais disponível e foi retirado das listagens do site.
+                </div>
+              )}
               <div className="flex items-center gap-2 flex-wrap mb-2">
+
                 <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground leading-tight">{property.title}</h1>
                 {(property as any).status && (property as any).status !== "disponivel" && (
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${

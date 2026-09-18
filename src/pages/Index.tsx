@@ -14,6 +14,8 @@ import MarqueeBanner from "@/components/MarqueeBanner";
 import Footer from "@/components/Footer";
 import { searchLocations } from "@/data/pernambuco-locations";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
+import { getVisibleProperties } from "@/lib/property-visibility";
+
 
 const typeFilters = [
   { label: "Todos", short: "Todos", icon: LayoutGrid },
@@ -40,11 +42,12 @@ export default function Index() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const available = useMemo(() => properties.filter((p) => !p.status || p.status === "disponivel"), [properties]);
+  const available = useMemo(() => getVisibleProperties(properties), [properties]);
   const featured = useMemo(() => available.filter((p) => p.featured), [available]);
   const [activeType, setActiveType] = useState("Todos");
   const [sortBy, setSortBy] = useState("");
-  const [showAll, setShowAll] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(6);
+
 
   const filteredProperties = useMemo(() => {
     let result = activeType === "Todos" ? available : available.filter((p) => p.type === activeType);
@@ -52,12 +55,16 @@ export default function Index() {
     return result;
   }, [available, activeType, sortBy]);
 
-  const displayedProperties = showAll ? filteredProperties : filteredProperties.slice(0, 6);
+  const displayedProperties = filteredProperties.slice(0, visibleCount);
 
-  // Hero carousel - show ALL properties
-  const heroSlides = useMemo(() => properties.length > 0
-    ? properties.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
-    : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }], [properties, settings.heroTitle]);
+  useEffect(() => { setVisibleCount(6); }, [activeType, sortBy]);
+
+
+  // Hero carousel - somente imóveis ativos
+  const heroSlides = useMemo(() => available.length > 0
+    ? available.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
+    : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }], [available, settings.heroTitle]);
+
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [quickSearch, setQuickSearch] = useState("");
@@ -110,7 +117,7 @@ export default function Index() {
 
   // Dynamic collections from property types
   const collections = Array.from(
-    properties.reduce((map, p) => {
+    available.reduce((map, p) => {
       if (!map.has(p.type)) {
         map.set(p.type, { type: p.type, image: p.images[0] || heroImage, count: 1 });
       } else {
@@ -425,7 +432,7 @@ export default function Index() {
                 {typeFilters.map(({ label, short, icon: Icon }) => (
                   <button
                     key={label}
-                    onClick={() => { setActiveType(label); setShowAll(false); }}
+                    onClick={() => { setActiveType(label); setVisibleCount(6); }}
                     className={`shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all active:scale-95 ${
                       activeType === label
                         ? "bg-accent text-accent-foreground shadow-md"
@@ -476,16 +483,20 @@ export default function Index() {
                         <PropertyCard key={p.id} property={p} index={i} />
                       ))}
                     </div>
-                    {!showAll && filteredProperties.length > 6 && (
-                      <div className="flex justify-center mt-8">
+                    {displayedProperties.length < filteredProperties.length && (
+                      <div className="flex flex-col items-center gap-2 mt-8">
                         <button
-                          onClick={() => setShowAll(true)}
+                          onClick={() => setVisibleCount((c) => c + 6)}
                           className="flex items-center gap-2 px-8 py-3 rounded-full border-2 border-accent text-accent text-sm font-bold uppercase tracking-wider hover:bg-accent hover:text-accent-foreground transition-all"
                         >
-                          Ver todos os {filteredProperties.length} imóveis <ArrowRight className="h-4 w-4" />
+                          Ver mais imóveis <ArrowRight className="h-4 w-4" />
                         </button>
+                        <span className="text-xs text-muted-foreground">
+                          Exibindo {displayedProperties.length} de {filteredProperties.length} imóveis
+                        </span>
                       </div>
                     )}
+
                   </>
                 ) : (
                   <p className="text-card/50 text-sm text-center py-12">Nenhum imóvel encontrado para "{activeType}".</p>

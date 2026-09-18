@@ -8,13 +8,15 @@ import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { getVisibleProperties } from "@/lib/property-visibility";
+
 
 const propertyTypes = ["Casa", "Apartamento", "Cobertura", "Terreno", "Comercial"] as const;
 const statusOptions = [
   { value: "disponivel", label: "Disponível" },
   { value: "reservado", label: "Reservado" },
-  { value: "vendido", label: "Vendido" },
 ] as const;
+
 
 export default function SearchResults() {
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function SearchResults() {
   };
 
   const filtered = useMemo(() => {
-    let result = properties;
+    let result = getVisibleProperties(properties);
 
     // Filter by status
     if (activeStatus.length > 0) {
@@ -147,7 +149,7 @@ export default function SearchResults() {
                   onClick={() => toggleStatus(value)}
                   className={`flex shrink-0 items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${
                     active
-                      ? value === "vendido" ? "bg-red-500 text-white" : value === "reservado" ? "bg-yellow-500 text-white" : "bg-green-600 text-white"
+                      ? value === "reservado" ? "bg-yellow-500 text-white" : "bg-green-600 text-white"
                       : "bg-card border border-border text-muted-foreground"
                   }`}
                 >

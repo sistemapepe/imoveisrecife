@@ -22,9 +22,9 @@ Verifiquei os 15 imóveis cadastrados: 13 estão como "disponível" e 2 como "ve
 
 ## Detalhes técnicos
 
-- Novo utilitário `isPubliclyVisible(property)` em `src/lib/property-visibility.ts` (status `disponivel` ou `reservado`), exportado junto de um helper `getVisibleProperties(list)`.
-- `src/pages/Index.tsx`: `heroSlides` e `collections` passam a usar `available` (renomeado para `visibleProperties`), removendo o comentário "show ALL properties"; paginação incremental em vez de corte fixo em 6.
-- `src/pages/SearchResults.tsx`: base do `filtered` passa por `getVisibleProperties`; chips de status limitados a disponível/reservado.
-- `src/components/SimilarProperties.tsx`: troca o `p.status === "vendido"` manual pelo helper.
-- `src/pages/PropertyDetail.tsx`: adiciona `noindex` e aviso quando o status não é público.
+- Novo utilitário `isPubliclyVisible(propriedade)` em `src/lib/property-visibility.ts` (status `disponivel` ou `reservado`), exportado junto de um helper `getVisibleProperties(lista)`.
+- `src/pages/Index.tsx`: `heroSlides` e `coleções` passam a usar `disponível` (renomeado para `propriedades visíveis`), removendo o comentário "show ALL properties"; paginação incremental em vez de corte fixo em 6.
+- `src/pages/SearchResults.tsx`: base do `filtrado` passa por `getVisibleProperties`; chips de status limitados a disponível/reservado.
+- `src/componentes/SimilarProperties.tsx`: troca o `p.status === "vendido"` manual pelo helper.
+- `src/pages/PropertyDetail.tsx`: adiciona `sem índice` e aviso quando o status não é público.
 - Sem mudanças no banco; o status continua sendo controlado no painel.
