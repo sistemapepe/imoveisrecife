@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Shield } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
+import DownloadPhotosButton from "@/components/DownloadPhotosButton";
+
 import { useProperties, Property, formatPriceFull } from "@/contexts/PropertyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -387,7 +389,13 @@ export default function Admin() {
                           <TagIcon className="h-4 w-4" />
                         </button>
                       )}
+                      <DownloadPhotosButton
+                        images={p.images}
+                        baseName={p.code || p.title}
+                        variant="icon"
+                      />
                       {canManageProperties && (
+
                         <button onClick={() => startEdit(p)} className="p-2 rounded-lg bg-primary/10 text-primary"><Pencil className="h-4 w-4" /></button>
                       )}
                       {canDeleteProperties && (
