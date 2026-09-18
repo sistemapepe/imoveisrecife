@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { useProperties, Property } from "@/contexts/PropertyContext";
 import PropertyCard from "@/components/PropertyCard";
+import { isPubliclyVisible } from "@/lib/property-visibility";
+
 
 interface SimilarPropertiesProps {
   current: Property;
