@@ -16,7 +16,7 @@ export default function SimilarProperties({ current }: SimilarPropertiesProps) {
     const maxPrice = current.price * 1.2;
     const candidates = properties.filter((p) => {
       if (p.id === current.id) return false;
-      if (p.status === "vendido") return false;
+      if (!isPubliclyVisible(p)) return false;
       const priceMatch = p.price >= minPrice && p.price <= maxPrice;
       const sameNeighborhood = p.neighborhood?.toLowerCase() === current.neighborhood?.toLowerCase();
       const sameCity = p.city?.toLowerCase() === current.city?.toLowerCase();

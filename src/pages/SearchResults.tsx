@@ -13,8 +13,8 @@ const propertyTypes = ["Casa", "Apartamento", "Cobertura", "Terreno", "Comercial
 const statusOptions = [
   { value: "disponivel", label: "Disponível" },
   { value: "reservado", label: "Reservado" },
-  { value: "vendido", label: "Vendido" },
 ] as const;
+
 
 export default function SearchResults() {
   useEffect(() => {
