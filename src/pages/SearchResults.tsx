@@ -48,7 +48,7 @@ export default function SearchResults() {
   };
 
   const filtered = useMemo(() => {
-    let result = properties;
+    let result = getVisibleProperties(properties);
 
     // Filter by status
     if (activeStatus.length > 0) {
