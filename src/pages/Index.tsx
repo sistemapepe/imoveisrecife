@@ -1,126 +1,642 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Search, MapPin, SlidersHorizontal } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import PropertyCard from "@/components/PropertyCard";
-import SEOHead from "@/components/SEOHead";
-import PageTransition from "@/components/PageTransition";
-import { useProperties } from "@/contexts/PropertyContext";
-import { getVisibleProperties } from "@/lib/property-visibility";
+importar { usarEstado, useEfeito, useRef, no memorando } de "reagir";
+importar { useNavigate } de "react-roteador-dom";
+importar { Seta Direita, Coração, ChevronEsquerda, ChevronDireita, Procurar, MapPin, LayoutGrid, Lar, Edifício2, Camadas, Terreno, Loja, Seta para cima e para baixo } de "lúcido-reagir";
+importar { movimento, AnimatePresença } de "movimento de enquadramento";
+importar heróiImagem de "@/assets/hero-mansion.jpg";
+importar { usarPropriedades, formatoPriceFull } de "@/contextos/PropertyContext";
+importar { Exibição de preço } de "@/componentes/PriceDisplay";
+importar { Governante, CamaCasal, Carro } de "lúcido-reagir";
+importar Transição de página de "@/componentes/PageTransition";
+importar Cartão de Propriedade de "@/componentes/PropertyCard";
+importar Chefe de ESSE de "@/componentes/SEOHead";
+importar Barra de navegação de "@/componentes/Barra de navegação";
+importar LetreiroBanner de "@/componentes/MarqueeBanner";
+importar Rodapé de "@/componentes/Rodapé";
+importar { locais de pesquisa } de "@/data/pernambuco-locais";
+importar { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } de "@/lib/otimização de imagem";
+importar { getVisibleProperties } de "@/lib/propriedade-visibilidade";
 
-export default function Index() {
-  const navigate = useNavigate();
-  const { properties, settings, loading } = useProperties();
-  const [search, setSearch] = useState("");
 
-  const visibleProperties = useMemo(() => {
-    const publicProperties = getVisibleProperties(properties || []);
-    const term = search.trim().toLowerCase();
-    if (!term) return publicProperties;
-    return publicProperties.filter((property) =>
-      [property.title, property.neighborhood, property.city, property.category]
-        .filter(Boolean)
-        .some((value) => String(value).toLowerCase().includes(term)),
-    );
-  }, [properties, search]);
+const filtros de tipo = [
+  { rótulo: "Todos", curto: "Todos", ícone: LayoutGrid },
+  { rótulo: "Casa", curto: "Casa", ícone: Lar },
+  { rótulo: "Apartamento", curto: "Apto", ícone: Edifício2 },
+  { rótulo: "Cobertura", curto: "Cobertura", ícone: Camadas },
+  { rótulo: "Terreno", curto: "Terreno", ícone: Terreno },
+  { rótulo: "Comercial", curto: "Comercial", ícone: Loja },
+];
+const sortOptions = [
+  { valor: "área_desc", rótulo: "Maior área", ícone: Seta para cima e para baixo },
+];
 
-  const featuredProperties = visibleProperties.slice(0, 6);
-  const heroTitle = settings?.heroTitle || "Encontre o imóvel ideal para sua próxima história";
-  const brandName = settings?.brandName || "Imóveis Recife";
+exportar padrão função Índice() {
+  const navegar = useNavigate();
+  const { propriedades, configurações, favoritos, alternarFavorito, carregando } = usarPropriedades();
+  const [está rolado, setIsScrolled] = usarEstado(falso);
+  
+  useEfeito(() => {
+    const handleScroll = () => {
+      setIsScrolled(janela.rolarY > 20);
+    };
+    janela.addEventListener("rolar", handleScroll);
+    retornar () => janela.removedorEventListener("rolar", handleScroll);
+  }, []);
+
+  const disponível = no memorando(() => getVisibleProperties(propriedades), [propriedades]);
+  const apresentou = no memorando(() => disponível.filtro((p) => p.apresentou), [disponível]);
+  const [tipo ativo, setActiveType] = usarEstado("Todos");
+  const [ordenar por, definirSortBy] = usarEstado("");
+  const [contagem visível, setVisibleCount] = usarEstado(6);
+
+
+  const propriedades filtradas = no memorando(() => {
+    deixar resultado = tipo ativo === "Todos" ? disponível : disponível.filtro((p) => p.tipo === tipo ativo);
+    se (ordenar por === "área_desc") retornar [...resultado].organizar((um, b) => b.área - um.área);
+    retornar resultado;
+  }, [disponível, tipo ativo, ordenar por]);
+
+  const propriedades exibidas = propriedades filtradas.fatiar(0, contagem visível);
+
+  useEfeito(() => { setVisibleCount(6); }, [tipo ativo, ordenar por]);
+
+
+  // Hero carousel - somente imóveis ativos
+  const heroSlides = no memorando(() => disponível.comprimento > 0
+    ? disponível.mapa((p) => ({ imagem: p.imagens[0] || heróiImagem, título: p.título, eu isto: p.eu ele }))
+    : [{ imagem: heróiImagem, título: configurações.heroTítulo, eu isto: nulo como corda | nulo }], [disponível, configurações.heroTítulo]);
+
+
+  const [deslizar atual, setCurrentSlide] = usarEstado(0);
+  const [pesquisa rápida, definirQuickSearch] = usarEstado("");
+  const [showQuickSuggestions, setShowQuickSuggestions] = usarEstado(falso);
+  const sugestões rápidas = locais de pesquisa(pesquisa rápida);
+  const quickSearchRef = useRef<Elemento HTMLDiv>(nulo);
+
+  //Fecha sugestões em clique externo
+  useEfeito(() => {
+    const handler = (e: MouseEvent) => {
+      if (quickSearchRef.current && !quickSearchRef.current.contains(e.target as Node)) {
+        setShowQuickSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+  // Auto-advance carousel
+  const intervalMs = (settings.bannerInterval || 5) * 1000;
+  useEffect(() => {
+    if (heroSlides.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, intervalMs);
+    return () => clearInterval(timer);
+  }, [heroSlides.length, intervalMs]);
+
+  useEffect(() => {
+    setCurrentSlide((prev) => (prev >= heroSlides.length ? 0 : prev));
+  }, [heroSlides.length]);
+
+  // Preload first hero image to optimize LCP
+  const firstHeroImage = heroSlides[0]?.image;
+  useEffect(() => {
+    if (!firstHeroImage) return;
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = firstHeroImage;
+    link.fetchPriority = "high";
+    document.head.appendChild(link);
+    return () => {
+      if (link.parentNode) link.parentNode.removeChild(link);
+    };
+  }, [firstHeroImage]);
+
+  const goToSlide = (index: number) => setCurrentSlide(index);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+
+  // Dynamic collections from property types
+  const collections = Array.from(
+    available.reduce((map, p) => {
+      if (!map.has(p.type)) {
+        map.set(p.type, { type: p.type, image: p.images[0] || heroImage, count: 1 });
+      } else {
+        map.get(p.type)!.count += 1;
+      }
+      return map;
+    }, new Map<string, { type: string; image: string; count: number }>())
+  ).map(([, v]) => v);
+
+  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://imoveisrecife.com.br";
+  const homeJsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateAgent",
+      name: settings.brandName,
+      url: siteOrigin,
+      logo: settings.logoUrl || undefined,
+      image: settings.logoUrl || undefined,
+      description: `${settings.brandName} — Imóveis de alto padrão em Recife e região.`,
+      areaServed: { "@type": "City", name: "Recife", addressRegion: "PE", addressCountry: "BR" },
+      sameAs: [
+        settings.instagramUrl,
+        settings.facebookUrl,
+        settings.youtubeUrl,
+        settings.linkedinUrl,
+        settings.websiteUrl,
+      ].filter(Boolean),
+      contactPoint: settings.whatsappNumber
+        ? {
+            "@type": "ContactPoint",
+            telephone: `+${settings.whatsappNumber}`,
+            contactType: "sales",
+            areaServed: "BR",
+            availableLanguage: ["Portuguese"],
+          }
+        : undefined,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: settings.brandName,
+      url: siteOrigin,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${siteOrigin}/busca?location={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+    available.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          itemListElement: available.slice(0, 12).map((p, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            url: `${siteOrigin}/imovel/${p.id}`,
+            name: p.title,
+          })),
+        }
+      : null,
+  ].filter(Boolean) as Record<string, any>[];
 
   return (
     <PageTransition>
-      <SEOHead title={brandName} description={heroTitle} />
-      <div className="min-h-screen bg-background text-foreground">
-        <Navbar />
+      <SEOHead
+        title={settings.heroTitle}
+        description={`${settings.brandName} — Imóveis de alto padrão em Recife e região. Encontre casas, apartamentos, coberturas e terrenos exclusivos com atendimento personalizado.`}
+        jsonLd={homeJsonLd}
+      />
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <motion.div
+            key="skeleton"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24 max-w-screen-lg mx-auto"
+          >
+            {/* Skeleton Nav */}
+            <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-2 border-b border-card/10 max-w-screen-lg mx-auto bg-luxury-dark h-16">
+              <div className="w-10 h-10 rounded-full bg-card/10 animate-pulse" />
+              <div className="h-10 w-40 rounded bg-card/10 animate-pulse" />
+              <div className="w-10" />
+            </nav>
 
-        <main>
-          <section className="relative overflow-hidden border-b border-border bg-muted px-4 py-16 sm:px-6 md:py-24">
-            <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-              <div className="max-w-2xl">
-                <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
-                  Recife e região
-                </p>
-                <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl">
-                  {heroTitle}
-                </h1>
-                <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Encontre casas, apartamentos, terrenos e imóveis exclusivos com atendimento próximo e seguro.
-                </p>
-
-                <form
-                  className="mt-8 flex flex-col gap-3 rounded-2xl border border-border bg-card p-3 sm:flex-row"
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    navigate(search ? `/busca?search=${encodeURIComponent(search)}` : "/busca");
-                  }}
-                >
-                  <label className="flex min-w-0 flex-1 items-center gap-3 px-2">
-                    <Search className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden="true" />
-                    <span className="sr-only">Buscar imóvel</span>
-                    <input
-                      value={search}
-                      onChange={(event) => setSearch(event.target.value)}
-                      placeholder="Bairro, cidade ou tipo de imóvel"
-                      className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
-                    />
-                  </label>
-                  <button
-                    type="submit"
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-5 font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    Buscar
-                  </button>
-                </form>
-              </div>
-
-              <div className="hidden justify-end lg:flex" aria-hidden="true">
-                <div className="max-w-sm border-l-2 border-primary/40 pl-8">
-                  <MapPin className="mb-5 h-8 w-8 text-primary" />
-                  <p className="font-serif text-3xl leading-tight">Seu próximo endereço começa aqui.</p>
+            {/* Skeleton Hero - Fixed Aspect Ratio to prevent layout shift */}
+            <section className="relative h-[calc(100svh-220px)] md:h-[85vh] w-full shrink-0 overflow-hidden bg-card/5 animate-pulse">
+              <div className="absolute inset-0 bg-gradient-to-t from-luxury-dark via-transparent to-transparent" />
+              <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 px-8 gap-4">
+                <div className="h-10 w-64 rounded bg-card/10 animate-pulse" />
+                <div className="h-8 w-48 rounded bg-card/10 animate-pulse" />
+                <div className="h-12 w-40 rounded-full border-2 border-card/10 animate-pulse mt-2" />
+                <div className="flex gap-2 mt-4">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className={`h-1 rounded-full bg-card/10 animate-pulse ${i === 0 ? "w-8" : "w-2"}`} />
+                  ))}
                 </div>
+              </div>
+            </section>
+
+            {/* Skeleton Featured */}
+            <section className="relative -mt-12 z-10 bg-luxury-dark rounded-t-xl pb-8">
+              <div className="px-6 pt-8 pb-4 flex justify-between items-end">
+                <div>
+                  <div className="h-3 w-20 rounded bg-card/10 animate-pulse mb-2" />
+                  <div className="h-7 w-32 rounded bg-card/10 animate-pulse" />
+                </div>
+                <div className="h-4 w-20 rounded bg-card/10 animate-pulse" />
+              </div>
+              <div className="flex overflow-x-auto hide-scrollbar gap-5 px-6 pb-6">
+                {[0, 1].map((i) => (
+                  <div key={i} className="flex flex-col min-w-[280px] bg-luxury-dark-lighter/40 rounded-xl overflow-hidden border border-card/5">
+                    <div className="w-full aspect-[4/3] bg-card/10 animate-pulse" />
+                    <div className="p-5 space-y-3">
+                      <div className="h-5 w-28 rounded bg-card/10 animate-pulse" />
+                      {settings.showLocationOnCard && <div className="h-4 w-40 rounded bg-card/10 animate-pulse" />}
+                      <div className="flex gap-4">
+                        <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
+                        <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
+                        <div className="h-3 w-14 rounded bg-card/10 animate-pulse" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="relative flex min-h-screen w-full flex-col bg-luxury-dark overflow-x-hidden pb-24 max-w-screen-lg mx-auto"
+          >
+            <Navbar />
+            <MarqueeBanner />
+
+            {/* Hero Carousel */}
+            <section className="relative h-[calc(100svh-220px)] md:h-[85vh] w-full shrink-0 overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentSlide}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="absolute inset-0"
+                >
+                  <img
+                    src={getOptimizedImageUrl(heroSlides[currentSlide].image, IMAGE_SIZES.HERO)}
+                    srcSet={getImageSrcSet(heroSlides[currentSlide].image, [800, 1200, 1920])}
+                    sizes="100vw"
+                    alt={heroSlides[currentSlide].title || "Imóvel em destaque"}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    fetchPriority={currentSlide === 0 ? "high" : "auto"}
+                    loading={currentSlide === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                  <div className="absolute inset-0 hero-gradient" />
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Navigation arrows */}
+              {heroSlides.length > 1 && (
+                <>
+                  <button onClick={prevSlide} aria-label="Slide anterior" className="absolute left-3 top-1/3 sm:top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-2 rounded-full">
+                    <ChevronLeft className="h-5 w-5 text-card" />
+                  </button>
+                  <button onClick={nextSlide} aria-label="Próximo slide" className="absolute right-3 top-1/3 sm:top-1/2 -translate-y-1/2 z-20 bg-foreground/30 backdrop-blur-sm p-2 rounded-full">
+                    <ChevronRight className="h-5 w-5 text-card" />
+                  </button>
+                </>
+              )}
+
+              <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 px-8 text-center z-10">
+                <AnimatePresence mode="wait">
+                  <motion.h2
+                    key={currentSlide}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5 }}
+                    className="font-serif text-4xl text-card leading-tight mb-6"
+                  >
+                    {heroSlides[currentSlide].title}
+                  </motion.h2>
+                </AnimatePresence>
+
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{
+                    opacity: 1,
+                    scale: [1, 1.05, 1],
+                    boxShadow: [
+                      "0 0 0 0 hsl(var(--accent) / 0.5)",
+                      "0 0 0 12px hsl(var(--accent) / 0)",
+                      "0 0 0 0 hsl(var(--accent) / 0)",
+                    ],
+                  }}
+                  transition={{
+                    opacity: { duration: 0.5, delay: 0.2 },
+                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                    boxShadow: { duration: 2, repeat: Infinity, ease: "easeOut" },
+                  }}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92, transition: { type: "spring", stiffness: 600, damping: 18 } }}
+                  onClick={() => {
+                    const slide = heroSlides[currentSlide];
+                    if (slide.id) {
+                      navigate(`/imovel/${slide.id}`);
+                    } else {
+                      navigate("/busca");
+                    }
+                  }}
+                  className="group relative flex min-w-[160px] items-center justify-center overflow-hidden rounded-full h-12 px-8 mb-6 border-2 border-accent text-card text-sm font-bold uppercase tracking-[0.2em] transition-colors active:brightness-95"
+                >
+                  <span
+                    className="pointer-events-none absolute inset-0 animate-[gradient-shift_4s_ease_infinite]"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(120deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 35%, hsl(var(--accent)) 65%, hsl(var(--primary)) 100%)",
+                      backgroundSize: "300% 300%",
+                    }}
+                  />
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_2.5s_infinite]" />
+                  <span className="relative z-10">Descobrir</span>
+
+                </motion.button>
+
+
+                {/* Quick Search */}
+                <motion.div
+                  ref={quickSearchRef}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="relative w-full max-w-md mx-auto"
+                >
+                  <div className="relative flex items-center group">
+                    <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-accent/40 via-primary/20 to-accent/40 opacity-60 blur-sm group-focus-within:opacity-100 transition-opacity duration-500" />
+                    <Search className="absolute left-5 h-5 w-5 text-accent/80 z-10" />
+                    <input
+                      className="relative w-full h-14 pl-13 pr-5 bg-foreground/20 backdrop-blur-2xl rounded-full text-sm font-medium text-card shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)] border border-card/15 focus:border-accent/40 focus:shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_20px_hsl(var(--accent)/0.15)] focus:outline-none transition-all duration-300 placeholder:text-card/50"
+                      style={{ paddingLeft: '3.25rem' }}
+                      value={quickSearch}
+                      onChange={(e) => { 
+                        setQuickSearch(e.target.value); 
+                        if (e.target.value.trim().length >= 2) {
+                          setShowQuickSuggestions(true);
+                        }
+                      }}
+                      onFocus={() => {
+                        if (quickSearch.trim().length >= 2) {
+                          setShowQuickSuggestions(true);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && quickSearch.trim()) {
+                          navigate(`/busca?location=${encodeURIComponent(quickSearch.trim())}`);
+                        }
+                      }}
+                      placeholder="Onde deseja morar?"
+                    />
+                  </div>
+                  {showQuickSuggestions && quickSearch.trim() && quickSuggestions.length > 0 && (
+                    <div className="absolute left-0 right-0 top-full mt-3 max-h-56 overflow-y-auto rounded-2xl bg-foreground/25 backdrop-blur-2xl border border-card/15 shadow-[0_16px_48px_rgba(0,0,0,0.5)] z-50">
+                      {quickSuggestions.map((s, i) => (
+                        <button
+                          key={`${s.city}-${s.neighborhood || ""}-${i}`}
+                          onClick={() => {
+                            const loc = s.neighborhood ? `${s.neighborhood}, ${s.city}` : s.city;
+                            navigate(`/busca?location=${encodeURIComponent(loc)}`);
+                          }}
+                          className="flex items-center gap-3 w-full px-5 py-3.5 text-left hover:bg-card/10 transition-colors duration-200 border-b border-card/5 last:border-0"
+                        >
+                          <MapPin className="h-4 w-4 shrink-0 text-accent" />
+                          <div className="min-w-0">
+                            {s.neighborhood ? (
+                              <>
+                                <span className="text-sm font-semibold text-card">{s.neighborhood}</span>
+                                <span className="text-xs text-card/50 ml-1.5">{s.city}, PE</span>
+                              </>
+                            ) : (
+                              <span className="text-sm font-semibold text-card">{s.city}, PE</span>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+
+
+                {/* Dots */}
+                <div className="mt-8 flex gap-2">
+                  {heroSlides.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => goToSlide(i)}
+                      className={`h-1 rounded-full transition-all ${i === currentSlide ? "w-8 bg-accent" : "w-2 bg-card/30"}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Inline Filters - Minimal top bar */}
+            <div className="sticky top-[var(--navbar-height)] z-40 bg-luxury-dark/95 backdrop-blur-xl border-b border-card/10 shadow-lg transition-all duration-300">
+              <div className="flex overflow-x-auto hide-scrollbar gap-1.5 px-3 py-2">
+                {typeFilters.map(({ label, short, icon: Icon }) => (
+                  <button
+                    key={label}
+                    onClick={() => { setActiveType(label); setVisibleCount(6); }}
+                    className={`shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all active:scale-95 ${
+                      activeType === label
+                        ? "bg-accent text-accent-foreground shadow-md"
+                        : "bg-card/5 text-card/50 hover:text-card hover:bg-card/10"
+                    }`}
+                  >
+                    <Icon className="h-3 w-3" />
+                    {short}
+                  </button>
+                ))}
+                <div className="shrink-0 w-px h-5 bg-card/10 self-center mx-0.5" />
+                {sortOptions.map((opt) => {
+                  const SortIcon = opt.icon;
+                  return (
+                  <button
+                    key={opt.value}
+                    onClick={() => setSortBy(sortBy === opt.value ? "" : opt.value)}
+                    className={`shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] font-semibold tracking-wider transition-all active:scale-95 ${
+                      sortBy === opt.value
+                        ? "text-primary bg-primary/10"
+                        : "text-card/30 hover:text-card/60"
+                    }`}
+                  >
+                    <SortIcon className="h-3 w-3" />
+                    {opt.label}
+                  </button>
+                  );
+                })}
               </div>
             </div>
-          </section>
 
-          <section className="px-4 py-14 sm:px-6 md:py-20">
-            <div className="mx-auto max-w-6xl">
-              <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Destaques</p>
-                  <h2 className="mt-2 font-serif text-3xl font-bold tracking-tight sm:text-4xl">Imóveis selecionados</h2>
+            <section className="relative z-10 bg-luxury-dark pb-8">
+              {/* Filtered Properties Grid - immediately visible after filters */}
+              <div className="px-6 pt-6 pb-4">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-lg font-serif text-card">
+                    {activeType === "Todos" ? "Todos os Imóveis" : activeType}
+                  </h3>
+                  <span className="text-card/40 text-xs font-medium">
+                    {filteredProperties.length} {filteredProperties.length === 1 ? "imóvel" : "imóveis"}
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => navigate("/busca")}
-                  className="inline-flex w-fit items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-semibold transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
-                  Ver todos
+
+                {displayedProperties.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      {displayedProperties.map((p, i) => (
+                        <PropertyCard key={p.id} property={p} index={i} />
+                      ))}
+                    </div>
+                    {displayedProperties.length < filteredProperties.length && (
+                      <div className="flex flex-col items-center gap-2 mt-8">
+                        <button
+                          onClick={() => setVisibleCount((c) => c + 6)}
+                          className="flex items-center gap-2 px-8 py-3 rounded-full border-2 border-accent text-accent text-sm font-bold uppercase tracking-wider hover:bg-accent hover:text-accent-foreground transition-all"
+                        >
+                          Ver mais imóveis <ArrowRight className="h-4 w-4" />
+                        </button>
+                        <span className="text-xs text-muted-foreground">
+                          Exibindo {displayedProperties.length} de {filteredProperties.length} imóveis
+                        </span>
+                      </div>
+                    )}
+
+                  </>
+                ) : (
+                  <p className="text-card/50 text-sm text-center py-12">Nenhum imóvel encontrado para "{activeType}".</p>
+                )}
+              </div>
+
+              {/* Featured */}
+              {featured.length > 0 && (
+                <>
+              <div className="px-6 pt-6 pb-4 flex justify-between items-end">
+                <div>
+                  <span className="text-accent text-xs font-bold uppercase tracking-widest">Exclusividade {settings.brandName}</span>
+                  <h3 className="text-2xl font-serif text-card mt-1">Destaques</h3>
+                </div>
+                <button onClick={() => navigate("/busca")} className="text-primary text-sm font-semibold flex items-center gap-1">
+                  Ver todos <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
 
-              {loading ? (
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label="Carregando imóveis">
-                  {[1, 2, 3].map((item) => <div key={item} className="aspect-[4/3] animate-pulse rounded-2xl bg-muted" />)}
-                </div>
-              ) : featuredProperties.length > 0 ? (
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {featuredProperties.map((property, index) => <PropertyCard key={property.id} property={property} index={index} />)}
-                </div>
-              ) : (
-                <div className="rounded-2xl border border-dashed border-border px-6 py-16 text-center">
-                  <h3 className="font-serif text-2xl">Nenhum imóvel encontrado</h3>
-                  <p className="mt-2 text-muted-foreground">Tente outra busca ou veja todos os imóveis disponíveis.</p>
-                  <button type="button" onClick={() => { setSearch(""); navigate("/busca"); }} className="mt-6 rounded-xl bg-primary px-5 py-3 font-semibold text-primary-foreground hover:bg-primary/90">Explorar imóveis</button>
+              <div className="flex overflow-x-auto hide-scrollbar gap-5 px-6 pb-6">
+                {featured.map((p, i) => (
+                  <motion.div
+                    key={p.id}
+                    initial={{ opacity: 0, x: 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.1 * i }}
+                    className="flex flex-col min-w-[280px] bg-luxury-dark-lighter/40 rounded-xl overflow-hidden border border-card/5 cursor-pointer"
+                    onClick={() => navigate(`/imovel/${p.id}`)}
+                  >
+                    <div className="relative w-full aspect-[4/3] overflow-hidden">
+                      <img 
+                        src={getOptimizedImageUrl(p.images[0], IMAGE_SIZES.CARD)} 
+                        srcSet={getImageSrcSet(p.images[0], [400, 600])}
+                        sizes="(max-width: 640px) 100vw, 300px"
+                        alt={p.title} 
+                        className="w-full h-full object-cover" 
+                        loading="lazy" 
+                        decoding="async" 
+                      />
+                      {p.status && p.status !== "disponivel" && (
+                        <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-sm shadow-lg ${
+                          p.status === "reservado" ? "bg-yellow-500/90" : "bg-red-500/90"
+                        }`}>
+                          <span className="text-[10px] font-bold text-white uppercase tracking-wider">
+                            {p.status === "reservado" ? "Reservado" : "Vendido"}
+                          </span>
+                        </div>
+                      )}
+                      <button
+                        className="absolute top-3 right-3 bg-foreground/50 backdrop-blur-md p-1.5 rounded-full"
+                        onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}
+                        aria-label={favorites.includes(p.id) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                        aria-pressed={favorites.includes(p.id)}
+                      >
+                        <Heart className={`h-4 w-4 ${favorites.includes(p.id) ? "fill-accent text-accent" : "text-card"}`} />
+                      </button>
+                    </div>
+                    <div className="p-5">
+                      <PriceDisplay as="p" section="banner" value={p.price} />
+                      <p className="text-card/70 text-sm font-medium mb-3">
+                        {p.title}
+                        {settings.showLocationOnCard && ` - ${p.neighborhood}`}
+                      </p>
+                      <div className="flex items-center gap-4 text-card/50 text-xs uppercase tracking-tighter">
+                        {!!p.area && <div className="flex items-center gap-1"><Ruler className="h-3 w-3 text-primary" />{p.area}m²</div>}
+                        {!!p.suites && <div className="flex items-center gap-1"><BedDouble className="h-3 w-3 text-primary" />{p.suites} Suítes</div>}
+                        {!!p.parking && <div className="flex items-center gap-1"><Car className="h-3 w-3 text-primary" />{p.parking} Vagas</div>}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+                </>
+              )}
+
+              {/* CTA Banner with first property cover */}
+              {properties.length > 0 && (
+                <div className="px-6 py-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="relative h-56 md:h-64 rounded-2xl overflow-hidden cursor-pointer group"
+                    onClick={() => navigate(`/imovel/${properties[0].id}`)}
+                  >
+                    <img
+                      src={getOptimizedImageUrl(properties[0].images[0], IMAGE_SIZES.HERO)}
+                      srcSet={getImageSrcSet(properties[0].images[0], [600, 1200])}
+                      sizes="(max-width: 1024px) 100vw, 800px"
+                      alt={properties[0].title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/50 to-transparent" />
+                    <div className="relative z-10 flex flex-col justify-center h-full px-8 max-w-sm">
+                      <span className="text-accent text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Em destaque</span>
+                      <h3 className="font-serif text-2xl md:text-3xl text-card leading-tight mb-2">{properties[0].title}</h3>
+                      {settings.showLocationOnCard && (
+                        <p className="text-card/70 text-sm mb-4">{properties[0].neighborhood} · {properties[0].city}</p>
+                      )}
+                      <span className="inline-flex items-center gap-2 text-accent font-bold text-sm uppercase tracking-wider group-hover:gap-3 transition-all">
+                        Saiba mais <ArrowRight className="h-4 w-4" />
+                      </span>
+                    </div>
+                  </motion.div>
                 </div>
               )}
-            </div>
-          </section>
-        </main>
-        <Footer />
-      </div>
+
+              {/* Dynamic Collections */}
+              <div className="px-6 py-6">
+                <h4 className="text-card font-serif text-lg mb-4">Coleções</h4>
+                {collections.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {collections.map((col) => (
+                      <button
+                        key={col.type}
+                        onClick={() => { setActiveType(col.type); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                        className="relative h-28 rounded-lg overflow-hidden border border-card/5"
+                      >
+                        <img src={col.image} alt={col.type} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
+                        <div className="absolute inset-0 bg-foreground/50" />
+                        <div className="relative z-10 flex flex-col justify-center items-center h-full">
+                          <span className="text-card font-bold tracking-widest text-xs uppercase">{col.type}</span>
+                          <span className="text-card/60 text-[10px] mt-1">{col.count} {col.count === 1 ? "imóvel" : "imóveis"}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-card/50 text-sm">Cadastre imóveis para ver as coleções.</p>
+                )}
+              </div>
+
+              <Footer />
+            </section>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </PageTransition>
   );
 }
