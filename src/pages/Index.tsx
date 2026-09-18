@@ -14,6 +14,8 @@ import MarqueeBanner from "@/components/MarqueeBanner";
 import Footer from "@/components/Footer";
 import { searchLocations } from "@/data/pernambuco-locations";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
+import { getVisibleProperties } from "@/lib/property-visibility";
+
 
 const typeFilters = [
   { label: "Todos", short: "Todos", icon: LayoutGrid },
@@ -40,11 +42,12 @@ export default function Index() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const available = useMemo(() => properties.filter((p) => !p.status || p.status === "disponivel"), [properties]);
+  const available = useMemo(() => getVisibleProperties(properties), [properties]);
   const featured = useMemo(() => available.filter((p) => p.featured), [available]);
   const [activeType, setActiveType] = useState("Todos");
   const [sortBy, setSortBy] = useState("");
-  const [showAll, setShowAll] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(6);
+
 
   const filteredProperties = useMemo(() => {
     let result = activeType === "Todos" ? available : available.filter((p) => p.type === activeType);
@@ -52,12 +55,13 @@ export default function Index() {
     return result;
   }, [available, activeType, sortBy]);
 
-  const displayedProperties = showAll ? filteredProperties : filteredProperties.slice(0, 6);
+  const displayedProperties = filteredProperties.slice(0, visibleCount);
 
-  // Hero carousel - show ALL properties
-  const heroSlides = useMemo(() => properties.length > 0
-    ? properties.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
-    : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }], [properties, settings.heroTitle]);
+  // Hero carousel - somente imóveis ativos
+  const heroSlides = useMemo(() => available.length > 0
+    ? available.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
+    : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }], [available, settings.heroTitle]);
+
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [quickSearch, setQuickSearch] = useState("");
@@ -110,7 +114,7 @@ export default function Index() {
 
   // Dynamic collections from property types
   const collections = Array.from(
-    properties.reduce((map, p) => {
+    available.reduce((map, p) => {
       if (!map.has(p.type)) {
         map.set(p.type, { type: p.type, image: p.images[0] || heroImage, count: 1 });
       } else {
