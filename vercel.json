@@ -1,4 +1,5 @@
 {
+  "clean_urls": true,
   "framework": "vite",
   "rewrites": [
     {
