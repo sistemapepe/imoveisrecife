@@ -28,12 +28,17 @@ serve(async (req) => {
     }
 
     const callerId = claimsData.user.id;
-    const { data: isSuperAdmin } = await supabaseAdmin.rpc("has_role", { _user_id: callerId, _role: "super_admin" });
-    const { data: isAdmin } = await supabaseAdmin.rpc("has_role", { _user_id: callerId, _role: "admin" });
-    
-    if (!isAdmin && !isSuperAdmin) {
+    const { data: roles, error: rolesError } = await supabaseAdmin
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", callerId);
+
+    const allowed = !rolesError && (roles ?? []).some((r: { role: string }) => r.role === "admin" || r.role === "super_admin");
+
+    if (!allowed) {
       return new Response(JSON.stringify({ error: "Sem permissão" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
+
 
     const body = await req.json();
     const { settingsId, twitterUser, websiteUrl } = body;
