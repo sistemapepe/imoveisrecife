@@ -731,6 +731,10 @@ export default function Admin() {
           {tab === "network" && isSuperAdmin && (
             <NetworkTab />
           )}
+
+          {tab === "domain" && (canManageSettings || isAdmin) && (
+            <DomainTab />
+          )}
           </main>
         </div>
 
