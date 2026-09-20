@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PropertyProvider } from "@/contexts/PropertyContext";
+import { TenantProvider } from "@/contexts/TenantContext";
 import { Suspense } from "react";
 import { safeLazy } from "@/lib/safe-lazy";
 import BottomNav from "@/components/BottomNav";
@@ -90,14 +91,16 @@ const App = () => {
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <PropertyProvider>
-          <Toaster />
-          <Sonner />
-          <DynamicTheme />
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
-        </PropertyProvider>
+        <TenantProvider>
+          <PropertyProvider>
+            <Toaster />
+            <Sonner />
+            <DynamicTheme />
+            <BrowserRouter>
+              <AppContent />
+            </BrowserRouter>
+          </PropertyProvider>
+        </TenantProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
