@@ -14,8 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Globe, Loader2, Plus, Power, PowerOff, Building2, Check, Trash2, Copy, RefreshCw, CheckCircle2, AlertTriangle } from "lucide-react";
-import { checkDomainDns, DOMAIN_TARGET_IP } from "@/lib/domain-dns";
+import { Globe, Loader2, Plus, Power, PowerOff, Building2, Check, Trash2, Copy } from "lucide-react";
 
 interface NetworkSite {
   id: string;
@@ -40,17 +39,6 @@ export default function NetworkTab() {
   const [form, setForm] = useState({ brand_name: "", domain: "", source: "" });
   const [domainDialog, setDomainDialog] = useState<NetworkSite | null>(null);
   const [newHostname, setNewHostname] = useState("");
-  const [dnsStatus, setDnsStatus] = useState<Record<string, "checking" | "ok" | "pendente">>({});
-
-  const verifyHost = async (hostname: string) => {
-    setDnsStatus((s) => ({ ...s, [hostname]: "checking" }));
-    try {
-      const res = await checkDomainDns(hostname);
-      setDnsStatus((s) => ({ ...s, [hostname]: res.pointed ? "ok" : "pendente" }));
-    } catch {
-      setDnsStatus((s) => ({ ...s, [hostname]: "pendente" }));
-    }
-  };
 
   const load = useCallback(async () => {
     setLoading(true);
