@@ -40,6 +40,17 @@ export default function NetworkTab() {
   const [form, setForm] = useState({ brand_name: "", domain: "", source: "" });
   const [domainDialog, setDomainDialog] = useState<NetworkSite | null>(null);
   const [newHostname, setNewHostname] = useState("");
+  const [dnsStatus, setDnsStatus] = useState<Record<string, "checking" | "ok" | "pendente">>({});
+
+  const verifyHost = async (hostname: string) => {
+    setDnsStatus((s) => ({ ...s, [hostname]: "checking" }));
+    try {
+      const res = await checkDomainDns(hostname);
+      setDnsStatus((s) => ({ ...s, [hostname]: res.pointed ? "ok" : "pendente" }));
+    } catch {
+      setDnsStatus((s) => ({ ...s, [hostname]: "pendente" }));
+    }
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
