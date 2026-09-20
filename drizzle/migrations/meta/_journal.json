@@ -15,6 +15,13 @@
       "when": 1789870489245,
       "tag": "0001_fix_property_trigger_order",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789873502115,
+      "tag": "0002_site_set_custom_domain",
+      "breakpoints": true
     }
   ]
 }

@@ -14,7 +14,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Globe, Loader2, Plus, Power, PowerOff, Building2, Check, Trash2, Copy } from "lucide-react";
+import { Globe, Loader2, Plus, Power, PowerOff, Building2, Check, Trash2, Copy, RefreshCw, CheckCircle2, AlertTriangle } from "lucide-react";
+import { checkDomainDns, DOMAIN_TARGET_IP } from "@/lib/domain-dns";
 
 interface NetworkSite {
   id: string;
@@ -39,6 +40,17 @@ export default function NetworkTab() {
   const [form, setForm] = useState({ brand_name: "", domain: "", source: "" });
   const [domainDialog, setDomainDialog] = useState<NetworkSite | null>(null);
   const [newHostname, setNewHostname] = useState("");
+  const [dnsStatus, setDnsStatus] = useState<Record<string, "checking" | "ok" | "pendente">>({});
+
+  const verifyHost = async (hostname: string) => {
+    setDnsStatus((s) => ({ ...s, [hostname]: "checking" }));
+    try {
+      const res = await checkDomainDns(hostname);
+      setDnsStatus((s) => ({ ...s, [hostname]: res.pointed ? "ok" : "pendente" }));
+    } catch {
+      setDnsStatus((s) => ({ ...s, [hostname]: "pendente" }));
+    }
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -301,15 +313,27 @@ export default function NetworkTab() {
           <DialogHeader>
             <DialogTitle>Domínios de {domainDialog?.brand_name}</DialogTitle>
             <DialogDescription>
-              Cadastre aqui os endereços que devem abrir este site. Depois, conecte o mesmo domínio nas
-              configurações de publicação do projeto.
+              Cadastre aqui os endereços que devem abrir este site. Os registros devem apontar para{" "}
+              {DOMAIN_TARGET_IP}. Depois, conecte o mesmo domínio nas configurações de publicação do projeto.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
             {domainDialog?.hostnames?.map((h) => (
               <div key={h} className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 px-3 py-2">
-                <span className="text-sm truncate">{h}</span>
+                <span className="text-sm truncate flex items-center gap-2">
+                  {dnsStatus[h] === "checking" ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground shrink-0" />
+                  ) : dnsStatus[h] === "ok" ? (
+                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                  ) : dnsStatus[h] === "pendente" ? (
+                    <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+                  ) : null}
+                  {h}
+                </span>
                 <div className="flex items-center gap-1">
+                  <Button size="icon" variant="ghost" onClick={() => verifyHost(h)}>
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
                   <Button
                     size="icon"
                     variant="ghost"
