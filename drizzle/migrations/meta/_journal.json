@@ -8,6 +8,13 @@
       "when": 1789870469927,
       "tag": "0000_multi_site_network_resolution",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789870489245,
+      "tag": "0001_fix_property_trigger_order",
+      "breakpoints": true
     }
   ]
 }
