@@ -215,6 +215,7 @@ export default function Admin() {
     { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
     { key: "security", label: "Segurança", icon: Shield, show: role === "super_admin" || role === "admin" },
     { key: "network", label: "Rede de Sites", icon: Network, show: isSuperAdmin },
+    { key: "domain", label: "Domínio Próprio", icon: Globe, show: !!canManageSettings || isAdmin },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
