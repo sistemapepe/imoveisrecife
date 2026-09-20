@@ -25,6 +25,7 @@ export default function AnalyticsTab() {
   const [leadsByDay, setLeadsByDay] = useState<LeadsByPeriod[]>([]);
   const [viewsByDay, setViewsByDay] = useState<LeadsByPeriod[]>([]);
   const [loading, setLoading] = useState(true);
+  const { siteId } = useTenant();
   const [period, setPeriod] = useState<"today" | "7d" | "30d" | "90d" | "custom">("today");
   const [customRange, setCustomRange] = useState<DateRange | undefined>();
 
