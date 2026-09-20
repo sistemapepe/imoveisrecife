@@ -27,6 +27,20 @@ const CACHE_KEY = "tenant_site_cache";
 
 const TenantContext = createContext<TenantContextType | null>(null);
 
+/** Site ativo acessível fora de componentes React (trackers, helpers). */
+let activeSiteId: string | null = null;
+export function getActiveSiteId(): string | null {
+  if (activeSiteId) return activeSiteId;
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.hostname === window.location.hostname) return parsed.site?.siteId ?? null;
+    }
+  } catch {}
+  return null;
+}
+
 export function TenantProvider({ children }: { children: ReactNode }) {
   const { isSuperAdmin } = useAuth();
   const [hostSite, setHostSite] = useState<TenantSite | null>(() => {
@@ -89,6 +103,7 @@ export function TenantProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const siteId = (isSuperAdmin && overrideSiteId) || hostSite?.siteId || null;
+  activeSiteId = siteId;
 
   return (
     <TenantContext.Provider value={{ hostSite, siteId, overrideSiteId, setOverrideSiteId, loading }}>
