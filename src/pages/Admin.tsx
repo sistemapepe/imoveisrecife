@@ -29,6 +29,7 @@ import BulkImportTab from "@/components/admin/BulkImportTab";
 import PerformanceTab from "@/components/admin/PerformanceTab";
 import SecurityTab from "@/components/admin/SecurityTab";
 import NetworkTab from "@/components/admin/NetworkTab";
+import DomainTab from "@/components/admin/DomainTab";
 import { useTenant } from "@/contexts/TenantContext";
 
 type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security" | "network";
