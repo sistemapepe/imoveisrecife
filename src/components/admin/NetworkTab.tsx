@@ -291,7 +291,10 @@ export default function NetworkTab() {
                     {active ? <Check className="h-4 w-4 mr-1" /> : null}
                     {active ? "Gerenciando" : "Gerenciar este site"}
                   </Button>
-                  <Button size="sm" variant="outline" onClick={() => setDomainDialog(site)}>
+                  <Button size="sm" variant="outline" onClick={() => {
+                      setDomainDialog(site);
+                      (site.hostnames ?? []).slice(0, 4).forEach((h) => checkStatus(h));
+                    }}>
                     <Globe className="h-4 w-4 mr-1" /> Domínios
                   </Button>
                   <Button size="sm" variant="ghost" onClick={() => toggleActive(site)}>
