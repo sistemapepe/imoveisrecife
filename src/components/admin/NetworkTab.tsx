@@ -138,7 +138,7 @@ export default function NetworkTab() {
     return data as DomainStatusResponse;
   };
 
-  const checkStatus = useCallback(async (hostname: string) => {
+  const checkStatus = async (hostname: string) => {
     try {
       const data = await callDomainFn({ action: "status", hostname });
       setDomainStatus((prev) => {
@@ -152,7 +152,7 @@ export default function NetworkTab() {
     } catch (e) {
       setDomainStatus((prev) => ({ ...prev, [hostname]: "erro" }));
     }
-  }, []);
+  };
 
   const addDomain = async () => {
     if (!domainDialog || !newHostname.trim()) return;
