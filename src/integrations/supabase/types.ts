@@ -1023,6 +1023,25 @@ export type Database = {
         }[]
       }
       save_role_perms: { Args: { p_rows: Json }; Returns: boolean }
+      site_list_domains: {
+        Args: { p_site_id: string }
+        Returns: {
+          created_at: string
+          hostname: string
+          is_primary: boolean
+          status: Database["public"]["Enums"]["domain_status"]
+        }[]
+      }
+      site_remove_custom_domain: {
+        Args: { p_hostname: string; p_site_id: string }
+        Returns: boolean
+      }
+      site_set_custom_domain: {
+        Args: { p_hostname: string; p_site_id: string }
+        Returns: {
+          hostname: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "supervisor" | "corretor" | "super_admin"
