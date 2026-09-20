@@ -13,8 +13,6 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
-const teamQuery = VERCEL_TEAM_ID ? `?teamId=${encodeURIComponent(VERCEL_TEAM_ID)}` : "";
-
 async function vercel(path: string, init: RequestInit = {}) {
   const sep = path.includes("?") ? "&" : "?";
   const url = `https://api.vercel.com${path}${VERCEL_TEAM_ID ? `${sep}teamId=${encodeURIComponent(VERCEL_TEAM_ID)}` : ""}`;
@@ -98,8 +96,17 @@ Deno.serve(async (req) => {
         results.push({ hostname: h, ok: r.ok || !!code });
       }
 
+      const { data: siteRow } = await admin.from("sites").select("brand_name").eq("id", siteId).maybeSingle();
+      await admin
+        .from("tenants")
+        .upsert({ id: siteId, name: siteRow?.brand_name ?? bare, slug: `site-${siteId}`, status: "active" }, { onConflict: "id" });
       for (const h of [bare, www]) {
-        const { error } = await admin.rpc("network_add_domain", { p_site_id: siteId, p_hostname: h });
+        const { error } = await admin
+          .from("tenant_domains")
+          .upsert(
+            { tenant_id: siteId, hostname: h, is_primary: h === bare, status: "active" },
+            { onConflict: "hostname" },
+          );
         if (error) return json({ error: "db_error", message: error.message }, 400);
       }
       await admin.from("sites").update({ domain: bare, updated_at: new Date().toISOString() }).eq("id", siteId);
@@ -146,7 +153,7 @@ Deno.serve(async (req) => {
     if (action === "remove") {
       for (const h of [bare, www]) {
         await vercel(`/v9/projects/${VERCEL_PROJECT_ID}/domains/${h}`, { method: "DELETE" });
-        await admin.rpc("network_remove_domain", { p_hostname: h });
+        await admin.from("tenant_domains").delete().eq("hostname", h);
       }
       await admin.from("audit_logs").insert({
         user_id: userId,
