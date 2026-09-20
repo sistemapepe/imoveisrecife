@@ -29,6 +29,25 @@ interface NetworkSite {
   hostnames: string[];
 }
 
+interface DnsRecord {
+  type: string;
+  name: string;
+  value: string;
+}
+
+interface DomainStatusResponse {
+  domains?: { hostname: string; state: string }[];
+  records?: DnsRecord[];
+}
+
+const STATUS_LABEL: Record<string, { text: string; className: string }> = {
+  no_ar: { text: "No ar", className: "bg-primary/15 text-primary" },
+  aguardando_dns: { text: "Aguardando DNS", className: "bg-amber-500/15 text-amber-600" },
+  verificando: { text: "Emitindo certificado", className: "bg-amber-500/15 text-amber-600" },
+  nao_cadastrado: { text: "Não conectado", className: "bg-muted text-muted-foreground" },
+  erro: { text: "Não verificado", className: "bg-muted text-muted-foreground" },
+};
+
 export default function NetworkTab() {
   const { isSuperAdmin } = useAuth();
   const { siteId, hostSite, overrideSiteId, setOverrideSiteId } = useTenant();
