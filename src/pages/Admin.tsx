@@ -730,7 +730,6 @@ export default function Admin() {
             <NetworkTab />
           )}
 
-          )}
           </main>
         </div>
 

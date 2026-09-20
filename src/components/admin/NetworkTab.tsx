@@ -301,8 +301,8 @@ export default function NetworkTab() {
           <DialogHeader>
             <DialogTitle>Domínios de {domainDialog?.brand_name}</DialogTitle>
             <DialogDescription>
-              Cadastre aqui os endereços que devem abrir este site. Os registros devem apontar para{" "}
-              {DOMAIN_TARGET_IP}. Depois, conecte o mesmo domínio nas configurações de publicação do projeto.
+              Cadastre aqui os endereços que devem abrir este site. Depois de adicionar, peça no chat
+              para conectar o domínio — a configuração é guiada e automática.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
