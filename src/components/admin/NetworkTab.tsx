@@ -308,20 +308,8 @@ export default function NetworkTab() {
           <div className="space-y-2">
             {domainDialog?.hostnames?.map((h) => (
               <div key={h} className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 px-3 py-2">
-                <span className="text-sm truncate flex items-center gap-2">
-                  {dnsStatus[h] === "checking" ? (
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground shrink-0" />
-                  ) : dnsStatus[h] === "ok" ? (
-                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
-                  ) : dnsStatus[h] === "pendente" ? (
-                    <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
-                  ) : null}
-                  {h}
-                </span>
+                <span className="text-sm truncate">{h}</span>
                 <div className="flex items-center gap-1">
-                  <Button size="icon" variant="ghost" onClick={() => verifyHost(h)}>
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
                   <Button
                     size="icon"
                     variant="ghost"
