@@ -14,7 +14,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Globe, Loader2, Plus, Power, PowerOff, Building2, Check, Trash2, Copy } from "lucide-react";
+import { Globe, Loader2, Plus, Power, PowerOff, Building2, Check, Trash2, Copy, RefreshCw, CheckCircle2, AlertTriangle } from "lucide-react";
+import { checkDomainDns, DOMAIN_TARGET_IP } from "@/lib/domain-dns";
 
 interface NetworkSite {
   id: string;
