@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Shield } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Shield, Network } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
 import DownloadPhotosButton from "@/components/DownloadPhotosButton";
@@ -28,8 +28,9 @@ import BucketAccessTab from "@/components/admin/BucketAccessTab";
 import BulkImportTab from "@/components/admin/BulkImportTab";
 import PerformanceTab from "@/components/admin/PerformanceTab";
 import SecurityTab from "@/components/admin/SecurityTab";
+import NetworkTab from "@/components/admin/NetworkTab";
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security" | "network";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -206,6 +207,7 @@ export default function Admin() {
     { key: "bucket", label: "Imagens (Acesso)", icon: ImageIcon, show: !!canManageBucket },
     { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
     { key: "security", label: "Segurança", icon: Shield, show: role === "super_admin" || role === "admin" },
+    { key: "network", label: "Rede de Sites", icon: Network, show: isSuperAdmin },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
@@ -716,6 +718,10 @@ export default function Admin() {
 
           {tab === "security" && (role === "super_admin" || role === "admin") && (
             <SecurityTab />
+          )}
+
+          {tab === "network" && isSuperAdmin && (
+            <NetworkTab />
           )}
           </main>
         </div>
