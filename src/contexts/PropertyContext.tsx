@@ -222,10 +222,16 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       })));
     }
     setLoading(false);
-  }, []);
+  }, [siteId]);
 
   const fetchSettings = useCallback(async () => {
-    const { data } = await supabase.from("site_settings").select("*").limit(1).single();
+    if (!siteId) return;
+    const { data } = await supabase
+      .from("site_settings")
+      .select("*")
+      .eq("site_id", siteId)
+      .limit(1)
+      .maybeSingle();
     if (data) {
       setSettings((prev) => ({
         ...prev,
