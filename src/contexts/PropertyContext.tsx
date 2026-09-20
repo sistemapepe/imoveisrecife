@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, startTransition } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTenant } from "@/contexts/TenantContext";
 import { toast } from "sonner";
 
 import property1 from "@/assets/property-1.jpg";
@@ -204,9 +205,15 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const { siteId, loading: tenantLoading } = useTenant();
 
   const fetchProperties = useCallback(async () => {
-    const { data, error } = await supabase.from("properties").select("*").order("created_at", { ascending: false });
+    if (!siteId) return;
+    const { data, error } = await supabase
+      .from("properties")
+      .select("*")
+      .eq("site_id", siteId)
+      .order("created_at", { ascending: false });
     if (data && !error) {
       setProperties(data.map((p: any, i: number) => ({
         ...p,
