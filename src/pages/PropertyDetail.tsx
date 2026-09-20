@@ -24,6 +24,7 @@ import Watermark from "@/components/Watermark";
 import DownloadPhotosButton from "@/components/DownloadPhotosButton";
 
 import { supabase } from "@/integrations/supabase/client";
+import { getActiveSiteId } from "@/contexts/TenantContext";
 import { toast } from "sonner";
 import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-optimization";
 import { useResolvedImages, getPublicUrl } from "@/lib/property-image-url";
@@ -78,7 +79,7 @@ export default function PropertyDetail() {
   // Track property view
   useEffect(() => {
     if (!id) return;
-    supabase.from("property_views").insert({ property_id: id, ip_hash: "" }).then();
+    supabase.from("property_views").insert({ property_id: id, ip_hash: "", site_id: getActiveSiteId() }).then();
   }, [id]);
 
   if (!property && !loading) return (

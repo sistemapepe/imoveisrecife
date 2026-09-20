@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { Upload, FileSpreadsheet, CheckCircle2, AlertTriangle, Loader2, Download, RefreshCw, History } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTenant } from "@/contexts/TenantContext";
 import { useProperties, SiteSettings } from "@/contexts/PropertyContext";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -276,17 +277,16 @@ export default function BulkImportTab() {
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [reprocessOf, setReprocessOf] = useState<HistoryRow | null>(null);
+  const { siteId } = useTenant();
 
   const loadHistory = useCallback(async () => {
     setLoadingHistory(true);
-    const { data } = await supabase
-      .from("import_history")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(25);
+    let hq = supabase.from("import_history").select("*");
+    if (siteId) hq = hq.eq("site_id", siteId);
+    const { data } = await hq.order("created_at", { ascending: false }).limit(25);
     setHistory((data as any) ?? []);
     setLoadingHistory(false);
-  }, []);
+  }, [siteId]);
 
   useEffect(() => { loadHistory(); }, [loadHistory]);
 
@@ -381,6 +381,7 @@ export default function BulkImportTab() {
       errors: allErrors as any,
       parent_import_id: reprocessOf?.id ?? null,
       reprocess: !!reprocessOf,
+      site_id: siteId,
     } as any).select().single();
 
     if (histErr || !histRow) {
@@ -416,12 +417,12 @@ export default function BulkImportTab() {
         try {
           let existingId: string | null = null;
           if (upsertMode && Array.isArray(payload.images) && payload.images.length > 0) {
-            const { data: found } = await supabase
+            let fq = supabase
               .from("properties")
               .select("id")
-              .overlaps("images", payload.images)
-              .limit(1)
-              .maybeSingle();
+              .overlaps("images", payload.images);
+            if (siteId) fq = fq.eq("site_id", siteId);
+            const { data: found } = await fq.limit(1).maybeSingle();
             existingId = (found as any)?.id ?? null;
           }
           if (existingId) {
@@ -430,7 +431,7 @@ export default function BulkImportTab() {
             updated++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Atualizado", id: existingId });
           } else {
-            const { error } = await supabase.from("properties").insert(payload as any);
+            const { error } = await supabase.from("properties").insert({ ...payload, site_id: siteId } as any);
             if (error) throw error;
             created++;
             log.push({ at: new Date().toISOString(), row: __row, msg: "Criado" });

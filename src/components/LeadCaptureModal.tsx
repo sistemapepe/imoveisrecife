@@ -4,6 +4,7 @@ import { z } from "zod";
 import { MessageCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { getActiveSiteId } from "@/contexts/TenantContext";
 import { toast } from "sonner";
 import { useProperties } from "@/contexts/PropertyContext";
 import { checkHoneypot, HONEYPOT_FIELD_NAME, honeypotInputStyle } from "@/lib/honeypot";
@@ -127,6 +128,7 @@ export default function LeadCaptureModal({
       interest: interestText.slice(0, 100),
       message: messageText.slice(0, 5000),
       source: source.slice(0, 50),
+      site_id: getActiveSiteId(),
     });
     setSubmitting(false);
     if (error) {

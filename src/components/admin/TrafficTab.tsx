@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Globe, Smartphone, Monitor, Tablet, TrendingUp, Users, Eye, MousePointerClick, Download } from "lucide-react";
 import { DateRangePicker } from "./DateRangePicker";
 import { downloadCSV } from "@/lib/csv-export";
+import { useTenant } from "@/contexts/TenantContext";
 
 interface TrafficEvent {
   id: string;
@@ -27,6 +28,7 @@ export default function TrafficTab() {
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<"today" | "7d" | "30d" | "90d" | "custom">("today");
   const [customRange, setCustomRange] = useState<DateRange | undefined>();
+  const { siteId } = useTenant();
 
   const getDateRange = (): { from: string; to?: string } => {
     if (period === "custom" && customRange?.from) {
@@ -56,13 +58,14 @@ export default function TrafficTab() {
         .select("id, channel, source, medium, social_network, device_type, browser, os, landing_page, event_type, created_at, campaign, visitor_id, session_id")
         .gte("created_at", from);
       if (to) query = query.lte("created_at", to);
+      if (siteId) query = query.eq("site_id", siteId);
       const { data } = await query.order("created_at", { ascending: false }).limit(5000);
       setEvents(data || []);
       setLoading(false);
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [period, customRange?.from?.toISOString(), customRange?.to?.toISOString()]);
+  }, [period, siteId, customRange?.from?.toISOString(), customRange?.to?.toISOString()]);
 
   const stats = useMemo(() => {
     // Filter out development/preview traffic from total counts

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, startTransition } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTenant } from "@/contexts/TenantContext";
 import { toast } from "sonner";
 
 import property1 from "@/assets/property-1.jpg";
@@ -204,9 +205,15 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const { siteId, loading: tenantLoading } = useTenant();
 
   const fetchProperties = useCallback(async () => {
-    const { data, error } = await supabase.from("properties").select("*").order("created_at", { ascending: false });
+    if (!siteId) return;
+    const { data, error } = await supabase
+      .from("properties")
+      .select("*")
+      .eq("site_id", siteId)
+      .order("created_at", { ascending: false });
     if (data && !error) {
       setProperties(data.map((p: any, i: number) => ({
         ...p,
@@ -215,10 +222,16 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       })));
     }
     setLoading(false);
-  }, []);
+  }, [siteId]);
 
   const fetchSettings = useCallback(async () => {
-    const { data } = await supabase.from("site_settings").select("*").limit(1).single();
+    if (!siteId) return;
+    const { data } = await supabase
+      .from("site_settings")
+      .select("*")
+      .eq("site_id", siteId)
+      .limit(1)
+      .maybeSingle();
     if (data) {
       setSettings((prev) => ({
         ...prev,
@@ -277,11 +290,12 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         priceFormat: { ...DEFAULT_PRICE_FORMAT, ...((data as any).price_format ?? {}) },
       }));
     }
-  }, []);
+  }, [siteId]);
 
   const fetchContactInfo = useCallback(async () => {
+    if (!siteId) return;
     try {
-      const { data, error } = await supabase.functions.invoke("get-contact-info");
+      const { data, error } = await supabase.functions.invoke("get-contact-info", { body: { site_id: siteId } });
       if (!error && data) {
         setSettings((prev) => ({
           ...prev,
@@ -292,7 +306,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       console.error("Failed to fetch contact info", e);
     }
-  }, []);
+  }, [siteId]);
 
   const fetchFavorites = useCallback(async () => {
     if (!user) { setFavorites([]); return; }
@@ -301,10 +315,14 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   useEffect(() => {
+    if (!siteId) {
+      if (!tenantLoading) setLoading(false);
+      return;
+    }
     fetchProperties();
     fetchSettings();
     fetchContactInfo();
-  }, [fetchProperties, fetchSettings, fetchContactInfo]);
+  }, [siteId, tenantLoading, fetchProperties, fetchSettings, fetchContactInfo]);
 
   useEffect(() => {
     fetchFavorites();
@@ -316,6 +334,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       price: p.price, area: p.area, bedrooms: p.bedrooms, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
       type: p.type, description: p.description, amenities: p.amenities, images: p.images,
       exclusive: p.exclusive, featured: p.featured, category: p.category,
+      site_id: siteId,
     } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
     await fetchProperties();
@@ -386,11 +405,25 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
     }
 
-    if (settings.id && Object.keys(dbUpdate).length > 0) {
-      const { error } = await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
-      if (error) {
-        console.error("Error updating site_settings:", error);
-        toast.error("Erro ao salvar no banco: " + error.message);
+    if (Object.keys(dbUpdate).length > 0) {
+      if (settings.id) {
+        const { error } = await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
+        if (error) {
+          console.error("Error updating site_settings:", error);
+          toast.error("Erro ao salvar no banco: " + error.message);
+        }
+      } else if (siteId) {
+        const { data, error } = await supabase
+          .from("site_settings")
+          .insert({ ...dbUpdate, site_id: siteId } as any)
+          .select("id")
+          .maybeSingle();
+        if (error) {
+          console.error("Error creating site_settings:", error);
+          toast.error("Erro ao salvar no banco: " + error.message);
+        } else if (data) {
+          setSettings((prev) => ({ ...prev, id: (data as any).id }));
+        }
       }
     }
 
@@ -399,9 +432,11 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     if (s.whatsappNumber !== undefined) contactUpdate.whatsapp_number = s.whatsappNumber;
     if (s.emailContact !== undefined) contactUpdate.email_contact = s.emailContact;
     if (Object.keys(contactUpdate).length > 0) {
+      if (siteId) contactUpdate.site_id = siteId;
       const { data: existing } = await supabase
         .from("contact_info" as any)
         .select("id")
+        .eq("site_id", siteId)
         .limit(1)
         .maybeSingle();
       if (existing && (existing as any).id) {

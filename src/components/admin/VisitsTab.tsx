@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Calendar, CheckCircle, Clock, XCircle, Phone, Mail } from "lucide-react";
 import { toast } from "sonner";
+import { useTenant } from "@/contexts/TenantContext";
 
 interface VisitRequest {
   id: string;
@@ -21,17 +22,18 @@ export default function VisitsTab() {
   const [visits, setVisits] = useState<VisitRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "pending" | "confirmed" | "cancelled">("all");
+  const { siteId } = useTenant();
 
   useEffect(() => {
     fetchVisits();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siteId]);
 
   const fetchVisits = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from("visit_requests")
-      .select("*")
-      .order("created_at", { ascending: false });
+    let vq = supabase.from("visit_requests").select("*");
+    if (siteId) vq = vq.eq("site_id", siteId);
+    const { data } = await vq.order("created_at", { ascending: false });
 
     if (data) {
       const propIds = [...new Set(data.map((v) => v.property_id))];

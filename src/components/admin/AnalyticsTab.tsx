@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
+import { useTenant } from "@/contexts/TenantContext";
 import { BarChart3, Eye, MessageCircle, Calendar, TrendingUp, Download } from "lucide-react";
 import { DateRangePicker } from "./DateRangePicker";
 import { downloadCSV } from "@/lib/csv-export";
@@ -24,6 +25,7 @@ export default function AnalyticsTab() {
   const [leadsByDay, setLeadsByDay] = useState<LeadsByPeriod[]>([]);
   const [viewsByDay, setViewsByDay] = useState<LeadsByPeriod[]>([]);
   const [loading, setLoading] = useState(true);
+  const { siteId } = useTenant();
   const [period, setPeriod] = useState<"today" | "7d" | "30d" | "90d" | "custom">("today");
   const [customRange, setCustomRange] = useState<DateRange | undefined>();
 
@@ -56,15 +58,17 @@ export default function AnalyticsTab() {
     const { from, to } = getDateRange();
 
     const applyRange = <T,>(q: T): T => {
-      const qq = (q as unknown as { lte: (col: string, v: string) => T });
-      return to ? qq.lte("created_at", to) : q;
+      let out = q;
+      if (to) out = (out as unknown as { lte: (col: string, v: string) => T }).lte("created_at", to);
+      if (siteId) out = (out as unknown as { eq: (col: string, v: string) => T }).eq("site_id", siteId);
+      return out;
     };
 
     const [viewsRes, leadsRes, visitsRes, propertiesRes] = await Promise.all([
       applyRange(supabase.from("property_views").select("id, property_id, created_at").gte("created_at", from)),
       applyRange(supabase.from("contact_messages").select("id, created_at").gte("created_at", from)),
       applyRange(supabase.from("visit_requests").select("id, created_at").gte("created_at", from)),
-      supabase.from("properties").select("id, title"),
+      applyRange(supabase.from("properties").select("id, title")),
     ]);
 
     const views = viewsRes.data || [];

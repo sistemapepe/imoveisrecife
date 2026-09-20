@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Calendar, Clock, Send, CheckCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getActiveSiteId } from "@/contexts/TenantContext";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -63,6 +64,7 @@ export default function VisitScheduleForm({ propertyId, propertyTitle }: VisitSc
         preferred_date: result.data.preferred_date,
         preferred_time: result.data.preferred_time,
         message: result.data.message || "",
+        site_id: getActiveSiteId(),
       });
 
       if (error) throw error;

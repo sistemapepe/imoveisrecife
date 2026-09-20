@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Verified, ArrowLeft } from "lucide-react";
 import { useProperties } from "@/contexts/PropertyContext";
 import { supabase } from "@/integrations/supabase/client";
+import { getActiveSiteId } from "@/contexts/TenantContext";
 import { toast } from "sonner";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
@@ -37,6 +38,7 @@ export default function Contact() {
       interest: form.interest,
       message: form.message,
       source: "form_contato",
+      site_id: getActiveSiteId(),
     });
     setSending(false);
     if (error) {

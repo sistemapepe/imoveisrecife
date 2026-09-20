@@ -4,7 +4,7 @@ import UsersTab from "@/components/admin/UsersTab";
 import MessagesTab from "@/components/admin/MessagesTab";
 import PrivacyTab from "@/components/admin/PrivacyTab";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Shield } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Settings, LayoutDashboard, LogOut, Loader2, Users, MessageSquare, Bell, FileText, BarChart3, Calendar, Globe, TagIcon, TrendingDown, Menu, Home, Search, X, Sparkles, Image as ImageIcon, Upload, Zap, Shield, Network } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import ImageUpload from "@/components/ImageUpload";
 import DownloadPhotosButton from "@/components/DownloadPhotosButton";
@@ -28,8 +28,10 @@ import BucketAccessTab from "@/components/admin/BucketAccessTab";
 import BulkImportTab from "@/components/admin/BulkImportTab";
 import PerformanceTab from "@/components/admin/PerformanceTab";
 import SecurityTab from "@/components/admin/SecurityTab";
+import NetworkTab from "@/components/admin/NetworkTab";
+import { useTenant } from "@/contexts/TenantContext";
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security" | "network";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -56,6 +58,7 @@ export default function Admin() {
   const { user, isAdmin, isSuperAdmin, role, loading: authLoading, signOut, canViewProperties, canManageProperties, canDeleteProperties, canManageSettings, canManageUsers, canViewContacts, canViewAnalytics, canViewVisits, canViewTraffic, canManageSeo, canBulkImport, canManagePrivacy, canManageBucket } = useAuth();
   const { properties, settings, addProperty, updateProperty, deleteProperty, updateSettings } = useProperties();
   const [tab, setTab] = useState<Tab>("dashboard");
+  const { siteId } = useTenant();
   const [search, setSearch] = useState("");
   const [newMsgCount, setNewMsgCount] = useState(0);
   const [pendingVisitsCount, setPendingVisitsCount] = useState(0);
@@ -113,7 +116,9 @@ export default function Admin() {
     if (!canViewContacts) return;
     let lastCount = 0;
     const checkNewMessages = async () => {
-      const { count } = await supabase.from("contact_messages").select("id", { count: "exact", head: true });
+      let cq = supabase.from("contact_messages").select("id", { count: "exact", head: true });
+      if (siteId) cq = cq.eq("site_id", siteId);
+      const { count } = await cq;
       if (count !== null && count > lastCount && lastCount > 0 && tab !== "messages") {
         setNewMsgCount((c) => c + (count - lastCount));
       }
@@ -122,23 +127,25 @@ export default function Admin() {
     checkNewMessages();
     const interval = setInterval(checkNewMessages, 30000); // Poll every 30s
     return () => clearInterval(interval);
-  }, [canViewContacts, tab]);
+  }, [canViewContacts, tab, siteId]);
 
   // Poll for pending visit requests
   useEffect(() => {
     const canViewVisits = isAdmin || role === "supervisor";
     if (!canViewVisits) return;
     const checkPendingVisits = async () => {
-      const { count } = await supabase
+      let vq = supabase
         .from("visit_requests")
         .select("id", { count: "exact", head: true })
         .eq("status", "pending");
+      if (siteId) vq = vq.eq("site_id", siteId);
+      const { count } = await vq;
       setPendingVisitsCount(count ?? 0);
     };
     checkPendingVisits();
     const interval = setInterval(checkPendingVisits, 30000);
     return () => clearInterval(interval);
-  }, [isAdmin, role, tab]);
+  }, [isAdmin, role, tab, siteId]);
 
   useEffect(() => {
     if (!authLoading && (!user || role === "user")) {
@@ -206,6 +213,7 @@ export default function Admin() {
     { key: "bucket", label: "Imagens (Acesso)", icon: ImageIcon, show: !!canManageBucket },
     { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
     { key: "security", label: "Segurança", icon: Shield, show: role === "super_admin" || role === "admin" },
+    { key: "network", label: "Rede de Sites", icon: Network, show: isSuperAdmin },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
@@ -716,6 +724,10 @@ export default function Admin() {
 
           {tab === "security" && (role === "super_admin" || role === "admin") && (
             <SecurityTab />
+          )}
+
+          {tab === "network" && isSuperAdmin && (
+            <NetworkTab />
           )}
           </main>
         </div>

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { getActiveSiteId } from "@/contexts/TenantContext";
 import { logger } from "@/lib/logger";
 
 function getVisitorId(): string {
@@ -136,6 +137,7 @@ export function trackEvent(eventType: string, propertyId?: string) {
     visitor_id: getVisitorId().slice(0, 255),
     event_type: eventType,
     property_id: propertyId || null,
+    site_id: getActiveSiteId(),
   };
 
   supabase.from("traffic_events").insert(event).then(({ error }) => {

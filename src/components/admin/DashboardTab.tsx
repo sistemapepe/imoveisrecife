@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useProperties } from "@/contexts/PropertyContext";
 import { Building2, MessageSquare, Calendar, Eye, TrendingDown, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTenant } from "@/contexts/TenantContext";
 
 type Tab = "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic";
 
@@ -17,6 +18,7 @@ interface Stats {
 
 export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
   const { properties } = useProperties();
+  const { siteId } = useTenant();
   const [stats, setStats] = useState<Stats>({
     totalProperties: 0,
     newContacts: 0,
@@ -34,18 +36,27 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
       const isoWeek = sevenDaysAgo.toISOString();
 
       const [contactsRes, visitsRes, viewsRes] = await Promise.all([
-        supabase
-          .from("contact_messages")
-          .select("id", { count: "exact", head: true })
-          .gte("created_at", isoWeek),
-        supabase
-          .from("visit_requests")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "pending"),
-        supabase
-          .from("property_views")
-          .select("id", { count: "exact", head: true })
-          .gte("created_at", isoWeek),
+        (() => {
+          const q = supabase
+            .from("contact_messages")
+            .select("id", { count: "exact", head: true })
+            .gte("created_at", isoWeek);
+          return siteId ? q.eq("site_id", siteId) : q;
+        })(),
+        (() => {
+          const q = supabase
+            .from("visit_requests")
+            .select("id", { count: "exact", head: true })
+            .eq("status", "pending");
+          return siteId ? q.eq("site_id", siteId) : q;
+        })(),
+        (() => {
+          const q = supabase
+            .from("property_views")
+            .select("id", { count: "exact", head: true })
+            .gte("created_at", isoWeek);
+          return siteId ? q.eq("site_id", siteId) : q;
+        })(),
       ]);
 
       setStats({
@@ -59,7 +70,7 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
       setLoading(false);
     };
     load();
-  }, [properties]);
+  }, [properties, siteId]);
 
   const cards = [
     {
