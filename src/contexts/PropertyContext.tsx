@@ -306,7 +306,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       console.error("Failed to fetch contact info", e);
     }
-  }, []);
+  }, [siteId]);
 
   const fetchFavorites = useCallback(async () => {
     if (!user) { setFavorites([]); return; }
@@ -315,10 +315,14 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   useEffect(() => {
+    if (!siteId) {
+      if (!tenantLoading) setLoading(false);
+      return;
+    }
     fetchProperties();
     fetchSettings();
     fetchContactInfo();
-  }, [fetchProperties, fetchSettings, fetchContactInfo]);
+  }, [siteId, tenantLoading, fetchProperties, fetchSettings, fetchContactInfo]);
 
   useEffect(() => {
     fetchFavorites();
@@ -330,6 +334,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       price: p.price, area: p.area, bedrooms: p.bedrooms, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
       type: p.type, description: p.description, amenities: p.amenities, images: p.images,
       exclusive: p.exclusive, featured: p.featured, category: p.category,
+      site_id: siteId,
     } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
     await fetchProperties();
