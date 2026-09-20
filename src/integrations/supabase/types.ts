@@ -988,6 +988,40 @@ export type Database = {
         Args: { _hostname: string }
         Returns: string
       }
+      network_add_domain: {
+        Args: { p_hostname: string; p_site_id: string }
+        Returns: boolean
+      }
+      network_remove_domain: { Args: { p_hostname: string }; Returns: boolean }
+      network_set_site_active: {
+        Args: { p_active: boolean; p_site_id: string }
+        Returns: boolean
+      }
+      network_sites_overview: {
+        Args: never
+        Returns: {
+          brand_name: string
+          created_at: string
+          domain: string
+          hostnames: string[]
+          id: string
+          is_active: boolean
+          messages_count: number
+          properties_count: number
+          users_count: number
+          views_count: number
+        }[]
+      }
+      resolve_site_by_hostname: {
+        Args: { _hostname: string }
+        Returns: {
+          brand_name: string
+          domain: string
+          is_active: boolean
+          matched: boolean
+          site_id: string
+        }[]
+      }
       save_role_perms: { Args: { p_rows: Json }; Returns: boolean }
     }
     Enums: {
