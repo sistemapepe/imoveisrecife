@@ -29,10 +29,9 @@ import BulkImportTab from "@/components/admin/BulkImportTab";
 import PerformanceTab from "@/components/admin/PerformanceTab";
 import SecurityTab from "@/components/admin/SecurityTab";
 import NetworkTab from "@/components/admin/NetworkTab";
-import DomainTab from "@/components/admin/DomainTab";
 import { useTenant } from "@/contexts/TenantContext";
 
-type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security" | "network" | "domain";
+type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security" | "network";
 
 const maskCep = (v: string) => v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9);
 
@@ -215,7 +214,6 @@ export default function Admin() {
     { key: "performance", label: "Performance", icon: Zap, show: !!canViewAnalytics },
     { key: "security", label: "Segurança", icon: Shield, show: role === "super_admin" || role === "admin" },
     { key: "network", label: "Rede de Sites", icon: Network, show: isSuperAdmin },
-    { key: "domain", label: "Domínio Próprio", icon: Globe, show: !!canManageSettings || isAdmin },
     { key: "privacy", label: "LGPD", icon: FileText, show: !!canManagePrivacy },
   ];
   const visibleTabs = allTabs.filter((t) => t.show);
@@ -732,8 +730,6 @@ export default function Admin() {
             <NetworkTab />
           )}
 
-          {tab === "domain" && (canManageSettings || isAdmin) && (
-            <DomainTab />
           )}
           </main>
         </div>
