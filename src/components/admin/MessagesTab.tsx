@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTenant } from "@/contexts/TenantContext";
 import { Mail, Phone, Tag, RefreshCw, MessageSquareText } from "lucide-react";
 
 interface ContactMessage {
@@ -33,13 +34,13 @@ interface MessagesTabProps {
 export default function MessagesTab({ onNewMessage }: MessagesTabProps) {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  const { siteId } = useTenant();
 
   const fetchMessages = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("contact_messages")
-      .select("*")
-      .order("created_at", { ascending: false });
+    let q = supabase.from("contact_messages").select("*");
+    if (siteId) q = q.eq("site_id", siteId);
+    const { data, error } = await q.order("created_at", { ascending: false });
 
     if (error) {
       toast.error("Erro ao carregar mensagens");
@@ -47,7 +48,7 @@ export default function MessagesTab({ onNewMessage }: MessagesTabProps) {
       setMessages(data || []);
     }
     setLoading(false);
-  }, []);
+  }, [siteId]);
 
   useEffect(() => {
     fetchMessages();
@@ -61,7 +62,8 @@ export default function MessagesTab({ onNewMessage }: MessagesTabProps) {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "contact_messages" },
         (payload) => {
-          const newMsg = payload.new as ContactMessage;
+          const newMsg = payload.new as ContactMessage & { site_id?: string };
+          if (siteId && newMsg.site_id && newMsg.site_id !== siteId) return;
           setMessages((prev) => [newMsg, ...prev]);
           toast.info(`Nova mensagem de ${newMsg.name}`);
           onNewMessage?.();
@@ -72,7 +74,7 @@ export default function MessagesTab({ onNewMessage }: MessagesTabProps) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [onNewMessage]);
+  }, [onNewMessage, siteId]);
 
   return (
     <div className="space-y-4">
