@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Globe, Loader2, Plus, Power, PowerOff, Building2, Check, Trash2, Copy } from "lucide-react";
+import { Globe, Loader2, Plus, Power, PowerOff, Building2, Check, Trash2, Copy, RefreshCw } from "lucide-react";
 
 interface NetworkSite {
   id: string;
@@ -29,6 +29,25 @@ interface NetworkSite {
   hostnames: string[];
 }
 
+interface DnsRecord {
+  type: string;
+  name: string;
+  value: string;
+}
+
+interface DomainStatusResponse {
+  domains?: { hostname: string; state: string }[];
+  records?: DnsRecord[];
+}
+
+const STATUS_LABEL: Record<string, { text: string; className: string }> = {
+  no_ar: { text: "No ar", className: "bg-primary/15 text-primary" },
+  aguardando_dns: { text: "Aguardando DNS", className: "bg-amber-500/15 text-amber-600" },
+  verificando: { text: "Emitindo certificado", className: "bg-amber-500/15 text-amber-600" },
+  nao_cadastrado: { text: "Não conectado", className: "bg-muted text-muted-foreground" },
+  erro: { text: "Não verificado", className: "bg-muted text-muted-foreground" },
+};
+
 export default function NetworkTab() {
   const { isSuperAdmin } = useAuth();
   const { siteId, hostSite, overrideSiteId, setOverrideSiteId } = useTenant();
@@ -39,6 +58,9 @@ export default function NetworkTab() {
   const [form, setForm] = useState({ brand_name: "", domain: "", source: "" });
   const [domainDialog, setDomainDialog] = useState<NetworkSite | null>(null);
   const [newHostname, setNewHostname] = useState("");
+  const [connecting, setConnecting] = useState(false);
+  const [domainStatus, setDomainStatus] = useState<Record<string, string>>({});
+  const [dnsRecords, setDnsRecords] = useState<DnsRecord[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -104,31 +126,70 @@ export default function NetworkTab() {
     load();
   };
 
+  const callDomainFn = async (payload: Record<string, unknown>) => {
+    const { data, error } = await supabase.functions.invoke("manage-domain", { body: payload });
+    if (error) {
+      const msg = (data as { message?: string } | null)?.message ?? error.message;
+      throw new Error(msg);
+    }
+    if ((data as { error?: string } | null)?.error) {
+      throw new Error((data as { message?: string }).message ?? "Falha na operação");
+    }
+    return data as DomainStatusResponse;
+  };
+
+  const checkStatus = async (hostname: string) => {
+    try {
+      const data = await callDomainFn({ action: "status", hostname });
+      setDomainStatus((prev) => {
+        const next = { ...prev };
+        (data.domains ?? []).forEach((d) => {
+          next[d.hostname] = d.state;
+        });
+        return next;
+      });
+      setDnsRecords(data.records ?? []);
+    } catch (e) {
+      setDomainStatus((prev) => ({ ...prev, [hostname]: "erro" }));
+    }
+  };
+
   const addDomain = async () => {
     if (!domainDialog || !newHostname.trim()) return;
-    const { error } = await supabase.rpc("network_add_domain", {
-      p_site_id: domainDialog.id,
-      p_hostname: newHostname.trim(),
-    });
-    if (error) {
-      toast.error("Erro: " + error.message);
-      return;
+    setConnecting(true);
+    try {
+      const host = newHostname.trim();
+      await callDomainFn({ action: "add", site_id: domainDialog.id, hostname: host });
+      toast.success("Endereço conectado! Agora é só apontar o DNS.");
+      setNewHostname("");
+      await load();
+      await checkStatus(host);
+      setDomainDialog((prev) =>
+        prev
+          ? {
+              ...prev,
+              hostnames: Array.from(
+                new Set([...(prev.hostnames ?? []), host.replace(/^www\./, ""), `www.${host.replace(/^www\./, "")}`]),
+              ),
+            }
+          : prev,
+      );
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Erro ao conectar o endereço");
+    } finally {
+      setConnecting(false);
     }
-    toast.success("Domínio vinculado");
-    setNewHostname("");
-    setDomainDialog(null);
-    load();
   };
 
   const removeDomain = async (hostname: string) => {
-    const { error } = await supabase.rpc("network_remove_domain", { p_hostname: hostname });
-    if (error) {
-      toast.error("Erro: " + error.message);
-      return;
+    try {
+      await callDomainFn({ action: "remove", site_id: domainDialog?.id, hostname });
+      toast.success("Domínio removido");
+      setDomainDialog(null);
+      load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Erro ao remover");
     }
-    toast.success("Domínio removido");
-    setDomainDialog(null);
-    load();
   };
 
   const manage = (site: NetworkSite) => {
@@ -230,7 +291,10 @@ export default function NetworkTab() {
                     {active ? <Check className="h-4 w-4 mr-1" /> : null}
                     {active ? "Gerenciando" : "Gerenciar este site"}
                   </Button>
-                  <Button size="sm" variant="outline" onClick={() => setDomainDialog(site)}>
+                  <Button size="sm" variant="outline" onClick={() => {
+                      setDomainDialog(site);
+                      (site.hostnames ?? []).slice(0, 4).forEach((h) => checkStatus(h));
+                    }}>
                     <Globe className="h-4 w-4 mr-1" /> Domínios
                   </Button>
                   <Button size="sm" variant="ghost" onClick={() => toggleActive(site)}>
@@ -301,38 +365,75 @@ export default function NetworkTab() {
           <DialogHeader>
             <DialogTitle>Domínios de {domainDialog?.brand_name}</DialogTitle>
             <DialogDescription>
-              Cadastre aqui os endereços que devem abrir este site. Depois de adicionar, peça no chat
-              para conectar o domínio — a configuração é guiada e automática.
+              Digite o endereço e clique em Conectar. Depois é só o cliente colar os registros abaixo
+              no painel do provedor dele — o certificado https sai automático.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            {domainDialog?.hostnames?.map((h) => (
-              <div key={h} className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 px-3 py-2">
-                <span className="text-sm truncate">{h}</span>
-                <div className="flex items-center gap-1">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => {
-                      navigator.clipboard?.writeText(h);
-                      toast.success("Copiado");
-                    }}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                  <Button size="icon" variant="ghost" onClick={() => removeDomain(h)}>
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
+            {domainDialog?.hostnames?.map((h) => {
+              const st = STATUS_LABEL[domainStatus[h] ?? "erro"];
+              return (
+                <div key={h} className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 px-3 py-2">
+                  <div className="min-w-0">
+                    <p className="text-sm truncate">{h}</p>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${st.className}`}>
+                      {st.text}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button size="icon" variant="ghost" title="Verificar" onClick={() => checkStatus(h)}>
+                      <RefreshCw className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => {
+                        navigator.clipboard?.writeText(h);
+                        toast.success("Copiado");
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                    <Button size="icon" variant="ghost" onClick={() => removeDomain(h)}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
                 </div>
+              );
+            })}
+
+            {dnsRecords.length > 0 && (
+              <div className="rounded-lg border border-border p-3 space-y-2">
+                <p className="text-xs font-semibold">Registros para o provedor do cliente</p>
+                {dnsRecords.map((r) => (
+                  <div key={`${r.type}-${r.name}`} className="flex items-center justify-between gap-2 text-xs">
+                    <span className="font-mono truncate">
+                      {r.type} · {r.name} · {r.value}
+                    </span>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => {
+                        navigator.clipboard?.writeText(r.value);
+                        toast.success("Valor copiado");
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+
             <div className="flex gap-2 pt-2">
               <Input
                 value={newHostname}
                 onChange={(e) => setNewHostname(e.target.value)}
                 placeholder="novodominio.com.br"
               />
-              <Button onClick={addDomain}>Adicionar</Button>
+              <Button onClick={addDomain} disabled={connecting}>
+                {connecting && <Loader2 className="h-4 w-4 mr-1 animate-spin" />} Conectar
+              </Button>
             </div>
           </div>
         </DialogContent>
