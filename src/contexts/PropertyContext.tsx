@@ -405,11 +405,25 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       if ((s as any)[key] !== undefined) dbUpdate[dbKey] = (s as any)[key];
     }
 
-    if (settings.id && Object.keys(dbUpdate).length > 0) {
-      const { error } = await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
-      if (error) {
-        console.error("Error updating site_settings:", error);
-        toast.error("Erro ao salvar no banco: " + error.message);
+    if (Object.keys(dbUpdate).length > 0) {
+      if (settings.id) {
+        const { error } = await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
+        if (error) {
+          console.error("Error updating site_settings:", error);
+          toast.error("Erro ao salvar no banco: " + error.message);
+        }
+      } else if (siteId) {
+        const { data, error } = await supabase
+          .from("site_settings")
+          .insert({ ...dbUpdate, site_id: siteId } as any)
+          .select("id")
+          .maybeSingle();
+        if (error) {
+          console.error("Error creating site_settings:", error);
+          toast.error("Erro ao salvar no banco: " + error.message);
+        } else if (data) {
+          setSettings((prev) => ({ ...prev, id: (data as any).id }));
+        }
       }
     }
 
@@ -418,9 +432,11 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     if (s.whatsappNumber !== undefined) contactUpdate.whatsapp_number = s.whatsappNumber;
     if (s.emailContact !== undefined) contactUpdate.email_contact = s.emailContact;
     if (Object.keys(contactUpdate).length > 0) {
+      if (siteId) contactUpdate.site_id = siteId;
       const { data: existing } = await supabase
         .from("contact_info" as any)
         .select("id")
+        .eq("site_id", siteId)
         .limit(1)
         .maybeSingle();
       if (existing && (existing as any).id) {
