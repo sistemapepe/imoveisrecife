@@ -290,11 +290,12 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
         priceFormat: { ...DEFAULT_PRICE_FORMAT, ...((data as any).price_format ?? {}) },
       }));
     }
-  }, []);
+  }, [siteId]);
 
   const fetchContactInfo = useCallback(async () => {
+    if (!siteId) return;
     try {
-      const { data, error } = await supabase.functions.invoke("get-contact-info");
+      const { data, error } = await supabase.functions.invoke("get-contact-info", { body: { site_id: siteId } });
       if (!error && data) {
         setSettings((prev) => ({
           ...prev,
