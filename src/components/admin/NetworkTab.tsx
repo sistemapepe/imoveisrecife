@@ -39,6 +39,9 @@ export default function NetworkTab() {
   const [form, setForm] = useState({ brand_name: "", domain: "", source: "" });
   const [domainDialog, setDomainDialog] = useState<NetworkSite | null>(null);
   const [newHostname, setNewHostname] = useState("");
+  const [connecting, setConnecting] = useState(false);
+  const [domainStatus, setDomainStatus] = useState<Record<string, string>>({});
+  const [dnsRecords, setDnsRecords] = useState<DnsRecord[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
