@@ -104,31 +104,70 @@ export default function NetworkTab() {
     load();
   };
 
+  const callDomainFn = async (payload: Record<string, unknown>) => {
+    const { data, error } = await supabase.functions.invoke("manage-domain", { body: payload });
+    if (error) {
+      const msg = (data as { message?: string } | null)?.message ?? error.message;
+      throw new Error(msg);
+    }
+    if ((data as { error?: string } | null)?.error) {
+      throw new Error((data as { message?: string }).message ?? "Falha na operação");
+    }
+    return data as DomainStatusResponse;
+  };
+
+  const checkStatus = useCallback(async (hostname: string) => {
+    try {
+      const data = await callDomainFn({ action: "status", hostname });
+      setDomainStatus((prev) => {
+        const next = { ...prev };
+        (data.domains ?? []).forEach((d) => {
+          next[d.hostname] = d.state;
+        });
+        return next;
+      });
+      setDnsRecords(data.records ?? []);
+    } catch (e) {
+      setDomainStatus((prev) => ({ ...prev, [hostname]: "erro" }));
+    }
+  }, []);
+
   const addDomain = async () => {
     if (!domainDialog || !newHostname.trim()) return;
-    const { error } = await supabase.rpc("network_add_domain", {
-      p_site_id: domainDialog.id,
-      p_hostname: newHostname.trim(),
-    });
-    if (error) {
-      toast.error("Erro: " + error.message);
-      return;
+    setConnecting(true);
+    try {
+      const host = newHostname.trim();
+      await callDomainFn({ action: "add", site_id: domainDialog.id, hostname: host });
+      toast.success("Endereço conectado! Agora é só apontar o DNS.");
+      setNewHostname("");
+      await load();
+      await checkStatus(host);
+      setDomainDialog((prev) =>
+        prev
+          ? {
+              ...prev,
+              hostnames: Array.from(
+                new Set([...(prev.hostnames ?? []), host.replace(/^www\./, ""), `www.${host.replace(/^www\./, "")}`]),
+              ),
+            }
+          : prev,
+      );
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Erro ao conectar o endereço");
+    } finally {
+      setConnecting(false);
     }
-    toast.success("Domínio vinculado");
-    setNewHostname("");
-    setDomainDialog(null);
-    load();
   };
 
   const removeDomain = async (hostname: string) => {
-    const { error } = await supabase.rpc("network_remove_domain", { p_hostname: hostname });
-    if (error) {
-      toast.error("Erro: " + error.message);
-      return;
+    try {
+      await callDomainFn({ action: "remove", site_id: domainDialog?.id, hostname });
+      toast.success("Domínio removido");
+      setDomainDialog(null);
+      load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Erro ao remover");
     }
-    toast.success("Domínio removido");
-    setDomainDialog(null);
-    load();
   };
 
   const manage = (site: NetworkSite) => {
