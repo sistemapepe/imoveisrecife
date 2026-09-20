@@ -35,28 +35,28 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) =>
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
       const isoWeek = sevenDaysAgo.toISOString();
 
-      const scope = <T extends { eq: (c: string, v: string) => T }>(q: T) =>
-        (siteId ? q.eq("site_id", siteId) : q);
-
       const [contactsRes, visitsRes, viewsRes] = await Promise.all([
-        scope(
-          supabase
+        (() => {
+          const q = supabase
             .from("contact_messages")
             .select("id", { count: "exact", head: true })
-            .gte("created_at", isoWeek)
-        ),
-        scope(
-          supabase
+            .gte("created_at", isoWeek);
+          return siteId ? q.eq("site_id", siteId) : q;
+        })(),
+        (() => {
+          const q = supabase
             .from("visit_requests")
             .select("id", { count: "exact", head: true })
-            .eq("status", "pending")
-        ),
-        scope(
-          supabase
+            .eq("status", "pending");
+          return siteId ? q.eq("site_id", siteId) : q;
+        })(),
+        (() => {
+          const q = supabase
             .from("property_views")
             .select("id", { count: "exact", head: true })
-            .gte("created_at", isoWeek)
-        ),
+            .gte("created_at", isoWeek);
+          return siteId ? q.eq("site_id", siteId) : q;
+        })(),
       ]);
 
       setStats({
