@@ -40,13 +40,50 @@ interface DomainStatusResponse {
   records?: DnsRecord[];
 }
 
-const STATUS_LABEL: Record<string, { text: string; className: string }> = {
-  no_ar: { text: "No ar", className: "bg-primary/15 text-primary" },
-  aguardando_dns: { text: "Aguardando DNS", className: "bg-amber-500/15 text-amber-600" },
-  verificando: { text: "Emitindo certificado", className: "bg-amber-500/15 text-amber-600" },
-  nao_cadastrado: { text: "Não conectado", className: "bg-muted text-muted-foreground" },
-  erro: { text: "Não verificado", className: "bg-muted text-muted-foreground" },
+const STATUS_LABEL: Record<string, { text: string; className: string; dot: string; pulse?: boolean }> = {
+  no_ar: {
+    text: "No ar",
+    className: "bg-emerald-500/15 text-emerald-600",
+    dot: "bg-emerald-500 shadow-[0_0_8px_2px_hsl(152_76%_45%/0.7)]",
+    pulse: true,
+  },
+  aguardando_dns: {
+    text: "Aguardando DNS",
+    className: "bg-amber-500/15 text-amber-600",
+    dot: "bg-amber-500 shadow-[0_0_8px_2px_hsl(38_92%_50%/0.6)]",
+    pulse: true,
+  },
+  verificando: {
+    text: "Emitindo certificado",
+    className: "bg-sky-500/15 text-sky-600",
+    dot: "bg-sky-500 shadow-[0_0_8px_2px_hsl(199_89%_48%/0.6)]",
+    pulse: true,
+  },
+  nao_cadastrado: {
+    text: "Não conectado",
+    className: "bg-muted text-muted-foreground",
+    dot: "bg-muted-foreground/50",
+  },
+  erro: {
+    text: "Não verificado",
+    className: "bg-muted text-muted-foreground",
+    dot: "bg-muted-foreground/40",
+  },
 };
+
+function StatusDot({ state, size = "sm" }: { state?: string; size?: "sm" | "lg" }) {
+  const st = STATUS_LABEL[state ?? "erro"] ?? STATUS_LABEL.erro;
+  const dim = size === "lg" ? "h-3 w-3" : "h-2 w-2";
+  return (
+    <span className="relative inline-flex items-center justify-center" title={st.text}>
+      {st.pulse && (
+        <span className={`absolute ${dim} rounded-full ${st.dot} opacity-60 animate-ping`} aria-hidden />
+      )}
+      <span className={`relative ${dim} rounded-full ${st.dot}`} aria-label={st.text} />
+    </span>
+  );
+}
+
 
 export default function NetworkTab() {
   const { isSuperAdmin } = useAuth();
@@ -76,6 +113,16 @@ export default function NetworkTab() {
   useEffect(() => {
     if (isSuperAdmin) load();
   }, [isSuperAdmin, load]);
+
+  useEffect(() => {
+    if (!isSuperAdmin || sites.length === 0) return;
+    const hosts = sites.flatMap((s) => s.hostnames ?? []).slice(0, 12);
+    hosts.forEach((h) => {
+      if (!domainStatus[h]) checkStatus(h);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuperAdmin, sites]);
+
 
   if (!isSuperAdmin) {
     return (
@@ -279,12 +326,18 @@ export default function NetworkTab() {
                 {site.hostnames?.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {site.hostnames.map((h) => (
-                      <span key={h} className="text-[10px] px-2 py-0.5 rounded bg-muted/60 text-muted-foreground">
+                      <span
+                        key={h}
+                        className="text-[10px] px-2 py-0.5 rounded bg-muted/60 text-muted-foreground inline-flex items-center gap-1.5"
+                        title={(STATUS_LABEL[domainStatus[h] ?? "erro"] ?? STATUS_LABEL.erro).text}
+                      >
+                        <StatusDot state={domainStatus[h]} />
                         {h}
                       </span>
                     ))}
                   </div>
                 )}
+
 
                 <div className="flex flex-wrap gap-2">
                   <Button size="sm" variant={active ? "secondary" : "default"} onClick={() => manage(site)}>
@@ -371,15 +424,19 @@ export default function NetworkTab() {
           </DialogHeader>
           <div className="space-y-2">
             {domainDialog?.hostnames?.map((h) => {
-              const st = STATUS_LABEL[domainStatus[h] ?? "erro"];
+              const st = STATUS_LABEL[domainStatus[h] ?? "erro"] ?? STATUS_LABEL.erro;
               return (
                 <div key={h} className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 px-3 py-2">
-                  <div className="min-w-0">
-                    <p className="text-sm truncate">{h}</p>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${st.className}`}>
-                      {st.text}
-                    </span>
+                  <div className="min-w-0 flex items-center gap-3">
+                    <StatusDot state={domainStatus[h]} size="lg" />
+                    <div className="min-w-0">
+                      <p className="text-sm truncate">{h}</p>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${st.className}`}>
+                        {st.text}
+                      </span>
+                    </div>
                   </div>
+
                   <div className="flex items-center gap-1">
                     <Button size="icon" variant="ghost" title="Verificar" onClick={() => checkStatus(h)}>
                       <RefreshCw className="h-4 w-4" />
@@ -401,6 +458,17 @@ export default function NetworkTab() {
                 </div>
               );
             })}
+
+            <div className="flex flex-wrap items-center gap-3 rounded-lg bg-muted/20 px-3 py-2">
+              {["no_ar", "verificando", "aguardando_dns", "nao_cadastrado"].map((k) => (
+                <span key={k} className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                  <StatusDot state={k} />
+                  {STATUS_LABEL[k].text}
+                </span>
+              ))}
+            </div>
+
+
 
             {dnsRecords.length > 0 && (
               <div className="rounded-lg border border-border p-3 space-y-2">
