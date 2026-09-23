@@ -29,8 +29,16 @@ serve(async (req) => {
     }
 
     const callerId = claimsData.user.id;
-    const { data: isSuperAdmin } = await supabaseAdmin.rpc("has_role", { _user_id: callerId, _role: "super_admin" });
-    const { data: isAdmin } = await supabaseAdmin.rpc("has_role", { _user_id: callerId, _role: "admin" });
+    const { data: callerRoles, error: rolesError } = await supabaseAdmin
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", callerId);
+    if (rolesError) {
+      console.error("Erro ao buscar papéis:", rolesError);
+    }
+    const roleList = (callerRoles || []).map((r: any) => r.role);
+    const isSuperAdmin = roleList.includes("super_admin");
+    const isAdmin = roleList.includes("admin");
     if (!isAdmin && !isSuperAdmin) {
       return new Response(JSON.stringify({ error: "Sem permissão" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
