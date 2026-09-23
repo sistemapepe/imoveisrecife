@@ -29,6 +29,7 @@ import BulkImportTab from "@/components/admin/BulkImportTab";
 import PerformanceTab from "@/components/admin/PerformanceTab";
 import SecurityTab from "@/components/admin/SecurityTab";
 import NetworkTab from "@/components/admin/NetworkTab";
+import SiteSwitcher from "@/components/admin/SiteSwitcher";
 import { useTenant } from "@/contexts/TenantContext";
 
 type Tab = "dashboard" | "properties" | "settings" | "users" | "messages" | "privacy" | "analytics" | "visits" | "traffic" | "seo" | "bucket" | "import" | "performance" | "security" | "network";
@@ -261,6 +262,7 @@ export default function Admin() {
               </button>
             </div>
           </div>
+          <SiteSwitcher />
           {!canManageProperties && (
             <div className="px-4 py-2 bg-primary/10 text-primary text-xs text-center font-semibold">
               📋 Modo visualização — você pode consultar os imóveis cadastrados.
