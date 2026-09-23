@@ -976,6 +976,10 @@ export type Database = {
         Args: { p_site_id: string; p_user_id: string }
         Returns: boolean
       }
+      create_blank_site: {
+        Args: { new_brand_name: string; new_domain: string }
+        Returns: string
+      }
       duplicate_site: {
         Args: {
           new_brand_name: string

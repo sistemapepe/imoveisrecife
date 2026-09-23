@@ -22,6 +22,13 @@
       "when": 1789873502115,
       "tag": "0002_site_set_custom_domain",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790138869059,
+      "tag": "0003_fix_resolve_hostname_and_blank_site",
+      "breakpoints": true
     }
   ]
 }

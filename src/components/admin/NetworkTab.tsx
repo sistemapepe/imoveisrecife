@@ -92,7 +92,12 @@ export default function NetworkTab() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ brand_name: "", domain: "", source: "" });
+  const [form, setForm] = useState<{
+    brand_name: string;
+    domain: string;
+    source: string;
+    mode: "blank" | "copy";
+  }>({ brand_name: "", domain: "", source: "", mode: "blank" });
   const [domainDialog, setDomainDialog] = useState<NetworkSite | null>(null);
   const [newHostname, setNewHostname] = useState("");
   const [connecting, setConnecting] = useState(false);
@@ -140,12 +145,18 @@ export default function NetworkTab() {
       return;
     }
     setSaving(true);
+    const blank = form.mode === "blank";
     const source = form.source || sites[0]?.id;
-    const { data, error } = await supabase.rpc("duplicate_site", {
-      source_site_id: source,
-      new_domain: domain,
-      new_brand_name: brand,
-    });
+    const { data, error } = blank
+      ? await supabase.rpc("create_blank_site", {
+          new_domain: domain,
+          new_brand_name: brand,
+        })
+      : await supabase.rpc("duplicate_site", {
+          source_site_id: source,
+          new_domain: domain,
+          new_brand_name: brand,
+        });
     if (error) {
       toast.error("Erro ao criar site: " + error.message);
       setSaving(false);
@@ -153,9 +164,11 @@ export default function NetworkTab() {
     }
     const newId = data as unknown as string;
     await supabase.rpc("network_add_domain", { p_site_id: newId, p_hostname: domain });
-    toast.success("Site criado! Conecte o domínio nas configurações de publicação.");
+    toast.success(
+      blank ? "Site criado em branco, pronto para personalizar." : "Site criado a partir da cópia."
+    );
     setCreating(false);
-    setForm({ brand_name: "", domain: "", source: "" });
+    setForm({ brand_name: "", domain: "", source: "", mode: "blank" });
     setSaving(false);
     load();
   };
@@ -366,7 +379,7 @@ export default function NetworkTab() {
           <DialogHeader>
             <DialogTitle>Novo site na rede</DialogTitle>
             <DialogDescription>
-              O site nasce com a identidade visual copiada de um site existente e começa sem imóveis.
+              Escolha começar do zero ou aproveitar a aparência de um site já existente.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
@@ -386,21 +399,53 @@ export default function NetworkTab() {
                 placeholder="www.imobiliariaboaviagem.com.br"
               />
             </div>
-            <div>
-              <Label>Copiar aparência de</Label>
-              <select
-                className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
-                value={form.source}
-                onChange={(e) => setForm({ ...form, source: e.target.value })}
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, mode: "blank" })}
+                className={`rounded-lg border p-3 text-left transition ${
+                  form.mode === "blank"
+                    ? "border-primary bg-primary/10"
+                    : "border-border bg-muted/30 hover:bg-muted/50"
+                }`}
               >
-                <option value="">{sites[0]?.brand_name ?? "Site padrão"}</option>
-                {sites.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.brand_name}
-                  </option>
-                ))}
-              </select>
+                <p className="text-sm font-semibold">Começar em branco</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Sem logo, cores ou textos de outra imobiliária.
+                </p>
+              </button>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, mode: "copy" })}
+                className={`rounded-lg border p-3 text-left transition ${
+                  form.mode === "copy"
+                    ? "border-primary bg-primary/10"
+                    : "border-border bg-muted/30 hover:bg-muted/50"
+                }`}
+              >
+                <p className="text-sm font-semibold">Copiar de um site</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Repete a aparência, sem copiar os imóveis.
+                </p>
+              </button>
             </div>
+            {form.mode === "copy" && (
+              <div>
+                <Label>Copiar aparência de</Label>
+                <select
+                  className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
+                  value={form.source}
+                  onChange={(e) => setForm({ ...form, source: e.target.value })}
+                >
+                  <option value="">{sites[0]?.brand_name ?? "Site padrão"}</option>
+                  {sites.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.brand_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setCreating(false)}>
