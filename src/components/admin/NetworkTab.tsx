@@ -92,7 +92,12 @@ export default function NetworkTab() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ brand_name: "", domain: "", source: "" });
+  const [form, setForm] = useState<{
+    brand_name: string;
+    domain: string;
+    source: string;
+    mode: "blank" | "copy";
+  }>({ brand_name: "", domain: "", source: "", mode: "blank" });
   const [domainDialog, setDomainDialog] = useState<NetworkSite | null>(null);
   const [newHostname, setNewHostname] = useState("");
   const [connecting, setConnecting] = useState(false);
