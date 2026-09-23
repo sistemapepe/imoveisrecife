@@ -61,6 +61,36 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     }
   });
   const [loading, setLoading] = useState(!hostSite);
+  const [pathname, setPathname] = useState(() =>
+    typeof window !== "undefined" ? window.location.pathname : "/"
+  );
+
+  // O provider fica fora do Router, então acompanhamos a navegação manualmente.
+  useEffect(() => {
+    const sync = () => setPathname(window.location.pathname);
+    const patch = (key: "pushState" | "replaceState") => {
+      const original = window.history[key];
+      const wrapped = function (this: History, ...args: unknown[]) {
+        // eslint-disable-next-line prefer-spread
+        const result = (original as any).apply(this, args);
+        sync();
+        return result;
+      };
+      window.history[key] = wrapped as any;
+      return () => {
+        window.history[key] = original;
+      };
+    };
+    const undoPush = patch("pushState");
+    const undoReplace = patch("replaceState");
+    window.addEventListener("popstate", sync);
+    return () => {
+      undoPush();
+      undoReplace();
+      window.removeEventListener("popstate", sync);
+    };
+  }, []);
+
 
   const setOverrideSiteId = useCallback((id: string | null) => {
     setOverrideState(id);
