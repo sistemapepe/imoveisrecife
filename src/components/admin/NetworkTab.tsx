@@ -124,6 +124,19 @@ export default function NetworkTab() {
   }, [isSuperAdmin, load]);
 
   useEffect(() => {
+    if (!isSuperAdmin) return;
+    supabase
+      .from("network_settings")
+      .select("value")
+      .eq("key", "default_site_id")
+      .maybeSingle()
+      .then(({ data }) => {
+        const raw = data?.value;
+        setDefaultSiteId(typeof raw === "string" ? raw : null);
+      });
+  }, [isSuperAdmin]);
+
+  useEffect(() => {
     if (!isSuperAdmin || sites.length === 0) return;
     const hosts = sites.flatMap((s) => s.hostnames ?? []).slice(0, 12);
     hosts.forEach((h) => {
