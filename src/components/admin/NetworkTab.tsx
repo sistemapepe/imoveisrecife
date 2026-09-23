@@ -414,15 +414,19 @@ export default function NetworkTab() {
           </DialogHeader>
           <div className="space-y-2">
             {domainDialog?.hostnames?.map((h) => {
-              const st = STATUS_LABEL[domainStatus[h] ?? "erro"];
+              const st = STATUS_LABEL[domainStatus[h] ?? "erro"] ?? STATUS_LABEL.erro;
               return (
                 <div key={h} className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 px-3 py-2">
-                  <div className="min-w-0">
-                    <p className="text-sm truncate">{h}</p>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${st.className}`}>
-                      {st.text}
-                    </span>
+                  <div className="min-w-0 flex items-center gap-3">
+                    <StatusDot state={domainStatus[h]} size="lg" />
+                    <div className="min-w-0">
+                      <p className="text-sm truncate">{h}</p>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${st.className}`}>
+                        {st.text}
+                      </span>
+                    </div>
                   </div>
+
                   <div className="flex items-center gap-1">
                     <Button size="icon" variant="ghost" title="Verificar" onClick={() => checkStatus(h)}>
                       <RefreshCw className="h-4 w-4" />
