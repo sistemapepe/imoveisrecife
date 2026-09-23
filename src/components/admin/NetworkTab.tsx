@@ -449,6 +449,17 @@ export default function NetworkTab() {
               );
             })}
 
+            <div className="flex flex-wrap items-center gap-3 rounded-lg bg-muted/20 px-3 py-2">
+              {["no_ar", "verificando", "aguardando_dns", "nao_cadastrado"].map((k) => (
+                <span key={k} className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                  <StatusDot state={k} />
+                  {STATUS_LABEL[k].text}
+                </span>
+              ))}
+            </div>
+
+
+
             {dnsRecords.length > 0 && (
               <div className="rounded-lg border border-border p-3 space-y-2">
                 <p className="text-xs font-semibold">Registros para o provedor do cliente</p>
