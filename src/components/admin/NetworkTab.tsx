@@ -140,12 +140,18 @@ export default function NetworkTab() {
       return;
     }
     setSaving(true);
+    const blank = form.mode === "blank";
     const source = form.source || sites[0]?.id;
-    const { data, error } = await supabase.rpc("duplicate_site", {
-      source_site_id: source,
-      new_domain: domain,
-      new_brand_name: brand,
-    });
+    const { data, error } = blank
+      ? await supabase.rpc("create_blank_site", {
+          new_domain: domain,
+          new_brand_name: brand,
+        })
+      : await supabase.rpc("duplicate_site", {
+          source_site_id: source,
+          new_domain: domain,
+          new_brand_name: brand,
+        });
     if (error) {
       toast.error("Erro ao criar site: " + error.message);
       setSaving(false);
@@ -153,9 +159,11 @@ export default function NetworkTab() {
     }
     const newId = data as unknown as string;
     await supabase.rpc("network_add_domain", { p_site_id: newId, p_hostname: domain });
-    toast.success("Site criado! Conecte o domínio nas configurações de publicação.");
+    toast.success(
+      blank ? "Site criado em branco, pronto para personalizar." : "Site criado a partir da cópia."
+    );
     setCreating(false);
-    setForm({ brand_name: "", domain: "", source: "" });
+    setForm({ brand_name: "", domain: "", source: "", mode: "blank" });
     setSaving(false);
     load();
   };
