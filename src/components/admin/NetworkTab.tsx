@@ -114,6 +114,16 @@ export default function NetworkTab() {
     if (isSuperAdmin) load();
   }, [isSuperAdmin, load]);
 
+  useEffect(() => {
+    if (!isSuperAdmin || sites.length === 0) return;
+    const hosts = sites.flatMap((s) => s.hostnames ?? []).slice(0, 12);
+    hosts.forEach((h) => {
+      if (!domainStatus[h]) checkStatus(h);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuperAdmin, sites]);
+
+
   if (!isSuperAdmin) {
     return (
       <div className="rounded-xl border border-border bg-card/40 p-6 text-sm text-muted-foreground">
