@@ -40,13 +40,50 @@ interface DomainStatusResponse {
   records?: DnsRecord[];
 }
 
-const STATUS_LABEL: Record<string, { text: string; className: string }> = {
-  no_ar: { text: "No ar", className: "bg-primary/15 text-primary" },
-  aguardando_dns: { text: "Aguardando DNS", className: "bg-amber-500/15 text-amber-600" },
-  verificando: { text: "Emitindo certificado", className: "bg-amber-500/15 text-amber-600" },
-  nao_cadastrado: { text: "Não conectado", className: "bg-muted text-muted-foreground" },
-  erro: { text: "Não verificado", className: "bg-muted text-muted-foreground" },
+const STATUS_LABEL: Record<string, { text: string; className: string; dot: string; pulse?: boolean }> = {
+  no_ar: {
+    text: "No ar",
+    className: "bg-emerald-500/15 text-emerald-600",
+    dot: "bg-emerald-500 shadow-[0_0_8px_2px_hsl(152_76%_45%/0.7)]",
+    pulse: true,
+  },
+  aguardando_dns: {
+    text: "Aguardando DNS",
+    className: "bg-amber-500/15 text-amber-600",
+    dot: "bg-amber-500 shadow-[0_0_8px_2px_hsl(38_92%_50%/0.6)]",
+    pulse: true,
+  },
+  verificando: {
+    text: "Emitindo certificado",
+    className: "bg-sky-500/15 text-sky-600",
+    dot: "bg-sky-500 shadow-[0_0_8px_2px_hsl(199_89%_48%/0.6)]",
+    pulse: true,
+  },
+  nao_cadastrado: {
+    text: "Não conectado",
+    className: "bg-muted text-muted-foreground",
+    dot: "bg-muted-foreground/50",
+  },
+  erro: {
+    text: "Não verificado",
+    className: "bg-muted text-muted-foreground",
+    dot: "bg-muted-foreground/40",
+  },
 };
+
+function StatusDot({ state, size = "sm" }: { state?: string; size?: "sm" | "lg" }) {
+  const st = STATUS_LABEL[state ?? "erro"] ?? STATUS_LABEL.erro;
+  const dim = size === "lg" ? "h-3 w-3" : "h-2 w-2";
+  return (
+    <span className="relative inline-flex items-center justify-center" title={st.text}>
+      {st.pulse && (
+        <span className={`absolute ${dim} rounded-full ${st.dot} opacity-60 animate-ping`} aria-hidden />
+      )}
+      <span className={`relative ${dim} rounded-full ${st.dot}`} aria-label={st.text} />
+    </span>
+  );
+}
+
 
 export default function NetworkTab() {
   const { isSuperAdmin } = useAuth();
