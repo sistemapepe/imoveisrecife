@@ -416,8 +416,18 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     }
 
     if (Object.keys(dbUpdate).length > 0) {
+      if (!siteId) {
+        toast.error("Selecione um site antes de salvar as configurações.");
+        return;
+      }
       if (settings.id) {
-        const { error } = await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
+        // Duplo filtro: id do registro E site ativo. Assim é impossível gravar
+        // as configurações de uma imobiliária dentro de outra.
+        const { error } = await supabase
+          .from("site_settings")
+          .update(dbUpdate)
+          .eq("id", settings.id)
+          .eq("site_id", siteId);
         if (error) {
           console.error("Error updating site_settings:", error);
           toast.error("Erro ao salvar no banco: " + error.message);
