@@ -135,8 +135,7 @@ export function TenantProvider({ children }: { children: ReactNode }) {
   // O seletor de site do super admin só vale dentro do painel administrativo.
   // Nas páginas públicas o site é SEMPRE o do domínio acessado, para nunca
   // misturar o conteúdo de uma imobiliária no endereço de outra.
-  const inAdmin =
-    typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
+  const inAdmin = pathname.startsWith("/admin");
   const siteId = (isSuperAdmin && inAdmin && overrideSiteId) || hostSite?.siteId || null;
   activeSiteId = siteId;
 
