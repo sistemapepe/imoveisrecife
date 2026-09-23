@@ -103,6 +103,10 @@ export default function NetworkTab() {
   const [connecting, setConnecting] = useState(false);
   const [domainStatus, setDomainStatus] = useState<Record<string, string>>({});
   const [dnsRecords, setDnsRecords] = useState<DnsRecord[]>([]);
+  const [deleteTarget, setDeleteTarget] = useState<NetworkSite | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [defaultSiteId, setDefaultSiteId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -118,6 +122,19 @@ export default function NetworkTab() {
   useEffect(() => {
     if (isSuperAdmin) load();
   }, [isSuperAdmin, load]);
+
+  useEffect(() => {
+    if (!isSuperAdmin) return;
+    supabase
+      .from("network_settings")
+      .select("value")
+      .eq("key", "default_site_id")
+      .maybeSingle()
+      .then(({ data }) => {
+        const raw = data?.value;
+        setDefaultSiteId(typeof raw === "string" ? raw : null);
+      });
+  }, [isSuperAdmin]);
 
   useEffect(() => {
     if (!isSuperAdmin || sites.length === 0) return;
@@ -261,6 +278,31 @@ export default function NetworkTab() {
     toast.success(`Gerenciando: ${site.brand_name}`);
   };
 
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    const hostnames = deleteTarget.hostnames ?? [];
+    for (const h of hostnames) {
+      try {
+        await callDomainFn({ action: "remove", site_id: deleteTarget.id, hostname: h });
+      } catch {
+        /* segue a exclusão mesmo se o endereço já não existir */
+      }
+    }
+    const { error } = await supabase.rpc("network_delete_site", { p_site_id: deleteTarget.id });
+    setDeleting(false);
+    if (error) {
+      toast.error("Não foi possível excluir: " + error.message);
+      return;
+    }
+    if (overrideSiteId === deleteTarget.id) setOverrideSiteId(null);
+    toast.success(`"${deleteTarget.brand_name}" foi excluído permanentemente.`);
+    setDeleteTarget(null);
+    setDeleteConfirm("");
+    load();
+  };
+
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -366,6 +408,23 @@ export default function NetworkTab() {
                   <Button size="sm" variant="ghost" onClick={() => toggleActive(site)}>
                     {site.is_active ? <PowerOff className="h-4 w-4 mr-1" /> : <Power className="h-4 w-4 mr-1" />}
                     {site.is_active ? "Desativar" : "Ativar"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive hover:text-destructive"
+                    disabled={site.id === defaultSiteId}
+                    title={
+                      site.id === defaultSiteId
+                        ? "O site principal da rede não pode ser excluído"
+                        : "Excluir este site definitivamente"
+                    }
+                    onClick={() => {
+                      setDeleteConfirm("");
+                      setDeleteTarget(site);
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" /> Excluir
                   </Button>
                 </div>
               </div>
@@ -549,6 +608,77 @@ export default function NetworkTab() {
               </Button>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => {
+          if (!open && !deleting) {
+            setDeleteTarget(null);
+            setDeleteConfirm("");
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-destructive">Excluir site permanentemente</DialogTitle>
+            <DialogDescription>
+              Esta ação não pode ser desfeita. Todo o conteúdo de{" "}
+              <strong>{deleteTarget?.brand_name}</strong> será apagado.
+            </DialogDescription>
+          </DialogHeader>
+
+          {deleteTarget && (
+            <div className="space-y-3">
+              <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs space-y-1">
+                <p>Serão apagados definitivamente:</p>
+                <ul className="list-disc pl-4 space-y-0.5">
+                  <li>{deleteTarget.properties_count} imóvel(is)</li>
+                  <li>{deleteTarget.messages_count} contato(s) recebido(s)</li>
+                  <li>{deleteTarget.users_count} acesso(s) de equipe</li>
+                  <li>
+                    {(deleteTarget.hostnames ?? []).length} endereço(s) conectado(s)
+                    {(deleteTarget.hostnames ?? []).length > 0 &&
+                      `: ${(deleteTarget.hostnames ?? []).join(", ")}`}
+                  </li>
+                  <li>Logo, cores, textos e demais configurações</li>
+                </ul>
+              </div>
+
+              <div>
+                <Label>
+                  Para confirmar, digite <strong>EXCLUIR</strong>
+                </Label>
+                <Input
+                  value={deleteConfirm}
+                  onChange={(e) => setDeleteConfirm(e.target.value)}
+                  placeholder="EXCLUIR"
+                  autoFocus
+                />
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              disabled={deleting}
+              onClick={() => {
+                setDeleteTarget(null);
+                setDeleteConfirm("");
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={deleting || deleteConfirm.trim().toUpperCase() !== "EXCLUIR"}
+              onClick={handleDelete}
+            >
+              {deleting && <Loader2 className="h-4 w-4 mr-1 animate-spin" />} Excluir definitivamente
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
