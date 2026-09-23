@@ -103,6 +103,10 @@ export default function NetworkTab() {
   const [connecting, setConnecting] = useState(false);
   const [domainStatus, setDomainStatus] = useState<Record<string, string>>({});
   const [dnsRecords, setDnsRecords] = useState<DnsRecord[]>([]);
+  const [deleteTarget, setDeleteTarget] = useState<NetworkSite | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [defaultSiteId, setDefaultSiteId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
