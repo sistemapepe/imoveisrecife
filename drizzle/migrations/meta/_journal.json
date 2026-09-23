@@ -29,6 +29,13 @@
       "when": 1790138869059,
       "tag": "0003_fix_resolve_hostname_and_blank_site",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790140249291,
+      "tag": "0004_remove_jhr_legacy_defaults",
+      "breakpoints": true
     }
   ]
 }
