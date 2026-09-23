@@ -409,6 +409,23 @@ export default function NetworkTab() {
                     {site.is_active ? <PowerOff className="h-4 w-4 mr-1" /> : <Power className="h-4 w-4 mr-1" />}
                     {site.is_active ? "Desativar" : "Ativar"}
                   </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive hover:text-destructive"
+                    disabled={site.id === defaultSiteId}
+                    title={
+                      site.id === defaultSiteId
+                        ? "O site principal da rede não pode ser excluído"
+                        : "Excluir este site definitivamente"
+                    }
+                    onClick={() => {
+                      setDeleteConfirm("");
+                      setDeleteTarget(site);
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" /> Excluir
+                  </Button>
                 </div>
               </div>
             );
