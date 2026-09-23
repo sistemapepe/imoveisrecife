@@ -314,6 +314,14 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     if (data) setFavorites(data.map((f) => f.property_id));
   }, [user]);
 
+  // Ao trocar de site, limpamos tudo que estava em memória para que nenhum
+  // dado de uma imobiliária apareça (ou seja salvo) dentro de outra.
+  useEffect(() => {
+    setProperties([]);
+    setSettings(defaultSettings);
+    setLoading(true);
+  }, [siteId]);
+
   useEffect(() => {
     if (!siteId) {
       if (!tenantLoading) setLoading(false);
