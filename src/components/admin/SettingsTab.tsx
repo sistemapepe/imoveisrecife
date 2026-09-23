@@ -55,8 +55,8 @@ const sections: SectionDef[] = [
     title: "🏷️ Marca",
     description: "Nome e identidade da marca exibidos no site",
     fields: [
-      { label: "Nome da Marca", key: "brandName", icon: <Type className="h-4 w-4" />, placeholder: "JHR LUXURY" },
-      { label: "Subtítulo / Slogan", key: "heroSubtitle", placeholder: "JHR LUXURY" },
+      { label: "Nome da Marca", key: "brandName", icon: <Type className="h-4 w-4" />, placeholder: "Nome da sua imobiliária" },
+      { label: "Subtítulo / Slogan", key: "heroSubtitle", placeholder: "Imóveis selecionados" },
       { label: "Título do Hero", key: "heroTitle", placeholder: "Encontre o imóvel dos seus sonhos" },
     ],
   },
@@ -75,7 +75,7 @@ const sections: SectionDef[] = [
     fields: [
       { label: "WhatsApp (com DDI)", key: "whatsappNumber", icon: <MessageCircle className="h-4 w-4" />, placeholder: "5511999999999" },
       { label: "Mensagem padrão do WhatsApp", key: "whatsappMessage", icon: <MessageCircle className="h-4 w-4" />, multiline: true, placeholder: "Olá! Gostaria de mais informações..." },
-      { label: "E-mail de contato", key: "emailContact", icon: <Mail className="h-4 w-4" />, type: "email", placeholder: "contato@jhr.com" },
+      { label: "E-mail de contato", key: "emailContact", icon: <Mail className="h-4 w-4" />, type: "email", placeholder: "contato@suaimobiliaria.com.br" },
     ],
   },
   {
@@ -86,14 +86,14 @@ const sections: SectionDef[] = [
       { label: "Facebook", key: "facebookUrl", icon: <Facebook className="h-4 w-4" />, placeholder: "https://facebook.com/..." },
       { label: "YouTube", key: "youtubeUrl", icon: <Youtube className="h-4 w-4" />, placeholder: "https://youtube.com/..." },
       { label: "LinkedIn", key: "linkedinUrl", icon: <Linkedin className="h-4 w-4" />, placeholder: "https://linkedin.com/..." },
-      { label: "Website", key: "websiteUrl", icon: <Globe className="h-4 w-4" />, placeholder: "https://www.jhr.com" },
+      { label: "Website", key: "websiteUrl", icon: <Globe className="h-4 w-4" />, placeholder: "https://www.suaimobiliaria.com.br" },
     ],
   },
   {
     title: "📝 Rodapé",
     description: "Texto exibido no rodapé do site",
     fields: [
-      { label: "Texto do rodapé", key: "footerText", multiline: true, placeholder: "© 2024 JHR Imóveis..." },
+      { label: "Texto do rodapé", key: "footerText", multiline: true, placeholder: "© 2026 Sua Imobiliária..." },
       { label: "CRECI (obrigatório)", key: "creci", placeholder: "CRECI-PE 12345-J" },
     ],
   },
