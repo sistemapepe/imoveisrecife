@@ -136,7 +136,11 @@ export function TenantProvider({ children }: { children: ReactNode }) {
   // Nas páginas públicas o site é SEMPRE o do domínio acessado, para nunca
   // misturar o conteúdo de uma imobiliária no endereço de outra.
   const inAdmin = pathname.startsWith("/admin");
-  const siteId = (isSuperAdmin && inAdmin && overrideSiteId) || hostSite?.siteId || null;
+  // Endereços de teste (pré-visualização) não pertencem a nenhuma imobiliária:
+  // nesses casos o super admin vê a vitrine do site que escolheu no painel.
+  const isPreviewHost = hostSite ? !hostSite.matched : false;
+  const canUseOverride = isSuperAdmin && (inAdmin || isPreviewHost);
+  const siteId = (canUseOverride && overrideSiteId) || hostSite?.siteId || null;
   activeSiteId = siteId;
 
   return (
