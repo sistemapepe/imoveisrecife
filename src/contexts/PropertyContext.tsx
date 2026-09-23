@@ -314,6 +314,14 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     if (data) setFavorites(data.map((f) => f.property_id));
   }, [user]);
 
+  // Ao trocar de site, limpamos tudo que estava em memória para que nenhum
+  // dado de uma imobiliária apareça (ou seja salvo) dentro de outra.
+  useEffect(() => {
+    setProperties([]);
+    setSettings(defaultSettings);
+    setLoading(true);
+  }, [siteId]);
+
   useEffect(() => {
     if (!siteId) {
       if (!tenantLoading) setLoading(false);
@@ -341,13 +349,15 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   };
 
   const updateProperty = async (id: string, updates: Partial<Property>) => {
-    const { error } = await supabase.from("properties").update(updates).eq("id", id);
+    if (!siteId) { toast.error("Selecione um site antes de salvar."); return; }
+    const { error } = await supabase.from("properties").update(updates).eq("id", id).eq("site_id", siteId);
     if (error) { toast.error("Erro ao atualizar: " + error.message); return; }
     await fetchProperties();
   };
 
   const deleteProperty = async (id: string) => {
-    const { error } = await supabase.from("properties").delete().eq("id", id);
+    if (!siteId) { toast.error("Selecione um site antes de remover."); return; }
+    const { error } = await supabase.from("properties").delete().eq("id", id).eq("site_id", siteId);
     if (error) { toast.error("Erro ao remover: " + error.message); return; }
     await fetchProperties();
   };
@@ -406,8 +416,18 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     }
 
     if (Object.keys(dbUpdate).length > 0) {
+      if (!siteId) {
+        toast.error("Selecione um site antes de salvar as configurações.");
+        return;
+      }
       if (settings.id) {
-        const { error } = await supabase.from("site_settings").update(dbUpdate).eq("id", settings.id);
+        // Duplo filtro: id do registro E site ativo. Assim é impossível gravar
+        // as configurações de uma imobiliária dentro de outra.
+        const { error } = await supabase
+          .from("site_settings")
+          .update(dbUpdate)
+          .eq("id", settings.id)
+          .eq("site_id", siteId);
         if (error) {
           console.error("Error updating site_settings:", error);
           toast.error("Erro ao salvar no banco: " + error.message);
