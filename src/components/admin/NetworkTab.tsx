@@ -610,6 +610,77 @@ export default function NetworkTab() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => {
+          if (!open && !deleting) {
+            setDeleteTarget(null);
+            setDeleteConfirm("");
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-destructive">Excluir site permanentemente</DialogTitle>
+            <DialogDescription>
+              Esta ação não pode ser desfeita. Todo o conteúdo de{" "}
+              <strong>{deleteTarget?.brand_name}</strong> será apagado.
+            </DialogDescription>
+          </DialogHeader>
+
+          {deleteTarget && (
+            <div className="space-y-3">
+              <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs space-y-1">
+                <p>Serão apagados definitivamente:</p>
+                <ul className="list-disc pl-4 space-y-0.5">
+                  <li>{deleteTarget.properties_count} imóvel(is)</li>
+                  <li>{deleteTarget.messages_count} contato(s) recebido(s)</li>
+                  <li>{deleteTarget.users_count} acesso(s) de equipe</li>
+                  <li>
+                    {(deleteTarget.hostnames ?? []).length} endereço(s) conectado(s)
+                    {(deleteTarget.hostnames ?? []).length > 0 &&
+                      `: ${(deleteTarget.hostnames ?? []).join(", ")}`}
+                  </li>
+                  <li>Logo, cores, textos e demais configurações</li>
+                </ul>
+              </div>
+
+              <div>
+                <Label>
+                  Para confirmar, digite <strong>EXCLUIR</strong>
+                </Label>
+                <Input
+                  value={deleteConfirm}
+                  onChange={(e) => setDeleteConfirm(e.target.value)}
+                  placeholder="EXCLUIR"
+                  autoFocus
+                />
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              disabled={deleting}
+              onClick={() => {
+                setDeleteTarget(null);
+                setDeleteConfirm("");
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={deleting || deleteConfirm.trim().toUpperCase() !== "EXCLUIR"}
+              onClick={handleDelete}
+            >
+              {deleting && <Loader2 className="h-4 w-4 mr-1 animate-spin" />} Excluir definitivamente
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
