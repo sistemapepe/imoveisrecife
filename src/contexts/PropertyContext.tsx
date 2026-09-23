@@ -349,13 +349,15 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   };
 
   const updateProperty = async (id: string, updates: Partial<Property>) => {
-    const { error } = await supabase.from("properties").update(updates).eq("id", id);
+    if (!siteId) { toast.error("Selecione um site antes de salvar."); return; }
+    const { error } = await supabase.from("properties").update(updates).eq("id", id).eq("site_id", siteId);
     if (error) { toast.error("Erro ao atualizar: " + error.message); return; }
     await fetchProperties();
   };
 
   const deleteProperty = async (id: string) => {
-    const { error } = await supabase.from("properties").delete().eq("id", id);
+    if (!siteId) { toast.error("Selecione um site antes de remover."); return; }
+    const { error } = await supabase.from("properties").delete().eq("id", id).eq("site_id", siteId);
     if (error) { toast.error("Erro ao remover: " + error.message); return; }
     await fetchProperties();
   };
