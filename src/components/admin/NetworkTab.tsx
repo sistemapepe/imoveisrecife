@@ -316,12 +316,18 @@ export default function NetworkTab() {
                 {site.hostnames?.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {site.hostnames.map((h) => (
-                      <span key={h} className="text-[10px] px-2 py-0.5 rounded bg-muted/60 text-muted-foreground">
+                      <span
+                        key={h}
+                        className="text-[10px] px-2 py-0.5 rounded bg-muted/60 text-muted-foreground inline-flex items-center gap-1.5"
+                        title={(STATUS_LABEL[domainStatus[h] ?? "erro"] ?? STATUS_LABEL.erro).text}
+                      >
+                        <StatusDot state={domainStatus[h]} />
                         {h}
                       </span>
                     ))}
                   </div>
                 )}
+
 
                 <div className="flex flex-wrap gap-2">
                   <Button size="sm" variant={active ? "secondary" : "default"} onClick={() => manage(site)}>
