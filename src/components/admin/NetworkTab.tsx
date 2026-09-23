@@ -278,6 +278,31 @@ export default function NetworkTab() {
     toast.success(`Gerenciando: ${site.brand_name}`);
   };
 
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    const hostnames = deleteTarget.hostnames ?? [];
+    for (const h of hostnames) {
+      try {
+        await callDomainFn({ action: "remove", site_id: deleteTarget.id, hostname: h });
+      } catch {
+        /* segue a exclusão mesmo se o endereço já não existir */
+      }
+    }
+    const { error } = await supabase.rpc("network_delete_site", { p_site_id: deleteTarget.id });
+    setDeleting(false);
+    if (error) {
+      toast.error("Não foi possível excluir: " + error.message);
+      return;
+    }
+    if (overrideSiteId === deleteTarget.id) setOverrideSiteId(null);
+    toast.success(`"${deleteTarget.brand_name}" foi excluído permanentemente.`);
+    setDeleteTarget(null);
+    setDeleteConfirm("");
+    load();
+  };
+
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
