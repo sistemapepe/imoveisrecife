@@ -996,6 +996,7 @@ export type Database = {
         Args: { p_hostname: string; p_site_id: string }
         Returns: boolean
       }
+      network_delete_site: { Args: { p_site_id: string }; Returns: boolean }
       network_remove_domain: { Args: { p_hostname: string }; Returns: boolean }
       network_set_site_active: {
         Args: { p_active: boolean; p_site_id: string }
