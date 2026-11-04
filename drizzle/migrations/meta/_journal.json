@@ -43,6 +43,13 @@
       "when": 1790141564032,
       "tag": "0005_network_delete_site",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793781791580,
+      "tag": "0006_add_lease_fields_and_alugado_status",
+      "breakpoints": true
     }
   ]
 }

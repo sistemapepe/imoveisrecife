@@ -63,11 +63,13 @@ function PropertyCard({ property, index = 0 }: { property: Property; index?: num
             <div className={`inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full backdrop-blur-md border shadow-[0_4px_14px_rgba(0,0,0,0.35)] ${
               property.status === "reservado"
                 ? "bg-yellow-500/90 border-yellow-200/50"
-                : "bg-red-600/90 border-red-200/40"
+                : property.status === "alugado"
+                  ? "bg-blue-600/90 border-blue-200/40"
+                  : "bg-red-600/90 border-red-200/40"
             }`}>
               <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
               <span className="text-[10px] font-bold text-white uppercase tracking-[0.16em]">
-                {property.status === "reservado" ? "Reservado" : "Vendido"}
+                {property.status === "reservado" ? "Reservado" : property.status === "alugado" ? "Alugado" : "Vendido"}
               </span>
             </div>
           )}

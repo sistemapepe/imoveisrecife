@@ -9,7 +9,7 @@ import property2 from "@/assets/property-2.jpg";
 import property3 from "@/assets/property-3.jpg";
 import property4 from "@/assets/property-4.jpg";
 
-export type PropertyStatus = "disponivel" | "reservado" | "vendido";
+export type PropertyStatus = "disponivel" | "reservado" | "vendido" | "alugado";
 
 export interface Property {
   id: string;
@@ -34,6 +34,17 @@ export interface Property {
   status: PropertyStatus;
   video_tour_url?: string;
   previous_price?: number;
+  tenant_name?: string | null;
+  lease_start?: string | null;
+  lease_end?: string | null;
+}
+
+/** Locação: sincroniza status_aluguel com o status. Venda/Repasse: sem alteração. */
+export function leaseSyncFields(category?: string, status?: string): Record<string, string> {
+  if (category !== "Locação") return {};
+  if (status === "alugado") return { status_aluguel: "alugado" };
+  if (status === "disponivel") return { status_aluguel: "disponivel" };
+  return {};
 }
 
 export type PriceSection = "card" | "detail" | "banner" | "simulator";
@@ -342,6 +353,9 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       price: p.price, area: p.area, bedrooms: p.bedrooms, suites: p.suites, bathrooms: p.bathrooms, parking: p.parking,
       type: p.type, description: p.description, amenities: p.amenities, images: p.images,
       exclusive: p.exclusive, featured: p.featured, category: p.category,
+      status: p.status,
+      tenant_name: p.tenant_name || null, lease_start: p.lease_start || null, lease_end: p.lease_end || null,
+      ...leaseSyncFields(p.category, p.status),
       site_id: siteId,
     } as any);
     if (error) { toast.error("Erro ao criar: " + error.message); return; }
@@ -350,7 +364,13 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
 
   const updateProperty = async (id: string, updates: Partial<Property>) => {
     if (!siteId) { toast.error("Selecione um site antes de salvar."); return; }
-    const { error } = await supabase.from("properties").update(updates).eq("id", id).eq("site_id", siteId);
+    const payload: Record<string, any> = { ...updates };
+    for (const k of ["tenant_name", "lease_start", "lease_end"]) {
+      if (k in payload && !payload[k]) payload[k] = null;
+    }
+    const current = properties.find((x) => x.id === id);
+    Object.assign(payload, leaseSyncFields(updates.category ?? current?.category, updates.status ?? current?.status));
+    const { error } = await supabase.from("properties").update(payload as any).eq("id", id).eq("site_id", siteId);
     if (error) { toast.error("Erro ao atualizar: " + error.message); return; }
     await fetchProperties();
   };

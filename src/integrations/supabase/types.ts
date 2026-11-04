@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.1"
   }
   public: {
     Tables: {
@@ -325,6 +325,8 @@ export type Database = {
           featured: boolean
           id: string
           images: string[]
+          lease_end: string | null
+          lease_start: string | null
           neighborhood: string
           parking: number
           previous_price: number
@@ -333,6 +335,7 @@ export type Database = {
           status: string
           status_aluguel: string
           suites: number
+          tenant_name: string | null
           title: string
           type: string
           updated_at: string
@@ -353,6 +356,8 @@ export type Database = {
           featured?: boolean
           id?: string
           images?: string[]
+          lease_end?: string | null
+          lease_start?: string | null
           neighborhood?: string
           parking?: number
           previous_price?: number
@@ -361,6 +366,7 @@ export type Database = {
           status?: string
           status_aluguel?: string
           suites?: number
+          tenant_name?: string | null
           title: string
           type?: string
           updated_at?: string
@@ -381,6 +387,8 @@ export type Database = {
           featured?: boolean
           id?: string
           images?: string[]
+          lease_end?: string | null
+          lease_start?: string | null
           neighborhood?: string
           parking?: number
           previous_price?: number
@@ -389,6 +397,7 @@ export type Database = {
           status?: string
           status_aluguel?: string
           suites?: number
+          tenant_name?: string | null
           title?: string
           type?: string
           updated_at?: string

@@ -61,6 +61,7 @@ export default function Admin() {
   const [tab, setTab] = useState<Tab>("dashboard");
   const { siteId } = useTenant();
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
   const [newMsgCount, setNewMsgCount] = useState(0);
   const [pendingVisitsCount, setPendingVisitsCount] = useState(0);
   const [editing, setEditing] = useState<string | null>(null);
@@ -313,6 +314,26 @@ export default function Admin() {
                   <Plus className="h-5 w-5" /> Novo Imóvel
                 </button>
               )}
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { value: "", label: "Todos" },
+                  { value: "disponivel", label: "Disponível" },
+                  { value: "reservado", label: "Reservado" },
+                  { value: "vendido", label: "Vendido" },
+                  { value: "alugado", label: "Alugado" },
+                ].map((s) => (
+                  <button
+                    key={s.value || "all"}
+                    type="button"
+                    onClick={() => setStatusFilter(s.value)}
+                    className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-colors ${
+                      statusFilter === s.value ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
@@ -334,17 +355,20 @@ export default function Admin() {
               </div>
               {(() => {
                 const q = search.trim().toLowerCase();
+                const byStatus = statusFilter
+                  ? properties.filter((p) => (p.status || "disponivel") === statusFilter)
+                  : properties;
                 const filtered = q
-                  ? properties.filter((p) =>
+                  ? byStatus.filter((p) =>
                       [p.title, p.code, p.neighborhood, p.city, p.type]
                         .filter(Boolean)
                         .some((v) => v.toLowerCase().includes(q))
                     )
-                  : properties;
+                  : byStatus;
                 if (filtered.length === 0) {
                   return (
                     <div className="text-center py-10 text-sm text-muted-foreground">
-                      Nenhum imóvel encontrado para "{search}".
+                      Nenhum imóvel encontrado{search ? ` para "${search}"` : ""}.
                     </div>
                   );
                 }
@@ -369,9 +393,9 @@ export default function Admin() {
                       <span className="text-[10px] font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded shrink-0">{p.code}</span>
                       {p.status && p.status !== "disponivel" && (
                         <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
-                          p.status === "reservado" ? "bg-yellow-500/20 text-yellow-700" : "bg-red-500/20 text-red-700"
+                          p.status === "reservado" ? "bg-yellow-500/20 text-yellow-700" : p.status === "alugado" ? "bg-blue-500/20 text-blue-700" : "bg-red-500/20 text-red-700"
                         }`}>
-                          {p.status === "reservado" ? "Reservado" : "Vendido"}
+                          {p.status === "reservado" ? "Reservado" : p.status === "alugado" ? "Alugado" : "Vendido"}
                         </span>
                       )}
                     </div>
@@ -495,7 +519,12 @@ export default function Admin() {
                   {[
                     { value: "disponivel", label: "Disponível" },
                     { value: "reservado", label: "Reservado" },
-                    { value: "vendido", label: "Vendido" },
+                    form.category === "Locação"
+                      ? { value: "alugado", label: "Alugado" }
+                      : { value: "vendido", label: "Vendido" },
+                    // mantém visível um status legado incompatível com a categoria (não altera dados existentes)
+                    ...(form.category === "Locação" && form.status === "vendido" ? [{ value: "vendido", label: "Vendido (legado)" }] : []),
+                    ...(form.category !== "Locação" && form.status === "alugado" ? [{ value: "alugado", label: "Alugado (legado)" }] : []),
                   ].map((s) => (
                     <option key={s.value} value={s.value}>{s.label}</option>
                   ))}
@@ -663,6 +692,25 @@ export default function Admin() {
                 <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Tour Virtual 360° (URL YouTube/Matterport)</label>
                 <input type="url" value={(form as any).video_tour_url || ""} onChange={(e) => setForm({ ...form, video_tour_url: e.target.value } as any)} placeholder="https://youtube.com/watch?v=..." className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
               </div>
+              {form.category === "Locação" && (
+                <div className={`rounded-xl border p-3 space-y-3 ${form.status === "alugado" ? "border-primary/40 bg-primary/5" : "border-border"}`}>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Dados da locação (opcional)</p>
+                  <div>
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Nome do inquilino</label>
+                    <input type="text" value={form.tenant_name || ""} onChange={(e) => setForm({ ...form, tenant_name: e.target.value })} className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Início da locação</label>
+                      <input type="date" value={form.lease_start || ""} onChange={(e) => setForm({ ...form, lease_start: e.target.value })} className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Fim da locação</label>
+                      <input type="date" value={form.lease_end || ""} onChange={(e) => setForm({ ...form, lease_end: e.target.value })} className="w-full mt-1 px-3 py-2 rounded-lg border border-border bg-card text-sm" />
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 text-sm">
                   <input type="checkbox" checked={form.exclusive} onChange={(e) => setForm({ ...form, exclusive: e.target.checked })} className="rounded border-border" />

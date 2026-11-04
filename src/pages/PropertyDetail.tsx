@@ -164,7 +164,10 @@ export default function PropertyDetail() {
     window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
   };
 
+  const isUnavailable = property.status === "vendido" || property.status === "alugado";
+
   const handleWhatsApp = () => {
+    if (isUnavailable) { openWhatsApp(); return; }
     setLeadModalOpen(true);
   };
 
@@ -185,7 +188,7 @@ export default function PropertyDetail() {
       priceCurrency: "BRL",
       url: propertyUrl,
       availability:
-        property.status === "vendido"
+        property.status === "vendido" || property.status === "alugado"
           ? "https://schema.org/SoldOut"
           : property.status === "reservado"
             ? "https://schema.org/LimitedAvailability"
@@ -357,9 +360,11 @@ export default function PropertyDetail() {
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
                     (property as any).status === "reservado"
                       ? "bg-yellow-500/20 text-yellow-700 border border-yellow-500/30"
-                      : "bg-red-500/20 text-red-700 border border-red-500/30"
+                      : (property as any).status === "alugado"
+                        ? "bg-blue-500/20 text-blue-700 border border-blue-500/30"
+                        : "bg-red-500/20 text-red-700 border border-red-500/30"
                   }`}>
-                    {(property as any).status === "reservado" ? "Reservado" : "Vendido"}
+                    {(property as any).status === "reservado" ? "Reservado" : (property as any).status === "alugado" ? "Alugado" : "Vendido"}
                   </span>
                 )}
                 {(property as any).status === "disponivel" && (
@@ -463,7 +468,7 @@ export default function PropertyDetail() {
                 <VirtualTour videoUrl={property.video_tour_url} title={property.title} />
               )}
 
-              {settings.showVisitSchedule && (
+              {settings.showVisitSchedule && !isUnavailable && (
                 <VisitScheduleForm propertyId={property.id} propertyTitle={property.title} />
               )}
 
