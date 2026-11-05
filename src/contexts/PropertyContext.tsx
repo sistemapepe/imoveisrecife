@@ -11,6 +11,24 @@ import property4 from "@/assets/property-4.jpg";
 
 export type PropertyStatus = "disponivel" | "reservado" | "vendido" | "alugado";
 
+/** Slug público do imóvel no link: usa o código (ex.: IMO-0002) em vez do UUID.
+ * O UUID tem o mesmo formato da chave aleatória do Pix, e o WhatsApp o
+ * detectava como chave Pix dentro do link. O código já existe em todos os
+ * imóveis e é gerado pelo banco (trigger generate_property_code) para os
+ * futuros, então o link por código vale para os existentes e os novos.
+ * Sem código, volta para o id (UUID) para não quebrar nada. */
+export function propertyPublicSlug(p: Pick<Property, "id" | "code">): string {
+  const code = (p.code || "").trim();
+  return code || p.id;
+}
+
+/** Resolve um imóvel pelo slug público (código) ou pelo id (UUID, links antigos). */
+export function findPropertyBySlug(properties: Property[], slug: string | undefined): Property | undefined {
+  if (!slug) return undefined;
+  const lower = slug.toLowerCase();
+  return properties.find((p) => p.id === slug || (p.code && p.code.toLowerCase() === lower));
+}
+
 export interface Property {
   id: string;
   code: string;

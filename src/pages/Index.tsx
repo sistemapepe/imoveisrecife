@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, Heart, ChevronLeft, ChevronRight, Search, MapPin, LayoutGrid, Home, Building2, Layers, LandPlot, Store, ArrowUpDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import heroImage from "@/assets/hero-mansion.jpg";
-import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
+import { useProperties, formatPriceFull, propertyPublicSlug } from "@/contexts/PropertyContext";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { Ruler, BedDouble, Car } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
@@ -62,8 +62,8 @@ export default function Index() {
 
   // Hero carousel - somente imóveis ativos
   const heroSlides = useMemo(() => available.length > 0
-    ? available.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id }))
-    : [{ image: heroImage, title: settings.heroTitle, id: null as string | null }], [available, settings.heroTitle]);
+    ? available.map((p) => ({ image: p.images[0] || heroImage, title: p.title, id: p.id, code: p.code }))
+    : [{ image: heroImage, title: settings.heroTitle, id: null as string | null, code: null as string | null }], [available, settings.heroTitle]);
 
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -173,7 +173,7 @@ export default function Index() {
           itemListElement: available.slice(0, 12).map((p, i) => ({
             "@type": "ListItem",
             position: i + 1,
-            url: `${siteOrigin}/imovel/${p.id}`,
+            url: `${siteOrigin}/imovel/${propertyPublicSlug(p)}`,
             name: p.title,
           })),
         }
@@ -329,7 +329,7 @@ export default function Index() {
                   onClick={() => {
                     const slide = heroSlides[currentSlide];
                     if (slide.id) {
-                      navigate(`/imovel/${slide.id}`);
+                      navigate(`/imovel/${slide.code || slide.id}`);
                     } else {
                       navigate("/busca");
                     }
@@ -524,7 +524,7 @@ export default function Index() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: 0.1 * i }}
                     className="flex flex-col min-w-[280px] bg-luxury-dark-lighter/40 rounded-xl overflow-hidden border border-card/5 cursor-pointer"
-                    onClick={() => navigate(`/imovel/${p.id}`)}
+                    onClick={() => navigate(`/imovel/${propertyPublicSlug(p)}`)}
                   >
                     <div className="relative w-full aspect-[4/3] overflow-hidden">
                       <img 
@@ -581,7 +581,7 @@ export default function Index() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                     className="relative h-56 md:h-64 rounded-2xl overflow-hidden cursor-pointer group"
-                    onClick={() => navigate(`/imovel/${properties[0].id}`)}
+                    onClick={() => navigate(`/imovel/${propertyPublicSlug(properties[0])}`)}
                   >
                     <img
                       src={getOptimizedImageUrl(properties[0].images[0], IMAGE_SIZES.HERO)}

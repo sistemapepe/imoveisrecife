@@ -1,4 +1,4 @@
-import { useProperties } from "@/contexts/PropertyContext";
+import { useProperties, propertyPublicSlug } from "@/contexts/PropertyContext";
 import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -45,7 +45,7 @@ export default function MarqueeBanner() {
           return (
             <button
               key={`${item}-${index}`}
-              onClick={() => isLink ? navigate(`/imovel/${property.id}`) : null}
+              onClick={() => isLink ? navigate(`/imovel/${propertyPublicSlug(property)}`) : null}
               className={`text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-accent-foreground hover:text-primary focus-visible:text-primary transition-all flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded px-2 py-1 ${!isLink ? 'cursor-default pointer-events-none' : ''}`}
               aria-label={isLink ? `Ver detalhes de ${item}` : item}
             >

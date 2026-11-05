@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, Share2, BedDouble, Car, Ruler, MapPin, Award, Calendar, MessageCircle, Bath, DoorOpen, ChevronLeft, ChevronRight, TrendingDown } from "lucide-react";
 import { getAmenityIcon } from "@/lib/amenity-icons";
 import { motion } from "framer-motion";
-import { useProperties, formatPriceFull } from "@/contexts/PropertyContext";
+import { useProperties, formatPriceFull, propertyPublicSlug, findPropertyBySlug } from "@/contexts/PropertyContext";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
@@ -43,7 +43,9 @@ export default function PropertyDetail() {
   }, [id]);
   const navigate = useNavigate();
   const { properties, settings, favorites, toggleFavorite, loading } = useProperties();
-  const property = properties.find((p) => p.id === id);
+  const property = findPropertyBySlug(properties, id);
+  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://imoveisrecife.com.br";
+  const propertyUrl = property ? `${siteOrigin}/imovel/${propertyPublicSlug(property)}` : "";
   const resolvedImages = useResolvedImages(property?.images ?? []);
   const [currentImg, setCurrentImg] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -76,11 +78,11 @@ export default function PropertyDetail() {
     preloadImage((currentImg - 1 + resolvedImages.length) % resolvedImages.length);
   }, [currentImg, resolvedImages]);
 
-  // Track property view
+  // Track property view (usa o UUID interno; o parâmetro da rota pode ser o código)
   useEffect(() => {
-    if (!id) return;
-    supabase.from("property_views").insert({ property_id: id, ip_hash: "", site_id: getActiveSiteId() }).then();
-  }, [id]);
+    if (!property?.id) return;
+    supabase.from("property_views").insert({ property_id: property.id, ip_hash: "", site_id: getActiveSiteId() }).then();
+  }, [property?.id]);
 
   if (!property && !loading) return (
     <PageTransition>
@@ -138,7 +140,7 @@ export default function PropertyDetail() {
   const totalImages = property.images.length;
 
   const handleShare = async () => {
-    const url = window.location.href;
+    const url = propertyUrl || window.location.href;
 
     if (navigator.share) {
       try {
@@ -159,7 +161,7 @@ export default function PropertyDetail() {
 
   const openWhatsApp = () => {
     const message = encodeURIComponent(
-      `Olá! Tenho interesse no imóvel ${property.code}: ${property.title} - ${formatPriceFull(property.price)}\n${window.location.href}`
+      `Olá! Tenho interesse no imóvel ${property.code}: ${property.title} - ${formatPriceFull(property.price)}\n${propertyUrl}`
     );
     window.open(`https://wa.me/${settings.whatsappNumber}?text=${message}`, "_blank");
   };
@@ -171,8 +173,6 @@ export default function PropertyDetail() {
     setLeadModalOpen(true);
   };
 
-  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "https://imoveisrecife.com.br";
-  const propertyUrl = `${siteOrigin}/imovel/${property.id}`;
   const schemaOrg = {
     "@context": "https://schema.org",
     "@type": "RealEstateListing",

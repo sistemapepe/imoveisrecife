@@ -2,7 +2,7 @@ import { memo, useCallback, useState } from "react";
 import { Heart, Ruler, BedDouble, Bath, Car, DoorOpen, TrendingDown, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Property } from "@/contexts/PropertyContext";
+import { Property, propertyPublicSlug } from "@/contexts/PropertyContext";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { useProperties } from "@/contexts/PropertyContext";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
@@ -35,7 +35,7 @@ function PropertyCard({ property, index = 0 }: { property: Property; index?: num
     <>
     <div
       className="group bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-      onClick={() => navigate(`/imovel/${property.id}`)}
+      onClick={() => navigate(`/imovel/${propertyPublicSlug(property)}`)}
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
         <img
