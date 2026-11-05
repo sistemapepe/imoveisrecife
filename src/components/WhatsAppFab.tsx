@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { MessageCircle } from "lucide-react";
-import { useProperties } from "@/contexts/PropertyContext";
+import { useProperties, findPropertyBySlug } from "@/contexts/PropertyContext";
 import { useLocation, useParams } from "react-router-dom";
 import { trackEvent } from "@/hooks/useTrafficTracker";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
@@ -14,7 +14,7 @@ export default function WhatsAppFab() {
   const currentProperty = useMemo(() => {
     if (!location.pathname.startsWith("/imovel/")) return null;
     const id = params.id || location.pathname.split("/imovel/")[1]?.split("/")[0];
-    return properties.find((p) => p.id === id) || null;
+    return findPropertyBySlug(properties, id) || null;
   }, [location.pathname, params.id, properties]);
 
   // Hide on admin/login pages
