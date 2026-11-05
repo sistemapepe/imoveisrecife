@@ -14,11 +14,11 @@ Deno.serve(async (req) => {
   const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
 
-  const siteUrl = "https://imoveisrecife.com.br";
+  const siteUrl = "https://rrochaconsultor.com.br";
 
   const { data: properties, error } = await supabase
     .from("properties")
-    .select("id, updated_at, title")
+    .select("id, code, updated_at, title")
     .order("updated_at", { ascending: false });
 
   if (error) {
@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
     .concat(
       (properties || []).map(
         (p) => `  <url>
-    <loc>${siteUrl}/imovel/${p.id}</loc>
+    <loc>${siteUrl}/imovel/${p.code || p.id}</loc>
     <lastmod>${new Date(p.updated_at).toISOString().split("T")[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
