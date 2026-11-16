@@ -39,7 +39,7 @@ export default function InteractiveMap({ address, neighborhood, city }: Interact
       : `https://www.google.com/maps/embed/v1/search?key=${GOOGLE_MAPS_KEY}&q=${active.query}+near+${locationQuery}&zoom=15`;
 
   return (
-    <div className="mb-8 md:mb-0">
+    <div className="cv-defer mb-8 md:mb-0">
       <div className="flex justify-between items-end mb-3">
         <h2 className="text-lg font-bold">Localização</h2>
         <span className="text-xs text-primary font-bold uppercase tracking-wide">

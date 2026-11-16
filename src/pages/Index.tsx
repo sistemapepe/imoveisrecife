@@ -96,14 +96,21 @@ export default function Index() {
     setCurrentSlide((prev) => (prev >= heroSlides.length ? 0 : prev));
   }, [heroSlides.length]);
 
-  // Preload first hero image to optimize LCP
+  // Preload first hero image to optimize LCP — preloading the SAME optimized
+  // URL + srcset the <img> will pick, otherwise the preload is wasted and the
+  // browser fetches the image twice (raw URL != optimized URL).
   const firstHeroImage = heroSlides[0]?.image;
   useEffect(() => {
     if (!firstHeroImage) return;
     const link = document.createElement("link");
     link.rel = "preload";
     link.as = "image";
-    link.href = firstHeroImage;
+    link.href = getOptimizedImageUrl(firstHeroImage, IMAGE_SIZES.HERO);
+    const srcSet = getImageSrcSet(firstHeroImage, [800, 1200, 1920]);
+    if (srcSet) {
+      link.imageSrcset = srcSet;
+      link.imageSizes = "100vw";
+    }
     link.fetchPriority = "high";
     document.head.appendChild(link);
     return () => {
@@ -274,7 +281,7 @@ export default function Index() {
                     sizes="100vw"
                     alt={heroSlides[currentSlide].title || "Imóvel em destaque"}
                     className="absolute inset-0 w-full h-full object-cover"
-                    fetchPriority={currentSlide === 0 ? "high" : "auto"}
+                    fetchPriority={currentSlide === 0 ? "high" : undefined}
                     loading={currentSlide === 0 ? "eager" : "lazy"}
                     decoding="async"
                   />
@@ -523,7 +530,7 @@ export default function Index() {
                     initial={{ opacity: 0, x: 40 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: 0.1 * i }}
-                    className="flex flex-col min-w-[280px] bg-luxury-dark-lighter/40 rounded-xl overflow-hidden border border-card/5 cursor-pointer"
+                    className="cv-defer flex flex-col min-w-[280px] bg-luxury-dark-lighter/40 rounded-xl overflow-hidden border border-card/5 cursor-pointer"
                     onClick={() => navigate(`/imovel/${propertyPublicSlug(p)}`)}
                   >
                     <div className="relative w-full aspect-[4/3] overflow-hidden">
@@ -580,7 +587,7 @@ export default function Index() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="relative h-56 md:h-64 rounded-2xl overflow-hidden cursor-pointer group"
+                    className="cv-defer-sm relative h-56 md:h-64 rounded-2xl overflow-hidden cursor-pointer group"
                     onClick={() => navigate(`/imovel/${propertyPublicSlug(properties[0])}`)}
                   >
                     <img

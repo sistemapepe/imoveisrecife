@@ -91,9 +91,9 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
   }
-  img {
-    content-visibility: auto;
-  }
+  /* Lote D (modern-web-guidance: defer-rendering-heavy-content) — NÃO aplicar
+     content-visibility global em img: atingia também o hero (LCP) e atrasava
+     a renderização crítica. Usar .cv-defer só em blocos grandes abaixo da dobra. */
 
   /* WCAG 2.4.7 — Visible focus indicator (keyboard only) */
   *:focus {
@@ -146,6 +146,20 @@
   }
   .img-fade.is-loaded {
     opacity: 1;
+  }
+
+  /* Lote D (modern-web-guidance: defer-rendering-heavy-content) — adiar a
+     renderização de blocos grandes e autocontidos ABAIXO da dobra inicial.
+     contain-intrinsic-size é obrigatório: sem ele o bloco colapsa para 0px
+     fora da tela e a página salta ao rolar. Nunca aplicar no conteúdo
+     acima da dobra (ex.: hero) nem em formulários. */
+  .cv-defer {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
+  .cv-defer-sm {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 300px;
   }
 }
 
