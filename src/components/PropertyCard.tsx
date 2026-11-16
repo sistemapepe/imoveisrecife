@@ -11,7 +11,7 @@ import { getOptimizedImageUrl, getImageSrcSet, IMAGE_SIZES } from "@/lib/image-o
 import { useResolvedImage } from "@/lib/property-image-url";
 import Watermark from "@/components/Watermark";
 
-function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
+function PropertyCard({ property }: { property: Property; index?: number }) {
   const navigate = useNavigate();
   const { favorites, toggleFavorite, settings } = useProperties();
   const isFav = favorites.includes(property.id);
@@ -34,7 +34,7 @@ function PropertyCard({ property, index = 0 }: { property: Property; index?: num
   return (
     <>
     <div
-      className="group bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+      className="cv-defer group bg-card rounded-2xl overflow-hidden ios-shadow cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
       onClick={() => navigate(`/imovel/${propertyPublicSlug(property)}`)}
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
@@ -44,9 +44,8 @@ function PropertyCard({ property, index = 0 }: { property: Property; index?: num
           src={getOptimizedImageUrl(heroImage, IMAGE_SIZES.CARD)}
           srcSet={getImageSrcSet(heroImage, [300, 450, 600])}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          loading={index < 2 ? "eager" : "lazy"}
+          loading="lazy"
           decoding="async"
-          fetchPriority={index === 0 ? "high" : "auto"}
           onLoad={() => setImgLoaded(true)}
           onError={() => setImgLoaded(true)}
           width="400"
