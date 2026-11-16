@@ -29,7 +29,7 @@ export default function VirtualTour({ videoUrl, title }: VirtualTourProps) {
 
   return (
     <>
-      <div className="mb-8">
+      <div className="cv-defer mb-8">
         <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
           <Play className="h-5 w-5 text-accent" /> Tour Virtual 360°
         </h2>
@@ -38,6 +38,7 @@ export default function VirtualTour({ videoUrl, title }: VirtualTourProps) {
             src={embedUrl}
             title={`Tour virtual - ${title}`}
             className="w-full h-full"
+            loading="lazy"
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
           />
