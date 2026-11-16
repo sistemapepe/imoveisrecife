@@ -38,10 +38,24 @@
 
 
     <link rel="alternate" type="application/rss+xml" title="Imóveis Recife — Sitemap" href="https://bqxfopftcoagiautjeqz.supabase.co/functions/v1/sitemap" />
+
+    <style>
+      /* Shell de carregamento: primeira pintura imediata, sem depender do JS.
+         Sem ele, a página nasce com #root vazio e fica branca até o bundle
+         (~744 KB) baixar, executar e o React montar. O React substitui o
+         conteúdo de #root na primeira renderização. */
+      html, body { background: #0a0a0a; }
+      #app-shell { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: #0a0a0a; color: #f5f0e6; font-family: Georgia, 'Times New Roman', serif; }
+      #app-shell .shell-brand { font-size: 34px; letter-spacing: .35em; text-indent: .35em; font-weight: 700; }
+      #app-shell .shell-sub { font-size: 12px; letter-spacing: .3em; text-indent: .3em; text-transform: uppercase; opacity: .65; font-family: Arial, Helvetica, sans-serif; }
+      #app-shell .shell-spinner { width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(245, 240, 230, .2); border-top-color: #c9a86a; animation: shell-spin .9s linear infinite; }
+      @keyframes shell-spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { #app-shell .shell-spinner { animation: none; } }
+    </style>
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root"><div id="app-shell"><div class="shell-brand">RROCHA</div><div class="shell-sub">Consultor Imobiliário</div><div class="shell-spinner" aria-hidden="true"></div></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
